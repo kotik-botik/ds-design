@@ -1,0 +1,463 @@
+  --dynamic-surface-overlay-base-inverse-hover:  rgba(255, 255, 255, 0.12);
+  --dynamic-surface-overlay-base-inverse-press:  rgba(255, 255, 255, 0.16);
+
+  /* Text & Icons */
+  --dynamic-text-and-icons-base-primary:          #2E2F33;
+  --dynamic-text-and-icons-base-primary-hover:    rgba(46, 47, 51, 0.88);
+  --dynamic-text-and-icons-base-primary-press:    rgba(46, 47, 51, 0.76);
+  --dynamic-text-and-icons-base-secondary:        rgba(46, 47, 51, 0.64);
+  --dynamic-text-and-icons-base-secondary-hover:  rgba(46, 47, 51, 0.76);
+  --dynamic-text-and-icons-base-secondary-press:  rgba(46, 47, 51, 0.88);
+  --dynamic-text-and-icons-base-tertiary:         rgba(46, 47, 51, 0.48);
+  --dynamic-text-and-icons-base-inverse-primary:  #FFFFFF;
+  --dynamic-text-and-icons-base-inverse-secondary: rgba(255, 255, 255, 0.64);
+  --dynamic-text-and-icons-base-inverse-tertiary: rgba(255, 255, 255, 0.48);
+
+  --dynamic-text-and-icons-status-accent:   #D76200;
+  --dynamic-text-and-icons-status-accent-hover:  #FF7700;
+  --dynamic-text-and-icons-status-attention: #B7800A;
+  --dynamic-text-and-icons-status-info:     #018DEB;
+  --dynamic-text-and-icons-status-negative: #EA4648;
+  --dynamic-text-and-icons-status-positive: #009A5E;
+
+  /* Strokes */
+  --dynamic-stroke-contrast-low:  rgba(131, 102, 86, 0.08);
+  --dynamic-stroke-contrast-mid:  rgba(131, 102, 86, 0.16);
+  --dynamic-stroke-contrast-high: rgba(131, 102, 86, 0.36);
+  --dynamic-stroke-status-accent:   #D76200;
+  --dynamic-stroke-status-negative: #EA4648;
+  --dynamic-stroke-status-positive: #009A5E;
+  --dynamic-stroke-status-info:     #018DEB;
+/**
+ * OK Design System — Tokens
+ * Source: @ok/ds-tokens + odnoklassniki-frontend-common
+ * Auto-converted from Stylus. Do not edit manually.
+ */
+
+/* ============================================================
+   SPACING SCALE (4px grid)
+   ============================================================ */
+:root {
+  --space-0:    0px;
+  --space-0-5:  2px;
+  --space-1:    4px;
+  --space-1-5:  6px;
+  --space-2:    8px;
+  --space-2-5:  10px;
+  --space-3:    12px;
+  --space-4:    16px;
+  --space-5:    20px;
+  --space-6:    24px;
+  --space-7:    28px;
+  --space-8:    32px;
+  --space-9:    36px;
+  --space-10:   40px;
+  --space-11:   44px;
+  --space-12:   48px;
+  --space-14:   56px;
+  --space-16:   64px;
+  --space-18:   72px;
+  --space-24:   96px;
+}
+
+/* ============================================================
+   TYPOGRAPHY SCALE
+   Font: Onest, fallback: Arial, Helvetica Neue, Helvetica, sans-serif
+   ============================================================ */
+:root {
+  --font-family: Onest, Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+  /* Font sizes */
+  --font-size-50:  11px;
+  --font-size-100: 13px;
+  --font-size-200: 15px;
+  --font-size-300: 17px;
+  --font-size-400: 21px;
+  --font-size-500: 24px;
+  --font-size-600: 27px;
+  --font-size-700: 30px;
+  --font-size-800: 34px;
+  --font-size-2000: 56px;
+
+  /* Line heights */
+  --line-height-50:  12px;
+  --line-height-100: 16px;
+  --line-height-200: 20px;
+  --line-height-300: 24px;
+  --line-height-400: 28px;
+  --line-height-500: 32px;
+  --line-height-600: 36px;
+  --line-height-700: 40px;
+  --line-height-2000: 72px;
+}
+
+/* Typography helper classes */
+.ds-display-xl  { font-family: var(--font-family); font-size: 56px; line-height: 72px; font-weight: 500; letter-spacing: 0; }
+.ds-display-m   { font-family: var(--font-family); font-size: 24px; line-height: 28px; font-weight: 400; letter-spacing: 0; }
+.ds-title-xl    { font-family: var(--font-family); font-size: 27px; line-height: 36px; font-weight: 600; letter-spacing: 0; }
+.ds-title-l     { font-family: var(--font-family); font-size: 21px; line-height: 28px; font-weight: 600; letter-spacing: 0; }
+.ds-title-m     { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: 0; }
+.ds-title-s     { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 600; letter-spacing: 0; }
+.ds-body-l      { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 400; letter-spacing: 0; }
+.ds-body-m      { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 400; letter-spacing: 0; }
+.ds-caption-m   { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; }
+.ds-caption-m-accent { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
+.ds-caption-s   { font-family: var(--font-family); font-size: 11px; line-height: 16px; font-weight: 400; letter-spacing: 0; }
+.ds-caption-s-accent { font-family: var(--font-family); font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
+
+/* ============================================================
+   STATE OVERLAYS
+   ============================================================ */
+:root {
+  --state-element-disabled: 0.36;
+  --state-element-hovered:  0.84;
+  --state-element-pressed:  0.76;
+  --state-overlay-hovered:  0.12;
+  --state-overlay-pressed:  0.16;
+  --state-overlay-selected: 0.08;
+  --state-overlay-timered:  0.16;
+}
+
+/* ============================================================
+   COLOR PRIMITIVES
+   ============================================================ */
+:root {
+  /* White / Black */
+  --base-white-100: #FFFFFF;
+  --base-black-100: #2E2F33;
+  --base-black-lena-100: #000000;
+
+  /* Translucent black (using actual black #2E2F33) */
+  --base-black-translucent-4:  rgba(46, 47, 51, 0.04);
+  --base-black-translucent-8:  rgba(46, 47, 51, 0.08);
+  --base-black-translucent-12: rgba(46, 47, 51, 0.12);
+  --base-black-translucent-16: rgba(46, 47, 51, 0.16);
+  --base-black-translucent-20: rgba(46, 47, 51, 0.20);
+  --base-black-translucent-24: rgba(46, 47, 51, 0.24);
+  --base-black-translucent-32: rgba(46, 47, 51, 0.32);
+  --base-black-translucent-36: rgba(46, 47, 51, 0.36);
+  --base-black-translucent-40: rgba(46, 47, 51, 0.40);
+  --base-black-translucent-48: rgba(46, 47, 51, 0.48);
+  --base-black-translucent-56: rgba(46, 47, 51, 0.56);
+  --base-black-translucent-64: rgba(46, 47, 51, 0.64);
+  --base-black-translucent-76: rgba(46, 47, 51, 0.76);
+  --base-black-translucent-88: rgba(46, 47, 51, 0.88);
+
+  /* Translucent white */
+  --base-white-translucent-4:  rgba(255, 255, 255, 0.04);
+  --base-white-translucent-8:  rgba(255, 255, 255, 0.08);
+  --base-white-translucent-12: rgba(255, 255, 255, 0.12);
+  --base-white-translucent-16: rgba(255, 255, 255, 0.16);
+  --base-white-translucent-20: rgba(255, 255, 255, 0.20);
+  --base-white-translucent-24: rgba(255, 255, 255, 0.24);
+  --base-white-translucent-32: rgba(255, 255, 255, 0.32);
+  --base-white-translucent-36: rgba(255, 255, 255, 0.36);
+  --base-white-translucent-40: rgba(255, 255, 255, 0.40);
+  --base-white-translucent-48: rgba(255, 255, 255, 0.48);
+  --base-white-translucent-56: rgba(255, 255, 255, 0.56);
+  --base-white-translucent-64: rgba(255, 255, 255, 0.64);
+  --base-white-translucent-76: rgba(255, 255, 255, 0.76);
+  --base-white-translucent-88: rgba(255, 255, 255, 0.88);
+
+  /* Sand */
+  --base-sand-12: #F7F4F2;
+  --base-sand-saturated-100: #836656;
+  --base-sand-saturated-translucent-4:  rgba(131, 102, 86, 0.04);
+  --base-sand-saturated-translucent-8:  rgba(131, 102, 86, 0.08);
+  --base-sand-saturated-translucent-12: rgba(131, 102, 86, 0.12);
+  --base-sand-saturated-translucent-16: rgba(131, 102, 86, 0.16);
+  --base-sand-saturated-translucent-20: rgba(131, 102, 86, 0.20);
+  --base-sand-saturated-translucent-24: rgba(131, 102, 86, 0.24);
+  --base-sand-saturated-translucent-32: rgba(131, 102, 86, 0.32);
+  --base-sand-saturated-translucent-36: rgba(131, 102, 86, 0.36);
+  --base-sand-saturated-translucent-40: rgba(131, 102, 86, 0.40);
+  --base-sand-saturated-translucent-48: rgba(131, 102, 86, 0.48);
+  --base-sand-saturated-translucent-56: rgba(131, 102, 86, 0.56);
+  --base-sand-saturated-translucent-64: rgba(131, 102, 86, 0.64);
+  --base-sand-translucent-64: rgba(98, 92, 88, 0.64);
+
+  /* Orange */
+  --base-orange-12: #EFE0D7;
+  --base-orange-48: #D7976F;
+  --base-orange-56: #C3855C;
+  --base-orange-64: #AC7048;
+  --base-orange-saturated-48: #FF9558;
+  --base-orange-saturated-56: #FF7700;
+  --base-orange-saturated-64: #D76200;
+  --base-orange-saturated-translucent-12: rgba(255, 119, 0, 0.12);
+  --base-orange-saturated-translucent-16: rgba(255, 119, 0, 0.16);
+  --base-orange-saturated-translucent-20: rgba(255, 119, 0, 0.20);
+
+  /* Blue */
+  --base-blue-12: #CEE8F2;
+  --base-blue-48: #67B4CF;
+  --base-blue-56: #54A1BB;
+  --base-blue-64: #3D8BA5;
+  --base-blue-saturated-48: #6BB7FF;
+  --base-blue-saturated-56: #0099FF;
+  --base-blue-saturated-64: #018DEB;
+  --base-blue-saturated-translucent-12: rgba(0, 153, 255, 0.12);
+  --base-blue-saturated-translucent-16: rgba(0, 153, 255, 0.16);
+  --base-blue-saturated-translucent-20: rgba(0, 153, 255, 0.20);
+
+  /* Red */
+  --base-red-12: #EDDFDC;
+  --base-red-48: #FA7D71;
+  --base-red-56: #E56A5F;
+  --base-red-64: #CC544B;
+  --base-red-saturated-48: #FF9089;
+  --base-red-saturated-56: #FF5555;
+  --base-red-saturated-64: #EA4648;
+  --base-red-saturated-translucent-12: rgba(255, 85, 85, 0.12);
+  --base-red-saturated-translucent-16: rgba(255, 85, 85, 0.16);
+  --base-red-saturated-translucent-20: rgba(255, 85, 85, 0.20);
+
+  /* Green */
+  --base-green-12: #D6E9D8;
+  --base-green-48: #8CB491;
+  --base-green-56: #7AA17F;
+  --base-green-64: #658B6A;
+  --base-green-saturated-48: #00CB7D;
+  --base-green-saturated-56: #2FB675;
+  --base-green-saturated-64: #009A5E;
+  --base-green-saturated-translucent-12: rgba(47, 182, 117, 0.12);
+  --base-green-saturated-translucent-16: rgba(47, 182, 117, 0.16);
+  --base-green-saturated-translucent-20: rgba(47, 182, 117, 0.20);
+
+  /* Yellow */
+  --base-yellow-12: #EEE1CD;
+  --base-yellow-saturated-48: #FFBD4D;
+  --base-yellow-saturated-56: #FFB313;
+  --base-yellow-saturated-64: #B7800A;
+  --base-yellow-saturated-translucent-12: rgba(219, 153, 12, 0.12);
+
+  /* Pink */
+  --base-pink-12: #F2DCE1;
+  --base-pink-56: #E0678E;
+  --base-pink-64: #C75179;
+
+  /* Purple */
+  --base-purple-12: #F1DBEF;
+  --base-purple-56: #C86FC4;
+
+  /* Violet */
+  --base-violet-12: #EADEF3;
+  --base-violet-56: #AE7ECE;
+
+  /* Grey */
+  --base-grey-100: #38383B;
+  --base-grey-102: #2B2B2E;
+  --base-grey-104: #1A1A1C;
+  --base-grey-106: #0E0E0F;
+  --base-grey-saturated-100: #7C7C8A;
+  --base-grey-saturated-translucent-8:  rgba(124, 124, 138, 0.08);
+  --base-grey-saturated-translucent-12: rgba(124, 124, 138, 0.12);
+  --base-grey-saturated-translucent-16: rgba(124, 124, 138, 0.16);
+  --base-grey-saturated-translucent-20: rgba(124, 124, 138, 0.20);
+  --base-grey-saturated-translucent-24: rgba(124, 124, 138, 0.24);
+  --base-grey-saturated-translucent-32: rgba(124, 124, 138, 0.32);
+  --base-grey-saturated-translucent-36: rgba(124, 124, 138, 0.36);
+  --base-grey-saturated-translucent-40: rgba(124, 124, 138, 0.40);
+  --base-grey-saturated-translucent-48: rgba(124, 124, 138, 0.48);
+  --base-grey-saturated-translucent-56: rgba(124, 124, 138, 0.56);
+}
+
+/* ============================================================
+   SEMANTIC COLOR TOKENS — LIGHT THEME (default)
+   Applied on :root.__ui-theme_light (or :root without explicit dark)
+   ============================================================ */
+:root,
+:root.__ui-theme_enabled.__ui-theme_light {
+  /* Surfaces */
+  --dynamic-surface-base-primary:          #F7F4F2;
+  --dynamic-surface-base-secondary:        #FFFFFF;
+  --dynamic-surface-base-tertiary:         #F7F4F2;
+  --dynamic-surface-base-quaternary:       #FFFFFF;
+  --dynamic-surface-base-inverse-primary:  #1A1A1C;
+  --dynamic-surface-base-inverse-secondary: rgba(0, 0, 0, 0.64);
+  --dynamic-surface-base-inverse-tertiary: rgba(0, 0, 0, 0.48);
+
+  --dynamic-surface-contrast-low:          rgba(131, 102, 86, 0.12);
+  --dynamic-surface-contrast-low-hover:    rgba(131, 102, 86, 0.16);
+  --dynamic-surface-contrast-low-press:    rgba(131, 102, 86, 0.20);
+  --dynamic-surface-contrast-mid:          rgba(131, 102, 86, 0.24);
+  --dynamic-surface-contrast-mid-hover:    rgba(131, 102, 86, 0.32);
+  --dynamic-surface-contrast-mid-press:    rgba(131, 102, 86, 0.40);
+  --dynamic-surface-contrast-high:         rgba(131, 102, 86, 0.36);
+  --dynamic-surface-contrast-high-hover:   rgba(131, 102, 86, 0.48);
+  --dynamic-surface-contrast-high-press:   rgba(131, 102, 86, 0.56);
+  --dynamic-surface-contrast-inverse-low:  rgba(124, 124, 138, 0.12);
+  --dynamic-surface-contrast-inverse-mid:  rgba(124, 124, 138, 0.24);
+  --dynamic-surface-contrast-inverse-high: rgba(124, 124, 138, 0.36);
+
+  --dynamic-surface-special-overlay:      #836656;
+  --dynamic-surface-special-layer:        rgba(98, 92, 88, 0.64);
+  --dynamic-surface-special-nude:         rgba(255, 255, 255, 0.76);
+
+  --dynamic-surface-overlay-hover:         rgba(131, 102, 86, 0.12);
+  --dynamic-surface-overlay-press:         rgba(131, 102, 86, 0.16);
+  --dynamic-surface-overlay-base-hover:    rgba(46, 47, 51, 0.12);
+  --dynamic-surface-overlay-base-press:    rgba(46, 47, 51, 0.16);
+  --dynamic-surface-overlay-base-inverse-hover:  rgba(255, 255, 255, 0.12);
+  --dynamic-surface-overlay-base-inverse-press:  rgba(255, 255, 255, 0.16);
+
+  /* Text & Icons */
+  --dynamic-text-and-icons-base-primary:          #2E2F33;
+  --dynamic-text-and-icons-base-primary-hover:    rgba(46, 47, 51, 0.88);
+  --dynamic-text-and-icons-base-primary-press:    rgba(46, 47, 51, 0.76);
+  --dynamic-text-and-icons-base-secondary:        rgba(46, 47, 51, 0.64);
+  --dynamic-text-and-icons-base-secondary-hover:  rgba(46, 47, 51, 0.76);
+  --dynamic-text-and-icons-base-secondary-press:  rgba(46, 47, 51, 0.88);
+  --dynamic-text-and-icons-base-tertiary:         rgba(46, 47, 51, 0.48);
+  --dynamic-text-and-icons-base-inverse-primary:  #FFFFFF;
+  --dynamic-text-and-icons-base-inverse-secondary: rgba(255, 255, 255, 0.64);
+  --dynamic-text-and-icons-base-inverse-tertiary: rgba(255, 255, 255, 0.48);
+
+  --dynamic-text-and-icons-status-accent:   #D76200;
+  --dynamic-text-and-icons-status-accent-hover:  #FF7700;
+  --dynamic-text-and-icons-status-attention: #B7800A;
+  --dynamic-text-and-icons-status-info:     #018DEB;
+  --dynamic-text-and-icons-status-negative: #EA4648;
+  --dynamic-text-and-icons-status-positive: #009A5E;
+
+  /* Strokes */
+  --dynamic-stroke-contrast-low:  rgba(131, 102, 86, 0.08);
+  --dynamic-stroke-contrast-mid:  rgba(131, 102, 86, 0.16);
+  --dynamic-stroke-contrast-high: rgba(131, 102, 86, 0.36);
+  --dynamic-stroke-status-accent:   #D76200;
+  --dynamic-stroke-status-negative: #EA4648;
+  --dynamic-stroke-status-positive: #009A5E;
+  --dynamic-stroke-status-info:     #018DEB;
+  --dynamic-stroke-status-attention: #B7800A;
+}
+
+/* ============================================================
+   SEMANTIC COLOR TOKENS — DARK THEME
+   Applied on :root.__ui-theme_enabled.__ui-theme_dark
+   ============================================================ */
+:root.__ui-theme_enabled.__ui-theme_dark {
+  --dynamic-surface-base-primary:          #1A1A1C;
+  --dynamic-surface-base-secondary:        #2B2B2E;
+  --dynamic-surface-base-tertiary:         #1A1A1C;
+  --dynamic-surface-base-quaternary:       #38383B;
+  --dynamic-surface-base-inverse-primary:  #FFFFFF;
+  --dynamic-surface-base-inverse-secondary: rgba(255, 255, 255, 0.88);
+
+  --dynamic-surface-contrast-low:          rgba(124, 124, 138, 0.12);
+  --dynamic-surface-contrast-low-hover:    rgba(124, 124, 138, 0.16);
+  --dynamic-surface-contrast-mid:          rgba(124, 124, 138, 0.24);
+  --dynamic-surface-contrast-high:         rgba(124, 124, 138, 0.36);
+  --dynamic-surface-contrast-inverse-low:  rgba(131, 102, 86, 0.12);
+  --dynamic-surface-contrast-inverse-mid:  rgba(131, 102, 86, 0.24);
+  --dynamic-surface-contrast-inverse-high: rgba(131, 102, 86, 0.36);
+
+  --dynamic-surface-special-overlay:      #7C7C8A;
+  --dynamic-surface-overlay-hover:         rgba(124, 124, 138, 0.12);
+  --dynamic-surface-overlay-press:         rgba(124, 124, 138, 0.16);
+  --dynamic-surface-overlay-base-hover:    rgba(255, 255, 255, 0.12);
+  --dynamic-surface-overlay-base-press:    rgba(255, 255, 255, 0.16);
+  --dynamic-surface-overlay-base-inverse-hover:  rgba(46, 47, 51, 0.12);
+  --dynamic-surface-overlay-base-inverse-press:  rgba(46, 47, 51, 0.16);
+
+  --dynamic-text-and-icons-base-primary:          #FFFFFF;
+  --dynamic-text-and-icons-base-secondary:        rgba(255, 255, 255, 0.64);
+  --dynamic-text-and-icons-base-tertiary:         rgba(255, 255, 255, 0.48);
+  --dynamic-text-and-icons-base-inverse-primary:  #2E2F33;
+  --dynamic-text-and-icons-base-inverse-secondary: rgba(46, 47, 51, 0.64);
+
+  --dynamic-text-and-icons-status-accent:   #FF9558;
+  --dynamic-text-and-icons-status-attention: #FFBD4D;
+  --dynamic-text-and-icons-status-info:     #6BB7FF;
+  --dynamic-text-and-icons-status-negative: #FF9089;
+  --dynamic-text-and-icons-status-positive: #00CB7D;
+
+  --dynamic-stroke-contrast-low:  rgba(124, 124, 138, 0.08);
+  --dynamic-stroke-contrast-mid:  rgba(124, 124, 138, 0.16);
+  --dynamic-stroke-contrast-high: rgba(124, 124, 138, 0.36);
+}
+
+/* ============================================================
+   STATIC COLOR TOKENS (do not change with theme)
+   ============================================================ */
+:root {
+  /* Surface */
+  --static-surface-status-accent:    #FF7700;
+  --static-surface-status-negative:  #FF5555;
+  --static-surface-status-positive:  #2FB675;
+  --static-surface-status-info:      #0099FF;
+  --static-surface-status-attention: #FFB313;
+
+  --static-surface-status-contrast-negative:  rgba(255, 85, 85, 0.12);
+  --static-surface-status-contrast-accent:    rgba(255, 119, 0, 0.12);
+  --static-surface-status-contrast-positive:  rgba(47, 182, 117, 0.12);
+  --static-surface-status-contrast-info:      rgba(0, 153, 255, 0.12);
+  --static-surface-status-contrast-attention: rgba(219, 153, 12, 0.12);
+
+  --static-surface-base-primary:    #2E2F33;
+  --static-surface-base-inverse-primary: #FFFFFF;
+  --static-surface-contrast-low:    rgba(46, 47, 51, 0.12);
+  --static-surface-contrast-inverse-low: rgba(255, 255, 255, 0.12);
+  --static-surface-contrast-high:   rgba(46, 47, 51, 0.36);
+  --static-surface-contrast-inverse-high: rgba(255, 255, 255, 0.36);
+
+  --static-surface-overlay-base-hover:   rgba(46, 47, 51, 0.12);
+  --static-surface-overlay-base-press:   rgba(46, 47, 51, 0.16);
+  --static-surface-overlay-base-inverse-hover:  rgba(255, 255, 255, 0.12);
+  --static-surface-overlay-base-inverse-press:  rgba(255, 255, 255, 0.16);
+
+  /* Text & Icons */
+  --static-text-and-icons-base-primary:          #2E2F33;
+  --static-text-and-icons-base-secondary:        rgba(46, 47, 51, 0.64);
+  --static-text-and-icons-base-tertiary:         rgba(46, 47, 51, 0.48);
+  --static-text-and-icons-base-inverse-primary:  #FFFFFF;
+  --static-text-and-icons-base-inverse-secondary: rgba(255, 255, 255, 0.64);
+  --static-text-and-icons-base-inverse-tertiary: rgba(255, 255, 255, 0.48);
+
+  /* Strokes */
+  --static-stroke-special-focus:   #0099FF;
+  --static-stroke-special-accent:  #FF7700;
+  --static-stroke-contrast-low:    rgba(46, 47, 51, 0.08);
+  --static-stroke-contrast-mid:    rgba(46, 47, 51, 0.16);
+  --static-stroke-contrast-high:   rgba(46, 47, 51, 0.36);
+  --static-stroke-contrast-inverse-low:  rgba(255, 255, 255, 0.08);
+  --static-stroke-contrast-inverse-high: rgba(255, 255, 255, 0.36);
+  --static-stroke-base-inverse-primary:  #FFFFFF;
+}
+
+/* ============================================================
+   CELL VIEW LAYOUT TOKENS
+   ============================================================ */
+:root {
+  --dynamic-cell-view-horizontal-default: 16px;
+  --dynamic-cell-view-vertical-default:   12px;
+}  --dynamic-stroke-status-attention: #B7800A;
+}
+
+/* ============================================================
+   SEMANTIC COLOR TOKENS — DARK THEME
+   Applied on :root.__ui-theme_enabled.__ui-theme_dark
+   ============================================================ */
+:root.__ui-theme_enabled.__ui-theme_dark {
+  --dynamic-surface-base-primary:          #1A1A1C;
+  --dynamic-surface-base-secondary:        #2B2B2E;
+  --dynamic-surface-base-tertiary:         #1A1A1C;
+  --dynamic-surface-base-quaternary:       #38383B;
+  --dynamic-surface-base-inverse-primary:  #FFFFFF;
+  --dynamic-surface-base-inverse-secondary: rgba(255, 255, 255, 0.88);
+
+  --dynamic-surface-contrast-low:          rgba(124, 124, 138, 0.12);
+  --dynamic-surface-contrast-low-hover:    rgba(124, 124, 138, 0.16);
+  --dynamic-surface-contrast-mid:          rgba(124, 124, 138, 0.24);
+  --dynamic-surface-contrast-high:         rgba(124, 124, 138, 0.36);
+  --dynamic-surface-contrast-inverse-low:  rgba(131, 102, 86, 0.12);
+  --dynamic-surface-contrast-inverse-mid:  rgba(131, 102, 86, 0.24);
+  --dynamic-surface-contrast-inverse-high: rgba(131, 102, 86, 0.36);
+
+  --dynamic-surface-special-overlay:      #7C7C8A;
+  --dynamic-surface-overlay-hover:         rgba(124, 124, 138, 0.12);
+  --dynamic-surface-overlay-press:         rgba(124, 124, 138, 0.16);
+  --dynamic-surface-overlay-base-hover:    rgba(255, 255, 255, 0.12);
+  --dynamic-surface-overlay-base-press:    rgba(255, 255, 255, 0.16);
+  --dynamic-surface-overlay-base-inverse-hover:  rgba(46, 47, 51, 0.12);
+  --dynamic-surface-overlay-base-inverse-press:  rgba(46, 47, 51, 0.16);
+
