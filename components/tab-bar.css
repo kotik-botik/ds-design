@@ -1,0 +1,68 @@
+/**
+ * OK Design System — TabBar (bottom)
+ *
+ * Fixed bottom navigation bar for mobile prototypes. Holds 4–5 icon items
+ * and a home-indicator handle (iOS-style).
+ *
+ * STATES per item: .__state-on (active, accent color)
+ *                  .__state-disabled
+ *                  .__clicked (scale 0.95)
+ *
+ * The bar itself has no states.
+ */
+
+.tab-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: var(--dynamic-surface-base-secondary);
+  border-top: 1px solid var(--dynamic-stroke-contrast-low);
+}
+
+.tab-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-10);
+  width: 100%;
+  padding: var(--space-3) 0 0;
+}
+
+.tab-bar-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--dynamic-text-and-icons-base-tertiary);
+  cursor: pointer;
+  transition: color var(--ds-animation-duration) var(--ds-animation-easing),
+              var(--ds-transition-transform);
+}
+
+.tab-bar-item.__state-on {
+  color: var(--dynamic-text-and-icons-status-accent);
+}
+
+.tab-bar-item:not(.__state-disabled):active,
+.tab-bar-item:not(.__state-disabled).__clicked {
+  transform: scale(0.95);
+}
+
+.tab-bar-item.__state-disabled {
+  opacity: var(--state-element-disabled, 0.36);
+  cursor: not-allowed;
+}
+
+.tab-bar__handle {
+  width: 108px;
+  height: 4px;
+  margin: var(--space-2-5) auto var(--space-1);
+  border-radius: 12px;
+  background-color: var(--dynamic-text-and-icons-base-primary);
+  opacity: 0.18;
+}

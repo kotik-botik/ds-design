@@ -1,0 +1,148 @@
+/**
+ * OK Design System — FeedPost (molecule)
+ *
+ * FeedPost is a *composition*, not a new primitive. It's just a vertical
+ * stack of layout sections; the actual styling comes from the primitives
+ * placed inside:
+ *
+ *   <article class="feed-post">
+ *     <!-- Header: UniCell with avatar (left), name+time (center), button (right) -->
+ *     <div class="uni-cell-wrapper">
+ *       <div class="uni-cell-container __state-enabled">
+ *         <div class="uni-cell">
+ *           <div class="avatar __size-40"> … </div>
+ *           <div class="uni-cell-additional-content __align-self-center">
+ *             <div class="ds-title-s">Игорь Черняков</div>
+ *             <div class="ds-caption-m">12:48</div>
+ *           </div>
+ *           <div class="button-wrapper __size-28">
+ *             <button class="button-container __style-secondary">…Подписаться</button>
+ *           </div>
+ *         </div>
+ *       </div>
+ *     </div>
+ *
+ *     <div class="feed-post-category"><span class="category-path">…</span></div>
+ *     <p class="feed-post-text ds-body-m">…</p>
+ *     <div class="feed-post-media"> <img …> </div>
+ *     <div class="feed-post-actions">
+ *       <div class="button-wrapper __size-36"> … </div>
+ *       …
+ *     </div>
+ *   </article>
+ *
+ * STATES on the outer .feed-post:
+ *   .__state-loading  — shimmer over the media area
+ *
+ * No __state-enabled on the post itself — interactivity lives in the inner
+ * primitives (uni-cell header, button-wrappers in actions).
+ */
+
+.feed-post {
+  display: block;
+  background-color: var(--dynamic-surface-base-secondary);
+}
+
+/* ============================================================
+   CATEGORY ROW — wrapper around the .category-path primitive
+   ============================================================ */
+.feed-post-category {
+  padding: 0 var(--space-4) var(--space-1);
+}
+
+/* ============================================================
+   TEXT — apply .ds-body-m on the element itself for typography
+   ============================================================ */
+.feed-post-text {
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-2-5);
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+
+/* ============================================================
+   MEDIA — image / video preview slot
+   ============================================================ */
+.feed-post-media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--dynamic-surface-contrast-low);
+}
+
+.feed-post-media img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.feed-post-media__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.22);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: var(--ds-transition-opacity);
+}
+.feed-post-media__play:active { opacity: 0.7; }
+
+.feed-post-media__time {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  height: 24px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #FFFFFF;
+  font-family: var(--font-family);
+  font-size: var(--font-size-100);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Media shimmer for loading */
+.feed-post.__state-loading .feed-post-media {
+  position: relative;
+}
+.feed-post.__state-loading .feed-post-media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--dynamic-surface-special-overlay) 50%,
+    transparent 100%
+  );
+  opacity: 0.12;
+  pointer-events: none;
+  animation: ds-shimmer 2.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards infinite;
+}
+
+/* ============================================================
+   ACTIONS — flex row holding .button-wrapper instances
+   ============================================================ */
+.feed-post-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-top: 1px solid var(--dynamic-stroke-contrast-low);
+}
+
+.feed-post-actions__spacer {
+  flex: 1;
+}

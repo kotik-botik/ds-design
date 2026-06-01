@@ -1,0 +1,71 @@
+/**
+ * OK Design System — PageHeader
+ *
+ * Two stacked rows that form the top chrome of a mobile screen:
+ *   - .status-bar     — mock iOS status bar (time + signal/battery)
+ *   - .nav-bar        — avatar slot + title slot + actions slot
+ *
+ * Both pieces sit on --dynamic-surface-base-secondary. To make them stick
+ * at the top of the scrollable phone, wrap them in .phone-frame__sticky.
+ */
+
+/* ============================================================
+   STATUS BAR
+   ============================================================ */
+.status-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 var(--space-5) var(--space-2);
+  background-color: var(--dynamic-surface-base-secondary);
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-family: var(--font-family);
+}
+
+.status-bar__time {
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.status-bar__indicators {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+
+/* ============================================================
+   NAV BAR
+   ============================================================ */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 var(--space-4);
+  background-color: var(--dynamic-surface-base-secondary);
+}
+
+.nav-bar__leading,
+.nav-bar__trailing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nav-bar__title {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-family);
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--dynamic-text-and-icons-base-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
