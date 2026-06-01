@@ -47,6 +47,9 @@ ds-design/
 
 Тёмная тема: `__ui-theme_dark` вместо `__ui-theme_light`.
 
+Открой `preview.html` в браузере — там собраны примитивы, молекулы (как
+композиции примитивов) и собранный экран ленты в `phone-frame`.
+
 Чтобы использовать OK Sans вместо Onest, переопредели `--font-family`:
 
 ```css
@@ -95,7 +98,7 @@ ds-design/
 | `.pava`, `.ar-ava`, `.nb-ava`, `.cmt-ava` | `.avatar.__size-32/36/40/44` | loading / disabled |
 | `.ar-dot` | `.pulse-dot.__view-accent` | paused |
 | `.pcat` | `.category-path` | — |
-| `.post` | `.feed-post` (+ `.feed-post-header/category/text/media/actions`) | enabled / loading |
+| `.post` | `.feed-post` композиция: header = `.uni-cell-wrapper` + `.avatar` + `.button-wrapper`; actions = ряд `.button-wrapper.__size-36.__style-secondary` | loading |
 | `.tabs` + `.tab` | `.feed-tabs` + `.feed-tabs-tab.__state-on` | on / disabled / clicked |
 | `.tbar` + `.tbi` | `.tab-bar` + `.tab-bar-item.__state-on` | on / disabled |
 | `.sb` | `.status-bar` | — |

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru" class="__ui-theme_enabled __ui-theme_light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OK DS — Preview</title>
+<link rel="stylesheet" href="index.css">
+<style>
+  /*  Local preview-page styles — not part of the design system  */
+  body { padding: 24px; }
+  .preview-grid { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+  .preview-section {
+    background: var(--dynamic-surface-base-secondary);
+    border-radius: 16px;
+    padding: 20px;
+    min-width: 280px;
+  }
+  .preview-section h2 { margin: 0 0 16px; font-size: 17px; font-weight: 600; }
+  .preview-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .preview-label { font-size: 12px; color: var(--dynamic-text-and-icons-base-secondary); margin-bottom: 6px; }
+  .preview-stage { background: var(--dynamic-surface-base-primary); padding: 16px; border-radius: 12px; }
+
+  /*  Reusable inline svg sprite for the demos  */
+  .demo-icon { color: currentColor; }
+</style>
+</head>
+<body>
+
+<h1 class="ds-title-l" style="margin: 0 0 24px;">OK DS — Preview</h1>
+
+<div class="preview-grid">
+
+  <!-- ===================== PRIMITIVES ===================== -->
+
+  <section class="preview-section">
+    <h2>Avatar</h2>
+    <div class="preview-row">
+      <div class="avatar __size-24"></div>
+      <div class="avatar __size-32"></div>
+      <div class="avatar __size-36"></div>
+      <div class="avatar __size-40"></div>
+      <div class="avatar __size-44"></div>
+      <div class="avatar __size-48 __view-initials">АК</div>
+      <div class="avatar __size-56 __view-initials">ОК</div>
+    </div>
+    <div class="preview-label">__state-loading</div>
+    <div class="preview-row">
+      <div class="avatar __size-40 __state-loading"></div>
+    </div>
+  </section>
+
+  <section class="preview-section">
+    <h2>Button — sizes</h2>
+    <div class="preview-row">
+      <div class="button-wrapper __size-28">
+        <button class="button-container __style-primary"><span class="button-content">Primary 28</span></button>
+      </div>
+      <div class="button-wrapper __size-36">
+        <button class="button-container __style-primary"><span class="button-content">Primary 36</span></button>
+      </div>
+      <div class="button-wrapper __size-44">
+        <button class="button-container __style-primary"><span class="button-content">Primary 44</span></button>
+      </div>
+      <div class="button-wrapper __size-56">
+        <button class="button-container __style-primary"><span class="button-content">Primary 56</span></button>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 24px;">Button — styles</h2>
+    <div class="preview-row">
+      <div class="button-wrapper __size-36"><button class="button-container __style-primary"><span class="button-content">Primary</span></button></div>
+      <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content">Secondary</span></button></div>
+      <div class="button-wrapper __size-36"><button class="button-container __style-tertiary"><span class="button-content">Tertiary</span></button></div>
+      <div class="button-wrapper __size-36"><button class="button-container __style-negative"><span class="button-content">Negative</span></button></div>
+      <div class="button-wrapper __size-36"><button class="button-container __style-destructive"><span class="button-content">Destructive</span></button></div>
+    </div>
+
+    <h2 style="margin-top: 24px;">Button — states</h2>
+    <div class="preview-row">
+      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-loading"><span class="button-content">Loading</span></button></div>
+      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-disabled"><span class="button-content">Disabled</span></button></div>
+      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-highlighted"><span class="button-content">Highlighted</span></button></div>
+    </div>
+  </section>
+
+  <section class="preview-section">
+    <h2>ButtonInline</h2>
+    <div class="preview-row">
+      <div class="button-inline-wrapper __view-primary __size-16">
+        <button class="button-inline __size-16">Primary 16</button>
+      </div>
+      <div class="button-inline-wrapper __view-secondary __size-20">
+        <button class="button-inline __size-20">Secondary 20</button>
+      </div>
+      <div class="button-inline-wrapper __view-tertiary __size-24">
+        <button class="button-inline __size-24">Tertiary 24</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section">
+    <h2>PulseDot</h2>
+    <div class="preview-row">
+      <span class="pulse-dot __size-8"></span>
+      <span class="pulse-dot __size-12"></span>
+      <span class="pulse-dot __size-16"></span>
+      <span class="pulse-dot __view-positive"></span>
+      <span class="pulse-dot __view-info"></span>
+      <span class="pulse-dot __view-negative"></span>
+      <span class="pulse-dot __view-attention"></span>
+    </div>
+  </section>
+
+  <section class="preview-section">
+    <h2>CategoryPath</h2>
+    <div class="preview-row">
+      <span class="category-path">
+        <span class="category-path__item">Еда</span>
+        <span class="category-path__separator">›</span>
+        <span class="category-path__item">Рецепты</span>
+      </span>
+    </div>
+    <div class="preview-row">
+      <span class="category-path __size-13 __view-tertiary">
+        <span class="category-path__item">Дача</span>
+        <span class="category-path__separator">›</span>
+        <span class="category-path__item">Огород</span>
+        <span class="category-path__separator">›</span>
+        <span class="category-path__item">Помидоры</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- ===================== MOLECULES ===================== -->
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>ActivityRow — UniCell + Avatar + Button</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <div class="uni-cell-wrapper">
+        <div class="uni-cell-container __state-enabled">
+          <div class="uni-cell">
+            <div class="avatar __size-44 __view-initials" style="margin-right: 12px;">ТБ</div>
+            <div class="uni-cell-additional-content __align-self-center">
+              <div class="ds-body-m"><b>Тамара Белова</b> опубликовала фото — набрало 247 классов</div>
+            </div>
+            <div class="button-wrapper __size-28" style="margin-left: 12px; align-self: center;">
+              <button class="button-container __style-secondary"><span class="button-content">Смотреть</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>Comment — UniCell + Avatar</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <div class="uni-cell-wrapper">
+        <div class="uni-cell-container">
+          <div class="uni-cell">
+            <div class="avatar __size-36 __view-initials" style="margin-right: 10px;">МК</div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-caption-m-accent">Михаил К.</div>
+              <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">5 мин. назад</div>
+              <div class="ds-body-m" style="margin-top: 4px;">Отличный рецепт, спасибо! Сделал на ужин — вся семья в восторге.</div>
+              <div class="button-inline-wrapper __view-tertiary __size-16" style="margin-top: 6px;">
+                <button class="button-inline __size-16">🤍 0</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>GroupCard — UniCard composition</h2>
+    <div class="preview-stage">
+      <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary); margin-bottom: 8px;">Вступите в сообщество</div>
+      <div class="uni-card-wrapper __size-custom" style="--uni-card-size-custom: 100%;">
+        <div class="uni-card __state-enabled" style="border: 1.5px solid var(--dynamic-stroke-contrast-mid); border-radius: 12px; overflow: hidden; background: var(--dynamic-surface-base-secondary);">
+          <div class="uni-card-media" style="width: 100%; height: 100px; background: linear-gradient(135deg, #67B4CF, #3D8BA5); margin: 0;"></div>
+          <div class="uni-card-content" style="width: 100%; padding: 12px;">
+            <div class="ds-title-s">Любители рыбалки — Петербург</div>
+            <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary); margin-top: 3px;">48 320 участников · Закрытая группа</div>
+            <div class="button-wrapper __size-36 __full-width" style="display: block; margin-top: 10px;">
+              <button class="button-container __style-primary" style="width: 100%;"><span class="button-content">Вступить</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>FeedPost — primitives composition</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <article class="feed-post">
+        <!-- Header: uni-cell with avatar + meta + subscribe -->
+        <div class="uni-cell-wrapper">
+          <div class="uni-cell-container __state-enabled">
+            <div class="uni-cell">
+              <div class="avatar __size-40 __view-initials" style="margin-right: 10px;">ИЧ</div>
+              <div class="uni-cell-additional-content __align-self-center">
+                <div class="ds-title-s">Игорь Черняков</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">12:48</div>
+              </div>
+              <div class="button-wrapper __size-28" style="margin-left: 12px; align-self: center;">
+                <button class="button-container __style-secondary"><span class="button-content">Подписаться</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="feed-post-category">
+          <span class="category-path">
+            <span class="category-path__item">Еда</span>
+            <span class="category-path__separator">›</span>
+            <span class="category-path__item">Рецепты</span>
+          </span>
+        </div>
+
+        <p class="feed-post-text ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
+
+        <div class="feed-post-media" style="height: 220px; background: linear-gradient(135deg, #FF9558, #D76200);">
+          <button class="feed-post-media__play" aria-label="Play">▶</button>
+          <span class="feed-post-media__time">12:34</span>
+        </div>
+
+        <!-- Actions: just button-wrappers in a flex row -->
+        <div class="feed-post-actions">
+          <div class="button-wrapper __size-36">
+            <button class="button-container __style-secondary"><span class="button-content">❤ 1.2k</span></button>
+          </div>
+          <div class="button-wrapper __size-36">
+            <button class="button-container __style-secondary"><span class="button-content">💬 89</span></button>
+          </div>
+          <div class="button-wrapper __size-36">
+            <button class="button-container __style-secondary"><span class="button-content">👍 247</span></button>
+          </div>
+          <div class="feed-post-actions__spacer"></div>
+          <div class="button-wrapper __size-36">
+            <button class="button-container __style-secondary" aria-label="More" style="width: 36px;"><span class="button-content">⋯</span></button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>FeedTabs</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <div class="feed-tabs">
+        <button class="feed-tabs-tab __state-on">Лента</button>
+        <button class="feed-tabs-tab">Сегодня</button>
+        <button class="feed-tabs-tab">Подарки</button>
+        <button class="feed-tabs-tab">Обсуждение</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>TabBar</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <div class="tab-bar">
+        <div class="tab-bar__row">
+          <button class="tab-bar-item __state-on" aria-label="Лента">⌂</button>
+          <button class="tab-bar-item" aria-label="Подарки">🎁</button>
+          <button class="tab-bar-item" aria-label="Сообщения">✉</button>
+          <button class="tab-bar-item" aria-label="Видео">▶</button>
+          <button class="tab-bar-item" aria-label="Меню">≡</button>
+        </div>
+        <div class="tab-bar__handle"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>PageHeader (Status + Nav)</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <div class="status-bar">
+        <span class="status-bar__time">9:41</span>
+        <span class="status-bar__indicators">📶 􀛨 100%</span>
+      </div>
+      <div class="nav-bar">
+        <div class="nav-bar__leading">
+          <div class="avatar __size-36 __view-initials">АК</div>
+        </div>
+        <div class="nav-bar__trailing">
+          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">+</span></button></div>
+          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔔</span></button></div>
+          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔍</span></button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>CommentInput</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <div class="comment-input">
+        <div class="avatar __size-32 __view-initials">А</div>
+        <input class="comment-input__field" placeholder="Написать комментарий…">
+        <div class="button-wrapper __size-36">
+          <button class="button-container __style-primary" style="width: 36px; border-radius: 50%;" aria-label="Send">
+            <span class="button-content">↑</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ASSEMBLED SCREEN ===================== -->
+
+  <section class="preview-section" style="min-width: 407px; padding: 16px;">
+    <h2>Phone — assembled feed</h2>
+    <div class="phone-frame" style="height: 720px; min-height: 720px; border: 1px solid var(--dynamic-stroke-contrast-mid); border-radius: 24px;">
+
+      <div class="phone-frame__sticky">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">100%</span>
+        </div>
+        <div class="nav-bar">
+          <div class="nav-bar__leading">
+            <div class="avatar __size-36 __view-initials">АК</div>
+          </div>
+          <div class="nav-bar__trailing">
+            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">+</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔔</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔍</span></button></div>
+          </div>
+        </div>
+        <div class="feed-tabs">
+          <button class="feed-tabs-tab __state-on">Лента</button>
+          <button class="feed-tabs-tab">Сегодня</button>
+          <button class="feed-tabs-tab">Подарки</button>
+        </div>
+      </div>
+
+      <div class="phone-frame__feed">
+
+        <!-- Activity widget -->
+        <section style="background: var(--dynamic-surface-base-secondary); padding: 20px 0 8px;">
+          <div style="display:flex; align-items:center; gap:6px; padding: 0 16px 6px;">
+            <span class="ds-title-l">Вокруг вас сейчас</span>
+            <span class="pulse-dot"></span>
+          </div>
+          <div class="uni-cell-wrapper">
+            <div class="uni-cell-container __state-enabled">
+              <div class="uni-cell">
+                <div class="avatar __size-44 __view-initials" style="margin-right: 12px;">ТБ</div>
+                <div class="uni-cell-additional-content __align-self-center">
+                  <div class="ds-body-m"><b>Тамара Белова</b> опубликовала фото — набрало 247 классов</div>
+                </div>
+                <div class="button-wrapper __size-28" style="margin-left: 12px; align-self: center;">
+                  <button class="button-container __style-secondary"><span class="button-content">Смотреть</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="uni-cell-wrapper">
+            <div class="uni-cell-container __state-enabled">
+              <div class="uni-cell">
+                <div class="avatar __size-44 __view-initials" style="background: var(--base-blue-saturated-64); margin-right: 12px;">ЮМ</div>
+                <div class="uni-cell-additional-content __align-self-center">
+                  <div class="ds-body-m"><b>Юрий Макиненко</b> задаёт вопрос про счётчики воды</div>
+                </div>
+                <div class="button-wrapper __size-28" style="margin-left: 12px; align-self: center;">
+                  <button class="button-container __style-secondary"><span class="button-content">Ответить</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="phone-frame__gap"></div>
+
+        <!-- Feed post -->
+        <article class="feed-post">
+          <div class="uni-cell-wrapper">
+            <div class="uni-cell-container __state-enabled">
+              <div class="uni-cell">
+                <div class="avatar __size-40 __view-initials" style="margin-right: 10px;">ИЧ</div>
+                <div class="uni-cell-additional-content __align-self-center">
+                  <div class="ds-title-s">Игорь Черняков</div>
+                  <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">12:48</div>
+                </div>
+                <div class="button-wrapper __size-28" style="margin-left: 12px; align-self: center;">
+                  <button class="button-container __style-secondary"><span class="button-content">Подписаться</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feed-post-category">
+            <span class="category-path">
+              <span class="category-path__item">Еда</span>
+              <span class="category-path__separator">›</span>
+              <span class="category-path__item">Рецепты</span>
+            </span>
+          </div>
+          <p class="feed-post-text ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
+          <div class="feed-post-media" style="height: 220px; background: linear-gradient(135deg, #FF9558, #D76200);">
+            <button class="feed-post-media__play" aria-label="Play">▶</button>
+            <span class="feed-post-media__time">12:34</span>
+          </div>
+          <div class="feed-post-actions">
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary __view-liked"><span class="button-content">❤ 1.2k</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content">💬 89</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content">👍 247</span></button></div>
+            <div class="feed-post-actions__spacer"></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content">⋯</span></button></div>
+          </div>
+        </article>
+
+        <div class="phone-frame__gap"></div>
+
+        <!-- Group recommendation -->
+        <div style="background: var(--dynamic-surface-base-secondary); padding: 16px;">
+          <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary); margin-bottom: 8px;">Вступите в сообщество</div>
+          <div class="uni-card-wrapper __size-custom" style="--uni-card-size-custom: 100%;">
+            <div class="uni-card __state-enabled" style="border: 1.5px solid var(--dynamic-stroke-contrast-mid); border-radius: 12px; overflow: hidden; background: var(--dynamic-surface-base-secondary);">
+              <div class="uni-card-media" style="width: 100%; height: 100px; background: linear-gradient(135deg, #67B4CF, #3D8BA5); margin: 0;"></div>
+              <div class="uni-card-content" style="width: 100%; padding: 12px;">
+                <div class="ds-title-s">Любители рыбалки — Петербург</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary); margin-top: 3px;">48 320 участников · Закрытая группа</div>
+                <div class="button-wrapper __size-36 __full-width" style="display: block; margin-top: 10px;">
+                  <button class="button-container __style-primary" style="width: 100%;"><span class="button-content">Вступить</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="phone-frame__tab-bar">
+        <div class="tab-bar">
+          <div class="tab-bar__row">
+            <button class="tab-bar-item __state-on" aria-label="Лента">⌂</button>
+            <button class="tab-bar-item" aria-label="Подарки">🎁</button>
+            <button class="tab-bar-item" aria-label="Сообщения">✉</button>
+            <button class="tab-bar-item" aria-label="Видео">▶</button>
+            <button class="tab-bar-item" aria-label="Меню">≡</button>
+          </div>
+          <div class="tab-bar__handle"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

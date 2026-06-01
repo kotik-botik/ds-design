@@ -1,90 +1,66 @@
 /**
- * OK Design System — FeedPost (composition)
+ * OK Design System — FeedPost (molecule)
  *
- * Vertical post layout used in the social feed. Composes existing primitives:
- *   - .avatar          for author / community image
- *   - .button-wrapper  for the subscribe button and the "more" icon-button
- *   - .button-wrapper  (.__style-secondary, .__size-36) for like / comment / klass
- *   - .category-path   for the breadcrumb above the post text
+ * FeedPost is a *composition*, not a new primitive. It's just a vertical
+ * stack of layout sections; the actual styling comes from the primitives
+ * placed inside:
  *
- * STATES:  .__state-enabled  — whole card becomes pressable (scale on click)
- *          .__state-loading  — shimmer over media area
+ *   <article class="feed-post">
+ *     <!-- Header: UniCell with avatar (left), name+time (center), button (right) -->
+ *     <div class="uni-cell-wrapper">
+ *       <div class="uni-cell-container __state-enabled">
+ *         <div class="uni-cell">
+ *           <div class="avatar __size-40"> … </div>
+ *           <div class="uni-cell-additional-content __align-self-center">
+ *             <div class="ds-title-s">Игорь Черняков</div>
+ *             <div class="ds-caption-m">12:48</div>
+ *           </div>
+ *           <div class="button-wrapper __size-28">
+ *             <button class="button-container __style-secondary">…Подписаться</button>
+ *           </div>
+ *         </div>
+ *       </div>
+ *     </div>
  *
- * No size variants — width is driven by the parent container (typically the
- * .phone-frame at 375px).
+ *     <div class="feed-post-category"><span class="category-path">…</span></div>
+ *     <p class="feed-post-text ds-body-m">…</p>
+ *     <div class="feed-post-media"> <img …> </div>
+ *     <div class="feed-post-actions">
+ *       <div class="button-wrapper __size-36"> … </div>
+ *       …
+ *     </div>
+ *   </article>
+ *
+ * STATES on the outer .feed-post:
+ *   .__state-loading  — shimmer over the media area
+ *
+ * No __state-enabled on the post itself — interactivity lives in the inner
+ * primitives (uni-cell header, button-wrappers in actions).
  */
 
 .feed-post {
-  position: relative;
   display: block;
   background-color: var(--dynamic-surface-base-secondary);
-  transition: var(--ds-transition-transform);
-}
-
-.feed-post.__state-enabled {
-  cursor: pointer;
-}
-.feed-post.__state-enabled:active,
-.feed-post.__state-enabled.__clicked {
-  transform: scale(0.98);
 }
 
 /* ============================================================
-   HEADER — avatar + author meta + trailing action (subscribe / more)
-   ============================================================ */
-.feed-post-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2-5);
-  padding: var(--space-3) var(--space-4) var(--space-1-5);
-}
-
-.feed-post-header__meta {
-  flex: 1;
-  min-width: 0;
-}
-
-.feed-post-header__name {
-  color: var(--dynamic-text-and-icons-base-primary);
-  font-family: var(--font-family);
-  font-size: var(--font-size-200);
-  line-height: var(--line-height-200);
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.feed-post-header__time {
-  margin-top: 2px;
-  color: var(--dynamic-text-and-icons-base-secondary);
-  font-family: var(--font-family);
-  font-size: var(--font-size-100);
-  line-height: var(--line-height-100);
-  font-weight: 400;
-}
-
-/* ============================================================
-   CATEGORY ROW — wrapper around .category-path
+   CATEGORY ROW — wrapper around the .category-path primitive
    ============================================================ */
 .feed-post-category {
   padding: 0 var(--space-4) var(--space-1);
 }
 
 /* ============================================================
-   TEXT
+   TEXT — apply .ds-body-m on the element itself for typography
    ============================================================ */
 .feed-post-text {
+  margin: 0;
   padding: 0 var(--space-4) var(--space-2-5);
   color: var(--dynamic-text-and-icons-base-primary);
-  font-family: var(--font-family);
-  font-size: var(--font-size-200);
-  line-height: 1.45;
-  font-weight: 400;
 }
 
 /* ============================================================
-   MEDIA — image or video preview
+   MEDIA — image / video preview slot
    ============================================================ */
 .feed-post-media {
   position: relative;
@@ -157,8 +133,7 @@
 }
 
 /* ============================================================
-   ACTIONS — Like / Comment / Klass + Share / More
-   Buttons inside are .button-wrapper.__size-36.__style-secondary
+   ACTIONS — flex row holding .button-wrapper instances
    ============================================================ */
 .feed-post-actions {
   display: flex;
@@ -172,8 +147,7 @@
   flex: 1;
 }
 
-/* Liked state for an action button — used by the heart action.
-   Toggle by adding .__view-liked to the .button-container. */
+/* Liked toggle for a button-container inside the actions row */
 .feed-post-actions .button-container.__view-liked {
   --button-color: var(--dynamic-text-and-icons-status-accent);
   --button-background-color: var(--base-orange-saturated-translucent-12);
