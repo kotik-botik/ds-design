@@ -2,8 +2,9 @@
  * OK Design System — PhoneFrame
  *
  * 375px-wide mobile viewport used for static prototypes / previews.
- * Holds a sticky header area at the top, a scrollable feed in the middle,
- * and reserves space for a fixed bottom .tab-bar.
+ * Holds a sticky header at the top, a scrollable feed in the middle, and
+ * a sticky-bottom .tab-bar. Both sticky elements take their own space in
+ * the flex column, so no extra padding is required around the feed.
  *
  * No states — this is a layout primitive.
  */
@@ -31,9 +32,9 @@
   flex-shrink: 0;
 }
 
-/* Scrollable content area. Pad-bottom for the fixed tab-bar (≈86px). */
+/* Scrollable content area. */
 .phone-frame__feed {
-  padding-bottom: 86px;
+  flex: 1;
 }
 
 /* 8px separator between feed cards (background of phone shows through) */

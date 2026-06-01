@@ -154,6 +154,16 @@
 }
 
 /* ============================================================
+   VIEW MODIFIERS — orthogonal to style, e.g. toggled / liked.
+   ============================================================ */
+
+/* Liked — accent-tinted secondary/tertiary; pair with any __style-*. */
+.button-container.__view-liked {
+  --button-color: var(--dynamic-text-and-icons-status-accent);
+  --button-background-color: var(--base-orange-saturated-translucent-12);
+}
+
+/* ============================================================
    HOVER / PRESS OVERLAY (::after pseudo)
    ============================================================ */
 .button-container:not(:disabled):not(.__state-loading):not(.__state-disabled)::after {
