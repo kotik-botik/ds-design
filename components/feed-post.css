@@ -1,0 +1,180 @@
+/**
+ * OK Design System — FeedPost (composition)
+ *
+ * Vertical post layout used in the social feed. Composes existing primitives:
+ *   - .avatar          for author / community image
+ *   - .button-wrapper  for the subscribe button and the "more" icon-button
+ *   - .button-wrapper  (.__style-secondary, .__size-36) for like / comment / klass
+ *   - .category-path   for the breadcrumb above the post text
+ *
+ * STATES:  .__state-enabled  — whole card becomes pressable (scale on click)
+ *          .__state-loading  — shimmer over media area
+ *
+ * No size variants — width is driven by the parent container (typically the
+ * .phone-frame at 375px).
+ */
+
+.feed-post {
+  position: relative;
+  display: block;
+  background-color: var(--dynamic-surface-base-secondary);
+  transition: var(--ds-transition-transform);
+}
+
+.feed-post.__state-enabled {
+  cursor: pointer;
+}
+.feed-post.__state-enabled:active,
+.feed-post.__state-enabled.__clicked {
+  transform: scale(0.98);
+}
+
+/* ============================================================
+   HEADER — avatar + author meta + trailing action (subscribe / more)
+   ============================================================ */
+.feed-post-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  padding: var(--space-3) var(--space-4) var(--space-1-5);
+}
+
+.feed-post-header__meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.feed-post-header__name {
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-200);
+  line-height: var(--line-height-200);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feed-post-header__time {
+  margin-top: 2px;
+  color: var(--dynamic-text-and-icons-base-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-100);
+  line-height: var(--line-height-100);
+  font-weight: 400;
+}
+
+/* ============================================================
+   CATEGORY ROW — wrapper around .category-path
+   ============================================================ */
+.feed-post-category {
+  padding: 0 var(--space-4) var(--space-1);
+}
+
+/* ============================================================
+   TEXT
+   ============================================================ */
+.feed-post-text {
+  padding: 0 var(--space-4) var(--space-2-5);
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-200);
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+/* ============================================================
+   MEDIA — image or video preview
+   ============================================================ */
+.feed-post-media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--dynamic-surface-contrast-low);
+}
+
+.feed-post-media img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.feed-post-media__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.22);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: var(--ds-transition-opacity);
+}
+.feed-post-media__play:active { opacity: 0.7; }
+
+.feed-post-media__time {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  height: 24px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #FFFFFF;
+  font-family: var(--font-family);
+  font-size: var(--font-size-100);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Media shimmer for loading */
+.feed-post.__state-loading .feed-post-media {
+  position: relative;
+}
+.feed-post.__state-loading .feed-post-media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--dynamic-surface-special-overlay) 50%,
+    transparent 100%
+  );
+  opacity: 0.12;
+  pointer-events: none;
+  animation: ds-shimmer 2.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards infinite;
+}
+
+/* ============================================================
+   ACTIONS — Like / Comment / Klass + Share / More
+   Buttons inside are .button-wrapper.__size-36.__style-secondary
+   ============================================================ */
+.feed-post-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-top: 1px solid var(--dynamic-stroke-contrast-low);
+}
+
+.feed-post-actions__spacer {
+  flex: 1;
+}
+
+/* Liked state for an action button — used by the heart action.
+   Toggle by adding .__view-liked to the .button-container. */
+.feed-post-actions .button-container.__view-liked {
+  --button-color: var(--dynamic-text-and-icons-status-accent);
+  --button-background-color: var(--base-orange-saturated-translucent-12);
+}

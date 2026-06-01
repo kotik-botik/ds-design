@@ -1,0 +1,86 @@
+/**
+ * OK Design System — Avatar Component
+ *
+ * Round avatar with either an image or text fallback (initials).
+ * Falls back to a neutral overlay surface when no image is provided.
+ *
+ * SIZES:   .__size-24 | .__size-32 | .__size-36 | .__size-40 (default)
+ *          .__size-44 | .__size-48 | .__size-56
+ *
+ * VIEWS:   .__view-default (image) | .__view-initials (text fallback)
+ *
+ * STATES:  .__state-loading  — shimmer sweep
+ *          .__state-disabled — opacity 0.36
+ */
+
+.avatar {
+  --avatar-size: 40px;
+  --avatar-bg: var(--dynamic-surface-contrast-low);
+  --avatar-color: var(--dynamic-text-and-icons-base-primary);
+  --avatar-font-size: 14px;
+  --overlay-color: var(--dynamic-surface-special-overlay);
+
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--avatar-bg);
+  color: var(--avatar-color);
+  font-family: var(--font-family);
+  font-size: var(--avatar-font-size);
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Size variants — keep visual rhythm with the 4px grid */
+.avatar.__size-24 { --avatar-size: 24px; --avatar-font-size: 11px; }
+.avatar.__size-32 { --avatar-size: 32px; --avatar-font-size: 13px; }
+.avatar.__size-36 { --avatar-size: 36px; --avatar-font-size: 14px; }
+.avatar.__size-40 { --avatar-size: 40px; --avatar-font-size: 14px; }
+.avatar.__size-44 { --avatar-size: 44px; --avatar-font-size: 15px; }
+.avatar.__size-48 { --avatar-size: 48px; --avatar-font-size: 17px; }
+.avatar.__size-56 { --avatar-size: 56px; --avatar-font-size: 19px; }
+
+/* Initials fallback view */
+.avatar.__view-initials {
+  --avatar-bg: var(--static-surface-status-accent);
+  --avatar-color: var(--static-text-and-icons-base-inverse-primary);
+}
+
+/* Loading state — shimmer */
+.avatar.__state-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 33.33%;
+  height: 100%;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--overlay-color) 50.5%,
+    transparent 100%
+  );
+  opacity: 0.12;
+  pointer-events: none;
+  animation: ds-shimmer 2.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards infinite;
+}
+
+/* Disabled */
+.avatar.__state-disabled {
+  opacity: var(--state-element-disabled, 0.36);
+  pointer-events: none;
+}

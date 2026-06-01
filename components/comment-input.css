@@ -1,0 +1,52 @@
+/**
+ * OK Design System — CommentInput
+ *
+ * Bottom-anchored bar with an avatar slot, a text input and a send button.
+ * Used inside the comments bottom-sheet.
+ *
+ * STATES on the wrapper:
+ *   .__state-disabled  — input + send become non-interactive
+ *   .__state-focused   — applied while the input is focused
+ *
+ * The send button is a standard .button-wrapper (round, primary, size 36).
+ */
+
+.comment-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2-5) var(--space-3);
+  padding-bottom: max(var(--space-2-5), env(safe-area-inset-bottom));
+  background-color: var(--dynamic-surface-base-secondary);
+  border-top: 1px solid var(--dynamic-stroke-contrast-low);
+}
+
+.comment-input__field {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--space-4);
+  border: 0;
+  outline: none;
+  border-radius: 20px;
+  background-color: var(--dynamic-surface-contrast-low);
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  line-height: 20px;
+  transition: background-color var(--ds-animation-duration) var(--ds-animation-easing);
+}
+
+.comment-input__field::placeholder {
+  color: var(--dynamic-text-and-icons-base-secondary);
+}
+
+.comment-input.__state-focused .comment-input__field,
+.comment-input__field:focus-visible {
+  background-color: var(--dynamic-surface-contrast-low-hover);
+}
+
+.comment-input.__state-disabled {
+  pointer-events: none;
+  opacity: var(--state-element-disabled, 0.36);
+}

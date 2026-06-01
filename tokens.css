@@ -1,33 +1,3 @@
-  --dynamic-surface-overlay-base-inverse-hover:  rgba(255, 255, 255, 0.12);
-  --dynamic-surface-overlay-base-inverse-press:  rgba(255, 255, 255, 0.16);
-
-  /* Text & Icons */
-  --dynamic-text-and-icons-base-primary:          #2E2F33;
-  --dynamic-text-and-icons-base-primary-hover:    rgba(46, 47, 51, 0.88);
-  --dynamic-text-and-icons-base-primary-press:    rgba(46, 47, 51, 0.76);
-  --dynamic-text-and-icons-base-secondary:        rgba(46, 47, 51, 0.64);
-  --dynamic-text-and-icons-base-secondary-hover:  rgba(46, 47, 51, 0.76);
-  --dynamic-text-and-icons-base-secondary-press:  rgba(46, 47, 51, 0.88);
-  --dynamic-text-and-icons-base-tertiary:         rgba(46, 47, 51, 0.48);
-  --dynamic-text-and-icons-base-inverse-primary:  #FFFFFF;
-  --dynamic-text-and-icons-base-inverse-secondary: rgba(255, 255, 255, 0.64);
-  --dynamic-text-and-icons-base-inverse-tertiary: rgba(255, 255, 255, 0.48);
-
-  --dynamic-text-and-icons-status-accent:   #D76200;
-  --dynamic-text-and-icons-status-accent-hover:  #FF7700;
-  --dynamic-text-and-icons-status-attention: #B7800A;
-  --dynamic-text-and-icons-status-info:     #018DEB;
-  --dynamic-text-and-icons-status-negative: #EA4648;
-  --dynamic-text-and-icons-status-positive: #009A5E;
-
-  /* Strokes */
-  --dynamic-stroke-contrast-low:  rgba(131, 102, 86, 0.08);
-  --dynamic-stroke-contrast-mid:  rgba(131, 102, 86, 0.16);
-  --dynamic-stroke-contrast-high: rgba(131, 102, 86, 0.36);
-  --dynamic-stroke-status-accent:   #D76200;
-  --dynamic-stroke-status-negative: #EA4648;
-  --dynamic-stroke-status-positive: #009A5E;
-  --dynamic-stroke-status-info:     #018DEB;
 /**
  * OK Design System — Tokens
  * Source: @ok/ds-tokens + odnoklassniki-frontend-common
@@ -65,8 +35,7 @@
    Font: Onest, fallback: Arial, Helvetica Neue, Helvetica, sans-serif
    ============================================================ */
 :root {
-  --font-family: "OK Sans Text", "OK Sans Display", Onest, Arial, "Helvetica Neue", Helvetica, sans-serif;
-  --font-family-display: "OK Sans Display", "OK Sans Text", Onest, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-family: Onest, Arial, "Helvetica Neue", Helvetica, sans-serif;
 
   /* Font sizes */
   --font-size-50:  11px;
@@ -431,34 +400,4 @@
 :root {
   --dynamic-cell-view-horizontal-default: 16px;
   --dynamic-cell-view-vertical-default:   12px;
-}  --dynamic-stroke-status-attention: #B7800A;
 }
-
-/* ============================================================
-   SEMANTIC COLOR TOKENS — DARK THEME
-   Applied on :root.__ui-theme_enabled.__ui-theme_dark
-   ============================================================ */
-:root.__ui-theme_enabled.__ui-theme_dark {
-  --dynamic-surface-base-primary:          #1A1A1C;
-  --dynamic-surface-base-secondary:        #2B2B2E;
-  --dynamic-surface-base-tertiary:         #1A1A1C;
-  --dynamic-surface-base-quaternary:       #38383B;
-  --dynamic-surface-base-inverse-primary:  #FFFFFF;
-  --dynamic-surface-base-inverse-secondary: rgba(255, 255, 255, 0.88);
-
-  --dynamic-surface-contrast-low:          rgba(124, 124, 138, 0.12);
-  --dynamic-surface-contrast-low-hover:    rgba(124, 124, 138, 0.16);
-  --dynamic-surface-contrast-mid:          rgba(124, 124, 138, 0.24);
-  --dynamic-surface-contrast-high:         rgba(124, 124, 138, 0.36);
-  --dynamic-surface-contrast-inverse-low:  rgba(131, 102, 86, 0.12);
-  --dynamic-surface-contrast-inverse-mid:  rgba(131, 102, 86, 0.24);
-  --dynamic-surface-contrast-inverse-high: rgba(131, 102, 86, 0.36);
-
-  --dynamic-surface-special-overlay:      #7C7C8A;
-  --dynamic-surface-overlay-hover:         rgba(124, 124, 138, 0.12);
-  --dynamic-surface-overlay-press:         rgba(124, 124, 138, 0.16);
-  --dynamic-surface-overlay-base-hover:    rgba(255, 255, 255, 0.12);
-  --dynamic-surface-overlay-base-press:    rgba(255, 255, 255, 0.16);
-  --dynamic-surface-overlay-base-inverse-hover:  rgba(46, 47, 51, 0.12);
-  --dynamic-surface-overlay-base-inverse-press:  rgba(46, 47, 51, 0.16);
-
