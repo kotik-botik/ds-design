@@ -146,13 +146,51 @@ transition: [property] 500ms cubic-bezier(0, -0.3, 0.5, 1.3)
 
 ## Иконки
 
-Иконки хранятся как SVG в dev-репо:
+В репо лежит набор SVG, вытащенных из Lenta-прототипа, под `assets/icons/`.
+Все иконки используют `currentColor`, чтобы перекрашиваться через CSS.
+
+| Файл | viewBox | Назначение в прототипе |
+|---|---|---|
+| `star.svg` | 24×24 | Like / Класс! (filled-on-press) |
+| `comment.svg` | 24×24 | Открыть комментарии |
+| `thumb-up.svg` | 24×24 | Класс (thumb-up reaction) |
+| `dots-horizontal.svg` | 24×24 | Меню «Ещё» |
+| `plus.svg` | 24×24 | Создать пост |
+| `bell.svg` | 24×24 | Уведомления |
+| `search.svg` | 24×24 | Поиск |
+| `arrow-left.svg` | 24×24 | Назад (в шторке) |
+| `send.svg` | 24×24 | Отправить комментарий |
+| `play.svg` | 24×24 | Play-overlay на видео |
+| `info-circle.svg` | 24×24 | Иконка-аватар «ОК Новости» |
+| `chevron-right.svg` | 8×13 | Шеврон в «Вокруг вас сейчас» |
+| `settings.svg` | 32×32 | Настройки ленты (sliders) |
+| `tab-home.svg` | 32×32 | Bottom tab — Лента |
+| `tab-book.svg` | 32×32 | Bottom tab — Дневник |
+| `tab-mail.svg` | 32×32 | Bottom tab — Сообщения |
+| `tab-video.svg` | 32×32 | Bottom tab — Видео |
+| `tab-menu.svg` | 32×32 | Bottom tab — Меню |
+| `status-wifi.svg` | 16×12 | Status bar — Wi-Fi |
+| `status-signal.svg` | 17×12 | Status bar — сеть |
+| `status-battery.svg` | 25×12 | Status bar — батарея |
+
+Использование — два способа:
+
+**1. Inline SVG (полный контроль, рекомендуется для приложения):**
+
+```html
+<span class="icon __size-20">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="…"/></svg>
+</span>
+```
+
+**2. Внешний SVG через mask (короче, но теряет multi-fill knockouts):**
+
+```html
+<span class="icon __size-20 __src"
+      style="--icon-src: url('assets/icons/star.svg')"></span>
+```
+
+Размеры через `.__size-12 / 16 / 20 / 24 / 28 / 32 / 36 / 40 / 44 / 48 / 56`.
+
+Дополнительно — канонический OK DS набор (~250 иконок) лежит в dev-репо:
 `design-system/assets/icons/glyphs/{size}/glyph_{name}_{size}.svg`
-
-Размеры: 12 / 16-20 (dual) / 20 / 24 / 24-48 (dual) / 48.
-
-Для прототипа — забирать нужные SVG напрямую из GitLab:
-
-```
-https://gitlab.corp.mail.ru/ok/ODKL/odnoklassniki-frontend-common/-/raw/master/design-system/assets/icons/glyphs/16-20/glyph_heart_16_20.svg
-```

@@ -111,6 +111,77 @@
     </div>
   </section>
 
+  <section class="preview-section" style="min-width: 360px;">
+    <h2>Icons (assets/icons/*.svg)</h2>
+    <div class="preview-label">Loaded as external SVG via <code>.icon.__src</code> + <code>--icon-src</code>. Inherit currentColor.</div>
+    <div class="preview-row" style="font-size: 11px; color: var(--dynamic-text-and-icons-base-secondary);">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/star.svg')"></span>star
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment.svg')"></span>comment
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/thumb-up.svg')"></span>thumb-up
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/dots-horizontal.svg')"></span>dots
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/plus.svg')"></span>plus
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/bell.svg')"></span>bell
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/search.svg')"></span>search
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/arrow-left.svg')"></span>arrow-left
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/send.svg')"></span>send
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-24 __src" style="--icon-src:url('assets/icons/play.svg')"></span>play
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/info-circle.svg')"></span>info
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-12 __src" style="--icon-src:url('assets/icons/chevron-right.svg')"></span>chevron
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-32 __src" style="--icon-src:url('assets/icons/settings.svg')"></span>settings
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-home.svg')"></span>tab-home
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-book.svg')"></span>tab-book
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-mail.svg')"></span>tab-mail
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-video.svg')"></span>tab-video
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-menu.svg')"></span>tab-menu
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __src" style="width:16px;height:12px;--icon-src:url('assets/icons/status-wifi.svg')"></span>wifi
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __src" style="width:17px;height:12px;--icon-src:url('assets/icons/status-signal.svg')"></span>signal
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;">
+        <span class="icon __src" style="width:25px;height:12px;--icon-src:url('assets/icons/status-battery.svg')"></span>battery
+      </div>
+    </div>
+    <div class="preview-label" style="margin-top:12px;">В OK.ru like-кнопка — это <code>thumb-up</code>, а избранное / Класс! — <code>star</code>.</div>
+  </section>
+
   <section class="preview-section">
     <h2>CategoryPath</h2>
     <div class="preview-row">
@@ -223,24 +294,26 @@
         <p class="feed-post-text ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
 
         <div class="feed-post-media" style="height: 220px; background: linear-gradient(135deg, #FF9558, #D76200);">
-          <button class="feed-post-media__play" aria-label="Play">▶</button>
+          <button class="feed-post-media__play" aria-label="Play">
+          <span class="icon __size-24 __src" style="--icon-src:url('assets/icons/play.svg')"></span>
+        </button>
           <span class="feed-post-media__time">12:34</span>
         </div>
 
         <!-- Actions: just button-wrappers in a flex row -->
         <div class="feed-post-actions">
           <div class="button-wrapper __size-36">
-            <button class="button-container __style-secondary"><span class="button-content">❤ 1.2k</span></button>
+            <button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/star.svg')"></span>&nbsp;1.2k</span></button>
           </div>
           <div class="button-wrapper __size-36">
-            <button class="button-container __style-secondary"><span class="button-content">💬 89</span></button>
+            <button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment.svg')"></span>&nbsp;89</span></button>
           </div>
           <div class="button-wrapper __size-36">
-            <button class="button-container __style-secondary"><span class="button-content">👍 247</span></button>
+            <button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/thumb-up.svg')"></span>&nbsp;247</span></button>
           </div>
           <div class="feed-post-actions__spacer"></div>
           <div class="button-wrapper __size-36">
-            <button class="button-container __style-secondary" aria-label="More" style="width: 36px;"><span class="button-content">⋯</span></button>
+            <button class="button-container __style-secondary" aria-label="More" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/dots-horizontal.svg')"></span></span></button>
           </div>
         </div>
       </article>
@@ -264,11 +337,11 @@
     <div class="preview-stage" style="padding: 0;">
       <div class="tab-bar">
         <div class="tab-bar__row">
-          <button class="tab-bar-item __state-on" aria-label="Лента">⌂</button>
-          <button class="tab-bar-item" aria-label="Подарки">🎁</button>
-          <button class="tab-bar-item" aria-label="Сообщения">✉</button>
-          <button class="tab-bar-item" aria-label="Видео">▶</button>
-          <button class="tab-bar-item" aria-label="Меню">≡</button>
+          <button class="tab-bar-item __state-on" aria-label="Лента"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-home.svg')"></span></button>
+          <button class="tab-bar-item" aria-label="Дневник"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-book.svg')"></span></button>
+          <button class="tab-bar-item" aria-label="Сообщения"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-mail.svg')"></span></button>
+          <button class="tab-bar-item" aria-label="Видео"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-video.svg')"></span></button>
+          <button class="tab-bar-item" aria-label="Меню"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-menu.svg')"></span></button>
         </div>
         <div class="tab-bar__handle"></div>
       </div>
@@ -280,16 +353,20 @@
     <div class="preview-stage" style="padding: 0;">
       <div class="status-bar">
         <span class="status-bar__time">9:41</span>
-        <span class="status-bar__indicators">📶 􀛨 100%</span>
+        <span class="status-bar__indicators">
+          <span class="icon __src" style="width:16px;height:12px;--icon-src:url('assets/icons/status-wifi.svg')"></span>
+          <span class="icon __src" style="width:17px;height:12px;--icon-src:url('assets/icons/status-signal.svg')"></span>
+          <span class="icon __src" style="width:25px;height:12px;--icon-src:url('assets/icons/status-battery.svg')"></span>
+        </span>
       </div>
       <div class="nav-bar">
         <div class="nav-bar__leading">
           <div class="avatar __size-36 __view-initials">АК</div>
         </div>
         <div class="nav-bar__trailing">
-          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">+</span></button></div>
-          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔔</span></button></div>
-          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔍</span></button></div>
+          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Создать"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/plus.svg')"></span></span></button></div>
+          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Уведомления"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/bell.svg')"></span></span></button></div>
+          <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Поиск"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/search.svg')"></span></span></button></div>
         </div>
       </div>
     </div>
@@ -303,7 +380,7 @@
         <input class="comment-input__field" placeholder="Написать комментарий…">
         <div class="button-wrapper __size-36">
           <button class="button-container __style-primary" style="width: 36px; border-radius: 50%;" aria-label="Send">
-            <span class="button-content">↑</span>
+            <span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/send.svg')"></span></span>
           </button>
         </div>
       </div>
@@ -319,16 +396,20 @@
       <div class="phone-frame__sticky">
         <div class="status-bar">
           <span class="status-bar__time">9:41</span>
-          <span class="status-bar__indicators">100%</span>
+          <span class="status-bar__indicators">
+            <span class="icon __src" style="width:16px;height:12px;--icon-src:url('assets/icons/status-wifi.svg')"></span>
+            <span class="icon __src" style="width:17px;height:12px;--icon-src:url('assets/icons/status-signal.svg')"></span>
+            <span class="icon __src" style="width:25px;height:12px;--icon-src:url('assets/icons/status-battery.svg')"></span>
+          </span>
         </div>
         <div class="nav-bar">
           <div class="nav-bar__leading">
             <div class="avatar __size-36 __view-initials">АК</div>
           </div>
           <div class="nav-bar__trailing">
-            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">+</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔔</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;"><span class="button-content">🔍</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Создать"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/plus.svg')"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Уведомления"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/bell.svg')"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Поиск"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/search.svg')"></span></span></button></div>
           </div>
         </div>
         <div class="feed-tabs">
@@ -401,15 +482,17 @@
           </div>
           <p class="feed-post-text ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
           <div class="feed-post-media" style="height: 220px; background: linear-gradient(135deg, #FF9558, #D76200);">
-            <button class="feed-post-media__play" aria-label="Play">▶</button>
+            <button class="feed-post-media__play" aria-label="Play">
+          <span class="icon __size-24 __src" style="--icon-src:url('assets/icons/play.svg')"></span>
+        </button>
             <span class="feed-post-media__time">12:34</span>
           </div>
           <div class="feed-post-actions">
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary __view-liked"><span class="button-content">❤ 1.2k</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content">💬 89</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content">👍 247</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary __view-liked"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/star.svg')"></span>&nbsp;1.2k</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment.svg')"></span>&nbsp;89</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/thumb-up.svg')"></span>&nbsp;247</span></button></div>
             <div class="feed-post-actions__spacer"></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content">⋯</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/dots-horizontal.svg')"></span></span></button></div>
           </div>
         </article>
 
@@ -437,11 +520,11 @@
       <div class="phone-frame__tab-bar">
         <div class="tab-bar">
           <div class="tab-bar__row">
-            <button class="tab-bar-item __state-on" aria-label="Лента">⌂</button>
-            <button class="tab-bar-item" aria-label="Подарки">🎁</button>
-            <button class="tab-bar-item" aria-label="Сообщения">✉</button>
-            <button class="tab-bar-item" aria-label="Видео">▶</button>
-            <button class="tab-bar-item" aria-label="Меню">≡</button>
+            <button class="tab-bar-item __state-on" aria-label="Лента"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-home.svg')"></span></button>
+            <button class="tab-bar-item" aria-label="Дневник"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-book.svg')"></span></button>
+            <button class="tab-bar-item" aria-label="Сообщения"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-mail.svg')"></span></button>
+            <button class="tab-bar-item" aria-label="Видео"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-video.svg')"></span></button>
+            <button class="tab-bar-item" aria-label="Меню"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-menu.svg')"></span></button>
           </div>
           <div class="tab-bar__handle"></div>
         </div>

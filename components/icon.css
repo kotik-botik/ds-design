@@ -45,6 +45,26 @@
 }
 
 /* ============================================================
+   EXTERNAL SVG VIA MASK
+   Use this when the SVG lives in /assets/icons and you still want it
+   to inherit currentColor for theme switching:
+
+   <span class="icon __size-20 __src" style="--icon-src: url('assets/icons/star.svg')"></span>
+
+   Caveat: mask uses only the silhouette, so multi-fill knockouts
+   (e.g. white "holes" inside settings.svg) collapse to a solid shape.
+   ============================================================ */
+.icon.__src::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  -webkit-mask: var(--icon-src) center / contain no-repeat;
+          mask: var(--icon-src) center / contain no-repeat;
+}
+
+/* ============================================================
    SIZE MODIFIERS
    ============================================================ */
 .icon.__size-12  { width: 12px;  height: 12px; }
