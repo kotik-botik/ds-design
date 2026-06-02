@@ -25,9 +25,11 @@
  *     <div class="feed-post-category"><span class="category-path">…</span></div>
  *     <p class="feed-post-text ds-body-m">…</p>
  *     <div class="feed-post-media"> <img …> </div>
- *     <div class="feed-post-actions">
+ *     <div class="button-row">
  *       <div class="button-wrapper __size-36"> … </div>
  *       …
+ *       <div class="button-row-spacer"></div>
+ *       <div class="button-wrapper __size-36"> … </div>
  *     </div>
  *   </article>
  *
@@ -133,16 +135,9 @@
 }
 
 /* ============================================================
-   ACTIONS — flex row holding .button-wrapper instances
+   ACTIONS — use .button-row primitive; feed-post just adds the
+   separator from the content above.
    ============================================================ */
-.feed-post-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
+.feed-post > .button-row {
   border-top: 1px solid var(--dynamic-stroke-contrast-low);
-}
-
-.feed-post-actions__spacer {
-  flex: 1;
 }
