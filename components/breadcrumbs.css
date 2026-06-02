@@ -27,7 +27,6 @@
 
 .breadcrumbs {
   --breadcrumbs-color: var(--dynamic-text-and-icons-base-secondary);
-  --breadcrumbs-color-hover: var(--dynamic-text-and-icons-base-primary);
   --breadcrumbs-separator-src: url('../assets/icons/chevron-right.svg');
 
   display: inline-flex;
@@ -46,11 +45,12 @@
   color: inherit;
   text-decoration: none;
   cursor: pointer;
-  transition: color var(--ds-animation-duration) var(--ds-animation-easing);
+  border-radius: 4px;
+  transition: background-color var(--ds-animation-duration) var(--ds-animation-easing);
 }
 
 a.breadcrumbs__item:hover {
-  color: var(--breadcrumbs-color-hover);
+  background-color: color-mix(in srgb, var(--dynamic-text-and-icons-base-inverse-primary) 10%, transparent);
 }
 
 .breadcrumbs__item.__state-on {
