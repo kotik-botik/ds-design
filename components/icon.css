@@ -67,15 +67,14 @@
 /* ============================================================
    GLYPH MODIFIERS — bake in the SVG path so the icon can react to
    parent state (e.g. swap to filled when the button is "liked").
-   Use as: <span class="icon __size-20 __src __view-thumb-up"></span>
+   Use as: <span class="icon __size-20 __src __view-klass"></span>
    ============================================================ */
-/* TODO: swap placeholder.svg for the real thumb-up glyph */
-.icon.__src.__view-thumb-up {
-  --icon-src: url('../assets/icons/placeholder.svg');
+.icon.__src.__view-klass {
+  --icon-src: url('../assets/icons/klass_16_20.svg');
 }
-.button-container.__view-liked .icon.__src.__view-thumb-up,
-.__view-liked > .icon.__src.__view-thumb-up {
-  --icon-src: url('../assets/icons/placeholder-filled.svg');
+.button-container.__view-liked .icon.__src.__view-klass,
+.__view-liked > .icon.__src.__view-klass {
+  --icon-src: url('../assets/icons/klass_filled_16_20.svg');
 }
 
 /* ============================================================
