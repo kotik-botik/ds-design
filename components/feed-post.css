@@ -22,7 +22,7 @@
  *       </div>
  *     </div>
  *
- *     <div class="feed-post-category"><span class="category-path">…</span></div>
+ *     <div class="feed-post-category"><span class="breadcrumbs">…</span></div>
  *     <p class="feed-post-text ds-body-m">…</p>
  *     <div class="feed-post-media"> <img …> </div>
  *     <div class="button-row">
@@ -46,7 +46,7 @@
 }
 
 /* ============================================================
-   CATEGORY ROW — wrapper around the .category-path primitive
+   CATEGORY ROW — wrapper around the .breadcrumbs primitive
    ============================================================ */
 .feed-post-category {
   padding: 0 var(--space-4) var(--space-1);

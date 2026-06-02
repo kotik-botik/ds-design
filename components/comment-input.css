@@ -22,7 +22,7 @@
 }
 
 .comment-input.__state-focused .text-input {
-  background-color: var(--dynamic-surface-contrast-low-hover);
+  background-color: var(--dynamic-surface-contrast-mid);
 }
 
 .comment-input.__state-disabled {

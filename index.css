@@ -22,6 +22,7 @@
 
 /* Canonical primitives */
 @import url('./components/icon.css');
+@import url('./components/icon-glyph.css');
 @import url('./components/button.css');
 @import url('./components/button-inline.css');
 @import url('./components/button-row.css');
@@ -33,7 +34,7 @@
 /* Lenta-derived components (built on top of the primitives above) */
 @import url('./components/avatar.css');
 @import url('./components/pulse-dot.css');
-@import url('./components/category-path.css');
+@import url('./components/breadcrumbs.css');
 @import url('./components/feed-post.css');
 @import url('./components/tabs.css');
 @import url('./components/tabbar.css');

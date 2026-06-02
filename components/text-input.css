@@ -34,7 +34,7 @@
 
 .text-input.__state-focused,
 .text-input:focus-visible {
-  background-color: var(--dynamic-surface-contrast-low-hover);
+  background-color: var(--dynamic-surface-contrast-mid);
 }
 
 .text-input.__state-disabled,
