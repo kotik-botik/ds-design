@@ -34,18 +34,29 @@
 
   <section class="preview-section">
     <h2>Avatar</h2>
+    <div class="preview-label">__type-initials — sizes</div>
     <div class="preview-row">
-      <div class="avatar __size-24"></div>
-      <div class="avatar __size-32"></div>
-      <div class="avatar __size-36"></div>
-      <div class="avatar __size-40"></div>
-      <div class="avatar __size-44"></div>
-      <div class="avatar __size-48 __view-initials">АК</div>
-      <div class="avatar __size-56 __view-initials">ОК</div>
+      <div class="avatar __size-24 __type-initials">А</div>
+      <div class="avatar __size-36 __type-initials">АК</div>
+      <div class="avatar __size-44 __type-initials">АК</div>
+      <div class="avatar __size-56 __type-initials">АК</div>
+      <div class="avatar __size-72 __type-initials">АК</div>
+      <div class="avatar __size-96 __type-initials">АК</div>
+      <div class="avatar __size-126 __type-initials">АК</div>
+    </div>
+    <div class="preview-label">__type-image — sizes</div>
+    <div class="preview-row">
+      <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
+      <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
+      <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
+      <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
+      <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
+      <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
+      <div class="avatar __size-126 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
     </div>
     <div class="preview-label">__state-loading</div>
     <div class="preview-row">
-      <div class="avatar __size-40 __state-loading"></div>
+      <div class="avatar __size-36 __state-loading"></div>
     </div>
   </section>
 
@@ -95,6 +106,22 @@
       <div class="button-inline-wrapper __view-tertiary __size-24">
         <button class="button-inline __size-24">Tertiary 24</button>
       </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 320px;">
+    <h2>TextInput</h2>
+    <div class="preview-label">default</div>
+    <div class="preview-row">
+      <input class="text-input" placeholder="Написать комментарий…" style="flex:1;">
+    </div>
+    <div class="preview-label">__state-focused</div>
+    <div class="preview-row">
+      <input class="text-input __state-focused" placeholder="Написать комментарий…" style="flex:1;">
+    </div>
+    <div class="preview-label">__state-disabled</div>
+    <div class="preview-row">
+      <input class="text-input __state-disabled" placeholder="Недоступно" style="flex:1;">
     </div>
   </section>
 
@@ -210,7 +237,7 @@
       <div class="uni-cell-wrapper">
         <div class="uni-cell-container __interactive">
           <div class="uni-cell">
-            <div class="avatar __size-44 __view-initials" style="margin-right: 12px;">ТБ</div>
+            <div class="avatar __size-44 __type-initials" style="margin-right: 12px;">ТБ</div>
             <div class="uni-cell-additional-content __align-self-center">
               <div class="ds-body-m"><b>Тамара Белова</b> опубликовала фото — набрало 247 классов</div>
             </div>
@@ -229,7 +256,7 @@
       <div class="uni-cell-wrapper">
         <div class="uni-cell-container">
           <div class="uni-cell">
-            <div class="avatar __size-36 __view-initials" style="margin-right: 10px;">МК</div>
+            <div class="avatar __size-36 __type-initials" style="margin-right: 10px;">МК</div>
             <div class="uni-cell-additional-content">
               <div class="ds-caption-m-accent">Михаил К.</div>
               <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">5 мин. назад</div>
@@ -271,7 +298,7 @@
         <div class="uni-cell-wrapper">
           <div class="uni-cell-container">
             <div class="uni-cell">
-              <div class="avatar __size-40 __view-initials" style="margin-right: 10px;">ИЧ</div>
+              <div class="avatar __size-36 __type-initials" style="margin-right: 10px;">ИЧ</div>
               <div class="uni-cell-additional-content __align-self-center">
                 <div class="ds-title-s">Игорь Черняков</div>
                 <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">12:48</div>
@@ -321,29 +348,46 @@
   </section>
 
   <section class="preview-section" style="min-width: 375px;">
-    <h2>FeedTabs</h2>
+    <h2>Tabs</h2>
     <div class="preview-stage" style="padding: 0;">
-      <div class="feed-tabs">
-        <button class="feed-tabs-tab __state-on">Лента</button>
-        <button class="feed-tabs-tab">Сегодня</button>
-        <button class="feed-tabs-tab">Подарки</button>
-        <button class="feed-tabs-tab">Обсуждение</button>
+      <div class="tabs">
+        <button class="tabs-tab __state-on">Лента</button>
+        <button class="tabs-tab">Сегодня</button>
+        <button class="tabs-tab">Подарки</button>
+        <button class="tabs-tab">Обсуждение</button>
       </div>
     </div>
   </section>
 
   <section class="preview-section" style="min-width: 375px;">
-    <h2>TabBar</h2>
+    <h2>Tabbar — iOS</h2>
     <div class="preview-stage" style="padding: 0;">
-      <div class="tab-bar">
-        <div class="tab-bar__row">
-          <button class="tab-bar-item __state-on" aria-label="Лента"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-home.svg')"></span></button>
-          <button class="tab-bar-item" aria-label="Дневник"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-book.svg')"></span></button>
-          <button class="tab-bar-item" aria-label="Сообщения"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-mail.svg')"></span></button>
-          <button class="tab-bar-item" aria-label="Видео"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-video.svg')"></span></button>
-          <button class="tab-bar-item" aria-label="Меню"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-menu.svg')"></span></button>
+      <div class="tabbar __platform-ios">
+        <div class="tabbar__row">
+          <button class="tabbar-icon __slot-feed __state-on" aria-label="Feed"></button>
+          <button class="tabbar-icon __slot-book" aria-label="Book"></button>
+          <button class="tabbar-icon __slot-message" aria-label="Message"></button>
+          <button class="tabbar-icon __slot-clip" aria-label="Clip"></button>
+          <button class="tabbar-icon __slot-menu" aria-label="Menu"></button>
         </div>
-        <div class="tab-bar__handle"></div>
+        <div class="tabbar__handle"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
+    <h2>Tabbar — Android</h2>
+    <div class="preview-stage" style="padding: 0;">
+      <div class="tabbar __platform-android">
+        <div class="tabbar__row">
+          <button class="tabbar-icon __slot-feed __state-on" aria-label="Feed"></button>
+          <button class="tabbar-icon __slot-book" aria-label="Book"></button>
+          <button class="tabbar-icon __slot-message" aria-label="Message"></button>
+          <button class="tabbar-icon __slot-discussion" aria-label="Discussion"></button>
+          <button class="tabbar-icon __slot-clip" aria-label="Clip"></button>
+          <button class="tabbar-icon __slot-menu" aria-label="Menu"></button>
+        </div>
+        <div class="tabbar__handle"></div>
       </div>
     </div>
   </section>
@@ -361,7 +405,7 @@
       </div>
       <div class="nav-bar">
         <div class="nav-bar__leading">
-          <div class="avatar __size-36 __view-initials">АК</div>
+          <div class="avatar __size-36 __type-initials">АК</div>
         </div>
         <div class="nav-bar__trailing">
           <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Создать"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/plus.svg')"></span></span></button></div>
@@ -376,8 +420,8 @@
     <h2>CommentInput</h2>
     <div class="preview-stage" style="padding: 0;">
       <div class="comment-input">
-        <div class="avatar __size-32 __view-initials">А</div>
-        <input class="comment-input__field" placeholder="Написать комментарий…">
+        <div class="avatar __size-36 __type-initials">А</div>
+        <input class="text-input" placeholder="Написать комментарий…">
         <div class="button-wrapper __size-36">
           <button class="button-container __style-primary" style="width: 36px; border-radius: 50%;" aria-label="Send">
             <span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/send.svg')"></span></span>
@@ -404,7 +448,7 @@
         </div>
         <div class="nav-bar">
           <div class="nav-bar__leading">
-            <div class="avatar __size-36 __view-initials">АК</div>
+            <div class="avatar __size-36 __type-initials">АК</div>
           </div>
           <div class="nav-bar__trailing">
             <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Создать"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/plus.svg')"></span></span></button></div>
@@ -412,10 +456,10 @@
             <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Поиск"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/search.svg')"></span></span></button></div>
           </div>
         </div>
-        <div class="feed-tabs">
-          <button class="feed-tabs-tab __state-on">Лента</button>
-          <button class="feed-tabs-tab">Сегодня</button>
-          <button class="feed-tabs-tab">Подарки</button>
+        <div class="tabs">
+          <button class="tabs-tab __state-on">Лента</button>
+          <button class="tabs-tab">Сегодня</button>
+          <button class="tabs-tab">Подарки</button>
         </div>
       </div>
 
@@ -430,7 +474,7 @@
           <div class="uni-cell-wrapper">
             <div class="uni-cell-container __interactive">
               <div class="uni-cell">
-                <div class="avatar __size-44 __view-initials" style="margin-right: 12px;">ТБ</div>
+                <div class="avatar __size-44 __type-initials" style="margin-right: 12px;">ТБ</div>
                 <div class="uni-cell-additional-content __align-self-center">
                   <div class="ds-body-m"><b>Тамара Белова</b> опубликовала фото — набрало 247 классов</div>
                 </div>
@@ -443,7 +487,7 @@
           <div class="uni-cell-wrapper">
             <div class="uni-cell-container __interactive">
               <div class="uni-cell">
-                <div class="avatar __size-44 __view-initials" style="background: var(--base-blue-saturated-64); margin-right: 12px;">ЮМ</div>
+                <div class="avatar __size-44 __type-initials" style="background: var(--base-blue-saturated-64); margin-right: 12px;">ЮМ</div>
                 <div class="uni-cell-additional-content __align-self-center">
                   <div class="ds-body-m"><b>Юрий Макиненко</b> задаёт вопрос про счётчики воды</div>
                 </div>
@@ -462,7 +506,7 @@
           <div class="uni-cell-wrapper">
             <div class="uni-cell-container">
               <div class="uni-cell">
-                <div class="avatar __size-40 __view-initials" style="margin-right: 10px;">ИЧ</div>
+                <div class="avatar __size-36 __type-initials" style="margin-right: 10px;">ИЧ</div>
                 <div class="uni-cell-additional-content __align-self-center">
                   <div class="ds-title-s">Игорь Черняков</div>
                   <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">12:48</div>
@@ -517,16 +561,16 @@
 
       </div>
 
-      <div class="phone-frame__tab-bar">
-        <div class="tab-bar">
-          <div class="tab-bar__row">
-            <button class="tab-bar-item __state-on" aria-label="Лента"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-home.svg')"></span></button>
-            <button class="tab-bar-item" aria-label="Дневник"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-book.svg')"></span></button>
-            <button class="tab-bar-item" aria-label="Сообщения"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-mail.svg')"></span></button>
-            <button class="tab-bar-item" aria-label="Видео"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-video.svg')"></span></button>
-            <button class="tab-bar-item" aria-label="Меню"><span class="icon __size-32 __src" style="--icon-src:url('assets/icons/tab-menu.svg')"></span></button>
+      <div class="phone-frame__tabbar">
+        <div class="tabbar __platform-ios">
+          <div class="tabbar__row">
+            <button class="tabbar-icon __slot-feed __state-on" aria-label="Feed"></button>
+            <button class="tabbar-icon __slot-book" aria-label="Book"></button>
+            <button class="tabbar-icon __slot-message" aria-label="Message"></button>
+            <button class="tabbar-icon __slot-clip" aria-label="Clip"></button>
+            <button class="tabbar-icon __slot-menu" aria-label="Menu"></button>
           </div>
-          <div class="tab-bar__handle"></div>
+          <div class="tabbar__handle"></div>
         </div>
       </div>
 

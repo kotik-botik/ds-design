@@ -1,14 +1,14 @@
 /**
  * OK Design System — CommentInput
  *
- * Bottom-anchored bar with an avatar slot, a text input and a send button.
- * Used inside the comments bottom-sheet.
+ * Bottom-anchored bar with an avatar slot, a .text-input field and a
+ * round send button. Used inside the comments bottom-sheet.
+ *
+ * Composes: .avatar + .text-input + .button-wrapper (size 36, primary).
  *
  * STATES on the wrapper:
  *   .__state-disabled  — input + send become non-interactive
- *   .__state-focused   — applied while the input is focused
- *
- * The send button is a standard .button-wrapper (round, primary, size 36).
+ *   .__state-focused   — surfaces focus to the contained .text-input
  */
 
 .comment-input {
@@ -21,28 +21,7 @@
   border-top: 1px solid var(--dynamic-stroke-contrast-low);
 }
 
-.comment-input__field {
-  flex: 1;
-  min-width: 0;
-  height: 36px;
-  padding: 0 var(--space-4);
-  border: 0;
-  outline: none;
-  border-radius: 20px;
-  background-color: var(--dynamic-surface-contrast-low);
-  color: var(--dynamic-text-and-icons-base-primary);
-  font-family: var(--font-family);
-  font-size: 14px;
-  line-height: 20px;
-  transition: background-color var(--ds-animation-duration) var(--ds-animation-easing);
-}
-
-.comment-input__field::placeholder {
-  color: var(--dynamic-text-and-icons-base-secondary);
-}
-
-.comment-input.__state-focused .comment-input__field,
-.comment-input__field:focus-visible {
+.comment-input.__state-focused .text-input {
   background-color: var(--dynamic-surface-contrast-low-hover);
 }
 
