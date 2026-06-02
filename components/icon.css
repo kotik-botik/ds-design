@@ -65,6 +65,19 @@
 }
 
 /* ============================================================
+   GLYPH MODIFIERS — bake in the SVG path so the icon can react to
+   parent state (e.g. swap to filled when the button is "liked").
+   Use as: <span class="icon __size-20 __src __view-thumb-up"></span>
+   ============================================================ */
+.icon.__src.__view-thumb-up {
+  --icon-src: url('../assets/icons/thumb-up.svg');
+}
+.button-container.__view-liked .icon.__src.__view-thumb-up,
+.__view-liked > .icon.__src.__view-thumb-up {
+  --icon-src: url('../assets/icons/thumb-up-filled.svg');
+}
+
+/* ============================================================
    SIZE MODIFIERS
    ============================================================ */
 .icon.__size-12  { width: 12px;  height: 12px; }
