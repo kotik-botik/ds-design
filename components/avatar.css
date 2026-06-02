@@ -1,20 +1,21 @@
 /**
  * OK Design System — Avatar Component
  *
- * Round avatar with either an image or text fallback (initials).
- * Falls back to a neutral overlay surface when no image is provided.
+ * Round avatar that displays either a PNG photo or text initials on a
+ * colored background.
  *
- * SIZES:   .__size-24 | .__size-32 | .__size-36 | .__size-40 (default)
- *          .__size-44 | .__size-48 | .__size-56
+ * SIZES:   .__size-24 | .__size-36 (default) | .__size-44 | .__size-56
+ *          .__size-72 | .__size-96 | .__size-126
  *
- * VIEWS:   .__view-default (image) | .__view-initials (text fallback)
+ * TYPE:    .__type-image     — <img> child (e.g. PNG)
+ *          .__type-initials  — 1–2 letter fallback on accent surface
  *
  * STATES:  .__state-loading  — shimmer sweep
  *          .__state-disabled — opacity 0.36
  */
 
 .avatar {
-  --avatar-size: 40px;
+  --avatar-size: 36px;
   --avatar-bg: var(--dynamic-surface-contrast-low);
   --avatar-color: var(--dynamic-text-and-icons-base-primary);
   --avatar-font-size: 14px;
@@ -46,18 +47,23 @@
 }
 
 /* Size variants — keep visual rhythm with the 4px grid */
-.avatar.__size-24 { --avatar-size: 24px; --avatar-font-size: 11px; }
-.avatar.__size-32 { --avatar-size: 32px; --avatar-font-size: 13px; }
-.avatar.__size-36 { --avatar-size: 36px; --avatar-font-size: 14px; }
-.avatar.__size-40 { --avatar-size: 40px; --avatar-font-size: 14px; }
-.avatar.__size-44 { --avatar-size: 44px; --avatar-font-size: 15px; }
-.avatar.__size-48 { --avatar-size: 48px; --avatar-font-size: 17px; }
-.avatar.__size-56 { --avatar-size: 56px; --avatar-font-size: 19px; }
+.avatar.__size-24  { --avatar-size: 24px;  --avatar-font-size: 11px; }
+.avatar.__size-36  { --avatar-size: 36px;  --avatar-font-size: 14px; }
+.avatar.__size-44  { --avatar-size: 44px;  --avatar-font-size: 15px; }
+.avatar.__size-56  { --avatar-size: 56px;  --avatar-font-size: 19px; }
+.avatar.__size-72  { --avatar-size: 72px;  --avatar-font-size: 24px; }
+.avatar.__size-96  { --avatar-size: 96px;  --avatar-font-size: 32px; }
+.avatar.__size-126 { --avatar-size: 126px; --avatar-font-size: 42px; }
 
-/* Initials fallback view */
-.avatar.__view-initials {
+/* Initials type — colored background with text */
+.avatar.__type-initials {
   --avatar-bg: var(--static-surface-status-accent);
   --avatar-color: var(--static-text-and-icons-base-inverse-primary);
+}
+
+/* Image type — explicit marker; <img> child fills via .avatar img */
+.avatar.__type-image {
+  --avatar-bg: var(--dynamic-surface-contrast-low);
 }
 
 /* Loading state — shimmer */
