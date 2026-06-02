@@ -109,6 +109,22 @@
     </div>
   </section>
 
+  <section class="preview-section" style="min-width: 320px;">
+    <h2>TextInput</h2>
+    <div class="preview-label">default</div>
+    <div class="preview-row">
+      <input class="text-input" placeholder="Написать комментарий…" style="flex:1;">
+    </div>
+    <div class="preview-label">__state-focused</div>
+    <div class="preview-row">
+      <input class="text-input __state-focused" placeholder="Написать комментарий…" style="flex:1;">
+    </div>
+    <div class="preview-label">__state-disabled</div>
+    <div class="preview-row">
+      <input class="text-input __state-disabled" placeholder="Недоступно" style="flex:1;">
+    </div>
+  </section>
+
   <section class="preview-section">
     <h2>PulseDot</h2>
     <div class="preview-row">
@@ -332,13 +348,13 @@
   </section>
 
   <section class="preview-section" style="min-width: 375px;">
-    <h2>FeedTabs</h2>
+    <h2>Tabs</h2>
     <div class="preview-stage" style="padding: 0;">
-      <div class="feed-tabs">
-        <button class="feed-tabs-tab __state-on">Лента</button>
-        <button class="feed-tabs-tab">Сегодня</button>
-        <button class="feed-tabs-tab">Подарки</button>
-        <button class="feed-tabs-tab">Обсуждение</button>
+      <div class="tabs">
+        <button class="tabs-tab __state-on">Лента</button>
+        <button class="tabs-tab">Сегодня</button>
+        <button class="tabs-tab">Подарки</button>
+        <button class="tabs-tab">Обсуждение</button>
       </div>
     </div>
   </section>
@@ -405,7 +421,7 @@
     <div class="preview-stage" style="padding: 0;">
       <div class="comment-input">
         <div class="avatar __size-36 __type-initials">А</div>
-        <input class="comment-input__field" placeholder="Написать комментарий…">
+        <input class="text-input" placeholder="Написать комментарий…">
         <div class="button-wrapper __size-36">
           <button class="button-container __style-primary" style="width: 36px; border-radius: 50%;" aria-label="Send">
             <span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/send.svg')"></span></span>
@@ -440,10 +456,10 @@
             <div class="button-wrapper __size-36"><button class="button-container __style-tertiary" style="width: 36px;" aria-label="Поиск"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/search.svg')"></span></span></button></div>
           </div>
         </div>
-        <div class="feed-tabs">
-          <button class="feed-tabs-tab __state-on">Лента</button>
-          <button class="feed-tabs-tab">Сегодня</button>
-          <button class="feed-tabs-tab">Подарки</button>
+        <div class="tabs">
+          <button class="tabs-tab __state-on">Лента</button>
+          <button class="tabs-tab">Сегодня</button>
+          <button class="tabs-tab">Подарки</button>
         </div>
       </div>
 

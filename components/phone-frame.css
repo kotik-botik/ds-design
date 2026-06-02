@@ -24,7 +24,7 @@
 }
 .phone-frame::-webkit-scrollbar { display: none; }
 
-/* Sticky header strip — wraps status-bar + nav-bar + feed-tabs */
+/* Sticky header strip — wraps status-bar + nav-bar + tabs */
 .phone-frame__sticky {
   position: sticky;
   top: 0;
