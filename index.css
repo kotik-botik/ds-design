@@ -34,9 +34,10 @@
 @import url('./components/pulse-dot.css');
 @import url('./components/category-path.css');
 @import url('./components/feed-post.css');
-@import url('./components/feed-tabs.css');
+@import url('./components/tabs.css');
 @import url('./components/tabbar.css');
 @import url('./components/page-header.css');
+@import url('./components/text-input.css');
 @import url('./components/comment-input.css');
 @import url('./components/phone-frame.css');
 
