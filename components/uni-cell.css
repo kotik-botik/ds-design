@@ -98,16 +98,20 @@
   pointer-events: none;
 }
 
-/* Hover + selected */
+/* Hover + selected + press — overlay 0.12 */
 .uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):hover::after,
 .uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):focus-visible::after,
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):active::after,
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled).__clicked::after,
 .uni-cell-container.__state-selected::after {
   opacity: 0.12;
 }
 
-/* Press / clicked */
+/* Press / clicked — scale to 0.95 from center */
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):active,
 .uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled).__clicked {
   transform: scale(0.95);
+  transform-origin: center center;
 }
 
 /* ============================================================
