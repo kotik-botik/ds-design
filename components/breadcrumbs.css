@@ -1,19 +1,34 @@
 /**
  * OK Design System — Breadcrumbs
  *
- * Inline list of category names separated by a chevron, e.g.
- * "Еда › Рецепты". Used above post text.
+ * Inline trail of clickable category links separated by a chevron icon.
+ * Typography is locked to body M (15/20). No size or weight modifiers.
  *
- * SIZES:  .__size-13 (caption-m) | .__size-15 (body-m, default)
- * VIEWS:  .__view-secondary (default) | .__view-tertiary
+ * STRUCTURE (max 3 levels):
+ *   <nav class="breadcrumbs">
+ *     <a class="breadcrumbs__item" href="…">Еда</a>
+ *     <span class="breadcrumbs__separator" aria-hidden="true"></span>
+ *     <a class="breadcrumbs__item" href="…">Рецепты</a>
+ *     <span class="breadcrumbs__separator" aria-hidden="true"></span>
+ *     <span class="breadcrumbs__item __state-on">Тесто</span>
+ *   </nav>
  *
- * Non-interactive; states are not applicable.
+ * ITEM STATES:
+ *   .__state-on        — current level, non-link (rendered as <span>)
+ *   :hover             — full-opacity, accent color
+ *   .__state-disabled  — opacity 0.36, not interactive
+ *
+ * SEPARATOR:
+ *   Rendered as a 16px icon via CSS mask. Default glyph is
+ *   `assets/icons/chevron-right.svg`. Override per-instance with the
+ *   `--breadcrumbs-separator-src` custom property when a brand-specific
+ *   icon ships.
  */
 
 .breadcrumbs {
   --breadcrumbs-color: var(--dynamic-text-and-icons-base-secondary);
-  --breadcrumbs-font-size: 15px;
-  --breadcrumbs-line-height: 20px;
+  --breadcrumbs-color-hover: var(--dynamic-text-and-icons-base-primary);
+  --breadcrumbs-separator-src: url('../assets/icons/chevron-right.svg');
 
   display: inline-flex;
   flex-wrap: wrap;
@@ -21,31 +36,41 @@
   gap: var(--space-1);
   color: var(--breadcrumbs-color);
   font-family: var(--font-family);
-  font-size: var(--breadcrumbs-font-size);
-  line-height: var(--breadcrumbs-line-height);
+  font-size: 15px;
+  line-height: 20px;
   font-weight: 400;
 }
 
 .breadcrumbs__item {
   white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--ds-animation-duration) var(--ds-animation-easing);
+}
+
+a.breadcrumbs__item:hover {
+  color: var(--breadcrumbs-color-hover);
+}
+
+.breadcrumbs__item.__state-on {
+  color: var(--dynamic-text-and-icons-base-primary);
+  cursor: default;
+}
+
+.breadcrumbs__item.__state-disabled {
+  opacity: var(--state-element-disabled, 0.36);
+  pointer-events: none;
 }
 
 .breadcrumbs__separator {
   flex-shrink: 0;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
   opacity: 0.5;
   user-select: none;
+  -webkit-mask: var(--breadcrumbs-separator-src) center / contain no-repeat;
+          mask: var(--breadcrumbs-separator-src) center / contain no-repeat;
 }
-
-/* Sizes */
-.breadcrumbs.__size-13 {
-  --breadcrumbs-font-size: 13px;
-  --breadcrumbs-line-height: 16px;
-}
-.breadcrumbs.__size-15 {
-  --breadcrumbs-font-size: 15px;
-  --breadcrumbs-line-height: 20px;
-}
-
-/* Views */
-.breadcrumbs.__view-secondary { --breadcrumbs-color: var(--dynamic-text-and-icons-base-secondary); }
-.breadcrumbs.__view-tertiary  { --breadcrumbs-color: var(--dynamic-text-and-icons-base-tertiary); }

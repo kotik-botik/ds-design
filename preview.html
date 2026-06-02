@@ -227,21 +227,31 @@
 
   <section class="preview-section">
     <h2>Breadcrumbs</h2>
+    <div class="preview-label">2 levels — last item is current (__state-on)</div>
     <div class="preview-row">
-      <span class="breadcrumbs">
-        <span class="breadcrumbs__item">Еда</span>
-        <span class="breadcrumbs__separator">›</span>
-        <span class="breadcrumbs__item">Рецепты</span>
-      </span>
+      <nav class="breadcrumbs">
+        <a class="breadcrumbs__item" href="#">Еда</a>
+        <span class="breadcrumbs__separator" aria-hidden="true"></span>
+        <span class="breadcrumbs__item __state-on">Рецепты</span>
+      </nav>
     </div>
+    <div class="preview-label">3 levels (max)</div>
     <div class="preview-row">
-      <span class="breadcrumbs __size-13 __view-tertiary">
-        <span class="breadcrumbs__item">Дача</span>
-        <span class="breadcrumbs__separator">›</span>
-        <span class="breadcrumbs__item">Огород</span>
-        <span class="breadcrumbs__separator">›</span>
-        <span class="breadcrumbs__item">Помидоры</span>
-      </span>
+      <nav class="breadcrumbs">
+        <a class="breadcrumbs__item" href="#">Дача</a>
+        <span class="breadcrumbs__separator" aria-hidden="true"></span>
+        <a class="breadcrumbs__item" href="#">Огород</a>
+        <span class="breadcrumbs__separator" aria-hidden="true"></span>
+        <span class="breadcrumbs__item __state-on">Помидоры</span>
+      </nav>
+    </div>
+    <div class="preview-label">__state-disabled</div>
+    <div class="preview-row">
+      <nav class="breadcrumbs">
+        <a class="breadcrumbs__item __state-disabled" href="#">Еда</a>
+        <span class="breadcrumbs__separator" aria-hidden="true"></span>
+        <span class="breadcrumbs__item __state-on">Рецепты</span>
+      </nav>
     </div>
   </section>
 
@@ -327,11 +337,11 @@
         </div>
 
         <div class="feed-post-category">
-          <span class="breadcrumbs">
-            <span class="breadcrumbs__item">Еда</span>
-            <span class="breadcrumbs__separator">›</span>
-            <span class="breadcrumbs__item">Рецепты</span>
-          </span>
+          <nav class="breadcrumbs">
+            <a class="breadcrumbs__item" href="#">Еда</a>
+            <span class="breadcrumbs__separator" aria-hidden="true"></span>
+            <span class="breadcrumbs__item __state-on">Рецепты</span>
+          </nav>
         </div>
 
         <p class="feed-post-text ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
@@ -534,11 +544,11 @@
             </div>
           </div>
           <div class="feed-post-category">
-            <span class="breadcrumbs">
-              <span class="breadcrumbs__item">Еда</span>
-              <span class="breadcrumbs__separator">›</span>
-              <span class="breadcrumbs__item">Рецепты</span>
-            </span>
+            <nav class="breadcrumbs">
+              <a class="breadcrumbs__item" href="#">Еда</a>
+              <span class="breadcrumbs__separator" aria-hidden="true"></span>
+              <span class="breadcrumbs__item __state-on">Рецепты</span>
+            </nav>
           </div>
           <p class="feed-post-text ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
           <div class="feed-post-media" style="height: 220px; background: linear-gradient(135deg, #FF9558, #D76200);">
