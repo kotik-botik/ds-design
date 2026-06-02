@@ -25,10 +25,10 @@
  *     <div class="feed-post-category"><span class="breadcrumbs">…</span></div>
  *     <p class="feed-post-text ds-body-m">…</p>
  *     <div class="feed-post-media"> <img …> </div>
- *     <div class="button-row">
+ *     <div class="feed-buttons-row">
  *       <div class="button-wrapper __size-36"> … </div>
  *       …
- *       <div class="button-row-spacer"></div>
+ *       <div class="feed-buttons-row-spacer"></div>
  *       <div class="button-wrapper __size-36"> … </div>
  *     </div>
  *   </article>
@@ -135,10 +135,10 @@
 }
 
 /* ============================================================
-   ACTIONS — use .button-row primitive; feed-post just adds the
+   ACTIONS — use .feed-buttons-row primitive; feed-post just adds the
    separator from the content above.
    ============================================================ */
-.feed-post > .button-row {
+.feed-post > .feed-buttons-row {
   border-top: 1px solid var(--dynamic-stroke-contrast-low);
   padding-top: var(--space-5);
 }

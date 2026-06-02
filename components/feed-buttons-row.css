@@ -1,0 +1,28 @@
+/**
+ * OK Design System — FeedButtonsRow
+ *
+ * Горизонтальный ряд кнопок в шапке/футере поста ленты. Сейчас живёт
+ * только внутри .feed-post (см. контекстный .feed-post > .feed-buttons-row
+ * в components/feed-post.css — он добавляет border-top + padding-top).
+ *
+ *   <div class="feed-buttons-row">
+ *     <div class="button-wrapper __size-36">...</div>
+ *     <div class="button-wrapper __size-36">...</div>
+ *     <div class="feed-buttons-row-spacer"></div>
+ *     <div class="button-wrapper __size-36">...</div>
+ *   </div>
+ *
+ * .feed-buttons-row-spacer — пустой div, который растягивается и толкает
+ * последующие кнопки в правый край ряда.
+ */
+
+.feed-buttons-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+}
+
+.feed-buttons-row-spacer {
+  flex: 1;
+}
