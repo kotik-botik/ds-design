@@ -1,0 +1,51 @@
+/**
+ * OK Design System — Breadcrumbs
+ *
+ * Inline list of category names separated by a chevron, e.g.
+ * "Еда › Рецепты". Used above post text.
+ *
+ * SIZES:  .__size-13 (caption-m) | .__size-15 (body-m, default)
+ * VIEWS:  .__view-secondary (default) | .__view-tertiary
+ *
+ * Non-interactive; states are not applicable.
+ */
+
+.breadcrumbs {
+  --breadcrumbs-color: var(--dynamic-text-and-icons-base-secondary);
+  --breadcrumbs-font-size: 15px;
+  --breadcrumbs-line-height: 20px;
+
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--breadcrumbs-color);
+  font-family: var(--font-family);
+  font-size: var(--breadcrumbs-font-size);
+  line-height: var(--breadcrumbs-line-height);
+  font-weight: 400;
+}
+
+.breadcrumbs__item {
+  white-space: nowrap;
+}
+
+.breadcrumbs__separator {
+  flex-shrink: 0;
+  opacity: 0.5;
+  user-select: none;
+}
+
+/* Sizes */
+.breadcrumbs.__size-13 {
+  --breadcrumbs-font-size: 13px;
+  --breadcrumbs-line-height: 16px;
+}
+.breadcrumbs.__size-15 {
+  --breadcrumbs-font-size: 15px;
+  --breadcrumbs-line-height: 20px;
+}
+
+/* Views */
+.breadcrumbs.__view-secondary { --breadcrumbs-color: var(--dynamic-text-and-icons-base-secondary); }
+.breadcrumbs.__view-tertiary  { --breadcrumbs-color: var(--dynamic-text-and-icons-base-tertiary); }
