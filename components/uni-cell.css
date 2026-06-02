@@ -6,7 +6,9 @@
  * Used for navigation items, settings rows, user rows, etc.
  *
  * STATES:
- *   .__state-enabled  — interactive, shows hover/press overlay
+ *   .__interactive    — cell is interactive: shows hover/press overlay on the
+ *                       container itself. Без него интерактивность остаётся
+ *                       только у вложенных компонентов.
  *   .__state-selected — shows hover overlay (selected state)
  *   .__state-disabled — pointer-events none, opacity 0.36
  *   .__state-loading  — shimmer animation
@@ -85,7 +87,7 @@
 /* ============================================================
    STATE: ENABLED / SELECTED — overlay on hover & press
    ============================================================ */
-.uni-cell-container.__state-enabled::after,
+.uni-cell-container.__interactive::after,
 .uni-cell-container.__state-selected::after {
   content: '';
   position: absolute;
@@ -96,16 +98,25 @@
   pointer-events: none;
 }
 
-/* Hover + selected */
-.uni-cell-container.__state-enabled:not(:disabled):not(.__state-loading):not(.__state-disabled):hover::after,
-.uni-cell-container.__state-enabled:not(:disabled):not(.__state-loading):not(.__state-disabled):focus-visible::after,
+/*
+ * Hover + selected + press — overlay 0.12.
+ * :has(...) выключает оверлей/скейл у самой ячейки, если ховер/тап
+ * пришёлся на интерактив внутри (кнопка, ссылка, role="button" и т.п.) —
+ * иначе срабатывала бы и подсветка кнопки, и подсветка всей ячейки.
+ */
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):not(:has(:is(button, a, [role="button"], input, textarea, select, [tabindex]):hover)):hover::after,
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):focus-visible::after,
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):not(:has(:is(button, a, [role="button"], input, textarea, select, [tabindex]):active)):active::after,
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):not(:has(:is(button, a, [role="button"], input, textarea, select, [tabindex]):active)).__clicked::after,
 .uni-cell-container.__state-selected::after {
   opacity: 0.12;
 }
 
-/* Press / clicked */
-.uni-cell-container.__state-enabled:not(:disabled):not(.__state-loading):not(.__state-disabled).__clicked {
+/* Press / clicked — scale to 0.95 from center */
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):not(:has(:is(button, a, [role="button"], input, textarea, select, [tabindex]):active)):active,
+.uni-cell-container.__interactive:not(:disabled):not(.__state-loading):not(.__state-disabled):not(:has(:is(button, a, [role="button"], input, textarea, select, [tabindex]):active)).__clicked {
   transform: scale(0.95);
+  transform-origin: center center;
 }
 
 /* ============================================================
