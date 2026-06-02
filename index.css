@@ -22,6 +22,7 @@
 
 /* Canonical primitives */
 @import url('./components/icon.css');
+@import url('./components/icon-glyph.css');
 @import url('./components/button.css');
 @import url('./components/button-inline.css');
 @import url('./components/uni-cell.css');
