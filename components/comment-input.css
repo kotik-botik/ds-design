@@ -43,7 +43,7 @@
 
 .comment-input.__state-focused .comment-input__field,
 .comment-input__field:focus-visible {
-  background-color: var(--dynamic-surface-contrast-low-hover);
+  background-color: var(--dynamic-surface-contrast-mid);
 }
 
 .comment-input.__state-disabled {
