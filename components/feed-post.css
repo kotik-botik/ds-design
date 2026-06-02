@@ -140,4 +140,5 @@
    ============================================================ */
 .feed-post > .button-row {
   border-top: 1px solid var(--dynamic-stroke-contrast-low);
+  padding-top: var(--space-5);
 }
