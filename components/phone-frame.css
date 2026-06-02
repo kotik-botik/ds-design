@@ -3,7 +3,7 @@
  *
  * 375px-wide mobile viewport used for static prototypes / previews.
  * Holds a sticky header at the top, a scrollable feed in the middle, and
- * a sticky-bottom .tab-bar. Both sticky elements take their own space in
+ * a sticky-bottom .tabbar. Both sticky elements take their own space in
  * the flex column, so no extra padding is required around the feed.
  *
  * No states — this is a layout primitive.
@@ -42,8 +42,8 @@
   height: var(--space-2);
 }
 
-/* Fixed bottom tab-bar inside the phone preview */
-.phone-frame__tab-bar {
+/* Fixed bottom tabbar inside the phone preview */
+.phone-frame__tabbar {
   position: sticky;
   bottom: 0;
   left: 0;
