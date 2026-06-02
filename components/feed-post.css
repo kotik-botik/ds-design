@@ -8,7 +8,7 @@
  *   <article class="feed-post">
  *     <!-- Header: UniCell with avatar (left), name+time (center), button (right) -->
  *     <div class="uni-cell-wrapper">
- *       <div class="uni-cell-container __state-enabled">
+ *       <div class="uni-cell-container __interactive">
  *         <div class="uni-cell">
  *           <div class="avatar __size-40"> … </div>
  *           <div class="uni-cell-additional-content __align-self-center">
@@ -34,7 +34,7 @@
  * STATES on the outer .feed-post:
  *   .__state-loading  — shimmer over the media area
  *
- * No __state-enabled on the post itself — interactivity lives in the inner
+ * No __interactive on the post itself — interactivity lives in the inner
  * primitives (uni-cell header, button-wrappers in actions).
  */
 
