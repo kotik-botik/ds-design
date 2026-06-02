@@ -13,6 +13,11 @@
  * SIZES:   .__size-56 | .__size-44 | .__size-36 | .__size-28
  * STYLES:  .__style-primary | .__style-secondary | .__style-tertiary
  *          .__style-primary-on-color | .__style-negative | .__style-destructive | .__style-custom
+ *
+ * MODIFIERS:
+ *   .__icon — apply when the button content contains an .icon. Forces the
+ *             icon to the size canonical for the button height:
+ *             56→20, 44→20, 36→16, 28→14.
  */
 
 /* ============================================================
@@ -37,7 +42,7 @@
 /* ============================================================
    SIZE VARIANTS
    ============================================================ */
-.button-wrapper.__size-56 { --button-border-radius: 16px; }
+.button-wrapper.__size-56 { --button-border-radius: 16px; --button-icon-size: 20px; }
 .button-wrapper.__size-56 .button-container {
   height: 56px;
   padding: 0 16px;
@@ -47,7 +52,7 @@
   --button-content-gap: 8px;
 }
 
-.button-wrapper.__size-44 { --button-border-radius: 15px; }
+.button-wrapper.__size-44 { --button-border-radius: 15px; --button-icon-size: 20px; }
 .button-wrapper.__size-44 .button-container {
   height: 44px;
   padding: 0 16px;
@@ -57,7 +62,7 @@
   --button-content-gap: 8px;
 }
 
-.button-wrapper.__size-36 { --button-border-radius: 12px; }
+.button-wrapper.__size-36 { --button-border-radius: 12px; --button-icon-size: 16px; }
 .button-wrapper.__size-36 .button-container {
   height: 36px;
   padding: 0 12px;
@@ -67,7 +72,7 @@
   --button-content-gap: 6px;
 }
 
-.button-wrapper.__size-28 { --button-border-radius: 10px; }
+.button-wrapper.__size-28 { --button-border-radius: 10px; --button-icon-size: 14px; }
 .button-wrapper.__size-28 .button-container {
   height: 28px;
   padding: 0 10px;
@@ -75,6 +80,13 @@
   line-height: 16px;
   font-weight: 600;
   --button-content-gap: 4px;
+}
+
+/* When the icon modifier is on, force the inner .icon to the size-canonical
+   value above (overrides any .icon.__size-N class on the same element). */
+.button-container.__icon .icon {
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
 }
 
 /* ============================================================
