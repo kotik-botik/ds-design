@@ -1,0 +1,52 @@
+/**
+ * OK Design System — Header
+ *
+ * Универсальный заголовок секции: тайтл по центру строки, опциональные
+ * слоты слева и справа (туда можно вложить что угодно — кнопку, иконку,
+ * pulse-dot, аватарку и т.п.).
+ *
+ *   <header class="header __size-l">
+ *     <div class="header-left"> … </div>      ← optional
+ *     <h2 class="header-title">Заголовок</h2>
+ *     <div class="header-right"> … </div>     ← optional
+ *   </header>
+ *
+ * SIZES — повторяют тайтловые стили DS:
+ *   __size-xl  → ds-title-xl  (27 / 36)
+ *   __size-l   → ds-title-l   (21 / 28)
+ *   __size-m   → ds-title-m   (17 / 24)
+ *   __size-s   → ds-title-s   (15 / 20)
+ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.header-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-family);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+
+/* ============================================================
+   SIZES — наследуют типографику из ds-title-*
+   ============================================================ */
+.header.__size-xl .header-title { font-size: 27px; line-height: 36px; }
+.header.__size-l  .header-title { font-size: 21px; line-height: 28px; }
+.header.__size-m  .header-title { font-size: 17px; line-height: 24px; }
+.header.__size-s  .header-title { font-size: 15px; line-height: 20px; }
