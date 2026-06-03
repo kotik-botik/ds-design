@@ -104,6 +104,7 @@
 }
 
 /* Press / clicked */
+.uni-cell-container.__state-enabled:not(:disabled):not(.__state-loading):not(.__state-disabled):active,
 .uni-cell-container.__state-enabled:not(:disabled):not(.__state-loading):not(.__state-disabled).__clicked {
   transform: scale(0.95);
 }
