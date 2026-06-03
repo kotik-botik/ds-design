@@ -20,6 +20,14 @@
   .preview-label { font-size: 12px; color: var(--dynamic-text-and-icons-base-secondary); margin-bottom: 6px; }
   .preview-stage { background: var(--dynamic-surface-base-primary); padding: 16px; border-radius: 12px; }
 
+  .button-block { margin-top: 16px; }
+  .button-block__title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .button-block__title code { font-weight: 500; font-size: 13px; color: var(--dynamic-text-and-icons-base-secondary); }
+  .button-block__desc { font-size: 12px; color: var(--dynamic-text-and-icons-base-secondary); margin-bottom: 10px; max-width: 640px; }
+  .button-block__group-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dynamic-text-and-icons-base-tertiary); margin-top: 16px; }
+  .button-block__divider { border: 0; border-top: 1px solid var(--dynamic-stroke-contrast-low); margin: 20px 0 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: var(--dynamic-surface-contrast-low); padding: 1px 6px; border-radius: 4px; }
+
   /*  Reusable inline svg sprite for the demos  */
   .demo-icon { color: currentColor; }
 </style>
@@ -61,52 +69,72 @@
   </section>
 
   <section class="preview-section">
-    <h2>Button — sizes</h2>
-    <div class="preview-row">
-      <div class="button-wrapper __size-28">
-        <button class="button-container __style-primary"><span class="button-content">Primary 28</span></button>
-      </div>
-      <div class="button-wrapper __size-36">
-        <button class="button-container __style-primary"><span class="button-content">Primary 36</span></button>
-      </div>
-      <div class="button-wrapper __size-44">
-        <button class="button-container __style-primary"><span class="button-content">Primary 44</span></button>
-      </div>
-      <div class="button-wrapper __size-56">
-        <button class="button-container __style-primary"><span class="button-content">Primary 56</span></button>
+    <h2>Button</h2>
+    <div class="preview-label">Базовая кнопка действия. Композиция: <code>.button-wrapper.__size-N</code> задаёт размер, <code>.button-container.__style-*</code> — визуальный стиль.</div>
+
+    <div class="button-block">
+      <div class="button-block__title">Основная</div>
+      <div class="button-block__desc">Дефолтный размер 44, стиль <code>__style-primary</code>. Используется для главного действия экрана.</div>
+      <div class="preview-row">
+        <div class="button-wrapper __size-44">
+          <button class="button-container __style-primary"><span class="button-content">Опубликовать</span></button>
+        </div>
       </div>
     </div>
 
-    <h2 style="margin-top: 24px;">Button — styles</h2>
-    <div class="preview-row">
-      <div class="button-wrapper __size-36"><button class="button-container __style-primary"><span class="button-content">Primary</span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content">Secondary</span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-tertiary"><span class="button-content">Tertiary</span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-negative"><span class="button-content">Negative</span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-destructive"><span class="button-content">Destructive</span></button></div>
+    <hr class="button-block__divider">
+    <div class="button-block__group-title">Модификаторы</div>
+
+    <div class="button-block">
+      <div class="button-block__title">Размер — <code>.__size-28 / 36 / 44 / 56</code></div>
+      <div class="button-block__desc">Задаётся на <code>.button-wrapper</code>. Высота, паддинги, типографика и канонический размер иконки внутри (28→16, 36→16, 44→20, 56→20) подбираются автоматически.</div>
+      <div class="preview-row">
+        <div class="button-wrapper __size-28"><button class="button-container __style-primary"><span class="button-content">Primary 28</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-primary"><span class="button-content">Primary 36</span></button></div>
+        <div class="button-wrapper __size-44"><button class="button-container __style-primary"><span class="button-content">Primary 44</span></button></div>
+        <div class="button-wrapper __size-56"><button class="button-container __style-primary"><span class="button-content">Primary 56</span></button></div>
+      </div>
     </div>
 
-    <h2 style="margin-top: 24px;">Button — states</h2>
-    <div class="preview-row">
-      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-loading"><span class="button-content">Loading</span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-disabled"><span class="button-content">Disabled</span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-highlighted"><span class="button-content">Highlighted</span></button></div>
+    <div class="button-block">
+      <div class="button-block__title">Стиль — <code>.__style-*</code></div>
+      <div class="button-block__desc"><code>primary</code> — главное действие, <code>secondary</code> — второстепенное, <code>tertiary</code> — на цветном фоне, <code>negative</code> и <code>destructive</code> — для опасных действий.</div>
+      <div class="preview-row">
+        <div class="button-wrapper __size-36"><button class="button-container __style-primary"><span class="button-content">Primary</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content">Secondary</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-tertiary"><span class="button-content">Tertiary</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-negative"><span class="button-content">Negative</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-destructive"><span class="button-content">Destructive</span></button></div>
+      </div>
     </div>
 
-    <h2 style="margin-top: 24px;">Button — __icon (auto-sized)</h2>
-    <div class="preview-label">icon-only: 56→20, 44→20, 36→16, 28→14</div>
-    <div class="preview-row">
-      <div class="button-wrapper __size-56"><button class="button-container __style-secondary __icon" style="width:56px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
-      <div class="button-wrapper __size-44"><button class="button-container __style-secondary __icon" style="width:44px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __icon" style="width:36px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
-      <div class="button-wrapper __size-28"><button class="button-container __style-secondary __icon" style="width:28px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
+    <div class="button-block">
+      <div class="button-block__title">Состояние — <code>.__state-*</code></div>
+      <div class="button-block__desc"><code>loading</code> прячет контент и показывает спиннер, <code>disabled</code> снижает непрозрачность и блокирует клики, <code>highlighted</code> — постоянно зажатый вид.</div>
+      <div class="preview-row">
+        <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-loading"><span class="button-content">Loading</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-disabled"><span class="button-content">Disabled</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-secondary __state-highlighted"><span class="button-content">Highlighted</span></button></div>
+      </div>
     </div>
-    <div class="preview-label">icon + label</div>
-    <div class="preview-row">
-      <div class="button-wrapper __size-56"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
-      <div class="button-wrapper __size-44"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
-      <div class="button-wrapper __size-36"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
-      <div class="button-wrapper __size-28"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
+
+    <div class="button-block">
+      <div class="button-block__title">С иконкой — <code>.__icon</code></div>
+      <div class="button-block__desc">Модификатор <code>.button-container.__icon</code> принудительно ставит размер вложенной <code>.icon</code> по высоте кнопки. Не нужно вручную писать <code>.icon.__size-N</code>.</div>
+      <div class="preview-label" style="margin-top:8px;">icon-only</div>
+      <div class="preview-row">
+        <div class="button-wrapper __size-56"><button class="button-container __style-secondary __icon" style="width:56px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
+        <div class="button-wrapper __size-44"><button class="button-container __style-secondary __icon" style="width:44px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-secondary __icon" style="width:36px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
+        <div class="button-wrapper __size-28"><button class="button-container __style-secondary __icon" style="width:28px;" aria-label="Star"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span></span></button></div>
+      </div>
+      <div class="preview-label" style="margin-top:8px;">icon + label</div>
+      <div class="preview-row">
+        <div class="button-wrapper __size-56"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
+        <div class="button-wrapper __size-44"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
+        <div class="button-wrapper __size-36"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
+        <div class="button-wrapper __size-28"><button class="button-container __style-secondary __icon"><span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;Старз</span></button></div>
+      </div>
     </div>
   </section>
 
