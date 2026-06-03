@@ -28,6 +28,12 @@
   .button-block__divider { border: 0; border-top: 1px solid var(--dynamic-stroke-contrast-low); margin: 20px 0 0; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: var(--dynamic-surface-contrast-low); padding: 1px 6px; border-radius: 4px; }
 
+  .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .spec-table th { text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dynamic-text-and-icons-base-tertiary); padding: 0 0 8px; border-bottom: 1px solid var(--dynamic-stroke-contrast-low); }
+  .spec-table td { padding: 8px 12px 8px 0; vertical-align: top; border-bottom: 1px solid var(--dynamic-stroke-contrast-low); }
+  .spec-table td:first-child { width: 220px; white-space: nowrap; color: var(--dynamic-text-and-icons-base-secondary); }
+  .spec-table tr:last-child td { border-bottom: 0; }
+
   /*  Reusable inline svg sprite for the demos  */
   .demo-icon { color: currentColor; }
 </style>
@@ -140,7 +146,9 @@
 
   <section class="preview-section">
     <h2>ButtonInline</h2>
-    <div class="preview-row">
+    <div class="preview-label">Текстовая кнопка без фона. Цвет задаёт <code>.__view-*</code> на <code>.button-inline-wrapper</code>, типографику — <code>.__size-*</code> на <code>.button-inline</code>.</div>
+
+    <div class="preview-row" style="margin-bottom: 16px;">
       <div class="button-inline-wrapper __view-primary __size-16">
         <button class="button-inline __size-16">Primary 16</button>
       </div>
@@ -151,21 +159,85 @@
         <button class="button-inline __size-24">Tertiary 24</button>
       </div>
     </div>
+
+    <table class="spec-table">
+      <thead>
+        <tr><th colspan="2">Что умеет</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>.__size-16</code></td>
+          <td>13/16, height 16px — для подписей и метаданных</td>
+        </tr>
+        <tr>
+          <td><code>.__size-20</code></td>
+          <td>15/20, height 20px — body-m, дефолт в теле текста</td>
+        </tr>
+        <tr>
+          <td><code>.__size-24</code></td>
+          <td>17/24, height 24px — body-l, рядом с крупным контентом</td>
+        </tr>
+        <tr>
+          <td><code>.__size-32</code></td>
+          <td>17/24, height 32px — та же типографика, увеличенная зона тапа</td>
+        </tr>
+        <tr>
+          <td><code>.__view-primary</code></td>
+          <td>акцентный цвет (оранжевый)</td>
+        </tr>
+        <tr>
+          <td><code>.__view-secondary</code></td>
+          <td>основной цвет текста</td>
+        </tr>
+        <tr>
+          <td><code>.__view-tertiary</code></td>
+          <td>приглушённый второстепенный</td>
+        </tr>
+        <tr>
+          <td><code>.__view-primary-on-color</code></td>
+          <td>белый, для тёмных/цветных фонов</td>
+        </tr>
+        <tr>
+          <td><code>.__view-secondary-on-color</code></td>
+          <td>белый c прозрачностью 64%, на цветных фонах</td>
+        </tr>
+        <tr>
+          <td><code>.__view-custom</code></td>
+          <td>цвет берётся из <code>--button-inline-custom-color</code></td>
+        </tr>
+        <tr>
+          <td><code>:hover</code></td>
+          <td>opacity 0.84</td>
+        </tr>
+        <tr>
+          <td><code>:active</code> / <code>.__clicked</code></td>
+          <td>opacity 0.76 + scale(0.95)</td>
+        </tr>
+        <tr>
+          <td><code>.__state-loading</code></td>
+          <td>курсор progress, слот под лоадер</td>
+        </tr>
+        <tr>
+          <td><code>.__state-disabled</code></td>
+          <td>opacity 0.36, курсор not-allowed</td>
+        </tr>
+        <tr>
+          <td>увеличенная tap-зона</td>
+          <td>невидимый <code>::before</code> расширяет область клика на 6–8px вокруг</td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 
   <section class="preview-section" style="min-width: 320px;">
     <h2>TextInput</h2>
-    <div class="preview-label">default</div>
+    <div class="preview-label"><code>.__size-36</code> — body-m</div>
     <div class="preview-row">
-      <input class="text-input" placeholder="Написать комментарий…" style="flex:1;">
+      <input class="text-input __size-36" placeholder="Написать комментарий…" style="flex:1;">
     </div>
-    <div class="preview-label">__state-focused</div>
+    <div class="preview-label"><code>.__size-56</code> — body-l</div>
     <div class="preview-row">
-      <input class="text-input __state-focused" placeholder="Написать комментарий…" style="flex:1;">
-    </div>
-    <div class="preview-label">__state-disabled</div>
-    <div class="preview-row">
-      <input class="text-input __state-disabled" placeholder="Недоступно" style="flex:1;">
+      <input class="text-input __size-56" placeholder="Написать комментарий…" style="flex:1;">
     </div>
   </section>
 
@@ -478,7 +550,7 @@
     <div class="preview-stage" style="padding: 0;">
       <div class="comment-input">
         <div class="avatar __size-36 __type-initials">А</div>
-        <input class="text-input" placeholder="Написать комментарий…">
+        <input class="text-input __size-36" placeholder="Написать комментарий…">
         <div class="button-wrapper __size-36">
           <button class="button-container __style-primary" style="width: 36px; border-radius: 50%;" aria-label="Send">
             <span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/send.svg')"></span></span>
