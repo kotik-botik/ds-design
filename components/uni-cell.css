@@ -153,3 +153,17 @@
   flex-direction: row;
   align-items: var(--uni-cell-middle-right-content-align, center);
 }
+
+/* ============================================================
+   VIEW: ACTIVITY — короткая строка действия с кнопкой справа
+   Layout-конвенция: avatar (left) + text (center, 1 line) + button (right).
+   Все слоты выровнены по центру, между ними одинаковый gap.
+   ============================================================ */
+.uni-cell-wrapper.__view-activity {
+  --uni-cell-padding-top:    var(--space-2, 8px);
+  --uni-cell-padding-bottom: var(--space-2, 8px);
+}
+.uni-cell-wrapper.__view-activity .uni-cell {
+  align-items: center;
+  gap: 12px;
+}
