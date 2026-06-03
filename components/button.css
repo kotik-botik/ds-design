@@ -72,7 +72,7 @@
   --button-content-gap: 6px;
 }
 
-.button-wrapper.__size-28 { --button-border-radius: 10px; --button-icon-size: 14px; }
+.button-wrapper.__size-28 { --button-border-radius: 10px; --button-icon-size: 16px; }
 .button-wrapper.__size-28 .button-container {
   height: 28px;
   padding: 0 10px;
