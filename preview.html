@@ -443,6 +443,22 @@
         </div>
       </div>
     </div>
+
+    <table class="spec-table">
+      <thead>
+        <tr><th colspan="2">Что умеет</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>контекст</td><td>используется в ленте (виджет «Вокруг вас сейчас»)</td></tr>
+        <tr><td>левый слот</td><td><code>.avatar.__size-56</code></td></tr>
+        <tr><td>центр</td><td>1 строка <code>.ds-body-m</code>, имя обычно жирным</td></tr>
+        <tr><td>правый слот</td><td><code>.button-wrapper.__size-36</code> с <code>.button-container.__style-secondary</code></td></tr>
+        <tr><td>паддинги</td><td>верт. 8px (компактнее обычной <code>.uni-cell</code>), горизонт. 16px</td></tr>
+        <tr><td>выравнивание</td><td><code>align-items: center</code> на <code>.uni-cell</code> — слоты сами центрируются</td></tr>
+        <tr><td>gap</td><td>12px между слотами (не нужны inline margins)</td></tr>
+        <tr><td><code>:active</code> / <code>.__clicked</code></td><td>scale(0.95) от центра (требует <code>__state-enabled</code> на контейнере)</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section class="preview-section" style="min-width: 375px;">
