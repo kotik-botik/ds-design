@@ -4,28 +4,42 @@
  * Single-line text field on a contrast-low pill. Inherits theme tokens
  * so it works the same inside the comment bar, a search row, or a form.
  *
+ * SIZES:   .__size-36  — body-m (15/20)
+ *          .__size-56  — body-l (17/24)
+ *          (border-radius = height / 4)
+ *
  * STATES:  .__state-focused   — explicit highlighted state (e.g. while the
  *                               surrounding wrapper is focus-within)
  *          .__state-disabled  — non-interactive, dimmed
  *
  * USAGE:
- *   <input class="text-input" placeholder="…">
+ *   <input class="text-input __size-36" placeholder="…">
  */
 
 .text-input {
   flex: 1;
   min-width: 0;
-  height: 36px;
   padding: 0 var(--space-4);
   border: 0;
   outline: none;
-  border-radius: 20px;
   background-color: var(--dynamic-surface-contrast-low);
   color: var(--dynamic-text-and-icons-base-primary);
   font-family: var(--font-family);
-  font-size: 14px;
-  line-height: 20px;
   transition: background-color var(--ds-animation-duration) var(--ds-animation-easing);
+}
+
+.text-input.__size-36 {
+  height: 36px;
+  border-radius: 9px;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.text-input.__size-56 {
+  height: 56px;
+  border-radius: 14px;
+  font-size: 17px;
+  line-height: 24px;
 }
 
 .text-input::placeholder {
