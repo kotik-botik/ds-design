@@ -15,6 +15,9 @@
  *
  * VIEWS:
  *   .__view-custom    — uses --uni-cell-custom-overlay-color
+ *
+ * TYPES:
+ *   .__type-activity  — короткая строка действия: avatar + 1 строка текста + кнопка
  */
 
 /* ============================================================
@@ -156,15 +159,15 @@
 }
 
 /* ============================================================
-   VIEW: ACTIVITY — короткая строка действия с кнопкой справа
+   TYPE: ACTIVITY — короткая строка действия с кнопкой справа
    Layout-конвенция: avatar (left) + text (center, 1 line) + button (right).
    Все слоты выровнены по центру, между ними одинаковый gap.
    ============================================================ */
-.uni-cell-wrapper.__view-activity {
+.uni-cell-wrapper.__type-activity {
   --uni-cell-padding-top:    var(--space-2, 8px);
   --uni-cell-padding-bottom: var(--space-2, 8px);
 }
-.uni-cell-wrapper.__view-activity .uni-cell {
+.uni-cell-wrapper.__type-activity .uni-cell {
   align-items: center;
   gap: 12px;
 }
