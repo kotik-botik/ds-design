@@ -536,27 +536,24 @@
           </div>
         </div>
 
-        <div class="feed-post-category">
-          <nav class="breadcrumbs">
-            <a class="breadcrumbs__item" href="#">Еда</a>
-            <span class="breadcrumbs__separator" aria-hidden="true"></span>
-            <span class="breadcrumbs__item __state-on">Рецепты</span>
-          </nav>
+        <nav class="breadcrumbs">
+          <a class="breadcrumbs__item" href="#">Еда</a>
+          <span class="breadcrumbs__separator" aria-hidden="true"></span>
+          <span class="breadcrumbs__item __state-on">Рецепты</span>
+        </nav>
+
+        <p class="ds-body-m" style="margin: 0;">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
+
+        <div class="media" style="height: 220px; background: linear-gradient(135deg, var(--base-orange-saturated-48), var(--base-orange-saturated-64));">
+          <button class="media__play" aria-label="Play">
+            <span class="icon __size-24 __src" style="--icon-src:url('../assets/icons/play.svg')"></span>
+          </button>
+          <span class="media__time">12:34</span>
         </div>
 
-        <p class="feed-post-text ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
-
-        <div class="feed-post-media" style="height: 220px; background: linear-gradient(135deg, var(--base-orange-saturated-48), var(--base-orange-saturated-64));">
-          <button class="feed-post-media__play" aria-label="Play">
-          <span class="icon __size-24 __src" style="--icon-src:url('../assets/icons/play.svg')"></span>
-        </button>
-          <span class="feed-post-media__time">12:34</span>
-        </div>
-
-        <!-- Actions: just button-wrappers in a flex row -->
-        <div class="feed-post-actions">
+        <div class="actions-bar">
           <div class="button-wrapper __size-36">
-            <button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;1.2k</span></button>
+            <button class="button-container __style-secondary __view-liked"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/star.svg')"></span>&nbsp;1.2k</span></button>
           </div>
           <div class="button-wrapper __size-36">
             <button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/comment_24.svg')"></span>&nbsp;89</span></button>
@@ -564,7 +561,7 @@
           <div class="button-wrapper __size-36">
             <button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/thumb-up.svg')"></span>&nbsp;247</span></button>
           </div>
-          <div class="feed-post-actions__spacer"></div>
+          <span class="spacer"></span>
           <div class="button-wrapper __size-36">
             <button class="button-container __style-secondary" aria-label="More" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/dots-horizontal.svg')"></span></span></button>
           </div>
@@ -577,16 +574,13 @@
         <tr><th colspan="2">Что умеет</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>.feed-post</code></td><td>вертикальный стек секций на surface-base-secondary; стилей у самого поста нет, всё делают примитивы внутри</td></tr>
-        <tr><td>хедер</td><td>обычный <code>.uni-cell</code> с аватаром, именем/временем и кнопкой</td></tr>
-        <tr><td><code>.feed-post-category</code></td><td>обёртка над <code>.breadcrumbs</code> с горизонтальным паддингом</td></tr>
-        <tr><td><code>.feed-post-text</code></td><td>текст поста, типографика задаётся отдельным <code>.ds-body-m</code></td></tr>
-        <tr><td><code>.feed-post-media</code></td><td>слот под фото/видео, на всю ширину</td></tr>
-        <tr><td><code>.feed-post-media__play</code></td><td>круглая play-кнопка 56px с blur поверх медиа</td></tr>
-        <tr><td><code>.feed-post-media__time</code></td><td>пилюля с длительностью в правом нижнем углу</td></tr>
-        <tr><td><code>.feed-post-actions</code></td><td>flex-ряд с <code>.button-wrapper</code>, разделён сверху линией</td></tr>
-        <tr><td><code>.feed-post-actions__spacer</code></td><td>растягивается, прижимает крайнюю кнопку (меню) вправо</td></tr>
-        <tr><td><code>.__state-loading</code></td><td>shimmer-анимация над медиа-слотом</td></tr>
+        <tr><td><code>.feed-post</code></td><td>вертикальный flex-стек на surface-base-secondary с <code>gap: 12px</code>; внутри только обычные примитивы</td></tr>
+        <tr><td>хедер</td><td><code>.uni-cell-wrapper</code> с аватаром, именем/временем и кнопкой</td></tr>
+        <tr><td>категория</td><td><code>.breadcrumbs</code> напрямую — без обёртки</td></tr>
+        <tr><td>текст</td><td><code>&lt;p class="ds-body-m"&gt;</code> — без обёртки</td></tr>
+        <tr><td>медиа</td><td><code>.media</code> + опционально <code>.media__play</code> / <code>.media__time</code></td></tr>
+        <tr><td>actions</td><td><code>.actions-bar</code> с <code>.button-wrapper</code>'ами и <code>.spacer</code> для разделения групп</td></tr>
+        <tr><td><code>.__state-loading</code></td><td>shimmer-анимация — теперь на <code>.media</code></td></tr>
       </tbody>
     </table>
   </section>

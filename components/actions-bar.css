@@ -1,0 +1,24 @@
+/**
+ * OK Design System — ActionsBar
+ *
+ * Горизонтальный ряд кнопок/иконок (лайк, коммент, share, … меню).
+ * Не приносит вертикальных паддингов снаружи — их задаёт родитель.
+ * Внутри использует <code>.spacer</code> для разделения групп.
+ *
+ *   <div class="actions-bar">
+ *     <div class="button-wrapper __size-36">…</div>
+ *     <div class="button-wrapper __size-36">…</div>
+ *     <span class="spacer"></span>
+ *     <div class="button-wrapper __size-36">…</div>
+ *   </div>
+ */
+
+.actions-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.spacer {
+  flex: 1;
+}
