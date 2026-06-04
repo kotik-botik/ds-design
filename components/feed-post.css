@@ -19,12 +19,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-4);
   background-color: var(--dynamic-surface-base-secondary);
 }
 
-/* Inner uni-cells (header) — без горизонтальных паддингов,
-   слоты выровнены по центру с фиксированным gap'ом */
+/* Каждая дочерняя секция получает горизонтальный паддинг 16,
+   кроме .media — она тянется на всю ширину поста */
+.feed-post > :not(.media) {
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+/* Inner uni-cells (header) — без своих горизонтальных паддингов,
+   их кладёт обёртка .feed-post > * */
 .feed-post .uni-cell-wrapper {
   --uni-cell-padding-left:  0;
   --uni-cell-padding-right: 0;
