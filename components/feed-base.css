@@ -1,10 +1,10 @@
 /**
- * OK Design System — FeedPost (molecule, layout only)
+ * OK Design System — FeedBase (molecule, layout only)
  *
  * Простая вертикальная флекс-стопка с фиксированным gap.
  * Внутри используются обычные примитивы:
  *
- *   <article class="feed-post">
+ *   <article class="feed-base">
  *     <div class="uni-cell-wrapper">…author header…</div>
  *     <nav class="breadcrumbs">…category…</nav>
  *     <p class="ds-body-m">…text…</p>
@@ -33,7 +33,7 @@
   overflow: hidden;
 }
 
-.feed-post {
+.feed-base {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -42,29 +42,29 @@
 /* Каждая дочерняя секция получает горизонтальный паддинг 16,
    кроме .media — она тянется на всю ширину поста.
    Вертикальные паддинги обнулены — расстояния задаются только flex-gap. */
-.feed-post > * {
+.feed-base > * {
   padding-top: 0;
   padding-bottom: 0;
 }
-.feed-post > :not(.media) {
+.feed-base > :not(.media) {
   padding-left: var(--space-4);
   padding-right: var(--space-4);
 }
 
 /* Inner uni-cells (header) — без своих горизонтальных паддингов,
-   их кладёт обёртка .feed-post > * */
-.feed-post .uni-cell-wrapper {
+   их кладёт обёртка .feed-base > * */
+.feed-base .uni-cell-wrapper {
   --uni-cell-padding-left:   0;
   --uni-cell-padding-right:  0;
   --uni-cell-padding-top:    0;
   --uni-cell-padding-bottom: 0;
 }
-.feed-post .uni-cell {
+.feed-base .uni-cell {
   align-items: center;
   gap: 10px;
 }
 
 /* Body paragraphs (текст поста) — без браузерных margin'ов */
-.feed-post p {
+.feed-base p {
   margin: 0;
 }
