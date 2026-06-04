@@ -38,3 +38,21 @@
 .feed-post p {
   margin: 0;
 }
+
+/* ============================================================
+   KLASS BUTTON — toggleable like-action для actions-bar.
+   Структура: <label class="button-wrapper button-klass">
+                <input type="checkbox" hidden>
+                <span class="button-container __style-secondary">…</span>
+              </label>
+   Иконка переключается outline ↔ filled через :checked.
+   ============================================================ */
+.feed-post .button-klass {
+  cursor: pointer;
+}
+.feed-post .button-klass .icon {
+  --icon-src: url('../assets/icons/klass_16_20.svg');
+}
+.feed-post .button-klass > input:checked ~ .button-container .icon {
+  --icon-src: url('../assets/icons/klass_filled_16_20.svg');
+}
