@@ -430,7 +430,7 @@
   <section class="preview-section" style="min-width: 375px;">
     <h2>ActivityCell — UniCell <code>__type-activity</code></h2>
     <div class="preview-label">Avatar + 1 строка текста + действие справа. Все слоты центрируются по вертикали автоматически, gap 12px ставит сама ячейка.</div>
-    <div class="preview-stage" style="padding: 0;">
+    <div class="preview-stage" style="padding: 0; background: transparent;">
       <div class="uni-cell-wrapper __type-activity">
         <div class="uni-cell-container __state-enabled">
           <div class="uni-cell">
@@ -463,18 +463,15 @@
 
   <section class="preview-section" style="min-width: 375px;">
     <h2>Comment — UniCell + Avatar</h2>
-    <div class="preview-stage" style="padding: 0;">
+    <div class="preview-stage" style="padding: 0; background: transparent;">
       <div class="uni-cell-wrapper">
         <div class="uni-cell-container">
-          <div class="uni-cell">
-            <div class="avatar __size-36 __type-initials" style="margin-right: 10px;">МК</div>
+          <div class="uni-cell" style="gap: 12px;">
+            <div class="avatar __size-36 __type-initials">МК</div>
             <div class="contents-view-container uni-cell-additional-content">
               <div class="ds-caption-m-accent">Михаил К.</div>
               <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">5 мин. назад</div>
               <div class="ds-body-m" style="margin-top: 4px;">Отличный рецепт, спасибо! Сделал на ужин — вся семья в восторге.</div>
-              <div class="button-inline-wrapper __view-tertiary __size-16" style="margin-top: 6px;">
-                <button class="button-inline __size-16">🤍 0</button>
-              </div>
             </div>
           </div>
         </div>
@@ -487,9 +484,25 @@
     <div class="preview-stage">
       <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary); margin-bottom: 8px;">Вступите в сообщество</div>
       <div class="uni-card-wrapper __size-custom" style="--uni-card-size-custom: 100%;">
-        <div class="uni-card __state-enabled" style="border: 1.5px solid var(--dynamic-stroke-contrast-mid); border-radius: 12px; overflow: hidden; background: var(--dynamic-surface-base-secondary);">
+        <div class="uni-card __state-enabled __has-background" style="overflow: hidden;">
           <div class="uni-card-media" style="width: 100%; height: 100px; background: linear-gradient(135deg, var(--base-blue-48), var(--base-blue-64)); margin: 0;"></div>
-          <div class="uni-card-content" style="width: 100%; padding: 12px;">
+          <div class="uni-card-content" style="width: 100%;">
+            <div class="contents-view-container">
+              <div class="ds-title-s">Любители рыбалки — Петербург</div>
+              <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary); margin-top: 3px;">48 320 участников · Закрытая группа</div>
+            </div>
+            <div class="button-wrapper __size-36 __full-width" style="display: block; margin-top: 10px;">
+              <button class="button-container __style-primary" style="width: 100%;"><span class="button-content">Вступить</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-label" style="margin-top: 16px;">Без <code>__has-background</code> — прозрачно, без бордера, content flush с краями.</div>
+      <div class="uni-card-wrapper __size-custom" style="--uni-card-size-custom: 100%;">
+        <div class="uni-card __state-enabled" style="overflow: hidden;">
+          <div class="uni-card-media" style="width: 100%; height: 100px; background: linear-gradient(135deg, var(--base-blue-48), var(--base-blue-64)); margin: 0;"></div>
+          <div class="uni-card-content" style="width: 100%;">
             <div class="contents-view-container">
               <div class="ds-title-s">Любители рыбалки — Петербург</div>
               <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary); margin-top: 3px;">48 320 участников · Закрытая группа</div>
@@ -507,9 +520,9 @@
     <h2>FeedPost — primitives composition</h2>
     <div class="preview-stage" style="padding: 0;">
       <article class="feed-post">
-        <!-- Header: uni-cell with avatar + meta + subscribe -->
+        <!-- Header: uni-cell with avatar + meta + subscribe (non-interactive) -->
         <div class="uni-cell-wrapper">
-          <div class="uni-cell-container __state-enabled">
+          <div class="uni-cell-container">
             <div class="uni-cell">
               <div class="avatar __size-36 __type-initials" style="margin-right: 10px;">ИЧ</div>
               <div class="contents-view-container uni-cell-additional-content __align-self-center">
