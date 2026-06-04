@@ -36,8 +36,10 @@
    CARD — the interactive surface
    ============================================================ */
 .uni-card {
-  --uni-card-radius-top:    20px;
-  --uni-card-radius-bottom: 10px;
+  --uni-card-radius-top:     20px;
+  --uni-card-content-padding: 12px;
+  --uni-card-button-radius:   12px;
+  --uni-card-radius-bottom:   calc(var(--uni-card-button-radius) + var(--uni-card-content-padding));
 
   display: block;
   padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
@@ -106,8 +108,16 @@
 }
 
 /* ============================================================
-   CONTENT
+   CONTENT — text + button area below media.
+   Default padding equals --uni-card-content-padding на all sides,
+   так что нижний радиус карточки (button-radius + content-padding)
+   получается концентричным к кнопке внутри.
    ============================================================ */
 .uni-card-content {
   width: var(--uni-card-size, 220px);
+  padding: var(--uni-card-content-padding)
+           var(--uni-card-content-padding)
+           var(--uni-card-content-padding)
+           var(--uni-card-content-padding);
+  box-sizing: border-box;
 }
