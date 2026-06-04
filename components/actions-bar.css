@@ -1,0 +1,22 @@
+/**
+ * OK Design System — ActionsBar
+ *
+ * Горизонтальный ряд кнопок/иконок. Вертикальные паддинги задаёт родитель.
+ * Кнопка с <code>.__pinned-end</code> прижимается к правому краю
+ * (через <code>margin-left: auto</code>) — удобно для меню/share.
+ *
+ *   <div class="actions-bar">
+ *     <div class="button-wrapper __size-36">…like…</div>
+ *     <div class="button-wrapper __size-36">…comment…</div>
+ *     <div class="button-wrapper __size-36 __pinned-end">…menu…</div>
+ *   </div>
+ */
+
+.actions-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.actions-bar > .__pinned-end {
+  margin-left: auto;
+}

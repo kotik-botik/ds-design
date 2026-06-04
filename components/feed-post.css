@@ -9,7 +9,7 @@
  *     <nav class="breadcrumbs">…category…</nav>
  *     <p class="ds-body-m">…text…</p>
  *     <div class="media">… <img> + .media__play / .media__time …</div>
- *     <div class="actions-bar">…buttons + .spacer…</div>
+ *     <div class="actions-bar">…buttons…</div>
  *   </article>
  *
  * Горизонтальные паддинги задаёт обёртка снаружи.
@@ -26,17 +26,4 @@
 .feed-post .uni-cell-wrapper {
   --uni-cell-padding-left:  0;
   --uni-cell-padding-right: 0;
-}
-
-/* ============================================================
-   ACTIONS BAR — flex-ряд с кнопками внизу поста.
-   .spacer прижимает крайнюю кнопку (меню) вправо.
-   ============================================================ */
-.feed-post .actions-bar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-.feed-post .actions-bar .spacer {
-  flex: 1;
 }
