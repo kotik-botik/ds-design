@@ -19,11 +19,22 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  padding: var(--space-4);
   background-color: var(--dynamic-surface-base-secondary);
 }
 
-/* Inner uni-cells (header) — без горизонтальных паддингов */
+/* Inner uni-cells (header) — без горизонтальных паддингов,
+   слоты выровнены по центру с фиксированным gap'ом */
 .feed-post .uni-cell-wrapper {
   --uni-cell-padding-left:  0;
   --uni-cell-padding-right: 0;
+}
+.feed-post .uni-cell {
+  align-items: center;
+  gap: 10px;
+}
+
+/* Body paragraphs (текст поста) — без браузерных margin'ов */
+.feed-post p {
+  margin: 0;
 }
