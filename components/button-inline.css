@@ -38,10 +38,10 @@
   --button-inline-color: var(--dynamic-text-and-icons-base-secondary);
 }
 .button-inline-wrapper.__view-primary-on-color {
-  --button-inline-color: #FFFFFF;
+  --button-inline-color: var(--static-text-and-icons-base-inverse-primary);
 }
 .button-inline-wrapper.__view-secondary-on-color {
-  --button-inline-color: rgba(255, 255, 255, 0.64);
+  --button-inline-color: var(--static-text-and-icons-base-inverse-tertiary);
 }
 .button-inline-wrapper.__view-custom {
   --button-inline-color: var(--button-inline-custom-color);
@@ -164,7 +164,7 @@
 .button-inline:focus-visible + .button-inline-outline {
   position: absolute;
   inset: 0;
-  outline: #0099FF solid 3px;
+  outline: var(--static-stroke-special-focus) solid 3px;
   outline-offset: 2px;
   border-radius: 2px;
   z-index: -1;
