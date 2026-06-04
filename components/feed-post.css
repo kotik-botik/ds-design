@@ -19,13 +19,20 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
   background-color: var(--dynamic-surface-base-secondary);
   border-radius: 20px;
   overflow: hidden;
 }
 
 /* Каждая дочерняя секция получает горизонтальный паддинг 16,
-   кроме .media — она тянется на всю ширину поста */
+   кроме .media — она тянется на всю ширину поста.
+   Вертикальные паддинги обнулены — расстояния задаются только flex-gap. */
+.feed-post > * {
+  padding-top: 0;
+  padding-bottom: 0;
+}
 .feed-post > :not(.media) {
   padding-left: var(--space-4);
   padding-right: var(--space-4);
@@ -47,9 +54,4 @@
 /* Body paragraphs (текст поста) — без браузерных margin'ов */
 .feed-post p {
   margin: 0;
-}
-
-/* Actions-bar получает нижний паддинг — чтобы кнопки не липли к краю поста */
-.feed-post > .actions-bar {
-  padding-bottom: var(--space-4);
 }
