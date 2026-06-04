@@ -122,8 +122,8 @@
 
 /* Primary — orange fill, white text */
 .button-container.__style-primary {
-  --button-color: #FFFFFF;
-  --button-background-color: #FF7700;
+  --button-color: var(--static-text-and-icons-base-inverse-primary);
+  --button-background-color: var(--static-surface-status-accent);
 }
 
 /* Secondary — translucent bg, theme text */
@@ -142,20 +142,20 @@
 
 /* Primary on color — dark bg, dark text */
 .button-container.__style-primary-on-color {
-  --button-color: #2E2F33;
-  --button-background-color: #FFFFFF;
+  --button-color: var(--base-black-100);
+  --button-background-color: var(--static-surface-base-inverse-primary);
 }
 
 /* Negative — red tint bg, red text */
 .button-container.__style-negative {
   --button-color: var(--dynamic-text-and-icons-status-negative);
-  --button-background-color: rgba(255, 85, 85, 0.12);
+  --button-background-color: var(--static-surface-status-contrast-negative);
 }
 
 /* Destructive — red fill, white text */
 .button-container.__style-destructive {
-  --button-color: #FFFFFF;
-  --button-background-color: #FF5555;
+  --button-color: var(--static-text-and-icons-base-inverse-primary);
+  --button-background-color: var(--static-surface-status-negative);
 }
 
 /* Custom — all values from CSS vars */
@@ -298,7 +298,7 @@
 .button-container:focus-visible + .button-outline {
   position: absolute;
   inset: 0;
-  outline: #0099FF solid 3px;
+  outline: var(--static-stroke-special-focus) solid 3px;
   outline-offset: 2px;
   border-radius: var(--button-border-radius, 15px);
   pointer-events: none;

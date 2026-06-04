@@ -86,11 +86,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.22);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background-color: var(--base-white-translucent-24);
+  border: 1.5px solid var(--base-white-translucent-36);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  color: #FFFFFF;
+  color: var(--static-text-and-icons-base-inverse-primary);
   cursor: pointer;
   transition: var(--ds-transition-opacity);
 }
@@ -105,8 +105,8 @@
   display: inline-flex;
   align-items: center;
   border-radius: 6px;
-  background-color: rgba(0, 0, 0, 0.55);
-  color: #FFFFFF;
+  background-color: var(--base-black-lena-translucent-56);
+  color: var(--static-text-and-icons-base-inverse-primary);
   font-family: var(--font-family);
   font-size: var(--font-size-100);
   font-weight: 600;

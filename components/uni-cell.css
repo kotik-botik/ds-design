@@ -117,7 +117,7 @@
    ============================================================ */
 .uni-cell-container.__state-dragged {
   --overlay-color: transparent;
-  box-shadow: 0px 8px 24px -8px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 8px 24px -8px var(--base-black-lena-translucent-12);
   cursor: grabbing;
   user-select: none;
   background-color: var(--dynamic-surface-base-quaternary);
@@ -127,7 +127,7 @@
    FOCUS
    ============================================================ */
 .uni-cell-container:focus-visible {
-  outline: #0099FF solid 3px;
+  outline: var(--static-stroke-special-focus) solid 3px;
   outline-offset: 0px;
 }
 
