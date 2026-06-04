@@ -12,10 +12,15 @@
  * Можно навешивать класс на сам компонент:
  *   <article class="feed-base island">…</article>
  *
+ * Ширина: всегда fillContainer (width: 100%). Горизонтальные отступы
+ * задаёт обёртка снаружи, не сам остров.
+ *
  * Стекуются несколько островов через .feed-container.
  */
 
 .island {
+  width: 100%;
+  box-sizing: border-box;
   padding-top: var(--space-4);
   padding-bottom: var(--space-4);
   background-color: var(--dynamic-surface-base-secondary);

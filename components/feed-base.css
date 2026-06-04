@@ -61,3 +61,29 @@
 .feed-base p {
   margin: 0;
 }
+
+/* ============================================================
+   SUBSCRIBE BUTTON — toggle между "Подписаться" (secondary)
+   и "Подписан" (tertiary).
+   Структура:
+     <label class="button-wrapper button-subscribe">
+       <input type="checkbox" hidden>
+       <span class="button-container __style-secondary">
+         <span class="button-content">
+           <span class="button-subscribe__label-default">Подписаться</span>
+           <span class="button-subscribe__label-subscribed">Подписан</span>
+         </span>
+       </span>
+     </label>
+   ============================================================ */
+.button-subscribe { cursor: pointer; }
+.button-subscribe__label-subscribed { display: none; }
+
+.button-subscribe:has(> input:checked) .button-subscribe__label-default { display: none; }
+.button-subscribe:has(> input:checked) .button-subscribe__label-subscribed { display: inline; }
+
+/* Subscribed state: look as if __style-tertiary */
+.button-subscribe:has(> input:checked) > .button-container {
+  --button-color: var(--dynamic-text-and-icons-base-secondary);
+  --button-background-color: transparent;
+}
