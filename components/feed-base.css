@@ -25,12 +25,24 @@
   flex-direction: column;
   gap: var(--space-3);
 }
-.feed-container > * {
+/* Карточный визуал применяется ко всем детям, кроме заголовка */
+.feed-container > :not(.feed-container__title) {
   padding-top: var(--space-4);
   padding-bottom: var(--space-4);
   background-color: var(--dynamic-surface-base-secondary);
   border-radius: 20px;
   overflow: hidden;
+}
+
+/* Опциональный заголовок контейнера — caption над списком.
+   Достаточно положить элемент с этим классом первым внутрь .feed-container —
+   он отрисуется без карточного фона. */
+.feed-container__title {
+  font-family: var(--font-family);
+  font-size: var(--font-size-100);
+  line-height: var(--line-height-100);
+  font-weight: 400;
+  color: var(--dynamic-text-and-icons-base-secondary);
 }
 
 .feed-base {
