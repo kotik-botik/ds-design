@@ -1,0 +1,86 @@
+/**
+ * OK Design System — Media
+ *
+ * Универсальный слот под фото/видео. Картинка тянется на 100% ширины,
+ * содержит опциональные оверлеи: .media__play (круглая play-кнопка),
+ * .media__time (пилюля с длительностью).
+ *
+ *   <div class="media">
+ *     <img src="…" alt="">
+ *     <button class="media__play">▶</button>
+ *     <span class="media__time">12:34</span>
+ *   </div>
+ *
+ * STATES:
+ *   .__state-loading — shimmer поверх медиа
+ */
+
+.media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--dynamic-surface-contrast-low);
+}
+
+.media img,
+.media video {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Round play button overlay */
+.media__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--base-white-translucent-24);
+  border: 1.5px solid var(--base-white-translucent-36);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--static-text-and-icons-base-inverse-primary);
+  cursor: pointer;
+  transition: var(--ds-transition-opacity);
+}
+.media__play:active { opacity: 0.7; }
+
+/* Duration pill (bottom-right) */
+.media__time {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  height: 24px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background-color: var(--base-black-lena-translucent-56);
+  color: var(--static-text-and-icons-base-inverse-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-100);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Loading shimmer */
+.media.__state-loading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--dynamic-surface-special-overlay) 50%,
+    transparent 100%
+  );
+  opacity: 0.12;
+  pointer-events: none;
+  animation: ds-shimmer 2.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards infinite;
+}

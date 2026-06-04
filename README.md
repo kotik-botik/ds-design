@@ -90,7 +90,7 @@ ds-design/
 | `.join-btn` | `.button-wrapper.__size-44.__style-primary.__full-width` | + loading при отправке |
 | `.nb-btn`, `.adots`, `.c-back` | `.button-wrapper.__size-36.__style-tertiary` + `.icon` | hover / press |
 | `.c-send` | `.button-wrapper.__size-36.__style-primary` (border-radius: 50%) | disabled когда поле пустое |
-| `.abtn` (like / comment / klass) | `.button-wrapper.__size-36.__style-secondary` + иконка + счётчик | `.__view-liked` на heart |
+| `.abtn` (like / comment / klass) | `.button-wrapper.__size-36.__style-secondary` + иконка + счётчик | liked-состояние = filled-иконка (`klass_filled_*`) |
 | `.cmt-like` | `.button-inline.__size-16.__view-tertiary` | hover (opacity 0.84) |
 | `.ar-row` | `.uni-cell-wrapper.__state-enabled` | hover / pressed |
 | `.cmt` | `.uni-cell-wrapper` | — |
