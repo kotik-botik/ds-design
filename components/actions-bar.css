@@ -23,18 +23,31 @@
 
 /* ============================================================
    KLASS BUTTON — toggleable like-action.
-   Структура: <label class="button-wrapper button-klass">
-                <input type="checkbox" hidden>
-                <span class="button-container __style-secondary">…</span>
-              </label>
-   Иконка переключается outline ↔ filled через :checked.
+   Структура:
+     <label class="button-wrapper button-klass">
+       <input type="checkbox" hidden>
+       <span class="button-container __style-secondary">
+         <span class="button-content">
+           <span class="button-klass__icon-outline icon __size-20 __src"
+                 style="--icon-src:url('…/klass_16_20.svg')"></span>
+           <span class="button-klass__icon-filled icon __size-20 __src"
+                 style="--icon-src:url('…/klass_filled_16_20.svg')"></span>
+           247
+         </span>
+       </span>
+     </label>
+   Чекбокс переключает видимость двух иконок.
    ============================================================ */
 .button-klass {
   cursor: pointer;
 }
-.button-klass .icon {
-  --icon-src: url('../assets/icons/klass_16_20.svg');
+/* default: outline visible, filled hidden */
+.button-klass__icon-filled { display: none; }
+
+/* checked: filled visible, outline hidden */
+.button-klass > input:checked ~ .button-container .button-klass__icon-outline {
+  display: none;
 }
-.button-klass > input:checked ~ .button-container .icon {
-  --icon-src: url('../assets/icons/klass_filled_16_20.svg');
+.button-klass > input:checked ~ .button-container .button-klass__icon-filled {
+  display: inline-flex;
 }
