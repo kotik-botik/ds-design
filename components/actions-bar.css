@@ -41,13 +41,18 @@
 .button-klass {
   cursor: pointer;
 }
-/* default: outline visible, filled hidden */
-.button-klass__icon-filled { display: none; }
+/* default: outline + base count */
+.button-klass__icon-filled,
+.button-klass__count-liked { display: none; }
 
-/* checked: filled visible, outline hidden */
-.button-klass > input:checked ~ .button-container .button-klass__icon-outline {
+/* checked: filled + incremented count */
+.button-klass > input:checked ~ .button-container .button-klass__icon-outline,
+.button-klass > input:checked ~ .button-container .button-klass__count-default {
   display: none;
 }
 .button-klass > input:checked ~ .button-container .button-klass__icon-filled {
   display: inline-flex;
+}
+.button-klass > input:checked ~ .button-container .button-klass__count-liked {
+  display: inline;
 }
