@@ -43,6 +43,7 @@
 
   display: block;
   padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
+  border: 0.5px solid var(--dynamic-stroke-contrast-mid);
   border-radius: var(--uni-card-radius-top) var(--uni-card-radius-top)
                  var(--uni-card-radius-bottom) var(--uni-card-radius-bottom);
   transition: transform 500ms cubic-bezier(0, -0.3, 0.5, 1.3);
