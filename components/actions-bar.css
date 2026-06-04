@@ -40,19 +40,20 @@
    ============================================================ */
 .button-klass {
   cursor: pointer;
-}
-/* default: outline + base count */
-.button-klass__icon-filled,
-.button-klass__count-liked { display: none; }
 
-/* checked: filled + incremented count */
-.button-klass > input:checked ~ .button-container .button-klass__icon-outline,
-.button-klass > input:checked ~ .button-container .button-klass__count-default {
-  display: none;
+  /* Base count приходит через --button-klass-count в inline-стиле */
+  counter-reset: klass-count var(--button-klass-count, 0);
 }
-.button-klass > input:checked ~ .button-container .button-klass__icon-filled {
-  display: inline-flex;
+.button-klass:has(> input:checked) {
+  counter-increment: klass-count 1;
 }
-.button-klass > input:checked ~ .button-container .button-klass__count-liked {
-  display: inline;
+
+/* Иконка: outline по умолчанию, filled при :checked */
+.button-klass__icon-filled { display: none; }
+.button-klass:has(> input:checked) .button-klass__icon-outline { display: none; }
+.button-klass:has(> input:checked) .button-klass__icon-filled  { display: inline-flex; }
+
+/* Счётчик рендерится из CSS-counter — автоматически +1 при :checked */
+.button-klass__count::before {
+  content: counter(klass-count);
 }
