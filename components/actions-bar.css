@@ -20,3 +20,21 @@
 .actions-bar > .__pinned-end {
   margin-left: auto;
 }
+
+/* ============================================================
+   KLASS BUTTON — toggleable like-action.
+   Структура: <label class="button-wrapper button-klass">
+                <input type="checkbox" hidden>
+                <span class="button-container __style-secondary">…</span>
+              </label>
+   Иконка переключается outline ↔ filled через :checked.
+   ============================================================ */
+.button-klass {
+  cursor: pointer;
+}
+.button-klass .icon {
+  --icon-src: url('../assets/icons/klass_16_20.svg');
+}
+.button-klass > input:checked ~ .button-container .icon {
+  --icon-src: url('../assets/icons/klass_filled_16_20.svg');
+}
