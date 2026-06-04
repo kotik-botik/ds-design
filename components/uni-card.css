@@ -110,15 +110,11 @@
 
 /* ============================================================
    CONTENT — text + button area below media.
-   Default padding equals --uni-card-content-padding на all sides,
-   так что нижний радиус карточки (button-radius + content-padding)
-   получается концентричным к кнопке внутри.
+   Без собственных паддингов: их кладёт composer (через
+   .contents-view-container или inline). --uni-card-content-padding
+   остаётся как "design rule input" для нижнего радиуса.
    ============================================================ */
 .uni-card-content {
   width: var(--uni-card-size, 220px);
-  padding: var(--uni-card-content-padding)
-           var(--uni-card-content-padding)
-           var(--uni-card-content-padding)
-           var(--uni-card-content-padding);
   box-sizing: border-box;
 }
