@@ -44,3 +44,8 @@
 .feed-post p {
   margin: 0;
 }
+
+/* Actions-bar получает нижний паддинг — чтобы кнопки не липли к краю поста */
+.feed-post > .actions-bar {
+  padding-bottom: var(--space-4);
+}
