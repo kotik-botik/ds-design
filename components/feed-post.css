@@ -20,6 +20,8 @@
   flex-direction: column;
   gap: var(--space-3);
   background-color: var(--dynamic-surface-base-secondary);
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 /* Каждая дочерняя секция получает горизонтальный паддинг 16,
@@ -32,8 +34,10 @@
 /* Inner uni-cells (header) — без своих горизонтальных паддингов,
    их кладёт обёртка .feed-post > * */
 .feed-post .uni-cell-wrapper {
-  --uni-cell-padding-left:  0;
-  --uni-cell-padding-right: 0;
+  --uni-cell-padding-left:   0;
+  --uni-cell-padding-right:  0;
+  --uni-cell-padding-top:    0;
+  --uni-cell-padding-bottom: 0;
 }
 .feed-post .uni-cell {
   align-items: center;
@@ -43,4 +47,9 @@
 /* Body paragraphs (текст поста) — без браузерных margin'ов */
 .feed-post p {
   margin: 0;
+}
+
+/* Actions-bar получает нижний паддинг — чтобы кнопки не липли к краю поста */
+.feed-post > .actions-bar {
+  padding-bottom: var(--space-4);
 }
