@@ -12,18 +12,31 @@
  *     <div class="actions-bar">…buttons…</div>
  *   </article>
  *
- * Горизонтальные паддинги задаёт обёртка снаружи.
+ * Группа постов оборачивается в .feed-container — flex-стек с gap.
  */
 
-.feed-post {
+/* ============================================================
+   FEED CONTAINER — обёртка для списка постов.
+   Сам контейнер только стекует детей, а каждому ребёнку отдаёт
+   карточный визуал (paddings 16/0, white fill, radius 20).
+   ============================================================ */
+.feed-container {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+.feed-container > * {
   padding-top: var(--space-4);
   padding-bottom: var(--space-4);
   background-color: var(--dynamic-surface-base-secondary);
   border-radius: 20px;
   overflow: hidden;
+}
+
+.feed-post {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 /* Каждая дочерняя секция получает горизонтальный паддинг 16,
