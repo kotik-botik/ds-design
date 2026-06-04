@@ -26,7 +26,7 @@ ds-design/
     ├── avatar.css              # Avatar (24–56px, image / initials)
     ├── pulse-dot.css           # PulseDot (анимированный индикатор)
     ├── category-path.css       # CategoryPath (хлебные крошки)
-    ├── feed-post.css           # FeedPost (карточка ленты)
+    ├── feed-base.css           # FeedBase (карточка ленты)
     ├── feed-tabs.css           # FeedTabs (большие табы сверху)
     ├── tab-bar.css             # TabBar (нижняя навигация)
     ├── page-header.css         # StatusBar + NavBar
@@ -98,7 +98,7 @@ ds-design/
 | `.pava`, `.ar-ava`, `.nb-ava`, `.cmt-ava` | `.avatar.__size-32/36/40/44` | loading / disabled |
 | `.ar-dot` | `.pulse-dot.__view-accent` | paused |
 | `.pcat` | `.category-path` | — |
-| `.post` | `.feed-post` композиция: header = `.uni-cell-wrapper` + `.avatar` + `.button-wrapper`; actions = ряд `.button-wrapper.__size-36.__style-secondary` | loading |
+| `.post` | `.feed-base` композиция: header = `.uni-cell-wrapper` + `.avatar` + `.button-wrapper`; actions = ряд `.button-wrapper.__size-36.__style-secondary` | loading |
 | `.tabs` + `.tab` | `.feed-tabs` + `.feed-tabs-tab.__state-on` | on / disabled / clicked |
 | `.tbar` + `.tbi` | `.tab-bar` + `.tab-bar-item.__state-on` | on / disabled |
 | `.sb` | `.status-bar` | — |
