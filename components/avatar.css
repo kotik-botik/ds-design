@@ -1,17 +1,16 @@
 /**
- * OK Design System — Avatar Component
+ * OK Design System — Avatar (circle, avaPicture 1.3)
  *
- * Round avatar that displays either a PNG photo or text initials on a
- * colored background.
+ * SIZES:   .__size-16 | 20 | 24 | 36 (default) | 44 | 56 | 72 | 96 | 120 | 144
  *
- * SIZES:   .__size-24 | .__size-36 (default) | .__size-44 | .__size-56
- *          .__size-72 | .__size-96 | .__size-126
+ * TYPES:   .__type-image       — <img> child
+ *          .__type-placeholder — пустой круг (loading/empty)
+ *          .__type-icon        — иконка по центру (.icon как ребёнок)
+ *          .__type-initials    — 1–2 буквы на акценте
+ *          .__type-counter     — число (бейдж) в indigo-тинте
+ *          .__type-emoji       — emoji-символ по центру
  *
- * TYPE:    .__type-image     — <img> child (e.g. PNG)
- *          .__type-initials  — 1–2 letter fallback on accent surface
- *
- * STATES:  .__state-loading  — shimmer sweep
- *          .__state-disabled — opacity 0.36
+ * STATES:  .__state-loading | .__state-disabled
  */
 
 .avatar {
@@ -47,22 +46,42 @@
 }
 
 /* Size variants — keep visual rhythm with the 4px grid */
+.avatar.__size-16  { --avatar-size: 16px;  --avatar-font-size: 7px;  }
+.avatar.__size-20  { --avatar-size: 20px;  --avatar-font-size: 9px;  }
 .avatar.__size-24  { --avatar-size: 24px;  --avatar-font-size: 11px; }
 .avatar.__size-36  { --avatar-size: 36px;  --avatar-font-size: 14px; }
 .avatar.__size-44  { --avatar-size: 44px;  --avatar-font-size: 15px; }
 .avatar.__size-56  { --avatar-size: 56px;  --avatar-font-size: 19px; }
 .avatar.__size-72  { --avatar-size: 72px;  --avatar-font-size: 24px; }
 .avatar.__size-96  { --avatar-size: 96px;  --avatar-font-size: 32px; }
-.avatar.__size-126 { --avatar-size: 126px; --avatar-font-size: 42px; }
+.avatar.__size-120 { --avatar-size: 120px; --avatar-font-size: 40px; }
+.avatar.__size-126 { --avatar-size: 126px; --avatar-font-size: 42px; } /* legacy */
+.avatar.__size-144 { --avatar-size: 144px; --avatar-font-size: 48px; }
 
-/* Initials type — colored background with text */
+/* Type variants */
+.avatar.__type-image {
+  --avatar-bg: var(--dynamic-surface-contrast-low);
+}
+.avatar.__type-placeholder {
+  --avatar-bg: var(--dynamic-surface-contrast-mid);
+}
+.avatar.__type-icon {
+  --avatar-bg: var(--dynamic-surface-contrast-low);
+  --avatar-color: var(--dynamic-text-and-icons-base-primary);
+}
+.avatar.__type-icon > .icon {
+  width: 50%;
+  height: 50%;
+}
 .avatar.__type-initials {
   --avatar-bg: var(--static-surface-status-accent);
   --avatar-color: var(--static-text-and-icons-base-inverse-primary);
 }
-
-/* Image type — explicit marker; <img> child fills via .avatar img */
-.avatar.__type-image {
+.avatar.__type-counter {
+  --avatar-bg: var(--dynamic-surface-tint-indigo);
+  --avatar-color: var(--dynamic-text-and-icons-indigo);
+}
+.avatar.__type-emoji {
   --avatar-bg: var(--dynamic-surface-contrast-low);
 }
 
