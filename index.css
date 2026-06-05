@@ -32,6 +32,7 @@
 @import url('./components/contents-view.css');
 
 /* Lenta-derived components (built on top of the primitives above) */
+@import url('./components/header.css');
 @import url('./components/avatar.css');
 @import url('./components/picture.css');
 @import url('./components/pulse-dot.css');
