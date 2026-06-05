@@ -39,7 +39,7 @@
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scroll-padding-left: var(--space-4);
-  padding: 4px 0;
+  padding: 0;
 }
 .feed-stories__list::-webkit-scrollbar { display: none; }
 
