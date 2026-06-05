@@ -22,6 +22,11 @@
   padding-right: var(--space-4);
 }
 
+/* «Посмотреть N ответов» — авто-ширина, прижата к левому краю */
+.feed-discussion > .button-inline-wrapper {
+  align-self: flex-start;
+}
+
 /* Тонкая линия-сепаратор */
 .ds-divider {
   border: 0;
