@@ -187,6 +187,7 @@
    ============================================================ */
 .avatar.__has-caption {
   flex-direction: column;
+  align-items: center;
   width: auto;
   height: auto;
   background-color: transparent;
