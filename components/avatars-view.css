@@ -1,0 +1,59 @@
+/**
+ * OK Design System — AvatarsView
+ *
+ * Стек аватарок (с лёгким overlap'ом) + текст справа.
+ * Обычно используется для «N друзей сделали X», участники чата, и т.д.
+ *
+ *   <div class="avatars-view">
+ *     <div class="avatars-view__stack">
+ *       <div class="avatar __size-24 __type-image"><img …></div>
+ *       <div class="avatar __size-24 __type-image"><img …></div>
+ *       <div class="avatars-view__more">+3</div>
+ *     </div>
+ *     <span class="avatars-view__text">12 друзей поздравило</span>
+ *   </div>
+ *
+ * Каждый следующий ребёнок стека наезжает на предыдущий на 8px и обведён
+ * белым контуром (фон острова) — визуально читается как стопка.
+ */
+
+.avatars-view {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.avatars-view__stack {
+  display: flex;
+  flex-shrink: 0;
+}
+.avatars-view__stack > * {
+  border: 2px solid var(--dynamic-surface-base-secondary);
+  box-sizing: content-box;
+}
+.avatars-view__stack > * + * {
+  margin-left: -8px;
+}
+
+/* «+N» — круглая плашка в стиле аватарки */
+.avatars-view__more {
+  width: var(--avatars-view-size, 24px);
+  height: var(--avatars-view-size, 24px);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dynamic-surface-contrast-mid);
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-50);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.avatars-view__text {
+  font-family: var(--font-family);
+  font-size: var(--font-size-200);
+  line-height: var(--line-height-200);
+  color: var(--dynamic-text-and-icons-base-primary);
+}
