@@ -30,8 +30,8 @@
   margin: 0;
   color: var(--dynamic-text-and-icons-base-primary);
   font-family: var(--font-family);
-  font-size: 29px;
-  line-height: 1;
+  font-size: var(--font-size-600);
+  line-height: var(--line-height-600);
   font-weight: 700;
   white-space: nowrap;
   opacity: 0.3;
