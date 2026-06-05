@@ -1,0 +1,63 @@
+/**
+ * OK Design System — Picture
+ *
+ * Прямоугольное изображение со скруглёнными углами («мягкий квадрат»).
+ * Похож на .avatar, но не круглый — для пресетов, превью, конкурсных работ
+ * и других «именованных» изображений.
+ *
+ *   <div class="picture __size-80">
+ *     <img src="…" alt="">
+ *   </div>
+ *
+ * SIZES: __size-56 / 72 / 80 / 96 / 120
+ * Каждый размер задаёт ширину/высоту и пропорциональный border-radius
+ * (~20% от стороны).
+ */
+
+.picture {
+  --picture-size:   80px;
+  --picture-radius: 16px;
+
+  position: relative;
+  width: var(--picture-size);
+  height: var(--picture-size);
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--picture-radius);
+  background-color: var(--dynamic-surface-contrast-low);
+}
+
+.picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   PICTURE STACK — ряд из нескольких .picture с лёгкими углами,
+   как небрежно разложенные карточки.
+   ============================================================ */
+.picture-stack {
+  display: flex;
+  gap: var(--space-1);
+}
+.picture-stack > .picture {
+  transform: rotate(-3deg);
+  transition: transform 300ms ease;
+}
+.picture-stack > .picture:nth-child(even) {
+  transform: rotate(3deg);
+}
+.picture-stack > .picture:nth-child(3n) {
+  transform: rotate(-1deg);
+}
+.picture-stack > .picture:nth-child(3n+1):not(:first-child) {
+  transform: rotate(2deg);
+}
+
+.picture.__size-56  { --picture-size: 56px;  --picture-radius: 12px; }
+.picture.__size-72  { --picture-size: 72px;  --picture-radius: 14px; }
+.picture.__size-80  { --picture-size: 80px;  --picture-radius: 16px; }
+.picture.__size-96  { --picture-size: 96px;  --picture-radius: 20px; }
+.picture.__size-120 { --picture-size: 120px; --picture-radius: 24px; }

@@ -32,9 +32,11 @@
 
 /* Lenta-derived components (built on top of the primitives above) */
 @import url('./components/avatar.css');
+@import url('./components/picture.css');
 @import url('./components/pulse-dot.css');
 @import url('./components/breadcrumbs.css');
 @import url('./components/media.css');
+@import url('./components/media-grid.css');
 @import url('./components/actions-bar.css');
 @import url('./components/island.css');
 @import url('./components/avatars-view.css');

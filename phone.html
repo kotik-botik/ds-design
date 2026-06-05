@@ -137,6 +137,100 @@
       <!-- Feed posts (wrapped in .feed-container) -->
       <div class="feed-container">
 
+      <!-- Конкурс — Урожай -->
+      <article class="feed-contest island">
+        <nav class="breadcrumbs ds-body-m">
+          <a class="breadcrumbs__item" href="#">Конкурс</a>
+          <span class="breadcrumbs__separator" aria-hidden="true"></span>
+          <span class="breadcrumbs__item __state-on">Урожай</span>
+        </nav>
+        <h2 style="margin: 0; font-family: var(--font-family); font-size: 24px; line-height: 30px; font-weight: 600;">Покажите свой урожай! Лучшие фото попадут в подборку района</h2>
+        <div class="picture-stack">
+          <div class="picture __size-96"><img src="https://picsum.photos/seed/harvest1/200/200" alt=""></div>
+          <div class="picture __size-96"><img src="https://picsum.photos/seed/harvest2/200/200" alt=""></div>
+          <div class="picture __size-96"><img src="https://picsum.photos/seed/harvest3/200/200" alt=""></div>
+          <div class="picture __size-96"><img src="https://picsum.photos/seed/harvest4/200/200" alt=""></div>
+        </div>
+        <div class="button-wrapper __size-44 __full-width" style="display: block;">
+          <button class="button-container __style-secondary" style="width: 100%;"><span class="button-content">📷 Загрузить фото</span></button>
+        </div>
+        <div class="button-wrapper __size-44 __full-width" style="display: block;">
+          <button class="button-container __style-secondary" style="width: 100%;"><span class="button-content">🖼 Смотреть работы</span></button>
+        </div>
+      </article>
+
+      <!-- Текстовый пост (без медиа) -->
+      <article class="feed-base island">
+        <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+          <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=49" alt=""></div>
+          <div class="contents-view-container uni-cell-additional-content">
+            <div class="ds-title-s">Елена Фёдорова</div>
+            <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">12:48</div>
+          </div>
+          <label class="button-wrapper __size-28 button-subscribe"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-subscribe__label-default">Подписаться</span><span class="button-subscribe__label-subscribed">Подписан</span></span></span></label>
+        </div></div></div>
+        <nav class="breadcrumbs ds-body-m">
+          <a class="breadcrumbs__item" href="#">Санкт-Петербург</a>
+          <span class="breadcrumbs__separator" aria-hidden="true"></span>
+          <span class="breadcrumbs__item __state-on">Рядом живут</span>
+        </nav>
+        <div class="feed-text" style="--feed-text-clamp: 5;">
+          <p class="feed-text__body ds-body-m">Я люблю фрукты, это же витамины, для стройности полезно, ем их каждый день — яблоки, груши, виноград, иногда бананы. Но в последнее время заметила, что после них живот начинает пучить, урчать, иногда даже больно. Подскажите, что не так?</p>
+          <label class="feed-text__expand button-inline-wrapper __size-20 __view-primary"><input type="checkbox" hidden><span class="button-inline __size-20"><span class="button-inline__content"><span class="feed-text__label-collapsed">Раскрыть текст</span><span class="feed-text__label-expanded">Свернуть</span></span></span></label>
+        </div>
+        <div class="actions-bar">
+          <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 34;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-klass__icon-outline icon __size-20 __src" style="--icon-src:url('../assets/icons/klass_16_20.svg')"></span><span class="button-klass__icon-filled icon __size-20 __src" style="--icon-src:url('../assets/icons/klass_filled_16_20.svg')"></span>&nbsp;<span class="button-klass__count"></span></span></span></label>
+          <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/comment_24.svg')"></span>&nbsp;14</span></button></div>
+          <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/reshare_24.svg')"></span>&nbsp;5</span></button></div>
+          <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/dots-horizontal.svg')"></span></span></button></div>
+        </div>
+      </article>
+
+      <!-- Альбом-пост с media-grid (4 фото + «Ещё N») -->
+      <article class="feed-base island">
+        <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+          <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=15" alt=""></div>
+          <div class="contents-view-container uni-cell-additional-content">
+            <div class="ds-title-s">Альберт Фёдоров</div>
+            <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">12:48</div>
+          </div>
+          <label class="button-wrapper __size-28 button-subscribe"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-subscribe__label-default">Подписаться</span><span class="button-subscribe__label-subscribed">Подписан</span></span></span></label>
+        </div></div></div>
+        <div class="feed-text">
+          <p class="feed-text__body ds-body-m">6 месяцев назад с Андреем открыли зимний сезон, поймал судака на 5кг, ура товарищи! Поделюсь всеми снастями и точкой в комментариях.</p>
+          <label class="feed-text__expand button-inline-wrapper __size-20 __view-primary"><input type="checkbox" hidden><span class="button-inline __size-20"><span class="button-inline__content"><span class="feed-text__label-collapsed">Раскрыть текст</span><span class="feed-text__label-expanded">Свернуть</span></span></span></label>
+        </div>
+        <div class="media-grid">
+          <div class="media-grid__cell"><img src="https://picsum.photos/seed/fish1/400/400" alt=""></div>
+          <div class="media-grid__cell"><img src="https://picsum.photos/seed/fish2/400/400" alt=""></div>
+          <div class="media-grid__cell"><img src="https://picsum.photos/seed/fish3/400/400" alt=""></div>
+          <div class="media-grid__cell __more" data-more="5"><img src="https://picsum.photos/seed/fish4/400/400" alt=""></div>
+        </div>
+        <div class="actions-bar">
+          <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 312;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-klass__icon-outline icon __size-20 __src" style="--icon-src:url('../assets/icons/klass_16_20.svg')"></span><span class="button-klass__icon-filled icon __size-20 __src" style="--icon-src:url('../assets/icons/klass_filled_16_20.svg')"></span>&nbsp;<span class="button-klass__count"></span></span></span></label>
+          <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/comment_24.svg')"></span>&nbsp;48</span></button></div>
+          <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/reshare_24.svg')"></span>&nbsp;15</span></button></div>
+          <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __src" style="--icon-src:url('../assets/icons/dots-horizontal.svg')"></span></span></button></div>
+        </div>
+      </article>
+
+      <!-- Сообщество — подписка -->
+      <article class="feed-group island">
+        <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/256?img=33" alt=""></div>
+        <h2 style="margin: 0; font-family: var(--font-family); font-size: 24px; line-height: 30px; font-weight: 600;">Вступай в сообщество рыбаков</h2>
+        <div class="avatars-view __size-36">
+          <div class="avatars-view__stack">
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/64?img=47" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/64?img=11" alt=""></div>
+            <div class="avatars-view__more">+3</div>
+          </div>
+          <span class="avatars-view__text">5 друзей подписаны</span>
+        </div>
+        <div class="button-wrapper __size-44 __full-width" style="display: block;">
+          <button class="button-container __style-secondary" style="width: 100%;"><span class="button-content">Подписаться</span></button>
+        </div>
+      </article>
+
       <!-- День рождения -->
       <article class="feed-birthday island">
         <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/256?img=68" alt=""></div>
