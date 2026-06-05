@@ -22,6 +22,12 @@
   background-color: var(--dynamic-surface-contrast-low);
 }
 
+/* Aspect ratio modifiers */
+.media.__aspect-9-16 { aspect-ratio: 9 / 16; }
+.media.__aspect-1-1  { aspect-ratio: 1 / 1; }
+.media.__aspect-4-3  { aspect-ratio: 4 / 3; }
+.media.__aspect-16-9 { aspect-ratio: 16 / 9; }
+
 .media img,
 .media video {
   display: block;
@@ -50,6 +56,25 @@
   transition: var(--ds-transition-opacity);
 }
 .media__play:active { opacity: 0.7; }
+
+/* Mute pill (bottom-right) — для клипов */
+.media__mute {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--base-black-lena-translucent-48);
+  color: var(--static-text-and-icons-base-inverse-primary);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
 
 /* Duration pill (bottom-right) */
 .media__time {
