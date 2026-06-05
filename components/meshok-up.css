@@ -1,12 +1,13 @@
 /**
- * OK Design System — PageHeader
+ * OK Design System — MeshokUp
  *
- * Two stacked rows that form the top chrome of a mobile screen:
+ * Three stacked rows that form the top chrome of a mobile screen:
  *   - .status-bar     — mock iOS status bar (time + signal/battery)
  *   - .nav-bar        — avatar slot + title slot + actions slot
+ *   - .tabs           — секционные табы под навбаром (опционально)
  *
- * Both pieces sit on --dynamic-surface-base-secondary. To make them stick
- * at the top of the scrollable phone, wrap them in .phone-frame__sticky.
+ * Все три на --dynamic-surface-base-secondary. Чтобы прилипало к верху
+ * скроллящегося телефона, заворачиваем в .phone-frame__sticky.
  */
 
 /* ============================================================
