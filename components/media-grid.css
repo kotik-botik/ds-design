@@ -1,0 +1,52 @@
+/**
+ * OK Design System — MediaGrid
+ *
+ * Сетка из 2–4 фото с тонкими разделителями. На последней ячейке
+ * можно показать оверлей «Ещё N» через атрибут data-more.
+ *
+ *   <div class="media-grid">
+ *     <div class="media-grid__cell"><img …></div>
+ *     <div class="media-grid__cell"><img …></div>
+ *     <div class="media-grid__cell"><img …></div>
+ *     <div class="media-grid__cell __more" data-more="5"><img …></div>
+ *   </div>
+ *
+ * 2 колонки, квадратные ячейки. Внутри феда заменяет одиночный .media.
+ */
+
+.media-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  width: 100%;
+  background-color: var(--dynamic-surface-base-secondary);
+}
+
+.media-grid__cell {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background-color: var(--dynamic-surface-contrast-low);
+}
+.media-grid__cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* «Ещё N» — затемнение + лейбл поверх последней ячейки */
+.media-grid__cell.__more::after {
+  content: 'Ещё ' attr(data-more);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--base-black-lena-translucent-48);
+  color: var(--static-text-and-icons-base-inverse-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 600;
+}

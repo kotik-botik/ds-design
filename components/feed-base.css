@@ -39,7 +39,7 @@
   padding-top: 0;
   padding-bottom: 0;
 }
-.feed-base > :not(.media) {
+.feed-base > :not(.media):not(.media-grid) {
   padding-left: var(--space-4);
   padding-right: var(--space-4);
 }

@@ -1,20 +1,15 @@
 /**
- * OK Design System — FeedBirthday (molecule, layout only)
+ * OK Design System — FeedBirthday / FeedGroup (shared layout)
  *
- * Карточка-поздравление: большая аватарка + крупный тайтл +
- * стек друзей (avatars-view) + полноширинная кнопка «Поздравить».
+ * Карточка-«спотлайт»: большая аватарка + крупный тайтл +
+ * стек друзей (avatars-view) + полноширинная кнопка.
  *
- *   <article class="feed-birthday island">
- *     <div class="avatar __size-56 __type-image">…</div>
- *     <h2 class="feed-birthday__title">Николай празднует свой День рождения!</h2>
- *     <div class="avatars-view">…</div>
- *     <div class="button-wrapper __size-44 __full-width">
- *       <button class="button-container __style-secondary" style="width:100%;">…Поздравить…</button>
- *     </div>
- *   </article>
+ *   <article class="feed-birthday island"> …поздравить…   </article>
+ *   <article class="feed-group island">    …подписаться… </article>
  */
 
-.feed-birthday {
+.feed-birthday,
+.feed-group {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -23,8 +18,9 @@
   padding-right: var(--space-4);
 }
 
-/* Контент над шариками */
-.feed-birthday > * {
+/* Контент над декоративными слоями */
+.feed-birthday > *,
+.feed-group > * {
   position: relative;
   z-index: 1;
 }
