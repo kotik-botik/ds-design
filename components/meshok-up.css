@@ -92,3 +92,11 @@
 .nav-bar.__type-feed .nav-bar__trailing {
   gap: var(--space-4);
 }
+
+/* ============================================================
+   TABS внутри MeshokUp — отступы 16 сверху / 8 снизу
+   ============================================================ */
+.meshok-up .tabs {
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-2);
+}
