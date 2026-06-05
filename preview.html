@@ -47,50 +47,87 @@
   <!-- ===================== PRIMITIVES ===================== -->
 
   <section class="preview-section">
-    <h2>Avatar</h2>
-    <div class="preview-label">__type-initials — sizes</div>
+    <h2>Avatar — circle</h2>
+    <div class="preview-label">Размеры (на примере initials): 16/20/24/36/44/56/72/96/120/144</div>
     <div class="preview-row">
+      <div class="avatar __size-16 __type-initials">А</div>
+      <div class="avatar __size-20 __type-initials">А</div>
       <div class="avatar __size-24 __type-initials">А</div>
       <div class="avatar __size-36 __type-initials">АК</div>
       <div class="avatar __size-44 __type-initials">АК</div>
       <div class="avatar __size-56 __type-initials">АК</div>
       <div class="avatar __size-72 __type-initials">АК</div>
       <div class="avatar __size-96 __type-initials">АК</div>
-      <div class="avatar __size-126 __type-initials">АК</div>
+      <div class="avatar __size-120 __type-initials">АК</div>
+      <div class="avatar __size-144 __type-initials">АК</div>
     </div>
-    <div class="preview-label">__type-image — sizes</div>
+
+    <div class="preview-label" style="margin-top: 12px;">Типы (size=56)</div>
     <div class="preview-row">
-      <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
-      <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
-      <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
       <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
-      <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
-      <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
-      <div class="avatar __size-126 __type-image"><img src="https://i.pravatar.cc/256?img=12" alt=""></div>
+      <div class="avatar __size-56 __type-placeholder"></div>
+      <div class="avatar __size-56 __type-icon"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></div>
+      <div class="avatar __size-56 __type-initials">АК</div>
+      <div class="avatar __size-56 __type-counter">12</div>
+      <div class="avatar __size-56 __type-emoji">🎈</div>
     </div>
-    <div class="preview-label">__state-loading</div>
+
+    <div class="preview-label" style="margin-top: 12px;">__state-loading</div>
     <div class="preview-row">
       <div class="avatar __size-36 __state-loading"></div>
     </div>
 
     <table class="spec-table">
-      <thead>
-        <tr><th colspan="2">Что умеет</th></tr>
-      </thead>
+      <thead><tr><th colspan="2">Что умеет</th></tr></thead>
       <tbody>
-        <tr><td><code>.__size-24</code></td><td>24px, инициалы 11px — рядом с body-m</td></tr>
-        <tr><td><code>.__size-36</code></td><td>36px, инициалы 14px — дефолт в лентах и комментариях</td></tr>
-        <tr><td><code>.__size-44</code></td><td>44px, инициалы 15px — крупная строка активности</td></tr>
-        <tr><td><code>.__size-56</code></td><td>56px, инициалы 19px</td></tr>
-        <tr><td><code>.__size-72</code></td><td>72px, инициалы 24px</td></tr>
-        <tr><td><code>.__size-96</code></td><td>96px, инициалы 32px — карточка профиля</td></tr>
-        <tr><td><code>.__size-126</code></td><td>126px, инициалы 42px — шапка профиля</td></tr>
-        <tr><td><code>.__type-initials</code></td><td>1–2 буквы на акцентном фоне</td></tr>
-        <tr><td><code>.__type-image</code></td><td>дочерний <code>&lt;img&gt;</code> заполняет круг через object-fit: cover</td></tr>
+        <tr><td>sizes</td><td>16 / 20 / 24 / 36 (default) / 44 / 56 / 72 / 96 / 120 / 144</td></tr>
+        <tr><td><code>.__type-image</code></td><td>дочерний <code>&lt;img&gt;</code>, object-fit: cover</td></tr>
+        <tr><td><code>.__type-placeholder</code></td><td>пустой круг — loading / empty state</td></tr>
+        <tr><td><code>.__type-icon</code></td><td>иконка-ребёнок занимает 50% от размера</td></tr>
+        <tr><td><code>.__type-initials</code></td><td>1–2 буквы на акцентном (orange) фоне</td></tr>
+        <tr><td><code>.__type-counter</code></td><td>число в indigo-тинте</td></tr>
+        <tr><td><code>.__type-emoji</code></td><td>emoji-символ по центру</td></tr>
         <tr><td><code>.__state-loading</code></td><td>shimmer-анимация поверх</td></tr>
         <tr><td><code>.__state-disabled</code></td><td>opacity 0.36, клики отключены</td></tr>
       </tbody>
     </table>
+  </section>
+
+  <section class="preview-section">
+    <h2>Picture — squircle</h2>
+    <div class="preview-label">«Мягкий квадрат» — как avatar, но не круглый. Размеры/типы те же.</div>
+    <div class="preview-row">
+      <div class="picture __size-16 __type-initials">А</div>
+      <div class="picture __size-20 __type-initials">А</div>
+      <div class="picture __size-24 __type-initials">А</div>
+      <div class="picture __size-36 __type-initials">АК</div>
+      <div class="picture __size-44 __type-initials">АК</div>
+      <div class="picture __size-56 __type-initials">АК</div>
+      <div class="picture __size-72 __type-initials">АК</div>
+      <div class="picture __size-96 __type-initials">АК</div>
+      <div class="picture __size-120 __type-initials">АК</div>
+      <div class="picture __size-144 __type-initials">АК</div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">Типы (size=56)</div>
+    <div class="preview-row">
+      <div class="picture __size-56 __type-image"><img src="https://picsum.photos/seed/p1/200/200" alt=""></div>
+      <div class="picture __size-56 __type-placeholder"></div>
+      <div class="picture __size-56 __type-icon"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></div>
+      <div class="picture __size-56 __type-initials">АК</div>
+      <div class="picture __size-56 __type-counter">12</div>
+      <div class="picture __size-56 __type-emoji">🎈</div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">picture-stack — лёгкие альтернирующие повороты</div>
+    <div class="preview-row">
+      <div class="picture-stack">
+        <div class="picture __size-72 __type-image"><img src="https://picsum.photos/seed/h1/200/200" alt=""></div>
+        <div class="picture __size-72 __type-image"><img src="https://picsum.photos/seed/h2/200/200" alt=""></div>
+        <div class="picture __size-72 __type-image"><img src="https://picsum.photos/seed/h3/200/200" alt=""></div>
+        <div class="picture __size-72 __type-image"><img src="https://picsum.photos/seed/h4/200/200" alt=""></div>
+      </div>
+    </div>
   </section>
 
   <section class="preview-section">
