@@ -38,6 +38,12 @@
   background-color: var(--dynamic-surface-contrast-low);
 }
 
+/* Aspect ratio modifiers */
+.media.__aspect-9-16 { aspect-ratio: 9 / 16; }
+.media.__aspect-1-1  { aspect-ratio: 1 / 1; }
+.media.__aspect-4-3  { aspect-ratio: 4 / 3; }
+.media.__aspect-16-9 { aspect-ratio: 16 / 9; }
+
 .media img,
 .media video {
   display: block;
