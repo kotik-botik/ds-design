@@ -119,19 +119,16 @@
 }
 
 /* ============================================================
-   RING — внешнее кольцо вокруг (Stories-like)
-   Реализовано через box-shadow: 2px белый зазор + 3px цветной ring.
-   Работает даже при overflow:hidden (тени не клипаются).
+   RING — внешнее кольцо (Stories-like) через outline + offset.
+   2px зазор (offset) + 2px толщина ring'а.
    ============================================================ */
 .avatar.__ring-active {
-  box-shadow:
-    0 0 0 2px var(--dynamic-surface-base-secondary),
-    0 0 0 4px var(--static-stroke-special-accent);
+  outline: 2px solid var(--static-stroke-special-accent);
+  outline-offset: 2px;
 }
 .avatar.__ring-viewed {
-  box-shadow:
-    0 0 0 2px var(--dynamic-surface-base-secondary),
-    0 0 0 4px var(--dynamic-stroke-contrast-mid);
+  outline: 2px solid var(--dynamic-stroke-contrast-mid);
+  outline-offset: 2px;
 }
 
 /* ============================================================
