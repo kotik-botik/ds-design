@@ -25,33 +25,34 @@
   <h2>Phone — assembled feed</h2>
   <div class="phone-frame" style="height: 720px; min-height: 720px; border: 1px solid var(--dynamic-stroke-contrast-mid); border-radius: 24px;">
 
-    <div class="phone-frame__sticky">
-      <div class="status-bar">
-        <span class="status-bar__time">9:41</span>
-        <span class="status-bar__indicators">
-          <span class="icon __src" style="width:16px;height:12px;--icon-src:url('../assets/icons/status-wifi.svg')"></span>
-          <span class="icon __src" style="width:17px;height:12px;--icon-src:url('../assets/icons/status-signal.svg')"></span>
-          <span class="icon __src" style="width:25px;height:12px;--icon-src:url('../assets/icons/status-battery.svg')"></span>
-        </span>
-      </div>
-      <div class="nav-bar __type-feed">
-        <div class="nav-bar__leading">
-          <div class="avatar __size-36 __type-initials">АК</div>
-        </div>
-        <div class="nav-bar__trailing">
-          <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Создать"><span class="button-inline__content"><span class="button-inline__icon icon __size-24 __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></span></button></span>
-          <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Уведомления"><span class="button-inline__content"><span class="button-inline__icon icon __size-24 __src" style="--icon-src:url('../assets/icons/bell.svg')"></span></span></button></span>
-          <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Поиск"><span class="button-inline__content"><span class="button-inline__icon icon __size-24 __src" style="--icon-src:url('../assets/icons/search.svg')"></span></span></button></span>
-        </div>
-      </div>
-      <div class="tabs">
-        <button class="tabs-tab __state-on">Лента</button>
-        <button class="tabs-tab">Сегодня</button>
-        <button class="tabs-tab">Подарки</button>
-      </div>
-    </div>
-
     <div class="phone-frame__feed">
+
+      <!-- MeshokUp: sticky status + nav + tabs -->
+      <div class="meshok-up">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">
+            <span class="icon __src" style="width:16px;height:12px;--icon-src:url('../assets/icons/status-wifi.svg')"></span>
+            <span class="icon __src" style="width:17px;height:12px;--icon-src:url('../assets/icons/status-signal.svg')"></span>
+            <span class="icon __src" style="width:25px;height:12px;--icon-src:url('../assets/icons/status-battery.svg')"></span>
+          </span>
+        </div>
+        <div class="nav-bar __type-feed">
+          <div class="nav-bar__leading">
+            <div class="avatar __size-36 __type-initials">АК</div>
+          </div>
+          <div class="nav-bar__trailing">
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Создать"><span class="button-inline__content"><span class="button-inline__icon icon __size-24 __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Уведомления"><span class="button-inline__content"><span class="button-inline__icon icon __size-24 __src" style="--icon-src:url('../assets/icons/bell.svg')"></span></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Поиск"><span class="button-inline__content"><span class="button-inline__icon icon __size-24 __src" style="--icon-src:url('../assets/icons/search.svg')"></span></span></button></span>
+          </div>
+        </div>
+        <div class="tabs">
+          <button class="tabs-tab __state-on">Лента</button>
+          <button class="tabs-tab">Сегодня</button>
+          <button class="tabs-tab">Подарки</button>
+        </div>
+      </div>
 
       <!-- Activity widget -->
       <div class="island">
@@ -132,7 +133,6 @@
         </div>
       </div>
 
-      <div class="phone-frame__gap"></div>
 
       <!-- Feed posts (wrapped in .feed-container) -->
       <div class="feed-container">
@@ -267,7 +267,6 @@
 
       </div>
 
-      <div class="phone-frame__gap"></div>
 
       <!-- Group recommendation -->
       <div class="island">

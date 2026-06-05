@@ -1,14 +1,27 @@
 /**
  * OK Design System — MeshokUp
  *
- * Three stacked rows that form the top chrome of a mobile screen:
- *   - .status-bar     — mock iOS status bar (time + signal/battery)
- *   - .nav-bar        — avatar slot + title slot + actions slot
- *   - .tabs           — секционные табы под навбаром (опционально)
+ * Sticky top chrome: status-bar + nav-bar + tabs.
+ * Закруглён снизу на 20px, чтобы совпадать с островами в фиде.
  *
- * Все три на --dynamic-surface-base-secondary. Чтобы прилипало к верху
- * скроллящегося телефона, заворачиваем в .phone-frame__sticky.
+ *   <div class="meshok-up">
+ *     <div class="status-bar">…</div>
+ *     <div class="nav-bar">…</div>
+ *     <div class="tabs">…</div>
+ *   </div>
  */
+
+.meshok-up {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  flex-shrink: 0;
+  background-color: var(--dynamic-surface-base-secondary);
+  border-radius: 0 0 20px 20px;
+  overflow: hidden;
+}
 
 /* ============================================================
    STATUS BAR
