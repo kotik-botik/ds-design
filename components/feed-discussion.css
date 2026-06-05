@@ -22,6 +22,21 @@
   padding-right: var(--space-4);
 }
 
+/* «Посмотреть N ответов» — авто-ширина, прижата к левому краю */
+.feed-discussion > .button-inline-wrapper {
+  align-self: flex-start;
+}
+
+/* Comment-input внутри обсуждения — без своих паддингов */
+.feed-discussion .comment-input {
+  padding: 0;
+}
+
+/* Header — без нижнего gap до следующего элемента (divider/comment) */
+.feed-discussion > .header {
+  margin-bottom: calc(-1 * var(--space-3));
+}
+
 /* Тонкая линия-сепаратор */
 .ds-divider {
   border: 0;
