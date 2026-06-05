@@ -160,22 +160,6 @@
   outline-offset: 4px;
 }
 
-/* При наличии caption — outline уходит на img/icon, а сам avatar чист */
-.avatar.__has-caption.__ring-active,
-.avatar.__has-caption.__ring-viewed {
-  outline: none;
-}
-.avatar.__has-caption.__ring-active > img,
-.avatar.__has-caption.__ring-active > .icon {
-  outline: 2px solid var(--static-stroke-special-accent);
-  outline-offset: 2px;
-}
-.avatar.__has-caption.__ring-viewed > img,
-.avatar.__has-caption.__ring-viewed > .icon {
-  outline: 2px solid var(--dynamic-stroke-contrast-mid);
-  outline-offset: 2px;
-}
-
 /* ============================================================
    ADDONS — иконки/бейджи в углах. Требует __has-addon чтобы
    снять overflow:hidden, иначе аддон клипается.
