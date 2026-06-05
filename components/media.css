@@ -98,27 +98,14 @@
    OVERLAYS (для любых типов)
    ============================================================ */
 
-/* Round play button — для video */
+/* Play overlay — позиционирует .button-circle по центру медиа.
+   Визуально используется .button-circle.__style-on-image __size-56. */
 .media__play {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: var(--base-white-translucent-24);
-  border: 1.5px solid var(--base-white-translucent-36);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  color: var(--static-text-and-icons-base-inverse-primary);
-  cursor: pointer;
-  transition: var(--ds-transition-opacity);
 }
-.media__play:active { opacity: 0.7; }
 
 /* Duration pill — для video */
 .media__time {
