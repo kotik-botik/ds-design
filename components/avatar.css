@@ -132,6 +132,33 @@
   outline: 2px solid var(--dynamic-stroke-contrast-mid);
   outline-offset: 2px;
 }
+/* Для крупного 56 — увеличенный orbit-offset 4px */
+.avatar.__size-56.__ring-active,
+.avatar.__size-56.__ring-viewed {
+  outline-offset: 4px;
+}
+
+/* При наличии caption — outline уходит на img/icon, а сам avatar чист */
+.avatar.__has-caption.__ring-active,
+.avatar.__has-caption.__ring-viewed {
+  outline: none;
+}
+.avatar.__has-caption.__ring-active > img,
+.avatar.__has-caption.__ring-active > .icon {
+  outline: 2px solid var(--static-stroke-special-accent);
+  outline-offset: 2px;
+}
+.avatar.__has-caption.__ring-viewed > img,
+.avatar.__has-caption.__ring-viewed > .icon {
+  outline: 2px solid var(--dynamic-stroke-contrast-mid);
+  outline-offset: 2px;
+}
+.avatar.__size-56.__has-caption.__ring-active > img,
+.avatar.__size-56.__has-caption.__ring-active > .icon,
+.avatar.__size-56.__has-caption.__ring-viewed > img,
+.avatar.__size-56.__has-caption.__ring-viewed > .icon {
+  outline-offset: 4px;
+}
 
 /* При наличии caption — outline уходит на img/icon, а сам avatar чист */
 .avatar.__has-caption.__ring-active,
