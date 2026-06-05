@@ -32,7 +32,7 @@
   font-family: var(--font-family);
   font-size: var(--font-size-600);
   line-height: var(--line-height-600);
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
   opacity: 0.3;
   cursor: pointer;
