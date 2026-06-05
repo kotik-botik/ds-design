@@ -66,8 +66,8 @@ a.breadcrumbs__item:hover {
 .breadcrumbs__separator {
   flex-shrink: 0;
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   background-color: currentColor;
   opacity: 0.5;
   user-select: none;
