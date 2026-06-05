@@ -10,6 +10,14 @@
  *          .__type-counter     — число (бейдж) в indigo-тинте
  *          .__type-emoji       — emoji-символ по центру
  *
+ * RING:    .__ring-active      — orange кольцо вокруг (Stories-like, не просмотрено)
+ *          .__ring-viewed      — серое кольцо (уже посмотрели)
+ *
+ * EXTRAS:  .__has-addon        — overflow:visible, чтобы аддоны не клипались.
+ *                                Дочерний <div class="avatar__addon __pos-br|tr|bl|tl">.
+ *          .__has-caption      — добавляет подпись под аватаркой.
+ *                                Дочерний <div class="avatar__caption">…</div>.
+ *
  * STATES:  .__state-loading | .__state-disabled
  */
 
@@ -108,4 +116,79 @@
 .avatar.__state-disabled {
   opacity: var(--state-element-disabled, 0.36);
   pointer-events: none;
+}
+
+/* ============================================================
+   RING — внешнее кольцо вокруг (Stories-like)
+   Реализовано через box-shadow: 2px белый зазор + 3px цветной ring.
+   Работает даже при overflow:hidden (тени не клипаются).
+   ============================================================ */
+.avatar.__ring-active {
+  box-shadow:
+    0 0 0 2px var(--dynamic-surface-base-secondary),
+    0 0 0 5px var(--static-stroke-special-accent);
+}
+.avatar.__ring-viewed {
+  box-shadow:
+    0 0 0 2px var(--dynamic-surface-base-secondary),
+    0 0 0 5px var(--dynamic-stroke-contrast-mid);
+}
+
+/* ============================================================
+   ADDONS — иконки/бейджи в углах. Требует __has-addon чтобы
+   снять overflow:hidden, иначе аддон клипается.
+   ============================================================ */
+.avatar.__has-addon {
+  overflow: visible;
+}
+.avatar.__has-addon > img,
+.avatar.__has-addon > .icon {
+  border-radius: 50%;
+}
+
+.avatar__addon {
+  position: absolute;
+  z-index: 1;
+}
+.avatar__addon.__pos-tr { top: -2px;    right: -2px;  }
+.avatar__addon.__pos-tl { top: -2px;    left: -2px;   }
+.avatar__addon.__pos-br { bottom: -2px; right: -2px;  }
+.avatar__addon.__pos-bl { bottom: -2px; left: -2px;   }
+
+/* ============================================================
+   CAPTION — подпись снизу. Требует __has-caption чтобы
+   avatar стал column-flex и каптион поместился под кругом.
+   ============================================================ */
+.avatar.__has-caption {
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  background-color: transparent;
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+/* Внутренний "shape" — img/text/icon — занимает фикс размер */
+.avatar.__has-caption > img,
+.avatar.__has-caption > .icon {
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.avatar__caption {
+  margin-top: 6px;
+  text-align: center;
+  font-family: var(--font-family);
+  font-size: var(--font-size-100);
+  line-height: var(--line-height-100);
+  font-weight: 400;
+  color: var(--dynamic-text-and-icons-base-primary);
+  max-width: calc(var(--avatar-size) + 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
