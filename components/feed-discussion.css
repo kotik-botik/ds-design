@@ -32,6 +32,11 @@
   padding: 0;
 }
 
+/* Header — без нижнего gap до следующего элемента (divider/comment) */
+.feed-discussion > .header {
+  margin-bottom: calc(-1 * var(--space-3));
+}
+
 /* Тонкая линия-сепаратор */
 .ds-divider {
   border: 0;
