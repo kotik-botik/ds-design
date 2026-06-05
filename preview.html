@@ -462,6 +462,71 @@
   </section>
 
   <section class="preview-section" style="min-width: 375px;">
+    <h2>AvatarsView — стек + текст</h2>
+    <div class="preview-label">Аватарки внахлёст с белой обводкой + «+N» плашка + опциональный body-m текст справа. Три размера: 20 / 24 / 36.</div>
+
+    <div class="preview-label" style="margin-top: 12px;">__size-20</div>
+    <div class="preview-row">
+      <div class="avatars-view __size-20">
+        <div class="avatars-view__stack">
+          <div class="avatar __size-20 __type-image"><img src="https://i.pravatar.cc/64?img=12" alt=""></div>
+          <div class="avatar __size-20 __type-image"><img src="https://i.pravatar.cc/64?img=44" alt=""></div>
+          <div class="avatars-view__more">+5</div>
+        </div>
+        <span class="avatars-view__text">7 участников</span>
+      </div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">__size-24 (default)</div>
+    <div class="preview-row">
+      <div class="avatars-view __size-24">
+        <div class="avatars-view__stack">
+          <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/64?img=12" alt=""></div>
+          <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/64?img=44" alt=""></div>
+          <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/64?img=23" alt=""></div>
+          <div class="avatars-view__more">+12</div>
+        </div>
+        <span class="avatars-view__text">15 друзей оценили</span>
+      </div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">__size-36</div>
+    <div class="preview-row">
+      <div class="avatars-view __size-36">
+        <div class="avatars-view__stack">
+          <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=12" alt=""></div>
+          <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=44" alt=""></div>
+          <div class="avatars-view__more">+3</div>
+        </div>
+        <span class="avatars-view__text">12 друзей поздравило</span>
+      </div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">Без текста</div>
+    <div class="preview-row">
+      <div class="avatars-view __size-24">
+        <div class="avatars-view__stack">
+          <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/64?img=12" alt=""></div>
+          <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/64?img=44" alt=""></div>
+          <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/64?img=23" alt=""></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <thead><tr><th colspan="2">Что умеет</th></tr></thead>
+      <tbody>
+        <tr><td><code>.avatars-view</code></td><td>flex-row, gap 8px, default __size-24</td></tr>
+        <tr><td><code>.__size-20 / __size-24 / __size-36</code></td><td>задают размер «+N» плашки, оверлап и font-size счётчика</td></tr>
+        <tr><td><code>.avatars-view__stack</code></td><td>стопка аватарок с 2px белым контуром и отрицательным margin-left</td></tr>
+        <tr><td><code>.avatars-view__more</code></td><td>круглая плашка с «+N»; bg <code>--dynamic-surface-contrast-mid</code></td></tr>
+        <tr><td><code>.avatars-view__text</code></td><td>body-m справа от стека — опционально, можно не класть</td></tr>
+        <tr><td>аватарки внутри</td><td>обычные <code>.avatar.__size-N</code> с подходящим размером</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="preview-section" style="min-width: 375px;">
     <h2>Comment — UniCell + Avatar</h2>
     <div class="preview-stage" style="padding: 0; background: transparent;">
       <div class="uni-cell-wrapper">
