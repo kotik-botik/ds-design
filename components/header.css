@@ -1,19 +1,19 @@
 /**
  * OK Design System — Header
  *
- * Тайтл секции + опциональный сабтайтл. Размер задаётся на родителе,
- * типографика тайтла и сабтайтла подбирается автоматически.
+ * Тайтл секции + опциональный сабтайтл. Типографика задаётся style-классами
+ * на дочерних элементах напрямую — компонент отвечает только за layout и цвета.
  *
- *   <header class="header __size-xl">
- *     <div class="header__title">Заголовок</div>
- *     <div class="header__subtitle">Опциональный подзаголовок</div>
+ *   <header class="header">
+ *     <div class="header__title ds-title-xl">Заголовок</div>
+ *     <div class="header__subtitle ds-body-l">Подзаголовок</div>
  *   </header>
  *
- * SIZES (title / subtitle):
- *   .__size-xl → ds-title-xl (27/36/600) / ds-body-l (17/24/400)
- *   .__size-l  → ds-title-l  (21/28/600) / ds-body-l (17/24/400)
- *   .__size-m  → ds-title-m  (17/24/600) / ds-body-m (15/20/400)
- *   .__size-s  → ds-title-s  (15/20/600) / ds-body-m (15/20/400)
+ * Рекомендуемые пары:
+ *   xl → ds-title-xl + ds-body-l
+ *   l  → ds-title-l  + ds-body-l
+ *   m  → ds-title-m  + ds-body-m
+ *   s  → ds-title-s  + ds-body-m
  *
  * Между title и subtitle всегда 2px.
  */
@@ -26,53 +26,9 @@
 
 .header__title {
   margin: 0;
-  font-family: var(--font-family);
-  font-weight: 600;
   color: var(--dynamic-text-and-icons-base-primary);
 }
 .header__subtitle {
   margin: 0;
-  font-family: var(--font-family);
-  font-weight: 400;
   color: var(--dynamic-text-and-icons-base-secondary);
-}
-
-/* size=xl — title-xl + body-l */
-.header.__size-xl .header__title {
-  font-size: var(--font-size-600);
-  line-height: var(--line-height-600);
-}
-.header.__size-xl .header__subtitle {
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-}
-
-/* size=l — title-l + body-l */
-.header.__size-l .header__title {
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-}
-.header.__size-l .header__subtitle {
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-}
-
-/* size=m — title-m + body-m */
-.header.__size-m .header__title {
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-}
-.header.__size-m .header__subtitle {
-  font-size: var(--font-size-200);
-  line-height: var(--line-height-200);
-}
-
-/* size=s — title-s + body-m */
-.header.__size-s .header__title {
-  font-size: var(--font-size-200);
-  line-height: var(--line-height-200);
-}
-.header.__size-s .header__subtitle {
-  font-size: var(--font-size-200);
-  line-height: var(--line-height-200);
 }
