@@ -32,7 +32,7 @@
    паддинги контейнера через отрицательный margin. */
 .feed-stories__list {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-1);
   overflow-x: auto;
   scroll-snap-type: x proximity;
   margin: 0 calc(-1 * var(--space-4));
