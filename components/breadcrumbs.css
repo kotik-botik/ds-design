@@ -26,18 +26,13 @@
  */
 
 .breadcrumbs {
-  --breadcrumbs-color: var(--dynamic-text-and-icons-base-secondary);
+  --breadcrumbs-color: var(--dynamic-text-and-icons-base-primary);
   --breadcrumbs-separator-src: url('../assets/icons/chevron-right.svg');
 
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1);
   color: var(--breadcrumbs-color);
-  font-family: var(--font-family);
-  font-size: 15px;
-  line-height: 20px;
-  font-weight: 400;
 }
 
 .breadcrumbs__item {
@@ -66,8 +61,10 @@ a.breadcrumbs__item:hover {
 .breadcrumbs__separator {
   flex-shrink: 0;
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
+  margin-left: 2px;
+  margin-right: 8px;
   background-color: currentColor;
   opacity: 0.5;
   user-select: none;
