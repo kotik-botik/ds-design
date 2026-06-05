@@ -126,12 +126,12 @@
 .avatar.__ring-active {
   box-shadow:
     0 0 0 2px var(--dynamic-surface-base-secondary),
-    0 0 0 5px var(--static-stroke-special-accent);
+    0 0 0 4px var(--static-stroke-special-accent);
 }
 .avatar.__ring-viewed {
   box-shadow:
     0 0 0 2px var(--dynamic-surface-base-secondary),
-    0 0 0 5px var(--dynamic-stroke-contrast-mid);
+    0 0 0 4px var(--dynamic-stroke-contrast-mid);
 }
 
 /* ============================================================
