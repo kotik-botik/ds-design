@@ -21,8 +21,27 @@
   padding-left: var(--space-4);
   padding-right: var(--space-4);
 }
-/* Тайтл/сабтайтл feed-questions реализованы через .header (см. header.css).
-   Используется header __size-xl. */
+.feed-questions__title {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-600);
+  line-height: var(--line-height-600);
+  font-weight: 600;
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+
+/* Опциональный сабтайтл — body-m, через 2px от тайтла
+   (negative margin компенсирует flex-gap родителя). */
+.feed-questions__subtitle {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-200);
+  line-height: var(--line-height-200);
+  color: var(--dynamic-text-and-icons-base-secondary);
+}
+.feed-questions__title + .feed-questions__subtitle {
+  margin-top: calc(-1 * var(--space-3) + 2px);
+}
 
 /* Горизонтальный скроллер карточек. Чтобы он мог переливаться
    за горизонтальные паддинги контейнера, размываем их через
