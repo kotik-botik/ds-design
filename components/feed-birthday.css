@@ -19,6 +19,14 @@
   padding-right: var(--space-4);
 }
 
+/* В feed-contest картинки в picture-stack наезжают сильнее (~16px overlap) */
+.feed-contest .picture-stack {
+  gap: 0;
+}
+.feed-contest .picture-stack > .picture + .picture {
+  margin-left: calc(-1 * var(--space-4));
+}
+
 /* Контент над декоративными слоями */
 .feed-birthday > *,
 .feed-group > *,
