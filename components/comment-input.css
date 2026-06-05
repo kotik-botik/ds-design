@@ -18,7 +18,6 @@
   padding: var(--space-2-5) var(--space-3);
   padding-bottom: max(var(--space-2-5), env(safe-area-inset-bottom));
   background-color: var(--dynamic-surface-base-secondary);
-  border-top: 1px solid var(--dynamic-stroke-contrast-low);
 }
 
 .comment-input.__state-focused .text-input {
