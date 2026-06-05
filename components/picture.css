@@ -34,6 +34,28 @@
   object-fit: cover;
 }
 
+/* ============================================================
+   PICTURE STACK — ряд из нескольких .picture с лёгкими углами,
+   как небрежно разложенные карточки.
+   ============================================================ */
+.picture-stack {
+  display: flex;
+  gap: var(--space-1);
+}
+.picture-stack > .picture {
+  transform: rotate(-3deg);
+  transition: transform 300ms ease;
+}
+.picture-stack > .picture:nth-child(even) {
+  transform: rotate(3deg);
+}
+.picture-stack > .picture:nth-child(3n) {
+  transform: rotate(-1deg);
+}
+.picture-stack > .picture:nth-child(3n+1):not(:first-child) {
+  transform: rotate(2deg);
+}
+
 .picture.__size-56  { --picture-size: 56px;  --picture-radius: 12px; }
 .picture.__size-72  { --picture-size: 72px;  --picture-radius: 14px; }
 .picture.__size-80  { --picture-size: 80px;  --picture-radius: 16px; }
