@@ -181,6 +181,10 @@
 .avatar__addon.__pos-br { top: calc(var(--avatar-size) - 12px); right: -2px; }
 .avatar__addon.__pos-bl { top: calc(var(--avatar-size) - 12px); left: -2px;  }
 
+/* Для size-56 — аддон 20px торчит на 2px справа/снизу из круга */
+.avatar.__size-56 .avatar__addon.__pos-br { top: calc(var(--avatar-size) - 18px); right: -2px; }
+.avatar.__size-56 .avatar__addon.__pos-bl { top: calc(var(--avatar-size) - 18px); left: -2px;  }
+
 /* ============================================================
    CAPTION — подпись снизу. Требует __has-caption чтобы
    avatar стал column-flex и каптион поместился под кругом.
