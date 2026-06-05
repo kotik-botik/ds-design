@@ -1,0 +1,62 @@
+/**
+ * OK Design System — Comment
+ *
+ * Базовый коммент: аватар слева + блок с шапкой/текстом/действиями.
+ *
+ *   <div class="comment">
+ *     <div class="avatar __size-36 __type-image">…</div>
+ *     <div class="comment__body">
+ *       <div class="comment__header">…имя · время…</div>
+ *       <p class="comment__text">…текст…</p>
+ *       <div class="comment__actions">…actions…</div>
+ *     </div>
+ *   </div>
+ *
+ * TYPES:
+ *   .__type-compact — имя и время в одной строке через «·», тоньше gap'ы.
+ */
+
+.comment {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.comment__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.comment__header {
+  font-family: var(--font-family);
+  font-size: var(--font-size-100);
+  line-height: var(--line-height-100);
+  color: var(--dynamic-text-and-icons-base-secondary);
+}
+.comment__header b {
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-weight: 600;
+  margin-right: 4px;
+}
+.comment__text {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-200);
+  line-height: var(--line-height-200);
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+.comment__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: 4px;
+}
+
+/* Compact — inline header, всё плотнее */
+.comment.__type-compact .comment__body {
+  gap: 2px;
+}
+.comment.__type-compact .comment__actions {
+  margin-top: 6px;
+}

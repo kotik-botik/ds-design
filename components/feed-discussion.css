@@ -1,0 +1,35 @@
+/**
+ * OK Design System — FeedDiscussion (Q&A)
+ *
+ *   <article class="feed-discussion island">
+ *     <nav class="breadcrumbs ds-body-m">…Здоровье > Обсуждают…</nav>
+ *     <h2 class="feed-discussion__title">…вопрос…</h2>
+ *     <hr class="ds-divider">
+ *     <div class="comment __type-compact">…top-comment…</div>
+ *     <span class="button-inline-wrapper __view-primary"><button class="button-inline">Посмотреть N ответов</button></span>
+ *     <div class="comment-input">…</div>
+ *   </article>
+ */
+
+.feed-discussion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+.feed-discussion__title {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+
+/* Тонкая линия-сепаратор */
+.ds-divider {
+  border: 0;
+  border-top: 1px solid var(--dynamic-stroke-contrast-low);
+  margin: 0;
+}
