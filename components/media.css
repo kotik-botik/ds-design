@@ -98,13 +98,17 @@
    OVERLAYS (для любых типов)
    ============================================================ */
 
-/* Play overlay — позиционирует .button-circle по центру медиа.
-   Визуально используется .button-circle.__style-on-image __size-56. */
+/* Play overlay — позиционирует .button-circle по центру медиа
+   и форсит ему стиль __style-on-image (тёмный translucent). */
 .media__play {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.media__play .button-circle {
+  --button-circle-bg:    var(--static-surface-special-layer-tertiary);
+  --button-circle-color: var(--static-text-and-icons-base-inverse-primary);
 }
 
 /* Duration pill — для video */
