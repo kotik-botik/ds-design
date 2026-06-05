@@ -135,6 +135,13 @@
   line-height: 1;
 }
 
+/* Тег в углу медиа — позиционирует .tag в top-left по умолчанию */
+.media__tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
 /* Mute pill (bottom-right) — для clip */
 .media__mute {
   position: absolute;

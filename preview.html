@@ -499,6 +499,35 @@
   </section>
 
   <section class="preview-section">
+    <h2>Tag — primary</h2>
+    <div class="preview-label">Pill-плашка для категорий, статусов, времени. Источник — Figma <code>primary ◇ tag 1.2</code>.</div>
+
+    <div class="preview-label" style="margin-top: 12px;">Размеры</div>
+    <div class="preview-row" style="background: var(--dynamic-surface-base-tertiary); padding: 12px; border-radius: 12px;">
+      <span class="tag __style-primary __size-20">size 20</span>
+      <span class="tag __style-primary __size-24">size 24</span>
+      <span class="tag __style-primary __size-32">size 32</span>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">С иконкой</div>
+    <div class="preview-row" style="background: var(--dynamic-surface-base-tertiary); padding: 12px; border-radius: 12px;">
+      <span class="tag __style-primary __size-24"><span class="icon __size-16 __src" style="--icon-src:url('../assets/icons/play.svg')"></span>Видео</span>
+    </div>
+
+    <table class="spec-table">
+      <thead><tr><th colspan="2">Что умеет</th></tr></thead>
+      <tbody>
+        <tr><td><code>.__style-primary</code></td><td>фон <code>--static-surface-special-layer-tertiary</code> (тёмный translucent), белый текст</td></tr>
+        <tr><td><code>.__size-20</code></td><td>padding 2/6, caption-s (11/14/400)</td></tr>
+        <tr><td><code>.__size-24</code></td><td>padding 4/8, caption-m (13/16/400)</td></tr>
+        <tr><td><code>.__size-32</code></td><td>padding 6/10, body-m (15/20/400)</td></tr>
+        <tr><td>радиус</td><td>999px (полностью pill)</td></tr>
+        <tr><td>слоты</td><td>left-icon, label, right-content — через children</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="preview-section">
     <h2>ButtonCircle</h2>
     <div class="preview-label">Круглая кнопка с иконкой по центру. Источник — Figma <code>buttonCircle 1.1</code>.</div>
 
@@ -831,6 +860,7 @@
         <p class="ds-body-m">Бургеры больше не покупаю, смотрите мой новый рецепт.</p>
 
         <div class="media __type-video" style="height: 220px; background: linear-gradient(135deg, var(--base-orange-saturated-48), var(--base-orange-saturated-64));">
+          <span class="media__tag tag __style-primary __size-24">Рецепт</span>
           <div class="media__play button-circle-wrapper __size-56">
             <button class="button-circle" aria-label="Play"><span class="icon __src" style="--icon-src:url('../assets/icons/play.svg')"></span></button>
           </div>

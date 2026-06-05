@@ -36,6 +36,7 @@
 @import url('./components/picture.css');
 @import url('./components/pulse-dot.css');
 @import url('./components/breadcrumbs.css');
+@import url('./components/tag.css');
 @import url('./components/media.css');
 @import url('./components/actions-bar.css');
 @import url('./components/island.css');
@@ -47,6 +48,7 @@
 @import url('./components/feed-birthday.css');
 @import url('./components/feed-discussion.css');
 @import url('./components/feed-questions.css');
+@import url('./components/feed-stories.css');
 @import url('./components/tabs.css');
 @import url('./components/tabbar.css');
 @import url('./components/meshok-up.css');
