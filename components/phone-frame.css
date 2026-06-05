@@ -32,9 +32,12 @@
   flex-shrink: 0;
 }
 
-/* Scrollable content area. */
+/* Scrollable content area — 16px по бокам, чтобы дочерние острова
+   и контейнеры были fillContainer без своих margin'ов */
 .phone-frame__feed {
   flex: 1;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
 }
 
 /* 8px separator between feed cards (background of phone shows through) */
