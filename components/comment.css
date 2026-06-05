@@ -8,7 +8,17 @@
  *     <div class="comment__body">
  *       <div class="comment__header">…имя · время…</div>
  *       <p class="comment__text">…текст…</p>
- *       <div class="comment__actions">…actions…</div>
+ *       <div class="comment__actions">
+ *         <span class="button-inline-wrapper __size-20 __view-secondary">
+ *           <button class="button-inline __size-20">…Ответить…</button>
+ *         </span>
+ *         <span class="button-inline-wrapper __size-20 __view-secondary">
+ *           <button class="button-inline __size-20">…👍 N…</button>
+ *         </span>
+ *       </div>
+ *       <span class="button-inline-wrapper __view-primary">
+ *         <button class="button-inline">Посмотреть N ответов</button>
+ *       </span>
  *     </div>
  *   </div>
  *
