@@ -1,11 +1,11 @@
 /**
- * OK Design System — FeedMoments (Stories-like)
+ * OK Design System — FeedStories (Stories-like)
  *
  * Горизонтальная карусель аватаров-моментов с кольцами.
  *
- *   <article class="feed-moments island">
+ *   <article class="feed-stories island">
  *     <nav class="breadcrumbs ds-body-m">…Дача > Сейчас на даче…</nav>
- *     <div class="feed-moments__list">
+ *     <div class="feed-stories__list">
  *       <div class="avatar __size-56 __type-image __ring-active __has-addon __has-caption">
  *         <img>
  *         <div class="avatar__addon __pos-br">…+…</div>
@@ -20,7 +20,7 @@
  *   </article>
  */
 
-.feed-moments {
+.feed-stories {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -30,7 +30,7 @@
 
 /* Горизонтальный скроллер аватаров. Растягивается за горизонтальные
    паддинги контейнера через отрицательный margin. */
-.feed-moments__list {
+.feed-stories__list {
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
@@ -38,9 +38,9 @@
   margin: 0 calc(-1 * var(--space-4));
   padding: 4px var(--space-4);
 }
-.feed-moments__list::-webkit-scrollbar { display: none; }
+.feed-stories__list::-webkit-scrollbar { display: none; }
 
-.feed-moments__list > .avatar {
+.feed-stories__list > .avatar {
   scroll-snap-align: start;
   flex-shrink: 0;
 }
