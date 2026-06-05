@@ -43,4 +43,5 @@
 .feed-stories__list > .avatar {
   scroll-snap-align: start;
   flex-shrink: 0;
+  width: 72px;
 }
