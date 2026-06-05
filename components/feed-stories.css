@@ -35,8 +35,10 @@
    с внутренним padding-left 16 для первой стори. */
 .feed-stories__list {
   display: flex;
+  align-items: flex-start;
   gap: var(--space-1);
   overflow-x: auto;
+  overflow-y: visible;
   scroll-snap-type: x proximity;
   scroll-padding-left: var(--space-4);
   padding: 0;
