@@ -34,8 +34,8 @@
   align-items: center;
   color: var(--breadcrumbs-color);
   font-family: var(--font-family);
-  font-size: 15px;
-  line-height: 20px;
+  font-size: var(--font-size-200);
+  line-height: var(--line-height-200);
   font-weight: 400;
 }
 
