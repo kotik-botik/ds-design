@@ -27,6 +27,11 @@
   align-self: flex-start;
 }
 
+/* Comment-input внутри обсуждения — без своих паддингов */
+.feed-discussion .comment-input {
+  padding: 0;
+}
+
 /* Тонкая линия-сепаратор */
 .ds-divider {
   border: 0;
