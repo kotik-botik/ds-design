@@ -35,7 +35,7 @@
    Font: Onest, fallback: Arial, Helvetica Neue, Helvetica, sans-serif
    ============================================================ */
 :root {
-  --font-family: Onest, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-family: "OK Sans Display", Onest, sans-serif;
 
   /* Font sizes */
   --font-size-50:  11px;
