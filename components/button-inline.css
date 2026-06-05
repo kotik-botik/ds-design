@@ -79,7 +79,7 @@
 
 /* Size-specific typography */
 .button-inline.__size-16 {
-  --button-inline-content-gap: 4px;
+  --button-inline-content-gap: 2px;
   font-size: 13px;
   line-height: 16px;
   font-weight: 400;
@@ -133,6 +133,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  gap: var(--button-inline-content-gap);
   position: relative;
 }
 
