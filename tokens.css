@@ -61,15 +61,30 @@
   --line-height-2000: 72px;
 }
 
-/* Typography helper classes */
+/* Typography helper classes (миксины). Дополнительные селекторы внизу
+   используют ту же декларацию — компоненты «расширяются» через группировку. */
 .ds-display-xl  { font-family: var(--font-family); font-size: 56px; line-height: 72px; font-weight: 500; letter-spacing: 0; }
 .ds-display-m   { font-family: var(--font-family); font-size: 24px; line-height: 28px; font-weight: 400; letter-spacing: 0; }
-.ds-title-xl    { font-family: var(--font-family); font-size: 27px; line-height: 36px; font-weight: 600; letter-spacing: 0; }
-.ds-title-l     { font-family: var(--font-family); font-size: 21px; line-height: 28px; font-weight: 600; letter-spacing: 0; }
-.ds-title-m     { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: 0; }
-.ds-title-s     { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 600; letter-spacing: 0; }
-.ds-body-l      { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 400; letter-spacing: 0; }
-.ds-body-m      { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 400; letter-spacing: 0; }
+
+.ds-title-xl,
+.header.__size-xl .header__title  { font-family: var(--font-family); font-size: 27px; line-height: 36px; font-weight: 600; letter-spacing: 0; }
+
+.ds-title-l,
+.header.__size-l .header__title   { font-family: var(--font-family); font-size: 21px; line-height: 28px; font-weight: 600; letter-spacing: 0; }
+
+.ds-title-m,
+.header.__size-m .header__title   { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: 0; }
+
+.ds-title-s,
+.header.__size-s .header__title   { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 600; letter-spacing: 0; }
+
+.ds-body-l,
+.header.__size-xl .header__subtitle,
+.header.__size-l  .header__subtitle  { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 400; letter-spacing: 0; }
+
+.ds-body-m,
+.header.__size-m .header__subtitle,
+.header.__size-s .header__subtitle  { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 400; letter-spacing: 0; }
 .ds-caption-m   { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; }
 .ds-caption-m-accent { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
 .ds-caption-s   { font-family: var(--font-family); font-size: 11px; line-height: 16px; font-weight: 400; letter-spacing: 0; }
