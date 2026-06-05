@@ -9,7 +9,8 @@
  */
 
 .feed-birthday,
-.feed-group {
+.feed-group,
+.feed-contest {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,7 +21,8 @@
 
 /* Контент над декоративными слоями */
 .feed-birthday > *,
-.feed-group > * {
+.feed-group > *,
+.feed-contest > * {
   position: relative;
   z-index: 1;
 }
