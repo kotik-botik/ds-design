@@ -25,6 +25,7 @@
 @import url('./components/icon-glyph.css');
 @import url('./components/button.css');
 @import url('./components/button-inline.css');
+@import url('./components/button-circle.css');
 @import url('./components/uni-cell.css');
 @import url('./components/uni-card.css');
 @import url('./components/content.css');
@@ -36,7 +37,6 @@
 @import url('./components/pulse-dot.css');
 @import url('./components/breadcrumbs.css');
 @import url('./components/media.css');
-@import url('./components/media-grid.css');
 @import url('./components/actions-bar.css');
 @import url('./components/island.css');
 @import url('./components/avatars-view.css');

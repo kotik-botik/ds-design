@@ -30,9 +30,21 @@
 
 /* Size modifiers — задают размер стека, «+N» и оверлап одновременно.
    Размер самих аватарок задаётся отдельно на .avatar (__size-N). */
+.avatars-view.__size-16 { --avatars-view-size: 16px; --avatars-view-overlap: -4px;  --avatars-view-font: var(--font-size-50);  }
 .avatars-view.__size-20 { --avatars-view-size: 20px; --avatars-view-overlap: -6px;  --avatars-view-font: var(--font-size-50);  }
 .avatars-view.__size-24 { --avatars-view-size: 24px; --avatars-view-overlap: -8px;  --avatars-view-font: var(--font-size-50);  }
 .avatars-view.__size-36 { --avatars-view-size: 36px; --avatars-view-overlap: -10px; --avatars-view-font: var(--font-size-100); }
+.avatars-view.__size-44 { --avatars-view-size: 44px; --avatars-view-overlap: -12px; --avatars-view-font: var(--font-size-100); }
+.avatars-view.__size-56 { --avatars-view-size: 56px; --avatars-view-overlap: -16px; --avatars-view-font: var(--font-size-200); }
+.avatars-view.__size-72 { --avatars-view-size: 72px; --avatars-view-overlap: -20px; --avatars-view-font: var(--font-size-300); }
+.avatars-view.__size-96 { --avatars-view-size: 96px; --avatars-view-overlap: -28px; --avatars-view-font: var(--font-size-500); }
+
+/* Layout-vertical — стек аватарок сверху, текст под ними */
+.avatars-view.__layout-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
 
 .avatars-view__stack {
   display: flex;
