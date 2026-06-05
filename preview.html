@@ -461,6 +461,59 @@
     </table>
   </section>
 
+  <section class="preview-section">
+    <h2>ButtonCircle</h2>
+    <div class="preview-label">Круглая кнопка с иконкой по центру. Источник — Figma <code>buttonCircle 1.1</code>.</div>
+
+    <div class="preview-label" style="margin-top: 12px;">Размеры (style=primary)</div>
+    <div class="preview-row">
+      <div class="button-circle-wrapper __size-16 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-20 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-24 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-36 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-44 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-56 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-72 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-96 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">Стили (size=44)</div>
+    <div class="preview-row">
+      <div class="button-circle-wrapper __size-44 __style-primary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-44 __style-secondary"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-44 __style-floating"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">…on-color / on-image (на тёмном фоне)</div>
+    <div class="preview-row" style="background: var(--static-surface-status-accent); padding: 12px; border-radius: 12px;">
+      <div class="button-circle-wrapper __size-44 __style-primary-on-color"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-44 __style-secondary-on-color"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-44 __style-on-image"><button class="button-circle"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+    </div>
+
+    <div class="preview-label" style="margin-top: 12px;">Состояния</div>
+    <div class="preview-row">
+      <div class="button-circle-wrapper __size-44 __style-primary"><button class="button-circle" disabled><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+      <div class="button-circle-wrapper __size-44 __style-primary"><button class="button-circle __state-loading"><span class="icon __src" style="--icon-src:url('../assets/icons/plus.svg')"></span></button></div>
+    </div>
+
+    <table class="spec-table">
+      <thead><tr><th colspan="2">Что умеет</th></tr></thead>
+      <tbody>
+        <tr><td><code>.__size-16 / 20 / 24 / 36 / 44 / 56 / 72 / 96</code></td><td>квадрат + пропорциональная иконка (12/16/16/20/24/24/32/40)</td></tr>
+        <tr><td><code>.__style-primary</code></td><td>orange fill, белая иконка — главное действие</td></tr>
+        <tr><td><code>.__style-secondary</code></td><td>translucent contrast bg, иконка по теме</td></tr>
+        <tr><td><code>.__style-primary-on-color</code></td><td>белая на акценте, иконка чёрная</td></tr>
+        <tr><td><code>.__style-secondary-on-color</code></td><td>translucent белый, иконка белая</td></tr>
+        <tr><td><code>.__style-floating</code></td><td>FAB: surface-base-quaternary + drop shadow</td></tr>
+        <tr><td><code>.__style-on-image</code></td><td>тёмный translucent оверлей для media</td></tr>
+        <tr><td><code>.__style-custom</code></td><td>цвета через <code>--button-circle-custom-bg</code> и <code>-color</code></td></tr>
+        <tr><td><code>.__state-disabled</code></td><td>opacity 0.36, pointer-events none</td></tr>
+        <tr><td><code>.__state-loading</code></td><td>shimmer, иконка скрыта</td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <section class="preview-section" style="min-width: 375px;">
     <h2>AvatarsView — стек + текст</h2>
     <div class="preview-label">Аватарки внахлёст с белой обводкой + «+N» плашка + опциональный body-m текст справа. Три размера: 20 / 24 / 36.</div>
