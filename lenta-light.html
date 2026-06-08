@@ -54,12 +54,24 @@
     --button-content-gap: 8px;
   }
 
-  /* Список карточек */
+  /* Список карточек. Нижний паддинг — высота таббара (48 + 24 handle)
+     плюс воздух, чтобы последняя карточка не залезала под таббар. */
   .ll-feed {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    padding: var(--space-2) var(--space-2) var(--space-6);
+    padding: var(--space-2) var(--space-2) calc(72px + var(--space-6));
+  }
+
+  /* Tabbar прибит к низу экрана (fixed, потому что .phone-frame
+     имеет overflow-y: auto — с position:absolute таббар уезжает
+     вместе с прокруткой). .ll-feed имеет нижний паддинг под высоту. */
+  .ll-tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
   }
 
   /* button-klass + <img>-иконки: my .ll-icon ставит display:inline-block,
@@ -318,19 +330,17 @@
 
           <p class="ds-body-m text-feed__body">Добавил в друзья</p>
 
-          <div class="text-feed__reshare-card">
-            <div class="ll-friend-row">
-              <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/256?img=68" alt=""></div>
-              <div class="ll-friend-row__txt">
-                <div class="ds-body-l ll-friend-row__name">
-                  Дмитрия Поречина
-                  <svg class="ll-badge-verified" width="16" height="16" viewBox="0 0 16 16" aria-label="Verified" role="img">
-                    <circle cx="8" cy="8" r="8" fill="#018DEB"/>
-                    <path d="M4.4 8.2 L6.9 10.6 L11.6 5.9" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </div>
-                <div class="ds-body-m ll-friend-row__subtitle">Нет общих друзей</div>
+          <div class="ll-friend-row">
+            <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/256?img=68" alt=""></div>
+            <div class="ll-friend-row__txt">
+              <div class="ds-body-l ll-friend-row__name">
+                Дмитрия Поречина
+                <svg class="ll-badge-verified" width="16" height="16" viewBox="0 0 16 16" aria-label="Verified" role="img">
+                  <circle cx="8" cy="8" r="8" fill="#018DEB"/>
+                  <path d="M4.4 8.2 L6.9 10.6 L11.6 5.9" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </div>
+              <div class="ds-body-m ll-friend-row__subtitle">Нет общих друзей</div>
             </div>
           </div>
 
@@ -380,6 +390,20 @@
           </div>
         </article>
 
+      </div>
+    </div>
+
+    <!-- TABBAR (DS-компонент, прибит к низу) -------------------------- -->
+    <div class="ll-tabbar">
+      <div class="tabbar __platform-ios">
+        <div class="tabbar__row">
+          <button class="tabbar-icon __slot-feed __state-on" aria-label="Лента"></button>
+          <button class="tabbar-icon __slot-book" aria-label="Книга"></button>
+          <button class="tabbar-icon __slot-message" aria-label="Сообщения"></button>
+          <button class="tabbar-icon __slot-clip" aria-label="Клипы"></button>
+          <button class="tabbar-icon __slot-menu" aria-label="Меню"></button>
+        </div>
+        <div class="tabbar__handle"></div>
       </div>
     </div>
   </div>
