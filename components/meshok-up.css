@@ -95,14 +95,13 @@
 
 /* ============================================================
    TYPE: PUBLISH — навбар облегчённой ленты (lenta-light).
-   Слева большая primary-on-color кнопка «Опубликовать»,
-   справа две 24px иконки (уведомления, поиск).
-   Фон совпадает с фоном страницы (--dynamic-surface-base-primary).
+   Без заливки: внутри только кнопка «Опубликовать» слева и
+   2 иконки справа. Фон даёт страница.
    ============================================================ */
 .nav-bar.__type-publish {
   height: auto;
   padding: var(--space-2) var(--space-4);
-  background-color: var(--dynamic-surface-base-primary);
+  background-color: transparent;
 }
 .nav-bar.__type-publish .nav-bar__trailing {
   gap: var(--space-4);

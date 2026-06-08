@@ -127,6 +127,62 @@
 }
 
 /* ============================================================
+   RESHARE CARD — встроенная «цитата» репоста.
+   Бордерный контейнер с аватаркой автора, текстом и фото,
+   нижние углы скруглены к самому медиа.
+   ============================================================
+   <div class="text-feed__reshare-card">
+     <div class="text-feed__reshare-card-author">
+       <div class="avatar __size-24 __type-image"><img …></div>
+       <div class="ds-body-m text-feed__reshare-card-author-name">Борис Фрол</div>
+     </div>
+     <label class="text-feed__body-toggle">…body…</label>     // опц.
+     <div class="text-feed__reshare-card-media"><img …></div> // опц.
+   </div>
+*/
+.text-feed__reshare-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border: 2px solid var(--dynamic-stroke-contrast-low);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.text-feed__reshare-card > :not(.text-feed__reshare-card-media) {
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.text-feed__reshare-card-author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+}
+.text-feed__reshare-card-author-name {
+  flex: 1 1 0;
+  min-width: 0;
+  color: var(--dynamic-text-and-icons-base-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* media в reshare-card: edge-to-edge, нижние углы клипуются
+   общим overflow:hidden на самом контейнере. */
+.text-feed__reshare-card-media {
+  position: relative;
+  width: 100%;
+  background-color: var(--dynamic-surface-contrast-low);
+}
+.text-feed__reshare-card-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* ============================================================
    BODY — текст с опциональным clamp и тап-разворотом
    ============================================================
    Структура:
