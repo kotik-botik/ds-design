@@ -33,13 +33,10 @@
     vertical-align: middle;
   }
 
-  /* Sticky top — status-bar + nav-bar лежат на фоне страницы.
-     flex-shrink: 0 обязателен, иначе во флекс-колонке родителя
-     сам sticky-блок усыхает и стикуется только частично. */
+  /* Top — status-bar + nav-bar лежат на фоне страницы и скроллятся
+     вместе с лентой (не sticky). flex-shrink: 0 чтобы во флекс-колонке
+     родителя блок не усыхал по высоте. */
   .ll-top {
-    position: sticky;
-    top: 0;
-    z-index: 50;
     flex-shrink: 0;
     background: var(--dynamic-surface-base-primary);
   }
@@ -113,8 +110,8 @@
             </div>
           </div>
           <div class="nav-bar__trailing">
-            <img class="ll-icon" src="assets/icons/notifications_24.svg" width="24" height="24" alt="Уведомления">
-            <img class="ll-icon" src="assets/icons/search_24.svg" width="24" height="24" alt="Поиск">
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Уведомления"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/notifications_24.svg" width="24" height="24" alt=""></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Поиск"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/search_24.svg" width="24" height="24" alt=""></span></button></span>
           </div>
         </div>
       </div>
