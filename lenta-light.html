@@ -62,28 +62,6 @@
     padding: var(--space-2) var(--space-2) var(--space-6);
   }
 
-  /* Toggle-панель прототипа: маленькая полоска с переключателями
-     состояний, на саму вёрстку фида не влияет. */
-  .ll-toggles {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-4);
-    color: var(--dynamic-text-and-icons-base-secondary);
-  }
-  .ll-toggles label {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    color: var(--dynamic-text-and-icons-base-primary);
-    cursor: pointer;
-  }
-
-  /* Тоггл активности: когда чекбокс выключен — прячем .text-feed__activity. */
-  .phone-frame:has(#ll-activity-toggle:not(:checked)) .text-feed__activity {
-    display: none;
-  }
-
   /* button-klass + <img>-иконки: my .ll-icon ставит display:inline-block,
      поэтому скрывать filled/outline через .button-klass__icon-X (тоже один
      класс) перебивается. Поднимаем специфичность через двойной класс. */
@@ -152,14 +130,6 @@
             <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Поиск"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/search_24.svg" width="24" height="24" alt=""></span></button></span>
           </div>
         </div>
-      </div>
-
-      <!-- TOGGLES (только для прототипа) -------------------------------- -->
-      <div class="ll-toggles">
-        <label class="ds-body-m">
-          <input type="checkbox" id="ll-activity-toggle" checked>
-          Показать «X поставил класс»
-        </label>
       </div>
 
       <!-- FEED ---------------------------------------------------------- -->
