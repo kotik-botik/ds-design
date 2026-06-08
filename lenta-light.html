@@ -83,6 +83,44 @@
   .phone-frame:has(#ll-activity-toggle:not(:checked)) .text-feed__activity {
     display: none;
   }
+
+  /* button-klass + <img>-иконки: my .ll-icon ставит display:inline-block,
+     поэтому скрывать filled/outline через .button-klass__icon-X (тоже один
+     класс) перебивается. Поднимаем специфичность через двойной класс. */
+  .button-klass .button-klass__icon-filled.ll-icon { display: none; }
+  .button-klass:has(> input:checked) .button-klass__icon-outline.ll-icon { display: none; }
+  .button-klass:has(> input:checked) .button-klass__icon-filled.ll-icon { display: inline-block; }
+
+  /* Verified-бейдж рядом с именем — небольшой inline-svg, 16px */
+  .ll-badge-verified {
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  /* Шапка во встроенной карточке Added Friend — флекс-ряд с гэпом 12,
+     внутренние uni-cell-padding'и уже занулены правилом из text-feed. */
+  .ll-friend-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .ll-friend-row__txt {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ll-friend-row__name {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
+  .ll-friend-row__subtitle {
+    color: var(--dynamic-text-and-icons-base-secondary);
+  }
 </style>
 </head>
 <body>
@@ -142,7 +180,7 @@
           <div class="actions-bar">
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;7</span></button></div>
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;2</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;34</span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 34;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
@@ -169,7 +207,7 @@
           <div class="actions-bar">
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;14</span></button></div>
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;73</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;16</span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 16;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
@@ -202,7 +240,7 @@
           <div class="actions-bar">
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;24</span></button></div>
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;5</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;128</span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 128;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
@@ -228,7 +266,7 @@
           <div class="actions-bar">
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;3</span></button></div>
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;12</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;47</span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 47;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
@@ -256,7 +294,7 @@
           <div class="actions-bar">
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;9</span></button></div>
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;4</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;22</span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 22;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
@@ -293,8 +331,51 @@
           <div class="actions-bar">
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;14</span></button></div>
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;73</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;16</span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 16;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- 7. Added Friend — добавил в друзья (встроенная карточка) ----- -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/128?img=15" alt=""></div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Александр Борщицкий</div>
+              <div class="ds-caption-s text-feed__time">12:48</div>
+            </div>
+          </div></div></div>
+
+          <p class="ds-body-m text-feed__body">Добавил в друзья</p>
+
+          <div class="text-feed__reshare-card">
+            <div class="ll-friend-row">
+              <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/256?img=68" alt=""></div>
+              <div class="ll-friend-row__txt">
+                <div class="ds-body-l ll-friend-row__name">
+                  Дмитрия Поречина
+                  <svg class="ll-badge-verified" width="16" height="16" viewBox="0 0 16 16" aria-label="Verified" role="img">
+                    <circle cx="8" cy="8" r="8" fill="#018DEB"/>
+                    <path d="M4.4 8.2 L6.9 10.6 L11.6 5.9" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="ds-body-m ll-friend-row__subtitle">Нет общих друзей</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/add_16_20.svg" width="20" height="20" alt="">
+                &nbsp;Добавить в друзья
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36 __pinned-end">
+              <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt="">
+              </span></button>
+            </div>
           </div>
         </article>
 
