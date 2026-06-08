@@ -79,6 +79,20 @@
   gap: var(--space-3);
 }
 
+/* ============================================================
+   ACTIVITY — опциональная плашка «X поставил класс» / «X переслал»
+   Маленькая строка caption-m, имя medium-weight. Размещается
+   первым ребёнком text-feed (над основной шапкой).
+   ============================================================
+   <div class="text-feed__activity ds-caption-m"><b>Борис Фрол</b> поставил класс</div>
+*/
+.text-feed__activity {
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+.text-feed__activity b {
+  font-weight: 500;
+}
+
 /* Горизонтальный паддинг — всем секциям, кроме медиа (full-bleed). */
 .text-feed > :not(.text-feed__media) {
   padding-left: var(--space-4);
