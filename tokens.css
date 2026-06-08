@@ -36,6 +36,15 @@
    ============================================================ */
 :root {
   --font-family: "OK Sans Display", Onest, sans-serif;
+}
+
+/* Шрифтовой модификатор: в прототипах lenta-light Roboto идёт первым.
+   Вешается на html/body, переопределяет --font-family для всего поддерева. */
+.__font-roboto {
+  --font-family: "Roboto", "OK Sans Display", Onest, Arial, sans-serif;
+}
+
+:root {
 
   /* Font sizes */
   --font-size-50:  11px;
