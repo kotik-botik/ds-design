@@ -1,7 +1,7 @@
 /**
  * OK Design System — Avatar (circle, avaPicture 1.3)
  *
- * SIZES:   .__size-16 | 20 | 24 | 36 (default) | 44 | 56 | 72 | 96 | 120 | 144
+ * SIZES:   .__size-16 | 20 | 24 | 36 (default) | 44 | 48 | 56 | 72 | 96 | 120 | 144
  *
  * TYPES:   .__type-image       — <img> child
  *          .__type-placeholder — пустой круг (loading/empty)
@@ -59,6 +59,7 @@
 .avatar.__size-24  { --avatar-size: 24px;  --avatar-font-size: 11px; }
 .avatar.__size-36  { --avatar-size: 36px;  --avatar-font-size: 14px; }
 .avatar.__size-44  { --avatar-size: 44px;  --avatar-font-size: 15px; }
+.avatar.__size-48  { --avatar-size: 48px;  --avatar-font-size: 16px; }
 .avatar.__size-56  { --avatar-size: 56px;  --avatar-font-size: 19px; }
 .avatar.__size-72  { --avatar-size: 72px;  --avatar-font-size: 24px; }
 .avatar.__size-96  { --avatar-size: 96px;  --avatar-font-size: 32px; }

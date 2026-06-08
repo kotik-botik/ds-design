@@ -1,0 +1,298 @@
+/**
+ * OK Design System — TextFeed
+ *
+ * Облегчённый формат поста ленты. Кладётся внутрь стандартного .island
+ * (фон, радиус 20, вертикальные паддинги 16 — всё оттуда).
+ * Сам text-feed добавляет вертикальную стопку секций с gap 12 и
+ * горизонтальные паддинги 16 для всех секций, кроме .text-feed__media.
+ *
+ * Три демо-варианта (см. text-feed-prototype.html):
+ *   1. text-only       — header + текст + control
+ *   2. text + media    — header + текст с инлайн «ещё» + одна картинка или ряд + control
+ *   3. reshare + media — header + плашка «переслано: ↗ Имя» + картинка + control
+ *
+ * Структура (опциональные блоки помечены):
+ *
+ *   <article class="text-feed island">
+ *     <div class="text-feed__header">
+ *       <div class="avatar __size-48 __type-image"><img src="…"></div>
+ *       <div class="text-feed__header-txt">
+ *         <div class="text-feed__header-name">Александра Борщицкий</div>
+ *         <div class="text-feed__header-time">12:48</div>
+ *       </div>
+ *     </div>
+ *
+ *     <div class="text-feed__reshare">                           <!-- опц. -->
+ *       <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>
+ *       <div class="avatar __size-24 __type-image"><img src="…"></div>
+ *       <div class="text-feed__reshare-name">Борис Фрол</div>
+ *     </div>
+ *
+ *     <p class="text-feed__body" style="--text-feed-clamp: 4;">  <!-- опц. -->
+ *       Длинный текст…
+ *       <a class="text-feed__more" href="#">ещё</a>
+ *     </p>
+ *
+ *     <div class="text-feed__media __single">                    <!-- опц., одно фото -->
+ *       <img src="…">
+ *     </div>
+ *
+ *     <div class="text-feed__media __row">                       <!-- опц., галерея -->
+ *       <div class="text-feed__media-cell" style="aspect-ratio: 220/165"><img src="…"></div>
+ *       <div class="text-feed__media-cell" style="aspect-ratio: 1"><img src="…"></div>
+ *       <div class="text-feed__media-cell" style="aspect-ratio: 168/195"><img src="…"></div>
+ *       <div class="text-feed__media-cell" style="aspect-ratio: 110/195"><img src="…"></div>
+ *     </div>
+ *
+ *     <div class="text-feed__control">
+ *       <div class="text-feed__control-group">
+ *         <div class="button-wrapper __size-36">
+ *           <button class="button-container __style-secondary">
+ *             <span class="button-content">
+ *               <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment_16_20.svg')"></span>
+ *               &nbsp;14
+ *             </span>
+ *           </button>
+ *         </div>
+ *         …reshare…
+ *         …klass…
+ *       </div>
+ *       <span class="text-feed__control-spacer"></span>
+ *       <div class="button-wrapper __size-36">
+ *         <button class="button-container __style-secondary" aria-label="Ещё">
+ *           <span class="button-content">
+ *             <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/more_16_20.svg')"></span>
+ *           </span>
+ *         </button>
+ *       </div>
+ *     </div>
+ *   </article>
+ *
+ * Порядок и стиль кнопок: переиспользуется button __size-36 __style-secondary
+ * (см. components/button.css) — отличается только порядок: коммент → репост → класс,
+ * затем спейсер и иконочная «...».
+ *
+ * Параметры:
+ *   --text-feed-clamp        — кол-во строк текста до обрезки (по умолч. без обрезки).
+ *                              Когда задан, в конец текста ставится <a class="text-feed__more">ещё</a>.
+ *   --text-feed-media-row-h  — высота ряда галереи (default 195px).
+ */
+
+/* ============================================================
+   LAYOUT — text-feed внутри .island. Только стопка секций
+   и горизонтальные паддинги; фон/радиус/верт. паддинги даёт .island.
+   ============================================================ */
+.text-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Горизонтальный паддинг — всем секциям, кроме медиа (она full-bleed). */
+.text-feed > :not(.text-feed__media) {
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+/* ============================================================
+   HEADER — аватар 48 + имя 15 medium + время 11 secondary
+   ============================================================ */
+.text-feed__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.text-feed__header-txt {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+}
+
+.text-feed__header-name {
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--dynamic-text-and-icons-base-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-feed__header-time {
+  font-family: var(--font-family);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 400;
+  color: var(--dynamic-text-and-icons-base-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   RESHARE — «переслано от: ↗ Имя»
+   ============================================================ */
+.text-feed__reshare {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+}
+
+.text-feed__reshare-name {
+  flex: 1 1 0;
+  min-width: 0;
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--dynamic-text-and-icons-base-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   BODY — текст 15/20, опциональный clamp с инлайн «ещё»
+   ============================================================ */
+.text-feed__body {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+
+/* Если задан --text-feed-clamp — обрезаем по строкам.
+   «ещё» позиционируем абсолютно в правом нижнем углу clamp-блока:
+   ставим над текстом, с фейдом фона слева, чтобы под линком не торчало. */
+.text-feed__body[style*="--text-feed-clamp"] {
+  position: relative;
+  display: -webkit-box;
+  -webkit-line-clamp: var(--text-feed-clamp, 3);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-feed__more {
+  color: var(--dynamic-text-and-icons-status-accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.text-feed__body[style*="--text-feed-clamp"] .text-feed__more {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding-left: 24px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--dynamic-surface-base-secondary) 16px
+  );
+}
+
+/* ============================================================
+   MEDIA — single (одно фото) | row (горизонтальная лента)
+   ============================================================ */
+.text-feed__media {
+  position: relative;
+  width: 100%;
+}
+
+/* — single — */
+.text-feed__media.__single {
+  aspect-ratio: 4 / 3;
+  background-color: var(--dynamic-surface-contrast-low);
+  border-top: 1px solid var(--dynamic-stroke-contrast-low);
+  border-bottom: 1px solid var(--dynamic-stroke-contrast-low);
+  overflow: hidden;
+}
+.text-feed__media.__single img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* — row — горизонтальная скролл-лента из ячеек с разными пропорциями */
+.text-feed__media.__row {
+  display: flex;
+  gap: 4px;
+  height: var(--text-feed-media-row-h, 195px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.text-feed__media.__row::-webkit-scrollbar { display: none; }
+
+.text-feed__media-cell {
+  flex: 0 0 auto;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--dynamic-surface-contrast-low);
+  border: 1px solid var(--dynamic-stroke-contrast-low);
+}
+.text-feed__media-cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Первая/последняя ячейка не должны казаться "обрезанными" — стираем
+   боковые границы у крайних, как в Figma (внешний бордер карточки). */
+.text-feed__media.__row .text-feed__media-cell:first-child { border-left: 0; }
+.text-feed__media.__row .text-feed__media-cell:last-child  { border-right: 0; }
+
+/* ============================================================
+   CONTROL — ряд пилюль (коммент / репост / класс) + spacer + more
+   ============================================================ */
+.text-feed__control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.text-feed__control-group {
+  display: flex;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+}
+
+.text-feed__control-spacer {
+  flex: 1 1 0;
+}
+
+/* Пилюля действия — 36px высоты, контраст-низкий фон, радиус 12 */
+.text-feed-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1-5);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: 12px;
+  background-color: var(--dynamic-surface-contrast-low);
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.text-feed-pill .icon { flex: 0 0 auto; }
+
+/* Иконочная пилюля — без текста, тот же 36×… паддинг */
+.text-feed-pill.__icon-only {
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+}
