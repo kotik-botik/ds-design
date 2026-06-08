@@ -33,13 +33,10 @@
     vertical-align: middle;
   }
 
-  /* Sticky top — status-bar + nav-bar лежат на фоне страницы.
-     flex-shrink: 0 обязателен, иначе во флекс-колонке родителя
-     сам sticky-блок усыхает и стикуется только частично. */
+  /* Top — status-bar + nav-bar лежат на фоне страницы и скроллятся
+     вместе с лентой (не sticky). flex-shrink: 0 чтобы во флекс-колонке
+     родителя блок не усыхал по высоте. */
   .ll-top {
-    position: sticky;
-    top: 0;
-    z-index: 50;
     flex-shrink: 0;
     background: var(--dynamic-surface-base-primary);
   }
