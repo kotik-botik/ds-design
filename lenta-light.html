@@ -81,6 +81,20 @@
   .button-klass:has(> input:checked) .button-klass__icon-outline.ll-icon { display: none; }
   .button-klass:has(> input:checked) .button-klass__icon-filled.ll-icon { display: inline-block; }
 
+  /* Toggle для кнопки «Добавить в друзья»: при :checked меняется иконка
+     (+ → ✓), лейбл («Добавить в друзья» → «У вас в друзьях») и стиль
+     (secondary → tertiary, прозрачный фон). */
+  .ll-add-friend { cursor: pointer; }
+  .ll-add-friend .ll-add-friend__icon-done.ll-icon,
+  .ll-add-friend .ll-add-friend__label-added { display: none; }
+  .ll-add-friend:has(> input:checked) .ll-add-friend__icon-add.ll-icon,
+  .ll-add-friend:has(> input:checked) .ll-add-friend__label-add { display: none; }
+  .ll-add-friend:has(> input:checked) .ll-add-friend__icon-done.ll-icon { display: inline-block; }
+  .ll-add-friend:has(> input:checked) .ll-add-friend__label-added { display: inline; }
+  .ll-add-friend:has(> input:checked) .button-container.__style-secondary {
+    --button-background-color: transparent;
+  }
+
   /* Verified-бейдж рядом с именем — небольшой inline-svg, 16px */
   .ll-badge-verified {
     display: inline-block;
@@ -379,12 +393,16 @@
           </div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36">
-              <button class="button-container __style-secondary"><span class="button-content">
-                <img class="ll-icon" src="assets/icons/add_16_20.svg" width="20" height="20" alt="">
-                &nbsp;Добавить в друзья
-              </span></button>
-            </div>
+            <label class="button-wrapper __size-36 ll-add-friend">
+              <input type="checkbox" hidden>
+              <span class="button-container __style-secondary"><span class="button-content">
+                <img class="ll-icon ll-add-friend__icon-add" src="assets/icons/add_16_20.svg" width="20" height="20" alt="">
+                <svg class="ll-icon ll-add-friend__icon-done" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M5 10.5 L8.5 14 L15 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                &nbsp;<span class="ll-add-friend__label-add">Добавить в друзья</span><span class="ll-add-friend__label-added">У вас в друзьях</span>
+              </span></span>
+            </label>
             <div class="button-wrapper __size-36 __pinned-end">
               <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
                 <img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt="">
