@@ -102,6 +102,11 @@
     flex-direction: column;
     gap: 2px;
   }
+  /* Стек 3-х общих друзей под подписью — небольшой воздух сверху, иначе
+     аватарки залезают на текст подписи. */
+  .ll-friend-row__mutuals {
+    margin-top: var(--space-1);
+  }
   .ll-friend-row__name {
     display: flex;
     align-items: center;
@@ -351,17 +356,26 @@
           <p class="ds-body-m text-feed__body">Добавил в друзья</p>
 
           <div class="text-feed__reshare-card">
-            <div class="text-feed__reshare-card-author">
-              <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/128?img=68" alt=""></div>
-              <div class="ds-body-m text-feed__reshare-card-author-name">
-                Дмитрия Поречина
-                <svg class="ll-badge-verified" width="16" height="16" viewBox="0 0 16 16" aria-label="Verified" role="img">
-                  <circle cx="8" cy="8" r="8" fill="#018DEB"/>
-                  <path d="M4.4 8.2 L6.9 10.6 L11.6 5.9" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+            <div class="ll-friend-row">
+              <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/256?img=68" alt=""></div>
+              <div class="ll-friend-row__txt">
+                <div class="ds-body-l ll-friend-row__name">
+                  Дмитрия Поречина
+                  <svg class="ll-badge-verified" width="16" height="16" viewBox="0 0 16 16" aria-label="Verified" role="img">
+                    <circle cx="8" cy="8" r="8" fill="#018DEB"/>
+                    <path d="M4.4 8.2 L6.9 10.6 L11.6 5.9" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="ds-body-m ll-friend-row__subtitle">20 общих друзей</div>
+                <div class="avatars-view __size-36 ll-friend-row__mutuals">
+                  <div class="avatars-view__stack">
+                    <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=32" alt=""></div>
+                    <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=47" alt=""></div>
+                    <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=23" alt=""></div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="ds-body-m ll-friend-row__subtitle">Нет общих друзей</div>
           </div>
 
           <div class="actions-bar">
