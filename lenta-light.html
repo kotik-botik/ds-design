@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru" class="__ui-theme_enabled __ui-theme_light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лента (light) — прототип</title>
+<link rel="stylesheet" href="index.css">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--dynamic-surface-base-primary);
+  }
+  .phone-frame {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    min-height: 100dvh;
+    background: var(--dynamic-surface-base-primary);
+  }
+  /* Сам список карточек — отступы между фидами и от навбара */
+  .lenta-light__feed-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-2) var(--space-6);
+  }
+  /* Sticky-top без белого фона: только status-bar + nav-bar __type-publish */
+  .lenta-light__top {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--dynamic-surface-base-primary);
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone-frame">
+    <div class="phone-frame__feed">
+
+      <!-- STATUS + NAVBAR ----------------------------------------------- -->
+      <div class="lenta-light__top">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">
+            <span class="icon __src" style="width:16px;height:12px;--icon-src:url('assets/icons/status-wifi.svg')"></span>
+            <span class="icon __src" style="width:17px;height:12px;--icon-src:url('assets/icons/status-signal.svg')"></span>
+            <span class="icon __src" style="width:25px;height:12px;--icon-src:url('assets/icons/status-battery.svg')"></span>
+          </span>
+        </div>
+
+        <div class="nav-bar __type-publish">
+          <div class="nav-bar__leading">
+            <div class="button-wrapper __size-56">
+              <button class="button-container __style-primary-on-color">
+                <span class="button-content">
+                  <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/add_square_24.svg')"></span>
+                  &nbsp;Опубликовать
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="nav-bar__trailing">
+            <span class="icon __size-24 __src" style="--icon-src:url('assets/icons/notifications_24.svg')"></span>
+            <span class="icon __size-24 __src" style="--icon-src:url('assets/icons/search_24.svg')"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEED ---------------------------------------------------------- -->
+      <div class="lenta-light__feed-container">
+
+        <!-- 1. Только текст, короткий ----------------------------------- -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image">
+              <img src="https://i.pravatar.cc/128?img=15" alt="">
+            </div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Альберт Фёдоров</div>
+              <div class="ds-caption-s text-feed__time">9:12</div>
+            </div>
+          </div></div></div>
+
+          <p class="ds-body-m text-feed__body">
+            Открыл сезон, поймал судака на 5 кг. Снасти и точку — в комментариях.
+          </p>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment_16_20.svg')"></span>&nbsp;7
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>&nbsp;2
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/klass_16_20.svg')"></span>&nbsp;34
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36 __pinned-end">
+              <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/more_16_20.svg')"></span>
+              </span></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. Длинный текст + clamp + «ещё» (тап разворачивает) -------- -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image">
+              <img src="https://i.pravatar.cc/128?img=49" alt="">
+            </div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Александра Борщицкий</div>
+              <div class="ds-caption-s text-feed__time">12:48</div>
+            </div>
+          </div></div></div>
+
+          <label class="text-feed__body-toggle">
+            <input type="checkbox" hidden>
+            <p class="ds-body-m text-feed__body __clamped" style="--text-feed-clamp: 2;">
+              Они редко скучают друг с другом: умеют вдохновлять и подталкивать к развитию. Ни один из них не будет «привязывать» партнёра или ограничивать свободу — каждый сам выбирает свой путь, и это здорово.
+              <span class="text-feed__more">ещё</span>
+            </p>
+          </label>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment_16_20.svg')"></span>&nbsp;14
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>&nbsp;73
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/klass_16_20.svg')"></span>&nbsp;16
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36 __pinned-end">
+              <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/more_16_20.svg')"></span>
+              </span></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3. Текст + горизонтальная галерея --------------------------- -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image">
+              <img src="https://i.pravatar.cc/128?img=23" alt="">
+            </div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Евгения Молчанова</div>
+              <div class="ds-caption-s text-feed__time">вчера, 18:02</div>
+            </div>
+          </div></div></div>
+
+          <label class="text-feed__body-toggle">
+            <input type="checkbox" hidden>
+            <p class="ds-body-m text-feed__body __clamped" style="--text-feed-clamp: 3;">
+              Дача, конец июля. Розы наконец зацвели после пересадки — кажется, прижились. Делюсь фотками: ракурсы разные, чтобы было видно, как они стоят.
+              <span class="text-feed__more">ещё</span>
+            </p>
+          </label>
+
+          <div class="text-feed__media __row">
+            <div class="text-feed__media-cell" style="aspect-ratio: 220/165">
+              <img src="https://picsum.photos/seed/light-g1/440/330" alt="">
+            </div>
+            <div class="text-feed__media-cell" style="aspect-ratio: 1">
+              <img src="https://picsum.photos/seed/light-g2/400/400" alt="">
+            </div>
+            <div class="text-feed__media-cell" style="aspect-ratio: 168/195">
+              <img src="https://picsum.photos/seed/light-g3/336/390" alt="">
+            </div>
+            <div class="text-feed__media-cell" style="aspect-ratio: 110/195">
+              <img src="https://picsum.photos/seed/light-g4/220/390" alt="">
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment_16_20.svg')"></span>&nbsp;24
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>&nbsp;5
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/klass_16_20.svg')"></span>&nbsp;128
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36 __pinned-end">
+              <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/more_16_20.svg')"></span>
+              </span></button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. Репост + одна картинка (без основного текста) ------------ -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image">
+              <img src="https://i.pravatar.cc/128?img=33" alt="">
+            </div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Михаил Бубнов</div>
+              <div class="ds-caption-s text-feed__time">пн, 21:14</div>
+            </div>
+          </div></div></div>
+
+          <div class="text-feed__reshare">
+            <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>
+            <div class="avatar __size-24 __type-image">
+              <img src="https://i.pravatar.cc/128?img=52" alt="">
+            </div>
+            <div class="ds-body-m text-feed__reshare-name">Борис Фрол</div>
+          </div>
+
+          <div class="text-feed__media __single">
+            <img src="https://picsum.photos/seed/light-single/720/540" alt="">
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment_16_20.svg')"></span>&nbsp;3
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>&nbsp;12
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/klass_16_20.svg')"></span>&nbsp;47
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-36 __pinned-end">
+              <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/more_16_20.svg')"></span>
+              </span></button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

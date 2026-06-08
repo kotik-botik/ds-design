@@ -39,10 +39,13 @@
  *       <div class="ds-body-m text-feed__reshare-name">Борис Фрол</div>
  *     </div>
  *
- *     <!-- BODY (опц.) -->
- *     <p class="ds-body-m text-feed__body" style="--text-feed-clamp: 2;">
- *       Длинный текст… <a class="text-feed__more" href="#">ещё</a>
- *     </p>
+ *     <!-- BODY (опц.) — обёртка-label позволяет тапнуть и развернуть текст -->
+ *     <label class="text-feed__body-toggle">
+ *       <input type="checkbox" hidden>
+ *       <p class="ds-body-m text-feed__body __clamped" style="--text-feed-clamp: 2;">
+ *         Длинный текст… <span class="text-feed__more">ещё</span>
+ *       </p>
+ *     </label>
  *
  *     <!-- MEDIA (опц.) — single или row -->
  *     <div class="text-feed__media __single"><img src="…"></div>
@@ -124,14 +127,28 @@
 }
 
 /* ============================================================
-   BODY — текст с опциональным clamp и инлайн-«ещё»
-   ============================================================ */
+   BODY — текст с опциональным clamp и тап-разворотом
+   ============================================================
+   Структура:
+     <label class="text-feed__body-toggle">
+       <input type="checkbox" hidden>
+       <p class="ds-body-m text-feed__body __clamped" style="--text-feed-clamp: 2;">
+         Длинный текст… <span class="text-feed__more">ещё</span>
+       </p>
+     </label>
+
+   По тапу чекбокс сбрасывается → clamp снимается, «ещё» прячется. */
+.text-feed__body-toggle {
+  display: block;
+  cursor: pointer;
+}
+
 .text-feed__body {
   margin: 0;
   color: var(--dynamic-text-and-icons-base-primary);
 }
 
-.text-feed__body[style*="--text-feed-clamp"] {
+.text-feed__body.__clamped {
   position: relative;
   display: -webkit-box;
   -webkit-line-clamp: var(--text-feed-clamp, 3);
@@ -142,21 +159,26 @@
 .text-feed__more {
   color: var(--dynamic-text-and-icons-status-accent);
   text-decoration: none;
-  cursor: pointer;
 }
 
-/* «ещё» сажаем в правый нижний угол clamp-блока, фейд-фоном
-   гасим текст под ним. */
-.text-feed__body[style*="--text-feed-clamp"] .text-feed__more {
+/* «ещё» — в правый нижний угол clamp-блока, фоном перекрываем то,
+   что под ним. */
+.text-feed__body.__clamped .text-feed__more {
   position: absolute;
   right: 0;
   bottom: 0;
-  padding-left: 24px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--dynamic-surface-base-secondary) 16px
-  );
+  padding-left: var(--space-1);
+  background-color: var(--dynamic-surface-base-secondary);
+}
+
+/* Развёрнутое состояние — checkbox внутри label-обёртки */
+.text-feed__body-toggle:has(> input:checked) .text-feed__body.__clamped {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+.text-feed__body-toggle:has(> input:checked) .text-feed__more {
+  display: none;
 }
 
 /* ============================================================
