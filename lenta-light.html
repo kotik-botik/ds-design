@@ -24,30 +24,14 @@
   }
 
   /* ============================================================
-     Иконки — без mask и currentColor: SVG отображается напрямую
-     через background-image. Так гарантированно рендерится на Pages
-     независимо от того, как браузер резолвит url() в CSS-переменных.
+     Иконки — через <img src="…svg">. SVG отдаются Pages напрямую,
+     никакой mask/currentColor, никакого var() в стилях.
      ============================================================ */
   .ll-icon {
     display: inline-block;
     flex-shrink: 0;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
+    vertical-align: middle;
   }
-  .ll-icon.__size-20 { width: 20px; height: 20px; }
-  .ll-icon.__size-24 { width: 24px; height: 24px; }
-
-  .ll-icon--comment       { background-image: url('assets/icons/comment_16_20.svg'); }
-  .ll-icon--reshare       { background-image: url('assets/icons/reshare_16_20.svg'); }
-  .ll-icon--klass         { background-image: url('assets/icons/klass_16_20.svg'); }
-  .ll-icon--more          { background-image: url('assets/icons/more_16_20.svg'); }
-  .ll-icon--bell          { background-image: url('assets/icons/notifications_24.svg'); }
-  .ll-icon--search        { background-image: url('assets/icons/search_24.svg'); }
-  .ll-icon--plus          { background-image: url('assets/icons/add_square_24.svg'); }
-  .ll-icon--status-wifi    { background-image: url('assets/icons/status-wifi.svg'); width: 16px; height: 12px; }
-  .ll-icon--status-signal  { background-image: url('assets/icons/status-signal.svg'); width: 17px; height: 12px; }
-  .ll-icon--status-battery { background-image: url('assets/icons/status-battery.svg'); width: 25px; height: 12px; }
 
   /* Sticky top — status-bar + nav-bar лежат на фоне страницы.
      flex-shrink: 0 обязателен, иначе во флекс-колонке родителя
@@ -92,9 +76,9 @@
         <div class="status-bar">
           <span class="status-bar__time">9:41</span>
           <span class="status-bar__indicators">
-            <span class="ll-icon ll-icon--status-wifi"></span>
-            <span class="ll-icon ll-icon--status-signal"></span>
-            <span class="ll-icon ll-icon--status-battery"></span>
+            <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
           </span>
         </div>
 
@@ -102,13 +86,13 @@
           <div class="nav-bar__leading">
             <div class="button-wrapper ll-publish-btn">
               <button class="button-container __style-primary-on-color"><span class="button-content">
-                <span class="ll-icon __size-20 ll-icon--plus"></span>&nbsp;Опубликовать
+                <img class="ll-icon" src="assets/icons/add_square_24.svg" width="20" height="20" alt="">&nbsp;Опубликовать
               </span></button>
             </div>
           </div>
           <div class="nav-bar__trailing">
-            <span class="ll-icon __size-24 ll-icon--bell"></span>
-            <span class="ll-icon __size-24 ll-icon--search"></span>
+            <img class="ll-icon" src="assets/icons/notifications_24.svg" width="24" height="24" alt="Уведомления">
+            <img class="ll-icon" src="assets/icons/search_24.svg" width="24" height="24" alt="Поиск">
           </div>
         </div>
       </div>
@@ -129,10 +113,10 @@
           <p class="ds-body-m text-feed__body">Открыл сезон, поймал судака на 5 кг. Снасти и точку — в комментариях.</p>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--comment"></span>&nbsp;7</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--reshare"></span>&nbsp;2</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--klass"></span>&nbsp;34</span></button></div>
-            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><span class="ll-icon __size-20 ll-icon--more"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;7</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;2</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;34</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
 
@@ -155,10 +139,10 @@
           </label>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--comment"></span>&nbsp;14</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--reshare"></span>&nbsp;73</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--klass"></span>&nbsp;16</span></button></div>
-            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><span class="ll-icon __size-20 ll-icon--more"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;14</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;73</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;16</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
 
@@ -188,10 +172,10 @@
           </div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--comment"></span>&nbsp;24</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--reshare"></span>&nbsp;5</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--klass"></span>&nbsp;128</span></button></div>
-            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><span class="ll-icon __size-20 ll-icon--more"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;24</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;5</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;128</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
 
@@ -206,7 +190,7 @@
           </div></div></div>
 
           <div class="text-feed__reshare">
-            <span class="ll-icon __size-20 ll-icon--reshare"></span>
+            <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">
             <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/128?img=52" alt=""></div>
             <div class="ds-body-m text-feed__reshare-name">Борис Фрол</div>
           </div>
@@ -214,10 +198,10 @@
           <div class="text-feed__media __single"><img src="https://picsum.photos/seed/light-single/720/540" alt=""></div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--comment"></span>&nbsp;3</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--reshare"></span>&nbsp;12</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--klass"></span>&nbsp;47</span></button></div>
-            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><span class="ll-icon __size-20 ll-icon--more"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;3</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;12</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;47</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
 
@@ -232,7 +216,7 @@
           </div></div></div>
 
           <div class="text-feed__reshare">
-            <span class="ll-icon __size-20 ll-icon--reshare"></span>
+            <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">
             <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/128?img=20" alt=""></div>
             <div class="ds-body-m text-feed__reshare-name">Соседи СПб</div>
           </div>
@@ -242,10 +226,10 @@
           <div class="text-feed__media __single"><img src="https://picsum.photos/seed/light-window/720/540" alt=""></div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--comment"></span>&nbsp;9</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--reshare"></span>&nbsp;4</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--klass"></span>&nbsp;22</span></button></div>
-            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><span class="ll-icon __size-20 ll-icon--more"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;9</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;4</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;22</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
 
@@ -279,10 +263,10 @@
           </div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--comment"></span>&nbsp;14</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--reshare"></span>&nbsp;73</span></button></div>
-            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="ll-icon __size-20 ll-icon--klass"></span>&nbsp;16</span></button></div>
-            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><span class="ll-icon __size-20 ll-icon--more"></span></span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;14</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;73</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/klass_16_20.svg" width="20" height="20" alt="">&nbsp;16</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
 
