@@ -180,6 +180,13 @@
       rgba(5, 0, 153, 0.24) 100%
     );
   }
+
+  /* В тёмных пилюлях __style-on-image иконки должны быть белыми.
+     В DS это решается через .icon.__src + currentColor (mask), но в
+     lenta-light мы используем <img>, поэтому форсим белый CSS-фильтром. */
+  .button-container.__style-on-image .ll-icon {
+    filter: brightness(0) invert(1);
+  }
 </style>
 </head>
 <body>
@@ -577,6 +584,30 @@
               <button class="button-container __style-secondary" style="width:100%"><span class="button-content">✨&nbsp;Создать ИИ подарок</span></button>
             </div>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- 12. Клип — full-bleed 9:16 видео с тёмными actions-overlay -- -->
+        <article class="clip-feed">
+          <div class="clip-feed__media">
+            <img src="https://picsum.photos/seed/light-clip/720/1280" alt="">
+          </div>
+
+          <div class="clip-feed__header">
+            <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/128?img=49" alt=""></div>
+            <div class="clip-feed__txt">
+              <div class="ds-title-s">Александра Борщицкий</div>
+              <div class="ds-caption-s clip-feed__time">12:48</div>
+            </div>
+          </div>
+
+          <div class="clip-feed__mute" aria-hidden="true">🔇</div>
+
+          <div class="actions-bar clip-feed__actions">
+            <div class="button-wrapper __size-36"><button class="button-container __style-on-image"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;14</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-on-image"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;73</span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 16;"><input type="checkbox" hidden><span class="button-container __style-on-image"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-on-image" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
 

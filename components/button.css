@@ -146,6 +146,13 @@
   --button-background-color: var(--static-surface-base-inverse-primary);
 }
 
+/* On image — translucent dark bg, white text. Для пилюль поверх медиа
+   (клип, фото и т.п.), где обычный secondary сливается с подложкой. */
+.button-container.__style-on-image {
+  --button-color: var(--static-text-and-icons-base-inverse-primary);
+  --button-background-color: var(--static-surface-special-layer-tertiary);
+}
+
 /* Negative — red tint bg, red text */
 .button-container.__style-negative {
   --button-color: var(--dynamic-text-and-icons-status-negative);
