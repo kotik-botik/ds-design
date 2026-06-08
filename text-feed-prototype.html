@@ -24,7 +24,7 @@
     gap: 16px;
   }
 
-  /* Панель тогглов — две галочки: «переслано» и «галерея» */
+  /* Панель тогглов — «переслано» и «галерея» */
   .toggles {
     display: flex;
     flex-direction: column;
@@ -32,13 +32,9 @@
     padding: 12px 16px;
     background: var(--dynamic-surface-base-secondary);
     border-radius: 16px;
-    font-size: 13px;
-    line-height: 16px;
     color: var(--dynamic-text-and-icons-base-secondary);
   }
   .toggles__title {
-    font-size: 11px;
-    line-height: 16px;
     color: var(--dynamic-text-and-icons-base-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.4px;
@@ -65,24 +61,24 @@
   <main class="stage">
 
     <div class="toggles">
-      <div class="toggles__title">Вьюшки</div>
-      <label><input type="checkbox" id="tf-toggle-reshare"> Показать «переслано от»</label>
-      <label><input type="checkbox" id="tf-toggle-gallery" checked> Показать галерею</label>
+      <div class="toggles__title ds-caption-s">Вьюшки</div>
+      <label class="ds-body-m"><input type="checkbox" id="tf-toggle-reshare"> Показать «переслано от»</label>
+      <label class="ds-body-m"><input type="checkbox" id="tf-toggle-gallery" checked> Показать галерею</label>
     </div>
 
     <div class="text-feed-demo">
       <article class="text-feed island">
 
         <!-- HEADER ----------------------------------------------------- -->
-        <div class="text-feed__header">
+        <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
           <div class="avatar __size-48 __type-image">
             <img src="https://i.pravatar.cc/128?img=49" alt="">
           </div>
-          <div class="text-feed__header-txt">
-            <div class="text-feed__header-name">Александра Борщицкий</div>
-            <div class="text-feed__header-time">12:48</div>
+          <div class="uni-cell-additional-content">
+            <div class="ds-title-s">Александра Борщицкий</div>
+            <div class="ds-caption-s text-feed__time">12:48</div>
           </div>
-        </div>
+        </div></div></div>
 
         <!-- RESHARE (вкл/выкл) ---------------------------------------- -->
         <div class="text-feed__reshare">
@@ -90,11 +86,11 @@
           <div class="avatar __size-24 __type-image">
             <img src="https://i.pravatar.cc/128?img=52" alt="">
           </div>
-          <div class="text-feed__reshare-name">Борис Фрол</div>
+          <div class="ds-body-m text-feed__reshare-name">Борис Фрол</div>
         </div>
 
         <!-- BODY ------------------------------------------------------- -->
-        <p class="text-feed__body" style="--text-feed-clamp: 2;">
+        <p class="ds-body-m text-feed__body" style="--text-feed-clamp: 2;">
           Они редко скучают друг с другом: умеют вдохновлять и подталкивать к развитию. Ни один из них не будет «привязывать» партнёра или ограничивать свободу — <a class="text-feed__more" href="#">ещё</a>
         </p>
 
@@ -114,36 +110,33 @@
           </div>
         </div>
 
-        <!-- CONTROL ---------------------------------------------------- -->
-        <div class="text-feed__control">
-          <div class="text-feed__control-group">
-            <div class="button-wrapper __size-36">
-              <button class="button-container __style-secondary">
-                <span class="button-content">
-                  <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment_16_20.svg')"></span>
-                  &nbsp;14
-                </span>
-              </button>
-            </div>
-            <div class="button-wrapper __size-36">
-              <button class="button-container __style-secondary">
-                <span class="button-content">
-                  <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>
-                  &nbsp;73
-                </span>
-              </button>
-            </div>
-            <div class="button-wrapper __size-36">
-              <button class="button-container __style-secondary">
-                <span class="button-content">
-                  <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/klass_16_20.svg')"></span>
-                  &nbsp;16
-                </span>
-              </button>
-            </div>
-          </div>
-          <span class="text-feed__control-spacer"></span>
+        <!-- CONTROL — actions-bar; порядок: comment → reshare → klass → __pinned-end more -->
+        <div class="actions-bar">
           <div class="button-wrapper __size-36">
+            <button class="button-container __style-secondary">
+              <span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/comment_16_20.svg')"></span>
+                &nbsp;14
+              </span>
+            </button>
+          </div>
+          <div class="button-wrapper __size-36">
+            <button class="button-container __style-secondary">
+              <span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/reshare_16_20.svg')"></span>
+                &nbsp;73
+              </span>
+            </button>
+          </div>
+          <div class="button-wrapper __size-36">
+            <button class="button-container __style-secondary">
+              <span class="button-content">
+                <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/klass_16_20.svg')"></span>
+                &nbsp;16
+              </span>
+            </button>
+          </div>
+          <div class="button-wrapper __size-36 __pinned-end">
             <button class="button-container __style-secondary" aria-label="Ещё">
               <span class="button-content">
                 <span class="icon __size-20 __src" style="--icon-src:url('assets/icons/more_16_20.svg')"></span>
