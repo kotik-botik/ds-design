@@ -82,4 +82,20 @@
 .tabbar__handle {
   width: 100%;
   height: 24px;
+  position: relative;
+}
+
+/* iOS home-indicator pill — рисуется внутри .tabbar__handle, чтобы
+   в HTML-протипотах было видно «таблетку» (на реальном устройстве её
+   рисует OS, и зона .tabbar__handle остаётся лишь safe-area спейсером). */
+.tabbar.__platform-ios .tabbar__handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  border-radius: 2.5px;
+  background-color: var(--dynamic-text-and-icons-base-primary);
 }
