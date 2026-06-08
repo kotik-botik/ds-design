@@ -6,9 +6,15 @@
 <title>Лента — прототип</title>
 <link rel="stylesheet" href="index.css">
 <style>
-  html, body { margin: 0; padding: 0; background: var(--dynamic-surface-base-secondary); }
-  /* fill-container: phone-frame на всю ширину окна */
-  .phone-frame { width: 100%; max-width: none; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--dynamic-surface-base-secondary); }
+  /* fill-container: phone-frame на всю ширину окна и на всю высоту,
+     чтобы tabbar мог приклеиться к нижнему краю экрана. */
+  .phone-frame {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    min-height: 100dvh;
+  }
 </style>
 </head>
 <body>
