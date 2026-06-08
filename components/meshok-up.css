@@ -38,7 +38,7 @@
 }
 
 .status-bar__time {
-  font-size: 15px;
+  font-size: var(--font-size-200);
   line-height: 1;
   font-weight: 600;
   letter-spacing: -0.3px;
@@ -74,8 +74,8 @@
   flex: 1;
   min-width: 0;
   font-family: var(--font-family);
-  font-size: 17px;
-  line-height: 24px;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
   font-weight: 600;
   text-align: center;
   color: var(--dynamic-text-and-icons-base-primary);

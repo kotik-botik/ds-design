@@ -80,21 +80,21 @@
 /* Size-specific typography */
 .button-inline.__size-16 {
   --button-inline-content-gap: 2px;
-  font-size: 13px;
-  line-height: 16px;
+  font-size: var(--font-size-100);
+  line-height: var(--line-height-100);
   font-weight: 400;
 }
 .button-inline.__size-20 {
   --button-inline-content-gap: 6px;
-  font-size: 15px;
-  line-height: 20px;
+  font-size: var(--font-size-200);
+  line-height: var(--line-height-200);
   font-weight: 400;
 }
 .button-inline.__size-24,
 .button-inline.__size-32 {
   --button-inline-content-gap: 8px;
-  font-size: 17px;
-  line-height: 24px;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
   font-weight: 400;
 }
 
