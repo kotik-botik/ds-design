@@ -121,6 +121,62 @@
   .ll-friend-row__subtitle {
     color: var(--dynamic-text-and-icons-base-secondary);
   }
+
+  /* «Получил открытку от …» — двухстрочный блок: подпись + автор-row */
+  .ll-gift-from {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  /* Карусель из нескольких reshare-card в одном фиде (подарки) — горизонтальный
+     скролл, ячейки фиксированной ширины, edge-to-edge через отрицательные margin. */
+  .ll-gift-carousel {
+    display: flex;
+    gap: var(--space-3);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--space-4));
+    padding-inline: var(--space-4);
+  }
+  .ll-gift-carousel::-webkit-scrollbar { display: none; }
+  .ll-gift-carousel > .text-feed__reshare-card {
+    flex: 0 0 272px;
+  }
+
+  /* Декоративная картинка в шапке ИИ-подарка — повёрнутый стикер
+     с лёгким красным свечением, прижат к правому верху бордерной карточки. */
+  .ll-ai-gift-deco {
+    flex-shrink: 0;
+    width: 70px;
+    height: 88px;
+    position: relative;
+    overflow: visible;
+  }
+  .ll-ai-gift-deco::before {
+    content: "💝";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    line-height: 1;
+    transform: rotate(12deg);
+    filter: drop-shadow(-8px -3px 32px rgba(210, 0, 0, 0.8));
+  }
+
+  /* Градиентная кнопка «Создать ИИ подарок» — повторяет --style-secondary
+     по высоте/радиусу/паддингам, но фон — диагональный неон-градиент. */
+  .ll-ai-gift-btn .button-container {
+    background: linear-gradient(
+      to right,
+      rgba(0, 183, 255, 0.24) 0%,
+      rgba(255, 0, 221, 0.24) 60%,
+      rgba(5, 0, 153, 0.24) 100%
+    );
+  }
 </style>
 </head>
 <body>
@@ -406,6 +462,117 @@
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;14</span></button></div>
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;73</span></button></div>
             <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 16;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- 9. Открытка — получил открытку от … ------------------------- -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/128?img=15" alt=""></div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Александр Борщицкий</div>
+              <div class="ds-caption-s text-feed__time">12:48</div>
+            </div>
+          </div></div></div>
+
+          <div class="text-feed__reshare-card">
+            <div class="ll-gift-from">
+              <div class="ds-body-m">Получил открытку от</div>
+              <div class="text-feed__reshare-card-author">
+                <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/128?img=44" alt=""></div>
+                <div class="ds-body-m text-feed__reshare-card-author-name"><b style="font-weight:500">Александра Москвичева</b></div>
+              </div>
+            </div>
+            <div class="text-feed__reshare-card-media" style="aspect-ratio: 1">
+              <img src="https://picsum.photos/seed/light-postcard/600/600" alt="">
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">🎁&nbsp;Отправить открытку</span></button>
+            </div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- 10. Подарок — карусель из 2-х встроенных карточек ----------- -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/128?img=47" alt=""></div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Мария Маяковская</div>
+              <div class="ds-caption-s text-feed__time">12:48</div>
+            </div>
+          </div></div></div>
+
+          <div class="ll-gift-carousel">
+            <div class="text-feed__reshare-card">
+              <div class="ll-gift-from">
+                <div class="ds-body-m">Получила открытку от</div>
+                <div class="text-feed__reshare-card-author">
+                  <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/128?img=33" alt=""></div>
+                  <div class="ds-body-m text-feed__reshare-card-author-name"><b style="font-weight:500">Бориса Малевича</b></div>
+                </div>
+              </div>
+              <div class="text-feed__reshare-card-media" style="aspect-ratio: 1">
+                <img src="https://picsum.photos/seed/light-gift1/500/500" alt="">
+              </div>
+            </div>
+
+            <div class="text-feed__reshare-card">
+              <div class="ll-gift-from">
+                <div class="ds-body-m">Получила подарок от</div>
+                <div class="text-feed__reshare-card-author">
+                  <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/128?img=44" alt=""></div>
+                  <div class="ds-body-m text-feed__reshare-card-author-name"><b style="font-weight:500">Александра Москвичева</b></div>
+                </div>
+              </div>
+              <div class="text-feed__reshare-card-media" style="aspect-ratio: 1">
+                <img src="https://picsum.photos/seed/light-gift2/500/500" alt="">
+              </div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36">
+              <button class="button-container __style-secondary"><span class="button-content">🎁&nbsp;Отправить подарок</span></button>
+            </div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- 11. ИИ подарок — с декорацией и градиентной кнопкой ---------- -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/128?img=47" alt=""></div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Мария Маяковская</div>
+              <div class="ds-caption-s text-feed__time">12:48</div>
+            </div>
+          </div></div></div>
+
+          <div class="text-feed__reshare-card">
+            <div style="display:flex; align-items:flex-start; gap:var(--space-3); width:100%;">
+              <div class="ll-gift-from" style="flex:1 1 0; min-width:0;">
+                <div class="ds-body-m">Получила подарок на День сельскохозяйственных строителей от</div>
+                <div class="text-feed__reshare-card-author">
+                  <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/128?img=44" alt=""></div>
+                  <div class="ds-body-m text-feed__reshare-card-author-name"><b style="font-weight:500">Александра Москвичева</b></div>
+                </div>
+              </div>
+              <div class="ll-ai-gift-deco" aria-hidden="true"></div>
+            </div>
+            <div class="text-feed__reshare-card-media" style="aspect-ratio: 1">
+              <img src="https://picsum.photos/seed/light-ai-gift/600/600" alt="">
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36 ll-ai-gift-btn" style="flex:1 1 0">
+              <button class="button-container __style-secondary" style="width:100%"><span class="button-content">✨&nbsp;Создать ИИ подарок</span></button>
+            </div>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
         </article>
