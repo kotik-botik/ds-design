@@ -90,7 +90,7 @@
   content: 'OK';
   font-family: var(--font-family);
   font-weight: 700;
-  font-size: var(--font-size-100);
+  font-size: 13px;
   color: var(--static-text-and-icons-base-inverse-primary);
   background-color: var(--static-surface-base-inverse-primary);
   width: 22px;
