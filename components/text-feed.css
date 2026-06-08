@@ -222,17 +222,27 @@
 }
 
 /* ============================================================
-   BODY — текст с опциональным clamp и тап-разворотом
+   BODY — текст с инлайн-разворотом «ещё / скрыть»
    ============================================================
    Структура:
      <label class="text-feed__body-toggle">
        <input type="checkbox" hidden>
-       <p class="ds-body-m text-feed__body __clamped" style="--text-feed-clamp: 2;">
-         Длинный текст… <span class="text-feed__more">ещё</span>
+       <p class="ds-body-m text-feed__body">
+         Короткая часть текста, гарантированно влезает в N символов…<span
+           class="text-feed__body-full"> остальная длинная часть, появляется при разворачивании.</span>
+         <span class="text-feed__more">
+           <span class="text-feed__more-show"> ещё</span>
+           <span class="text-feed__more-hide"> скрыть</span>
+         </span>
        </p>
      </label>
 
-   По тапу чекбокс сбрасывается → clamp снимается, «ещё» прячется. */
+   По умолчанию виден короткий хвост + «ещё» сразу после него.
+   По тапу label — checked → разворачивается полная часть, «ещё» → «скрыть».
+
+   Лимит длины — на стороне контента (макс символов в `body-short`).
+   CSS не клампует — это даёт гарантию, что «ещё» всегда сидит сразу
+   за концом видимого текста. */
 .text-feed__body-toggle {
   display: block;
   cursor: pointer;
@@ -243,38 +253,18 @@
   color: var(--dynamic-text-and-icons-base-primary);
 }
 
-.text-feed__body.__clamped {
-  position: relative;
-  display: -webkit-box;
-  -webkit-line-clamp: var(--text-feed-clamp, 3);
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+.text-feed__body-full { display: none; }
+.text-feed__body-toggle:has(> input:checked) .text-feed__body-full { display: inline; }
 
 .text-feed__more {
   color: var(--dynamic-text-and-icons-status-accent);
   text-decoration: none;
 }
 
-/* «ещё» — в правый нижний угол clamp-блока, фоном перекрываем то,
-   что под ним. */
-.text-feed__body.__clamped .text-feed__more {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding-left: var(--space-1);
-  background-color: var(--dynamic-surface-base-secondary);
-}
-
-/* Развёрнутое состояние — checkbox внутри label-обёртки */
-.text-feed__body-toggle:has(> input:checked) .text-feed__body.__clamped {
-  display: block;
-  -webkit-line-clamp: unset;
-  overflow: visible;
-}
-.text-feed__body-toggle:has(> input:checked) .text-feed__more {
-  display: none;
-}
+/* Парные лейблы «ещё / скрыть» — переключаются по checked-чекбоксу. */
+.text-feed__more-hide { display: none; }
+.text-feed__body-toggle:has(> input:checked) .text-feed__more-show { display: none; }
+.text-feed__body-toggle:has(> input:checked) .text-feed__more-hide { display: inline; }
 
 /* ============================================================
    MEDIA — single (одно фото) | row (горизонтальная лента)
