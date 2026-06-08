@@ -78,25 +78,10 @@
 }
 
 /* Size-specific typography */
-.button-inline.__size-16 {
-  --button-inline-content-gap: 2px;
-  font-size: 13px;
-  line-height: 16px;
-  font-weight: 400;
-}
-.button-inline.__size-20 {
-  --button-inline-content-gap: 6px;
-  font-size: 15px;
-  line-height: 20px;
-  font-weight: 400;
-}
+.button-inline.__size-16 { --button-inline-content-gap: 2px; }
+.button-inline.__size-20 { --button-inline-content-gap: 6px; }
 .button-inline.__size-24,
-.button-inline.__size-32 {
-  --button-inline-content-gap: 8px;
-  font-size: 17px;
-  line-height: 24px;
-  font-weight: 400;
-}
+.button-inline.__size-32 { --button-inline-content-gap: 8px; }
 
 /* ============================================================
    STATE ANIMATIONS

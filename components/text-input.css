@@ -31,15 +31,11 @@
 .text-input.__size-36 {
   height: 36px;
   border-radius: 9px;
-  font-size: 15px;
-  line-height: 20px;
 }
 
 .text-input.__size-56 {
   height: 56px;
   border-radius: 14px;
-  font-size: 17px;
-  line-height: 24px;
 }
 
 .text-input::placeholder {

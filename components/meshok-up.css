@@ -73,10 +73,6 @@
 .nav-bar__title {
   flex: 1;
   min-width: 0;
-  font-family: var(--font-family);
-  font-size: 17px;
-  line-height: 24px;
-  font-weight: 600;
   text-align: center;
   color: var(--dynamic-text-and-icons-base-primary);
   overflow: hidden;

@@ -48,9 +48,6 @@
   .ll-publish-btn .button-container {
     height: 48px;
     padding: 0 14px;
-    font-size: 15px;
-    line-height: 20px;
-    font-weight: 600;
     --button-content-gap: 8px;
   }
 
@@ -595,6 +592,30 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Скрытая «пасхалка»: 3 нажатия по «Опубликовать» в течение 800ms
+    // переключают режим типографики iOS 2XL (Dynamic Type xxLarge):
+    // шрифты и иконки увеличиваются пропорционально.
+    (function () {
+      var btn = document.querySelector('.ll-publish-btn .button-container');
+      if (!btn) return;
+
+      var taps = 0;
+      var timer = null;
+
+      btn.addEventListener('click', function () {
+        taps += 1;
+        clearTimeout(timer);
+        if (taps >= 3) {
+          taps = 0;
+          document.documentElement.classList.toggle('__type-scale-2xl');
+          return;
+        }
+        timer = setTimeout(function () { taps = 0; }, 800);
+      });
+    })();
+  </script>
 
 </body>
 </html>

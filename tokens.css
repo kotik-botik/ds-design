@@ -81,21 +81,42 @@
 .ds-title-l,
 .header.__size-l .header__title  { font-family: var(--font-family); font-size: 21px; line-height: 28px; font-weight: 600; letter-spacing: 0; }
 
+/* ds-title-m — также используется кнопками 56/44 и заголовком nav-bar */
 .ds-title-m,
-.header.__size-m .header__title  { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: 0; }
+.header.__size-m .header__title,
+.button-wrapper.__size-56 .button-container,
+.button-wrapper.__size-44 .button-container,
+.nav-bar__title { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: 0; }
 
+/* ds-title-s — также используется кнопкой 36 и локальной ll-publish-btn */
 .ds-title-s,
-.header.__size-s .header__title  { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 600; letter-spacing: 0; }
+.header.__size-s .header__title,
+.button-wrapper.__size-36 .button-container,
+.ll-publish-btn .button-container { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 600; letter-spacing: 0; }
 
+/* ds-body-l — также используется button-inline 24/32 и text-input 56 */
 .ds-body-l,
 .header.__size-xl .header__subtitle,
-.header.__size-l  .header__subtitle { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 400; letter-spacing: 0; }
+.header.__size-l  .header__subtitle,
+.button-inline.__size-24,
+.button-inline.__size-32,
+.text-input.__size-56 { font-family: var(--font-family); font-size: 17px; line-height: 24px; font-weight: 400; letter-spacing: 0; }
 
+/* ds-body-m — также используется button-inline 20 и text-input 36 */
 .ds-body-m,
 .header.__size-m .header__subtitle,
-.header.__size-s .header__subtitle { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 400; letter-spacing: 0; }
-.ds-caption-m   { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; }
-.ds-caption-m-accent { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
+.header.__size-s .header__subtitle,
+.button-inline.__size-20,
+.text-input.__size-36 { font-family: var(--font-family); font-size: 15px; line-height: 20px; font-weight: 400; letter-spacing: 0; }
+
+/* ds-caption-m — также используется button-inline 16 */
+.ds-caption-m,
+.button-inline.__size-16 { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 400; letter-spacing: 0; }
+
+/* ds-caption-m-accent — также используется кнопкой 28 */
+.ds-caption-m-accent,
+.button-wrapper.__size-28 .button-container { font-family: var(--font-family); font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
+
 .ds-caption-s   { font-family: var(--font-family); font-size: 11px; line-height: 16px; font-weight: 400; letter-spacing: 0; }
 .ds-caption-s-accent { font-family: var(--font-family); font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0; }
 
