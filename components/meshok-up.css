@@ -94,6 +94,21 @@
 }
 
 /* ============================================================
+   TYPE: PUBLISH — навбар облегчённой ленты (lenta-light).
+   Слева большая primary-on-color кнопка «Опубликовать»,
+   справа две 24px иконки (уведомления, поиск).
+   Фон совпадает с фоном страницы (--dynamic-surface-base-primary).
+   ============================================================ */
+.nav-bar.__type-publish {
+  height: auto;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--dynamic-surface-base-primary);
+}
+.nav-bar.__type-publish .nav-bar__trailing {
+  gap: var(--space-4);
+}
+
+/* ============================================================
    TABS внутри MeshokUp — отступы 16 сверху / 8 снизу
    ============================================================ */
 .meshok-up .tabs {
