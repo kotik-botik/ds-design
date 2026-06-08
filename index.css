@@ -59,6 +59,9 @@
 @import url('./components/comment-input.css');
 @import url('./components/phone-frame.css');
 
+/* Override: iOS Dynamic Type "xxLarge" (2XL) — активируется .__type-scale-2xl на <html> */
+@import url('./components/type-scale.css');
+
 /* ============================================================
    GLOBAL RESET (minimal)
    ============================================================ */

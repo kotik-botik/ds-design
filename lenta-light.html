@@ -53,6 +53,10 @@
     font-weight: 600;
     --button-content-gap: 8px;
   }
+  .__type-scale-2xl .ll-publish-btn .button-container {
+    font-size: 19px;
+    line-height: 24px;
+  }
 
   /* Список карточек. Нижний паддинг — высота таббара (48 + 24 handle)
      плюс воздух, чтобы последняя карточка не залезала под таббар. */
@@ -563,6 +567,30 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Скрытая «пасхалка»: 3 нажатия по «Опубликовать» в течение 800ms
+    // переключают режим типографики iOS 2XL (Dynamic Type xxLarge):
+    // шрифты и иконки увеличиваются пропорционально.
+    (function () {
+      var btn = document.querySelector('.ll-publish-btn .button-container');
+      if (!btn) return;
+
+      var taps = 0;
+      var timer = null;
+
+      btn.addEventListener('click', function () {
+        taps += 1;
+        clearTimeout(timer);
+        if (taps >= 3) {
+          taps = 0;
+          document.documentElement.classList.toggle('__type-scale-2xl');
+          return;
+        }
+        timer = setTimeout(function () { taps = 0; }, 800);
+      });
+    })();
+  </script>
 
 </body>
 </html>
