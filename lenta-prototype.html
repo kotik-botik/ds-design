@@ -6,26 +6,20 @@
 <title>Лента — прототип</title>
 <link rel="stylesheet" href="index.css">
 <style>
-  html, body { margin: 0; padding: 0; background: var(--dynamic-surface-base-secondary); }
-  body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 24px;
-    box-sizing: border-box;
-  }
+  html, body { margin: 0; padding: 0; background: var(--dynamic-surface-base-primary); }
+  /* Full-bleed: лента живёт на всю ширину окна, без рамки и отступов. */
   .phone-frame {
-    height: 720px;
-    min-height: 720px;
-    border: 1px solid var(--dynamic-stroke-contrast-mid);
-    border-radius: 24px;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    border: none;
+    border-radius: 0;
   }
 </style>
 </head>
 <body>
 
-  <div class="phone-frame">
+<div class="phone-frame">
 
     <div class="phone-frame__feed">
 
