@@ -179,16 +179,40 @@
 }
 
 /* media в reshare-card: edge-to-edge — отрицательные margin'ы
-   гасят inline-паддинг карточки, а если media — последний ребёнок,
-   гасится и нижний паддинг. Нижние углы клипуются overflow:hidden. */
+   гасят inline-паддинг карточки. Если media — первый/последний ребёнок,
+   также гасится верхний/нижний паддинг (углы клипуются overflow:hidden). */
 .text-feed__reshare-card-media {
   position: relative;
   margin-inline: calc(-1 * var(--space-4));
   background-color: var(--dynamic-surface-contrast-low);
 }
+.text-feed__reshare-card-media:first-child {
+  margin-top: calc(-1 * var(--space-4));
+}
 .text-feed__reshare-card-media:last-child {
   margin-bottom: calc(-1 * var(--space-4));
 }
+/* ============================================================
+   LINK — мета-блок превью ссылки внутри reshare-card:
+   title (title-m) / snippet (body-m) / source (caption-m),
+   gap 4 между строками. Используется в паре с media-сверху.
+   ============================================================
+   <div class="text-feed__reshare-card">
+     <div class="text-feed__reshare-card-media" style="aspect-ratio: 328/164"><img …></div>
+     <div class="text-feed__link">
+       <div class="ds-title-m">Заголовок</div>
+       <div class="ds-body-m">Сниппет описания…</div>
+       <div class="ds-caption-m">домен | OK.ru</div>
+     </div>
+   </div>
+*/
+.text-feed__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+
 .text-feed__reshare-card-media img {
   display: block;
   width: 100%;
