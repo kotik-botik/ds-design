@@ -6,11 +6,13 @@
 <title>Лента — прототип</title>
 <link rel="stylesheet" href="index.css">
 <style>
-  html, body { margin: 0; padding: 0; background: var(--dynamic-surface-base-primary); }
-  /* Full-bleed: лента живёт на всю ширину окна, без рамки и отступов. */
+  html, body { margin: 0; padding: 0; background: var(--dynamic-surface-base-secondary); }
+  /* Сайт-режим: контентная колонка с дизайн-системной шириной,
+     по центру, без рамки и без внешних отступов. */
   .phone-frame {
     width: 100%;
-    max-width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
     min-height: 100vh;
     border: none;
     border-radius: 0;
