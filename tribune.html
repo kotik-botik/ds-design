@@ -30,8 +30,12 @@
 
   .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
 
-  /* Ряд chips под navbar внутри meshok-up: горизонтальный паддинг + воздух снизу */
-  .ll-chips { padding: var(--space-2) 0 var(--space-3); }
+  /* Ряд chips под navbar внутри meshok-up: горизонтальный паддинг + воздух снизу.
+     Фон обязательно — иначе sticky meshok-up «просвечивает» ленту под чипсами. */
+  .ll-chips {
+    padding: var(--space-2) 0 var(--space-3);
+    background-color: var(--dynamic-surface-base-secondary);
+  }
   .ll-chips .chips-view__row { padding-left: var(--space-4); }
 
   /* Vibe-карточка на острове */
