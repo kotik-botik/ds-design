@@ -166,20 +166,24 @@
   /* Stories (Моменты) — горизонтальный ряд историй под навбаром.
      Кружки — DS-компонент .avatar (__size-56 + __ring-active/__ring-viewed),
      «+» своей истории — аддон .avatar__addon. Карточка — .island. */
-  .ll-stories {
-    padding-top: var(--space-3);
-    padding-bottom: var(--space-3);
-  }
   .ll-stories__row {
     display: flex;
     gap: var(--space-3);
     align-items: center;
-    padding: 0 var(--space-4);
+    /* верт. паддинг — чтобы outline-кольцо и аддон «+» не резались
+       скролл-контейнером (overflow-x:auto делает overflow-y:auto) */
+    padding: var(--space-2) var(--space-4);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
   .ll-stories__row::-webkit-scrollbar { display: none; }
+
+  /* Orbit (зазор кольца) у историй — 3px вместо дефолтных 4px для size-56 */
+  .ll-stories .avatar.__size-56.__ring-active,
+  .ll-stories .avatar.__size-56.__ring-viewed {
+    outline-offset: 3px;
+  }
 
   /* «+»-бейдж добавления своей истории — оранжевый кружок в белой обводке */
   .ll-story-add {
@@ -231,7 +235,7 @@
       <div class="ll-feed">
 
         <!-- 0. Моменты (истории) ---------------------------------------- -->
-        <div class="ll-stories island" aria-label="Моменты">
+        <div class="ll-stories" aria-label="Моменты">
           <div class="ll-stories__row">
             <!-- Ваша история (оранжевое кольцо + «+») -->
             <div class="avatar __size-56 __type-image __ring-active __has-addon">
