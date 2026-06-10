@@ -214,6 +214,14 @@
      горизонтальные паддинги = 0 (наследует full-width от .ll-feed). */
   .ll-banner { display: block; }
   .ll-banner__img { display: block; width: 100%; height: auto; }
+
+  /* Позиция бейджа — относительно кольцевой «коробки» (ава + орбита 3 + штрих 3 = 6px):
+     торчит на 3px за правую границу кольца, снизу — заподлицо с кольцом. */
+  .ll-stories .avatar.__size-56 .avatar__addon.__pos-br.ll-story-add {
+    top: auto;
+    bottom: -6px;   /* нижняя граница кольца = ава + 6px */
+    right: -9px;    /* правая граница кольца (−6) + вылет 3px */
+  }
 </style>
 </head>
 <body>
