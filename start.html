@@ -137,12 +137,21 @@
         #f03c00 57.5%,
         #e12300 70%);
     transition: opacity 0.5s ease;
+    /* circular reveal: JS задаёт центр и радиус через inline-style */
+    clip-path: circle(0px at 50% 50%);
+    will-change: clip-path;
+  }
+  .splash.is-revealing {
+    transition: clip-path 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .splash.is-done { opacity: 0; pointer-events: none; }
+
+  /* На сплеше — только подпись. Логотип в центре «приезжает» из тапнутой
+     иконки на лаунчере (.launch) и остаётся на месте лого сплеша. */
   .splash__logo {
     width: 78px;
     height: 78px;
-    animation: splashLogoIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    opacity: 0;
   }
   .splash__logo svg,
   .splash__logo img { display: block; width: 100%; height: 100%; }
@@ -161,11 +170,10 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
-  @keyframes splashLogoIn {
-    from { transform: scale(0.86); opacity: 0; }
-    to   { transform: none; opacity: 1; }
-  }
+  .splash.is-revealing .splash__subtitle { opacity: 1; transition-delay: 0.25s; }
 
   /* ============================================================
      SCREEN 1 — Lock screen (Pixel style)
@@ -460,34 +468,33 @@
   .notif__body  { font-size: 13px; color: #3c4043; margin-top: 1px; line-height: 1.3; }
 
   /* ============================================================
-     App-launch animation — tapped icon zooms to fill the screen
+     App-launch animation — tapped icon flies to splash logo position
+     while the orange splash background reveals as a growing circle
      ============================================================ */
   .launch {
     position: absolute;
-    z-index: 90;
-    border-radius: 50%;
+    z-index: 110;                  /* над сплешем, чтобы быть его «лого» */
+    border-radius: 24%;
     opacity: 0;
     pointer-events: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.30);
+    overflow: hidden;
   }
   .launch.is-animating {
     opacity: 1;
-    animation: appLaunch 0.42s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transition:
+      top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.4s ease;
   }
-  @keyframes appLaunch {
-    100% {
-      top: 0; left: 0;
-      width: 100%; height: 100dvh;
-      border-radius: 0;
-    }
-  }
+  .launch.is-arrived { box-shadow: none; }
   .launch__glyph {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    opacity: 1;
-    transition: opacity 0.3s ease 0.12s;
   }
-  .launch.is-animating .launch__glyph { opacity: 0; }
+  .launch__glyph img { display: block; width: 100%; height: 100%; }
 </style>
 </head>
 <body>
@@ -624,15 +631,11 @@
      не показывается. ---- */
   var SPLASH_MS = 1300;   // сколько держим сплеш перед переходом в ленту
 
-  function showSplash() {
-    if (!splash) return;
-    splash.style.display = 'flex';
-    // перезапустить анимацию появления лого
-    var logo = document.getElementById('splashLogo');
-    if (logo) { logo.style.animation = 'none'; void logo.offsetWidth; logo.style.animation = ''; }
-  }
   function hideSplash() {
-    if (splash) splash.style.display = 'none';
+    if (!splash) return;
+    splash.style.display = 'none';
+    splash.classList.remove('is-revealing');
+    splash.style.clipPath = '';
   }
 
   // Remembers, for this tab session, that the phone is already unlocked /
@@ -675,6 +678,7 @@
     launch.className = 'launch';
     launch.removeAttribute('style');
     glyph.innerHTML = '';
+    hideSplash();
   }
 
   /* ============================================================
@@ -824,35 +828,66 @@
     lock.addEventListener('pointercancel', end);
   })();
 
-  /* ---- Launch an app: zoom the tapped icon to fullscreen, then navigate ---- */
+  /* ---- Launch an app: icon flies to splash logo position while the
+     orange splash background reveals as a growing circle from the tap ---- */
+  var SPLASH_LOGO_SIZE = 78;       // совпадает с .splash__logo
+
   document.querySelectorAll('.app[data-href]').forEach(function (app) {
     app.addEventListener('click', function () {
       var href = app.getAttribute('data-href');
       var iconEl = app.querySelector('.app__icon');
-      var rect = iconEl.getBoundingClientRect();
+      var iconRect = iconEl.getBoundingClientRect();
+      var deviceRect = device.getBoundingClientRect();
 
-      // Place the launch layer exactly over the tapped icon
-      launch.style.top    = rect.top + 'px';
-      launch.style.left   = rect.left + 'px';
-      launch.style.width  = rect.width + 'px';
-      launch.style.height = rect.height + 'px';
-      launch.className = 'launch';                 // reset
-      launch.classList.add('icon-ok');
+      // Координаты иконки относительно .device
+      var startLeft = iconRect.left - deviceRect.left;
+      var startTop  = iconRect.top  - deviceRect.top;
+      var iconCx    = startLeft + iconRect.width / 2;
+      var iconCy    = startTop  + iconRect.height / 2;
+
+      // Куда летит лого — центр экрана, размером 78×78
+      var endLeft = (deviceRect.width  - SPLASH_LOGO_SIZE) / 2;
+      var endTop  = (deviceRect.height - SPLASH_LOGO_SIZE) / 2;
+
+      // Радиус, чтобы круговая волна полностью покрыла экран от точки тапа
+      var maxR = Math.hypot(
+        Math.max(iconCx, deviceRect.width  - iconCx),
+        Math.max(iconCy, deviceRect.height - iconCy)
+      );
+
+      // Поставить launch ровно над тапнутой иконкой
+      launch.className = 'launch icon-ok';
+      launch.style.top    = startTop  + 'px';
+      launch.style.left   = startLeft + 'px';
+      launch.style.width  = iconRect.width  + 'px';
+      launch.style.height = iconRect.height + 'px';
+      launch.style.borderRadius = '50%';
       glyph.innerHTML = iconEl.innerHTML;
+
+      // Подготовить сплеш: круг радиуса 0 в точке тапа
+      splash.style.display = 'flex';
+      splash.classList.remove('is-revealing');
+      splash.style.clipPath = 'circle(0px at ' + iconCx + 'px ' + iconCy + 'px)';
 
       // Remember we're "in the app" so Back returns to the menu
       try { sessionStorage.setItem(HOME_KEY, '1'); } catch (e) {}
 
-      // Force reflow so the starting rect is committed before animating
+      // Reflow → запускаем переходы
       void launch.offsetWidth;
-      launch.classList.add('is-animating');
+      void splash.offsetWidth;
 
-      launch.addEventListener('animationend', function () {
-        // Иконка раскрылась на весь экран → показываем сплеш ОК,
-        // держим момент и переходим в ленту.
-        showSplash();
-        setTimeout(function () { window.location.href = href; }, SPLASH_MS);
-      }, { once: true });
+      launch.classList.add('is-animating');
+      launch.style.top    = endTop  + 'px';
+      launch.style.left   = endLeft + 'px';
+      launch.style.width  = SPLASH_LOGO_SIZE + 'px';
+      launch.style.height = SPLASH_LOGO_SIZE + 'px';
+      launch.style.borderRadius = '24%';
+
+      splash.classList.add('is-revealing');
+      splash.style.clipPath = 'circle(' + maxR + 'px at ' + iconCx + 'px ' + iconCy + 'px)';
+
+      setTimeout(function () { launch.classList.add('is-arrived'); }, 500);
+      setTimeout(function () { window.location.href = href; }, SPLASH_MS);
     });
   });
 
