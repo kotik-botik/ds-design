@@ -440,10 +440,11 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.30);
     overflow: hidden;
   }
-  /* Все transition держим в одном месте (.is-animating), чтобы они не
-     дрались. Раньше .is-faded задавал свой shorthand transition и
-     обнулял переходы position-свойств → при одновременном применении
-     обоих классов иконка телепортировалась в центр без анимации. */
+  /* .is-animating включает только переходы позиции/тени: opacity 0→1
+     должен случиться мгновенно, чтобы иконка была видна в полёте.
+     .is-faded задаёт ПОЛНЫЙ transition-список (включая position'ы),
+     чтобы при одновременном применении обоих классов shorthand
+     не обнулял переходы position — все 8 свойств анимируются. */
   .launch.is-animating {
     opacity: 1;
     transition:
@@ -451,9 +452,6 @@
       left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.4s ease,
-      filter 0.4s ease,
-      transform 0.4s ease,
       box-shadow 0.4s ease;
   }
   .launch.is-arrived { box-shadow: none; }
@@ -461,6 +459,15 @@
     opacity: 0;
     filter: blur(12px);
     transform: scale(1.06);
+    transition:
+      top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.4s ease,
+      opacity 0.4s ease,
+      filter 0.4s ease,
+      transform 0.4s ease;
   }
   .launch__glyph {
     position: absolute; inset: 0;
@@ -753,11 +760,17 @@
 
       // Кроссфейд запускаем сразу же с самим полётом иконки: она блюрится
       // и гаснет параллельно с движением, а splashLogo.png проявляется
-      // из блюра почти сразу после тапа.
+      // из блюра почти сразу после тапа. Double-rAF: первый rAF — это
+      // ещё текущий кадр до layout/paint, во втором браузер уже зафиксирует
+      // opacity:1 от .is-animating, и переход opacity 1→0 у .is-faded
+      // действительно сработает (иначе оба класса резолвятся в одном
+      // recalc и иконку не видно совсем).
       requestAnimationFrame(function () {
-        launch.classList.add('is-arrived');
-        splash.classList.add('is-loaded');
-        launch.classList.add('is-faded');
+        requestAnimationFrame(function () {
+          launch.classList.add('is-arrived');
+          splash.classList.add('is-loaded');
+          launch.classList.add('is-faded');
+        });
       });
       setTimeout(function () { window.location.href = href; }, SPLASH_MS);
     });
