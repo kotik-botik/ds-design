@@ -125,6 +125,10 @@
     opacity: 0;
     pointer-events: none;
   }
+  /* When restoring straight to the menu (e.g. via Back), skip the
+     slide animation so we land on the home screen instantly. */
+  .device.no-anim .lockscreen,
+  .device.no-anim .homescreen { transition: none !important; }
 
   .lockscreen__clock {
     position: absolute;
@@ -445,8 +449,32 @@
   var launch   = document.getElementById('launch');
   var glyph    = document.getElementById('launchGlyph');
 
+  // Remembers, for this tab session, that the phone is already unlocked /
+  // sitting on the home screen — so coming Back from a feed lands on the
+  // menu instead of the lock screen.
+  var HOME_KEY = 'okstart_at_home';
+
   /* ---- Unlock: tap or swipe-up anywhere on the lock screen ---- */
-  function unlock() { device.classList.add('unlocked'); }
+  function unlock() {
+    device.classList.add('unlocked');
+    try { sessionStorage.setItem(HOME_KEY, '1'); } catch (e) {}
+  }
+
+  // Jump straight to the home screen with no slide animation.
+  function showHomeInstant() {
+    device.classList.add('no-anim');
+    device.classList.add('unlocked');
+    void device.offsetWidth;          // commit before re-enabling transitions
+    device.classList.remove('no-anim');
+  }
+
+  // Clear the launch-zoom overlay (it may be left fullscreen after a
+  // bfcache restore) so it never covers the menu.
+  function resetLaunch() {
+    launch.className = 'launch';
+    launch.removeAttribute('style');
+    glyph.innerHTML = '';
+  }
 
   lock.addEventListener('click', unlock);
 
@@ -475,6 +503,9 @@
       launch.classList.add(iconEl.classList.contains('icon-lenta') ? 'icon-lenta' : 'icon-lenta-light');
       glyph.innerHTML = iconEl.innerHTML;
 
+      // Remember we're "in the app" so Back returns to the menu
+      try { sessionStorage.setItem(HOME_KEY, '1'); } catch (e) {}
+
       // Force reflow so the starting rect is committed before animating
       void launch.offsetWidth;
       launch.classList.add('is-animating');
@@ -483,6 +514,15 @@
         window.location.href = href;
       }, { once: true });
     });
+  });
+
+  /* ---- Returning via Back: open straight to the menu, not the lock screen.
+     pageshow fires on both fresh loads and bfcache restores. ---- */
+  window.addEventListener('pageshow', function () {
+    resetLaunch();
+    var atHome = false;
+    try { atHome = sessionStorage.getItem(HOME_KEY) === '1'; } catch (e) {}
+    if (atHome) showHomeInstant();
   });
 })();
 </script>
