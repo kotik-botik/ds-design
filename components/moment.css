@@ -1,0 +1,310 @@
+/**
+ * OK Design System — Moment (полноэкранный просмотрщик сториз/моментов)
+ *
+ *   <div class="moment">
+ *     <img class="moment__media" src="..." alt="">
+ *     <div class="moment__scrim"></div>
+ *
+ *     <div class="moment__statusbar">
+ *       <span class="moment__statusbar-time">9:41</span>
+ *       <span class="moment__statusbar-indicators"> … </span>
+ *     </div>
+ *
+ *     <div class="moment__topbar">
+ *       <!-- Сегментов столько, сколько сториз в блоке, из которого открыт viewer -->
+ *       <div class="moment__progress">
+ *         <div class="moment__progress-segment __state-done"></div>
+ *         <div class="moment__progress-segment __state-active"></div>
+ *         <div class="moment__progress-segment"></div>
+ *         <div class="moment__progress-segment"></div>
+ *         <div class="moment__progress-segment"></div>
+ *       </div>
+ *       <div class="moment__header">
+ *         <div class="avatar __size-36 __type-image"><img src="..." alt=""></div>
+ *         <div class="moment__header-text">
+ *           <div class="moment__header-title">День рождения Анастасии</div>
+ *           <div class="moment__header-subtitle">3 часа назад</div>
+ *         </div>
+ *         <div class="moment__header-actions">
+ *           <button class="button-inline-wrapper __view-primary-on-color __size-24">…</button>
+ *           <button class="button-inline-wrapper __view-primary-on-color __size-24">…</button>
+ *         </div>
+ *       </div>
+ *     </div>
+ *
+ *     <!-- Тап-зоны: левая половина — prev, правая — next.
+ *          Поведение поднимает components/moment.js -->
+ *     <div class="moment__nav">
+ *       <button class="moment__nav-zone __side-prev" aria-label="Назад"></button>
+ *       <button class="moment__nav-zone __side-next" aria-label="Дальше"></button>
+ *     </div>
+ *
+ *     <!-- Опциональный CTA (вариант макета «с кнопкой») -->
+ *     <div class="moment__cta">
+ *       <div class="button-wrapper __size-44 __style-primary __full-width">
+ *         <button class="button-container __style-primary"><span class="button-content">Поздравить</span></button>
+ *       </div>
+ *     </div>
+ *
+ *     <div class="moment__handle"></div>
+ *   </div>
+ *
+ * VARIABLES (можно переопределить на .moment):
+ *   --moment-duration  — длительность активного сегмента (default 5s)
+ */
+
+.moment {
+  --moment-duration: 5s;
+
+  position: relative;
+  width: 360px;
+  height: 800px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #000;
+  color: var(--static-text-and-icons-base-inverse-primary);
+  font-family: var(--font-family);
+  isolation: isolate;
+  user-select: none;
+}
+
+/* Полноэкранный режим — viewer натягивается на родителя (например, .phone-frame).
+   Используется, когда moment работает как overlay, а не как preview-карточка. */
+.moment.__fullscreen {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+}
+.moment.__fullscreen .moment__scrim,
+.moment.__fullscreen .moment__media { border-radius: 0; }
+
+/* Полноэкранная картинка сториз */
+.moment__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Линейный градиент сверху — для читаемости header'а.
+   160h, opacity 0.4, black → transparent (как в Figma). */
+.moment__scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   STATUS BAR — белый, поверх скрима, 52h
+   (свой, а не из meshok-up: там фон --dynamic-surface-base-secondary !important)
+   ============================================================ */
+.moment__statusbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: var(--space-2-5) var(--space-6);
+  color: var(--static-text-and-icons-base-inverse-primary);
+  z-index: 3;
+  pointer-events: none;
+}
+.moment__statusbar-time {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0.14px;
+}
+.moment__statusbar-indicators {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ============================================================
+   TOPBAR — обёртка для progress + header. Лежит под status bar'ом
+   (52px от верха) и поверх скрима.
+   ============================================================ */
+.moment__topbar {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Полоска прогресса. Сегментов рендерим столько, сколько сториз в блоке. */
+.moment__progress {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5px;
+  padding: var(--space-3);
+}
+
+.moment__progress-segment {
+  flex: 1 1 0;
+  height: 2px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Заливка сегмента — отдельный слой, который анимируется в active-состоянии. */
+.moment__progress-segment::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--static-text-and-icons-base-inverse-primary);
+  border-radius: 2px;
+  transform: translateX(-100%);
+}
+
+/* Просмотренный сегмент — полностью залит. */
+.moment__progress-segment.__state-done::after {
+  transform: translateX(0);
+}
+
+/* Активный сегмент — заливается по таймеру.
+   Длительность управляется через --moment-duration на .moment. */
+.moment__progress-segment.__state-active::after {
+  animation: moment-progress var(--moment-duration, 5s) linear forwards;
+}
+
+/* Пауза для активного сегмента (если останавливаем таймер на touch/hold) */
+.moment.__state-paused .moment__progress-segment.__state-active::after {
+  animation-play-state: paused;
+}
+
+@keyframes moment-progress {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+/* ============================================================
+   HEADER — avatar + текст + правые иконки
+   ============================================================ */
+.moment__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
+  min-height: 38px;
+}
+.moment__header-text {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.moment__header-title {
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--static-text-and-icons-base-inverse-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.moment__header-subtitle {
+  font-family: var(--font-family);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 400;
+  color: var(--static-text-and-icons-base-inverse-tertiary, rgba(255, 255, 255, 0.6));
+}
+.moment__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+.moment__header-actions [role="button"] {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   NAV — невидимые тап-зоны для prev/next.
+   Лежат ПОД header/CTA по z-index, чтобы те получали клики первыми.
+   ============================================================ */
+.moment__nav {
+  position: absolute;
+  /* ниже status-bar (52) + progress (4+12*2≈26) + header (38) + запас 8
+     = 124. Чтобы тап-зоны не перехватывали клики по крестику/more/avatar. */
+  top: 124px;
+  bottom: 80px; /* выше CTA/handle */
+  left: 0;
+  right: 0;
+  display: flex;
+  z-index: 2;
+}
+.moment__nav-zone {
+  flex: 1 1 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   CTA — опциональная кнопка снизу.
+   bottom = 44 (как в Figma: 800 − 712 − 44 = ...).
+   Сама кнопка — обычный button-wrapper __size-44 __style-primary __full-width.
+   ============================================================ */
+.moment__cta {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  right: 0;
+  padding: 0 var(--space-4);
+  display: flex;
+  z-index: 4;
+}
+.moment__cta .button-wrapper {
+  flex: 1 1 0;
+}
+
+/* ============================================================
+   HOME INDICATOR — белая «пилюля» 108×4 внизу
+   ============================================================ */
+.moment__handle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  pointer-events: none;
+}
+.moment__handle::before {
+  content: '';
+  width: 108px;
+  height: 4px;
+  border-radius: 12px;
+  background-color: var(--static-text-and-icons-base-inverse-primary);
+}

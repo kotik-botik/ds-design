@@ -31,6 +31,7 @@
 @import url('./components/uni-card.css');
 @import url('./components/friend-card.css');
 @import url('./components/vvz-card.css');
+@import url('./components/dismissible.css');
 @import url('./components/content.css');
 @import url('./components/contents-view.css');
 
@@ -53,6 +54,7 @@
 @import url('./components/feed-discussion.css');
 @import url('./components/feed-questions.css');
 @import url('./components/feed-stories.css');
+@import url('./components/moment.css');
 @import url('./components/text-feed.css');
 @import url('./components/clip-feed.css');
 @import url('./components/tabs.css');

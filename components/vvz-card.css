@@ -49,31 +49,13 @@
   object-fit: cover;
 }
 
-/* Крестик «скрыть» в правом верхнем углу карточки — DS button-inline size 16 */
+/* Крестик «скрыть» в правом верхнем углу карточки — DS button-inline size 16.
+   Поведение и анимация — components/dismissible.{css,js}. */
 .vvz-card__close {
   position: absolute;
   top: 8px;
   right: 8px;
   z-index: 1;
-}
-.vvz-card__close svg { display: block; width: 16px; height: 16px; }
-
-/* Плавное затухание карточки/контейнера по «скрыть» */
-.vvz-card.__leaving {
-  opacity: 0;
-  transform: scale(0.96);
-  pointer-events: none;
-  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
-}
-[data-vvz].__leaving {
-  opacity: 0;
-  overflow: hidden;
-  pointer-events: none;
-  /* плавно схлопываем высоту/отступы — нижние ячейки подъезжают вверх */
-  transition: opacity 500ms ease-in-out,
-              height 500ms ease-in-out,
-              padding 500ms ease-in-out,
-              margin 500ms ease-in-out;
 }
 
 /* Контент — по центру */

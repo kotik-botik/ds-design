@@ -63,7 +63,14 @@
   border: 0;
   border-radius: var(--chip-border-radius);
 
+  /* Типографика чипа — встроена в компонент (ds-title-m: 17/24, weight 600).
+     На странице добавлять ds-title-m на каждый чип не нужно. */
   font-family: var(--font-family);
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+
   cursor: pointer;
   transition:
     background-color var(--ds-animation-duration) var(--ds-animation-easing),
@@ -185,6 +192,15 @@
 
 .chip-container .left-icon {
   margin-right: 6px;
+}
+
+/* Иконки внутри чипса наследуют цвет текста чипса.
+   Используется DS-примитив <span class="icon __size-20 __src" style="--icon-src:url(...)">
+   — он рендерит SVG как mask поверх currentColor, поэтому в __selected-* иконка
+   автоматически перекрашивается вместе с .chip-color. */
+.chip-container .left-icon .icon,
+.chip-container .right-icon .icon {
+  color: inherit;
 }
 
 /* right-icon появляется при selected default/dropdown — с плавным fade-in */
