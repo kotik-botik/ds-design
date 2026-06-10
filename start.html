@@ -440,6 +440,10 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.30);
     overflow: hidden;
   }
+  /* Все transition держим в одном месте (.is-animating), чтобы они не
+     дрались. Раньше .is-faded задавал свой shorthand transition и
+     обнулял переходы position-свойств → при одновременном применении
+     обоих классов иконка телепортировалась в центр без анимации. */
   .launch.is-animating {
     opacity: 1;
     transition:
@@ -447,6 +451,9 @@
       left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.4s ease,
+      filter 0.4s ease,
+      transform 0.4s ease,
       box-shadow 0.4s ease;
   }
   .launch.is-arrived { box-shadow: none; }
@@ -454,7 +461,6 @@
     opacity: 0;
     filter: blur(12px);
     transform: scale(1.06);
-    transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
   }
   .launch__glyph {
     position: absolute; inset: 0;
