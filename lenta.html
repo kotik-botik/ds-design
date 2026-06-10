@@ -15,6 +15,43 @@
     display: inline-block;
   }
   .preview-section h2 { margin: 0 0 16px; font-size: 17px; font-weight: 600; }
+
+  /* Stories (Моменты) — горизонтальный ряд историй под навбаром.
+     Кружки — DS-компонент .avatar (__size-56 + __ring-active/__ring-viewed),
+     «+» своей истории — аддон .avatar__addon. */
+  .ll-stories__row {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-2) var(--space-4) var(--space-4);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .ll-stories__row::-webkit-scrollbar { display: none; }
+
+  /* Кольцо историй: зазор 3px и штрих 3px (DS по умолчанию для size-56 — 4/2). */
+  .ll-stories .avatar.__size-56.__ring-active,
+  .ll-stories .avatar.__size-56.__ring-viewed {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+  /* outline не занимает место — орбиту выносим в layout через margin. */
+  .ll-stories .avatar.__size-56 { margin: var(--space-1-5); }
+
+  /* «+»-бейдж добавления своей истории — оранжевый кружок в белой обводке */
+  .ll-story-add {
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--static-surface-status-accent);
+    border: 3px solid var(--dynamic-surface-base-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ll-story-add .ll-icon { display: block; filter: brightness(0) invert(1); }
 </style>
 </head>
 <body>
@@ -51,6 +88,28 @@
           <button class="tabs-tab ds-title-xl __state-on">Лента</button>
           <button class="tabs-tab ds-title-xl">Сегодня</button>
           <button class="tabs-tab ds-title-xl">Подарки</button>
+        </div>
+      </div>
+
+      <!-- Stories (Моменты) -->
+      <div class="ll-stories" aria-label="Моменты">
+        <div class="ll-stories__row">
+          <!-- Ваша история (оранжевое кольцо + «+») -->
+          <div class="avatar __size-56 __type-image __ring-active __has-addon">
+            <img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KtrUxASmukStGfhv8gKAdnO8o0XlTdnM6-KfH9cwylJb75wIpMwrl23su2VU84PVRXgYOXqKlOJNEXEFe1u1a0c0jB7m3EkgrolCyD8RoAAAAp&dpr=2" alt="Ваша история">
+            <div class="avatar__addon __pos-br ll-story-add">
+              <img class="ll-icon" src="assets/icons/add_24.svg" width="20" height="20" alt="">
+            </div>
+          </div>
+          <!-- Не просмотренные (оранжевое кольцо) -->
+          <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
+          <!-- Просмотренные (серое кольцо) -->
+          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=33" alt=""></div>
         </div>
       </div>
 
