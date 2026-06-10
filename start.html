@@ -673,9 +673,14 @@
   function lockDevice() {
     device.classList.remove('unlocked');
     device.classList.remove('headsup-notifs');
-    if (window.OkNotifs) window.OkNotifs.setMode('lock');
+    if (window.OkNotifs) {
+      window.OkNotifs.setMode('lock');
+      // Только убираем видимые карточки (они принадлежали heads-up слою) —
+      // сам стрим продолжаем. Пуши приходят независимо от UI: новый пуш
+      // прилетит на свежий локскрин в lock-mode.
+      window.OkNotifs.clearShown();
+    }
     resetLaunch();
-    stopNotifications(true);          // clear & reset — replay on next unlock
     try { sessionStorage.removeItem(HOME_KEY); } catch (e) {}
   }
 
@@ -687,8 +692,7 @@
     if (window.OkNotifs) window.OkNotifs.setMode('heads-up');
     void device.offsetWidth;          // commit before re-enabling transitions
     device.classList.remove('no-anim');
-    stopNotifications(false);         // cancel any stale timer, keep delivered
-    startNotifications();             // resume any remaining notifications
+    startNotifications();             // resume any remaining notifications (idempotent)
     // Гарантируем запись истории «меню» (если в меню попали не через unlock),
     // чтобы Back с меню опускал локскрин, а не уводил со страницы.
     if (!history.state || history.state.scr !== 'menu') {
