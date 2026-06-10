@@ -48,14 +48,24 @@ await page.route('**/lenta-light.html', r => r.abort('aborted'));
 ```
 Тогда тап стартует splash, но переход не происходит → можно сэмплировать `#launch` через рАF до конца.
 
-## ScreenTransition (push/pop между страницами) — components/screen-transition.{js,css}
-- Корень экрана: `.phone-frame[data-screen]`. Кнопка назад: `[data-screen-back]` (опц. `data-href`, иначе history.back()).
-- Анимации 300ms cubic-bezier(.2,0,0,1): `screen-leave-back` (translateX 0→100%, z-index 200), `screen-enter-back` (-24%→0), `screen-enter-forward` (100%→0). Наблюдённая длительность класса ~318–334ms (keyframe 300 + хвост до animationend).
-- Направление передаётся через `sessionStorage['screenNavDir']`: `back` ставится кликом по back-кнопке *перед* навигацией; на следующей странице `playEnter()` читает и **удаляет** ключ. Если ключа нет → дефолт ветка `screen-enter-forward`.
-- BACK (messages→lenta): ✅ полностью работает. leave-класс + translateX + navDir='back' + переход + enter-back на lenta, класс снимается по animationend.
-- FORWARD (таббар): навигацию таббара делает **components/tab-bar.js** (делегированный click по `.tabbar-icon`, карта ROUTES: feed→lenta-light, message→messages; пропускает `__state-on`). У самой кнопки `__slot-message` НЕТ ни data-href, ни onclick — всё в tab-bar.js. **tab-bar.js НЕ ставит screenNavDir='forward'** — forward-въезд работает только потому, что default-ветка playEnter и так = forward. Совпадение, не явный сигнал; если когда-нибудь дефолт сменят на back — таббар-форвард сломается молча.
-- Тестировать leave-анимацию: `page.route('**/lenta-light.html', r=>r.abort())` чтобы заморозить навигацию и сэмплить transform середины. Enter — `addInitScript` с MutationObserver на `[data-screen]`, история классов с performance.now().
-- Консольные ошибки на этих страницах: только внешний шум (CDN lottie/jsdelivr CERT_AUTHORITY_INVALID + 404). Фильтровать `/CERT|404|net::/`.
+## ScreenTransition (push/pop) — components/screen-transition.{js,css}
+ПЕРЕПИСАНО на cross-document View Transitions API (commit 68db716). Старый JS-class-механизм (screen-leave-back/screen-enter-* + sessionStorage['screenNavDir']) БОЛЬШЕ НЕ СУЩЕСТВУЕТ — не искать его.
+- CSS: `@view-transition { navigation: auto; }`. Дефолт = forward: `::view-transition-new(root)` `screen-in-right` (100%→0), `::view-transition-old(root)` `screen-out-left` (0→-25%). Back через `:active-view-transition-type(back)::view-transition-old(root)` `screen-out-right`(0→100%, z-index:2) + `-new(root)` `screen-in-left`(-25%→0, z-index:1). Длительность 300ms cubic-bezier(.2,0,0,1).
+- JS (screen-transition.js): слушает `pageswap`+`pagereveal`, считает направление из Navigation API `activation` (isBack = navType==='traverse' && entry.index < from.index) и делает `e.viewTransition.types.add('forward'|'back')`. Back-кнопка `.nav-bar__back` / `[data-screen-back]` → `history.back()` (или data-href). Forward делает tab-bar.js (`location.href` по ROUTES).
+- Chromium поддерживает всё: vtTypeSel/startVT/navAPI/pageswap/pagereveal = true. Cross-doc VT **активируется** на localhost (hasVT:true на pagereveal обоих направлений).
+
+### БАГ (наблюдён 2026-06): BACK играет FORWARD-анимацию. types никогда не доезжает до входящего документа.
+- Замер `document.getAnimations()` + keyframes на ВХОДЯЩЕЙ странице: и forward, и back → одинаково `screen-in-right`(new)+`screen-out-left`(old). Back-ветка CSS не матчится.
+- Причина: `viewTransition.types` пустой на `pagereveal` (входящий док) во ВСЕХ читках (atFire / next-microtask / rAF = []). add() из pagereveal — no-op. На `pageswap` (исходящий док) add() ВИДЕН только в rAF-читке (['forward']/['back']) — но это уже после создания снапшота, типы в новый док не пробрасываются. Navigation activation корректен (computedIsBack: false для push 1→2, true для traverse 2→1) — логика isBack верна, проблема в моменте/документе применения типа.
+- Рывка НЕТ: new(root) стартует чисто с translateX(100%), без snap-to-0-then-jump. Единственный дефект — направление back совпадает с forward.
+- Навигации работают: lenta→messages (push, idx1→2), back лендит на **lenta-light.html** (traverse 2→1) — feed-back-trap НЕ срабатывает на этот history.back (sentinel-state в индексе совпадает, popstate-replace в start.html не уводит). final url = lenta-light.html. ОК.
+- Консоль: чисто (фильтр `/CERT|404|net::|jsdelivr|lottie|favicon/`), 0 своих ошибок.
+
+### Как тестировать VT-типы и направление (рабочий рецепт)
+- `chromium.launch({ args:['--enable-features=ViewTransitionOnNavigation'] })`.
+- `addInitScript`: вешать pageswap/pagereveal, типы читать в 3 момента (synchronous, `Promise.resolve().then`, `requestAnimationFrame`) — иначе пропустишь, что add() виден только в rAF.
+- Лог переживает навигацию только через `sessionStorage` (объект window.__vtlog обнуляется на новой странице).
+- Направление визуально доказывать НЕ скриншотом, а `getAnimations().effect.pseudoElement` + `.animationName` + `getKeyframes()` на входящей странице сразу после reveal (rAF×4). Имя кейфрейма = бесспорное доказательство ветки.
 
 ## Сэмплинг анимаций
 - Для покадровых данных: запусти `requestAnimationFrame`-цикл **внутри страницы** через `page.evaluate(async () => new Promise(resolve => { ... }))` и собирай computed styles в массив. Возврат массива на хост даст ~16 ms точность.
