@@ -137,6 +137,8 @@
   }
   .splash__logo svg,
   .splash__logo img { display: block; width: 100%; height: 100%; }
+  /* оранжевый логотип → белый для контраста на оранжевом фоне */
+  .splash__logo-img { filter: brightness(0) invert(1); }
   @keyframes splashLogoIn {
     from { transform: scale(0.86); opacity: 0; }
     to   { transform: none; opacity: 1; }
@@ -390,6 +392,9 @@
     position: absolute;
     top: 36px; left: 8px; right: 8px;
     z-index: 65;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;                /* стопка карточек, новые снизу */
     pointer-events: none;   /* empty area passes taps to the launcher */
   }
   .notif {
@@ -469,8 +474,9 @@
   <!-- ============== SPLASH приложения ОК (показывается при открытии) ============== -->
   <div class="splash" id="splash" style="display:none">
     <div class="splash__logo" id="splashLogo">
-      <!-- Логотип ОК — PNG-ассет -->
-      <img src="assets/icons/splashLogo.png" alt="ОК" width="78" height="78">
+      <!-- Официальный логотип ОК (78×78). На оранжевом сплеше делаем белым
+           CSS-фильтром для контраста. -->
+      <img src="assets/icons/splashLogo.png" alt="ОК" class="splash__logo-img">
     </div>
   </div>
 
@@ -661,14 +667,15 @@
   var NOTIF_GAP = 6000;   // 6s between notifications
   var NOTIF_FIRST = 2000; // first one shortly after entering the menu
 
+  var NOTIF_LIFETIME = 10000;  // каждое уведомление само скрывается через 10s
+
   var notifTimer = null, notifIndex = 0, notifsRunning = false;
-  var currentNotif = null;   // only ever one card on screen at a time
 
   // Animate a card up and out, then drop it from the DOM.
   function dismissNotif(el) {
     if (!el || el.__leaving) return;
     el.__leaving = true;
-    if (currentNotif === el) currentNotif = null;
+    if (el.__hideTimer) { clearTimeout(el.__hideTimer); el.__hideTimer = null; }
     el.style.transition = 'transform 0.28s ease, opacity 0.28s ease';
     el.style.transform = 'translateY(-150%)';
     el.style.opacity = '0';
@@ -709,9 +716,6 @@
   }
 
   function addNotif(data) {
-    // Each new push closes the one before it — only one card at a time.
-    if (currentNotif) dismissNotif(currentNotif);
-
     var el = document.createElement('div');
     el.className = 'notif';
     el.innerHTML =
@@ -728,9 +732,11 @@
       '<div class="notif__body"></div>';
     el.querySelector('.notif__title').textContent = data.title;
     el.querySelector('.notif__body').textContent = data.body;
-    notifBox.appendChild(el);
-    currentNotif = el;
+    notifBox.appendChild(el);            // новые снизу, старые накапливаются сверху
     attachSwipe(el);
+    // Предыдущие сами скрываются спустя время — карточки накладываются,
+    // пока старая не уедет.
+    el.__hideTimer = setTimeout(function () { dismissNotif(el); }, NOTIF_LIFETIME);
   }
 
   function scheduleNext() {
@@ -752,7 +758,12 @@
   function stopNotifications(clear) {
     notifsRunning = false;
     if (notifTimer) { clearTimeout(notifTimer); notifTimer = null; }
-    if (clear) { notifBox.innerHTML = ''; notifIndex = 0; currentNotif = null; }
+    if (clear) {
+      Array.prototype.forEach.call(notifBox.children, function (el) {
+        if (el.__hideTimer) clearTimeout(el.__hideTimer);
+      });
+      notifBox.innerHTML = ''; notifIndex = 0;
+    }
   }
 
   lock.addEventListener('click', unlock);
