@@ -745,6 +745,23 @@
     lock.addEventListener('pointercancel', end);
   })();
 
+  /* ---- Тап по гугл-серч-бару на главном экране → блокируем телефон
+     (возврат на локскрин). Используем history.back() — попадает в наш
+     popstate-листенер, который вызывает lockDevice() с правильным
+     синхром истории. */
+  (function () {
+    var bar = document.querySelector('.search-bar');
+    if (!bar) return;
+    bar.style.cursor = 'pointer';
+    bar.addEventListener('click', function () {
+      if (history.state && history.state.scr === 'menu') {
+        history.back();
+      } else {
+        lockDevice();
+      }
+    });
+  })();
+
   /* ---- Launch an app: icon flies to splash logo position while the
      orange splash background reveals as a growing circle from the tap ---- */
   var SPLASH_LOGO_SIZE = 128;      // совпадает с .splash__logo (Android spec ≈ 192dp круг)
