@@ -230,8 +230,46 @@
 
   /* Баннер под сторис — картинка во всю ширину контейнера ленты,
      горизонтальные паддинги = 0 (наследует full-width от .ll-feed). */
-  .ll-banner { display: block; }
-  .ll-banner__img { display: block; width: 100%; height: auto; }
+  /* Промо-карточка (контейнер из Figma node 2256:36272): мягкий лилово-розовый
+     градиент, слева текст body-m, справа 3D-иллюстрация (слот 100×72).
+     Скругление 20, паддинг 16, гэп 23. */
+  .ll-promo {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+    padding: 16px;
+    border-radius: 20px;
+    background: linear-gradient(100deg, #e7e0f6 0%, #efe9f6 50%, #fbf0ef 100%);
+  }
+  .ll-promo__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: #2e2f33;
+    font-family: var(--font-family);
+    font-size: 15px;
+    line-height: 20px;
+  }
+  .ll-promo__text p { margin: 0; }
+
+  /* Иллюстрация справа. Пока CSS-заглушка (монета + оранжевое кольцо) —
+     замени на <img src="…"> с реальным PNG, разметка это поддерживает. */
+  .ll-promo__art { position: relative; flex: 0 0 auto; width: 100px; height: 72px; }
+  .ll-promo__art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .ll-promo__ring,
+  .ll-promo__coin { position: absolute; left: 50%; top: 50%; }
+  .ll-promo__ring {
+    width: 88px; height: 40px;
+    transform: translate(-50%, -50%) rotate(-22deg);
+    border: 7px solid #ff7a2f;
+    border-radius: 50%;
+  }
+  .ll-promo__coin {
+    width: 50px; height: 50px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 36% 30%, #ffe79b 0%, #f7c64e 52%, #e2a531 100%);
+    box-shadow: 0 4px 10px rgba(226,165,49,0.45), inset 0 -3px 6px rgba(180,120,20,0.35);
+  }
 
   /* Позиция бейджа — относительно кольцевой «коробки» (ава + орбита 3 + штрих 3 = 6px):
      торчит на 3px за правую границу кольца, снизу — заподлицо с кольцом. */
@@ -299,10 +337,17 @@
       <!-- FEED ---------------------------------------------------------- -->
       <div class="ll-feed">
 
-        <!-- BANNER под сторис — картинка во всю ширину контейнера ленты -->
-        <a class="ll-banner" href="#" aria-label="Баннер">
-          <img class="ll-banner__img" src="assets/icons/bannerBack.png" alt="">
-        </a>
+        <!-- ПРОМО-карточка (из Figma): градиент + текст + 3D-иллюстрация -->
+        <div class="ll-promo">
+          <div class="ll-promo__text">
+            <p>Добрый дружеский привет!</p>
+            <p>С пожеланием добра!</p>
+          </div>
+          <div class="ll-promo__art" aria-hidden="true">
+            <span class="ll-promo__ring"></span>
+            <span class="ll-promo__coin"></span>
+          </div>
+        </div>
 
         <!-- 1. Короткий текст ------------------------------------------- -->
         <article class="text-feed island">
