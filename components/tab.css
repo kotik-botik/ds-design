@@ -90,6 +90,7 @@
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
+  padding: 0;                /* снимаем нативный паддинг кнопки */
   border: 0;
   font: inherit;
   cursor: pointer;
@@ -241,12 +242,12 @@
   color: var(--tab-label-color);
 }
 
-/* инлайн-счётчик в base-табе (рядом с лейблом, приглушённый) */
+/* инлайн-счётчик в base-табе (рядом с лейблом) — стиль title-s, приглушённый */
 .tab-wrapper .counter-inline {
   font-family: var(--font-family);
   font-size: 15px;
   line-height: 20px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--dynamic-text-and-icons-base-secondary);
   font-variant-numeric: tabular-nums;
 }
