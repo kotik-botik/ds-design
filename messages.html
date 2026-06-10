@@ -13,13 +13,13 @@
 
   html, body {
     margin: 0; padding: 0; height: 100%;
-    background: var(--dynamic-surface-base-primary);
+    background: var(--dynamic-surface-base-secondary);
   }
   .phone-frame {
     width: 100%; max-width: none;
     height: 100dvh; min-height: 100dvh;
     overflow: hidden;
-    background: var(--dynamic-surface-base-primary);
+    background: var(--dynamic-surface-base-secondary);
   }
   .phone-frame__feed {
     min-height: 0;
@@ -31,17 +31,17 @@
   .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
 
   /* Шапка: статус-бар + навбар, прибиты к верху скролла */
-  .ll-top { flex-shrink: 0; background: var(--dynamic-surface-base-primary); }
+  .ll-top { flex-shrink: 0; background: var(--dynamic-surface-base-secondary); }
   .status-bar {
     position: sticky; top: 0; z-index: 60;
-    background: var(--dynamic-surface-base-primary);
+    background: var(--dynamic-surface-base-secondary);
   }
   .ll-msg-title {
     display: inline-flex; align-items: center; gap: var(--space-1-5);
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
-  /* «Возможно, вы знакомы» — ряд DS uni-card (size 160) */
+  /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
   .ll-pymk { padding-top: var(--space-2); padding-bottom: var(--space-3); }
   .ll-pymk__head {
     display: flex; align-items: center; justify-content: space-between;
@@ -52,19 +52,6 @@
     overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
   }
   .ll-pymk__row::-webkit-scrollbar { display: none; }
-  .ll-pymk__row .uni-card-wrapper { flex: 0 0 auto; }
-  .ll-pymk__row .uni-card.__has-background { background-color: var(--dynamic-surface-base-tertiary); }
-  .ll-pymk__row .uni-card-media { position: relative; aspect-ratio: 1; }
-  .ll-pymk__row .uni-card-media img { height: 100%; object-fit: cover; }
-  .ll-pymk__name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ll-pymk__mutual { color: var(--dynamic-text-and-icons-base-secondary); margin-top: 2px; }
-  .ll-pymk__close {
-    position: absolute; top: 8px; right: 8px;
-    width: 24px; height: 24px; padding: 0; border: 0; cursor: pointer;
-    border-radius: 50%; background: rgba(0, 0, 0, 0.56);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .ll-pymk__close svg { width: 14px; height: 14px; display: block; }
 
   /* Список диалогов на DS uni-cell */
   .ll-msg__cell { gap: var(--space-3); align-items: center; }
@@ -126,50 +113,47 @@
         </div>
         <div class="ll-pymk__row">
 
-          <div class="uni-card-wrapper __size-160">
-            <div class="uni-card __state-enabled __has-background" style="overflow:hidden;">
-              <div class="uni-card-media">
-                <img src="https://i.pravatar.cc/240?img=47" alt="">
-                <button class="ll-pymk__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-              </div>
-              <div class="uni-card-content">
-                <div class="ll-pymk__name ds-title-s">Алёна Ящук</div>
-                <div class="ll-pymk__mutual ds-caption-m">20 общих друзей</div>
-                <div class="button-wrapper __size-36 __full-width" style="display:block;margin-top:12px;">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
-                </div>
+          <div class="friend-card">
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=47')"></div>
+              <img src="https://i.pravatar.cc/240?img=47" alt="">
+              <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Алёна Ящук</div>
+              <div class="friend-card__subtitle ds-caption-m">20 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
               </div>
             </div>
           </div>
 
-          <div class="uni-card-wrapper __size-160">
-            <div class="uni-card __state-enabled __has-background" style="overflow:hidden;">
-              <div class="uni-card-media">
-                <img src="https://i.pravatar.cc/240?img=44" alt="">
-                <button class="ll-pymk__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-              </div>
-              <div class="uni-card-content">
-                <div class="ll-pymk__name ds-title-s">Анна Смирнова</div>
-                <div class="ll-pymk__mutual ds-caption-m">12 общих друзей</div>
-                <div class="button-wrapper __size-36 __full-width" style="display:block;margin-top:12px;">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
-                </div>
+          <div class="friend-card">
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=44')"></div>
+              <img src="https://i.pravatar.cc/240?img=44" alt="">
+              <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Анна Смирнова</div>
+              <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
               </div>
             </div>
           </div>
 
-          <div class="uni-card-wrapper __size-160">
-            <div class="uni-card __state-enabled __has-background" style="overflow:hidden;">
-              <div class="uni-card-media">
-                <img src="https://i.pravatar.cc/240?img=45" alt="">
-                <button class="ll-pymk__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-              </div>
-              <div class="uni-card-content">
-                <div class="ll-pymk__name ds-title-s">Мария Иванова</div>
-                <div class="ll-pymk__mutual ds-caption-m">10 общих друзей</div>
-                <div class="button-wrapper __size-36 __full-width" style="display:block;margin-top:12px;">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
-                </div>
+          <div class="friend-card">
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=45')"></div>
+              <img src="https://i.pravatar.cc/240?img=45" alt="">
+              <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Мария Иванова</div>
+              <div class="friend-card__subtitle ds-caption-m">10 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
               </div>
             </div>
           </div>
