@@ -231,11 +231,12 @@
   white-space: nowrap;
 }
 
+/* лейбл — стиль ds-title-s (15/20, вес 600) */
 .tab-wrapper .label {
   font-family: var(--font-family);
   font-size: 15px;
   line-height: 20px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 0;
   color: var(--tab-label-color);
 }
