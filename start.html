@@ -108,6 +108,41 @@
   }
 
   /* ============================================================
+     SCREEN 0 — Splash (boot) — фирменный оранжевый градиент ОК
+     (точные стопы из Figma node 2245:45745). По центру — логотип 78×78.
+     ============================================================ */
+  .splash {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse 155% 72% at 50% 55.4%,
+        #ff9257 10%,
+        #ff732b 27.5%,
+        #ff6416 36.25%,
+        #ff5d0b 40.6%,
+        #ff5500 45%,
+        #f03c00 57.5%,
+        #e12300 70%);
+    transition: opacity 0.5s ease;
+  }
+  .splash.is-done { opacity: 0; pointer-events: none; }
+  .splash__logo {
+    width: 78px;
+    height: 78px;
+    animation: splashLogoIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .splash__logo svg,
+  .splash__logo img { display: block; width: 100%; height: 100%; }
+  @keyframes splashLogoIn {
+    from { transform: scale(0.86); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+  }
+
+  /* ============================================================
      SCREEN 1 — Lock screen (Pixel style)
      ============================================================ */
   .lockscreen {
@@ -430,6 +465,20 @@
 
 <div class="device" id="device">
 
+  <!-- ========================= SPLASH (boot) ========================= -->
+  <div class="splash" id="splash">
+    <div class="splash__logo" id="splashLogo">
+      <!-- Логотип ОК (78×78). Воспроизведён по присланному изображению;
+           при необходимости замени на официальный SVG/PNG из Figma. -->
+      <svg viewBox="0 0 78 78" xmlns="http://www.w3.org/2000/svg" fill="none"
+           stroke="#F15B25" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="39" cy="21" r="10.5"/>
+        <path d="M21.5 40.5 L39 47.5 L56.5 40.5"/>
+        <path d="M28 63 L39 47.5 L50 63"/>
+      </svg>
+    </div>
+  </div>
+
   <!-- Punch-hole camera -->
   <div class="punch-hole"></div>
 
@@ -496,7 +545,7 @@
             <rect x="7"  y="23" width="14" height="4" rx="2" fill="#ff7a00" fill-opacity="0.7"/>
           </svg>
         </span>
-        <span class="app__label">Лента Light</span>
+        <span class="app__label">ОК</span>
       </button>
     </div>
 
@@ -547,6 +596,25 @@
   var launch   = document.getElementById('launch');
   var glyph    = document.getElementById('launchGlyph');
   var notifBox = document.getElementById('notifs');
+  var splash   = document.getElementById('splash');
+
+  /* ---- Boot splash: shown on cold start, then reveals the lock screen ---- */
+  var SPLASH_MS = 1900;   // авто-уход сплеша
+  var splashTimer = null;
+
+  function hideSplash(instant) {
+    if (!splash) return;
+    if (splashTimer) { clearTimeout(splashTimer); splashTimer = null; }
+    if (instant) { splash.style.display = 'none'; }
+    else { splash.classList.add('is-done'); }
+  }
+  function runSplash() {
+    if (!splash) return;
+    splash.style.display = '';
+    splash.classList.remove('is-done');
+    splashTimer = setTimeout(function () { hideSplash(false); }, SPLASH_MS);
+  }
+  if (splash) splash.addEventListener('click', function () { hideSplash(false); });
 
   // Remembers, for this tab session, that the phone is already unlocked /
   // sitting on the home screen — so coming Back from a feed lands on the
@@ -617,7 +685,7 @@
           '<rect x="7" y="16" width="22" height="4" rx="2" fill="#fff" fill-opacity="0.9"/>' +
           '<rect x="7" y="23" width="14" height="4" rx="2" fill="#fff" fill-opacity="0.8"/>' +
         '</svg></span>' +
-        '<span class="notif__app">Лента Light</span>' +
+        '<span class="notif__app">ОК</span>' +
         '<span class="notif__sep">·</span><span>сейчас</span>' +
       '</div>' +
       '<div class="notif__title"></div>' +
@@ -700,7 +768,12 @@
     resetLaunch();
     var atHome = false;
     try { atHome = sessionStorage.getItem(HOME_KEY) === '1'; } catch (e) {}
-    if (atHome) showHomeInstant();
+    if (atHome) {
+      hideSplash(true);     // вернулись в меню — без сплеша и локскрина
+      showHomeInstant();
+    } else {
+      runSplash();          // холодный старт: сплеш → локскрин
+    }
   });
 
   /* ---- History-driven screen switching ----
