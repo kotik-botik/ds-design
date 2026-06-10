@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru" class="__ui-theme_enabled __ui-theme_light __font-roboto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Трибуна — прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="index.css">
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--dynamic-surface-base-secondary);
+  }
+  .phone-frame {
+    width: 100%; max-width: none;
+    height: 100dvh; min-height: 100dvh;
+    overflow: hidden;
+    background: var(--dynamic-surface-base-secondary);
+  }
+  .phone-frame__feed {
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .phone-frame__feed::-webkit-scrollbar { display: none; }
+
+  .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
+
+  /* Ряд chips под navbar внутри meshok-up: горизонтальный паддинг + воздух снизу */
+  .ll-chips { padding: var(--space-2) 0 var(--space-3); }
+  .ll-chips .chips-view__row { padding-left: var(--space-4); }
+
+  /* Vibe-карточка на острове */
+  .ll-vibe-island { padding: var(--space-6) var(--space-4); }
+  .ll-vibe-illu { display: block; width: 224px; height: auto; }
+  /* Fallback-цветной градиент, если PNG не загрузилась */
+  .ll-vibe-illu.__fallback {
+    height: 128px; border-radius: 16px;
+    background: linear-gradient(135deg, #FFE3A8 0%, #F2C56A 30%, #6EBCEB 55%, #9BD16F 80%, #E07A6C 100%);
+    box-shadow: 0 8px 24px -8px rgba(0,0,0,0.25);
+  }
+
+  /* FAB и таббар как в messages.html */
+  .ll-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; }
+</style>
+</head>
+<body>
+
+  <div class="phone-frame">
+    <div class="phone-frame__feed">
+
+      <!-- STATUS + NAVBAR (search) + CHIPS — внутри meshok-up -->
+      <div class="meshok-up">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">
+            <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+          </span>
+        </div>
+
+        <div class="nav-bar __type-search">
+          <div class="nav-bar__leading">
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Назад"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/back_24.svg" width="24" height="24" alt=""></span></button></span>
+          </div>
+          <div class="nav-bar__search">
+            <span class="nav-bar__search-icon"><img class="ll-icon" src="assets/icons/search_24.svg" width="20" height="20" alt=""></span>
+            <input class="text-input __size-36 ds-body-m" type="search" placeholder="Поиск по публикациям">
+          </div>
+          <div class="nav-bar__trailing">
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Фильтры"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/settings.svg" width="24" height="24" alt=""></span></button></span>
+          </div>
+        </div>
+
+        <!-- CHIPS — категории Трибуны -->
+        <div class="ll-chips">
+          <div class="chips-view">
+            <div class="chips-view__row __nowrap">
+              <button class="chip-container __size-default __view-primary ds-title-s">Все</button>
+              <button class="chip-container __size-default __view-primary __selected-primary ds-title-s">
+                <span class="left-icon"><span class="icon __size-20 __slot-klass-filled"></span></span>
+                Люди
+              </button>
+              <button class="chip-container __size-default __view-primary ds-title-s">
+                <span class="left-icon"><span class="icon __size-20 __slot-plus"></span></span>
+                Еда
+              </button>
+              <button class="chip-container __size-default __view-primary ds-title-s">
+                <span class="left-icon"><span class="icon __size-20 __slot-plus"></span></span>
+                Здоровье
+              </button>
+              <button class="chip-container __size-default __view-primary ds-title-s">
+                <span class="left-icon"><span class="icon __size-20 __slot-book"></span></span>
+                Истории
+              </button>
+              <button class="chip-container __size-default __view-primary ds-title-s">Дети</button>
+              <button class="chip-container __size-default __view-primary ds-title-s">Сад и огород</button>
+              <button class="chip-container __size-default __view-primary ds-title-s">Юмор</button>
+              <button class="chip-container __size-default __view-primary ds-title-s">Путешествия</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIBE — empty-state карточка «Здесь публикации пользователей ОК» -->
+      <section class="ll-vibe-island island">
+        <div class="vibe-wrapper">
+          <div class="vibe __context-island">
+            <div class="vibe__illustration">
+              <img class="ll-vibe-illu"
+                   src="assets/resourses.png"
+                   alt="Иллюстрация: стопка карточек с людьми"
+                   onerror="this.outerHTML='&lt;div class=&quot;ll-vibe-illu __fallback&quot; role=&quot;img&quot; aria-label=&quot;Иллюстрация: стопка карточек с людьми&quot;&gt;&lt;/div&gt;'">
+            </div>
+            <div class="vibe__title ds-title-xl">Здесь публикации пользователей ОК</div>
+            <div class="vibe__subtitle ds-body-l">Читайте, смотрите, находите близкие темы и общайтесь</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Лента постов -->
+      <div class="feed-container">
+
+        <!-- Авторский пост с фото (как на скрине Figma — бишбармак) -->
+        <article class="feed-base island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=12" alt=""></div>
+            <div class="contents-view-container uni-cell-additional-content">
+              <div class="ds-title-s">КАРИМ БИМЕНОВ</div>
+              <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">2 ч</div>
+            </div>
+            <label class="button-wrapper __size-28 button-subscribe"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-subscribe__label-default">Подписаться</span><span class="button-subscribe__label-subscribed">Подписан</span></span></span></label>
+          </div></div></div>
+          <div class="feed-text" style="--feed-text-clamp: 3;">
+            <p class="feed-text__body ds-body-m">Праздничный бишбармак, по казахски бесбармак. Астраханский вариант с картошкой.</p>
+          </div>
+          <div class="media">
+            <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=720&q=80" alt="" style="width:100%;display:block;">
+          </div>
+          <div class="actions-bar">
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 124;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-klass__icon-outline icon __size-20 __slot-klass-outline"></span><span class="button-klass__icon-filled icon __size-20 __slot-klass-filled"></span>&nbsp;<span class="button-klass__count"></span></span></span></label>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-comment"></span>&nbsp;28</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-reshare"></span>&nbsp;7</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __slot-dots"></span></span></button></div>
+          </div>
+        </article>
+
+        <!-- Текстовый пост без медиа -->
+        <article class="feed-base island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=49" alt=""></div>
+            <div class="contents-view-container uni-cell-additional-content">
+              <div class="ds-title-s">Елена Фёдорова</div>
+              <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">5 ч</div>
+            </div>
+            <label class="button-wrapper __size-28 button-subscribe"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-subscribe__label-default">Подписаться</span><span class="button-subscribe__label-subscribed">Подписан</span></span></span></label>
+          </div></div></div>
+          <div class="feed-text" style="--feed-text-clamp: 4;">
+            <p class="feed-text__body ds-body-m">Сегодня сыну исполнилось 18. Помню, как привозила его из роддома — кажется, было вчера. А он уже выше меня на голову и собирается в институт. Время летит так быстро, что не успеваешь оглянуться. Жизнь — это удивительное путешествие.</p>
+            <label class="feed-text__expand button-inline-wrapper __size-20 __view-primary"><input type="checkbox" hidden><span class="button-inline __size-20"><span class="button-inline__content"><span class="feed-text__label-collapsed">Раскрыть текст</span><span class="feed-text__label-expanded">Свернуть</span></span></span></label>
+          </div>
+          <div class="actions-bar">
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 56;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-klass__icon-outline icon __size-20 __slot-klass-outline"></span><span class="button-klass__icon-filled icon __size-20 __slot-klass-filled"></span>&nbsp;<span class="button-klass__count"></span></span></span></label>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-comment"></span>&nbsp;12</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-reshare"></span>&nbsp;3</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __slot-dots"></span></span></button></div>
+          </div>
+        </article>
+
+        <!-- Пост с большим заголовком (журнальный формат) -->
+        <article class="feed-base island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=23" alt=""></div>
+            <div class="contents-view-container uni-cell-additional-content">
+              <div class="ds-title-s">Истории о личном</div>
+              <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">Вчера</div>
+            </div>
+            <label class="button-wrapper __size-28 button-subscribe"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-subscribe__label-default">Подписаться</span><span class="button-subscribe__label-subscribed">Подписан</span></span></span></label>
+          </div></div></div>
+          <div class="ds-title-l">Как я научилась говорить «нет» — и стала счастливее</div>
+          <div class="feed-text" style="--feed-text-clamp: 3;">
+            <p class="feed-text__body ds-body-m">Долгие годы я соглашалась на всё, что меня просили. Помогала, выручала, отменяла свои планы. А потом поняла: чем больше я говорю «да» другим, тем чаще говорю «нет» себе.</p>
+            <label class="feed-text__expand button-inline-wrapper __size-20 __view-primary"><input type="checkbox" hidden><span class="button-inline __size-20"><span class="button-inline__content"><span class="feed-text__label-collapsed">Раскрыть текст</span><span class="feed-text__label-expanded">Свернуть</span></span></span></label>
+          </div>
+          <div class="media">
+            <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=720&q=80" alt="" style="width:100%;display:block;">
+          </div>
+          <div class="actions-bar">
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 240;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-klass__icon-outline icon __size-20 __slot-klass-outline"></span><span class="button-klass__icon-filled icon __size-20 __slot-klass-filled"></span>&nbsp;<span class="button-klass__count"></span></span></span></label>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-comment"></span>&nbsp;48</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-reshare"></span>&nbsp;19</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __slot-dots"></span></span></button></div>
+          </div>
+        </article>
+
+        <!-- Ещё один пост с фото -->
+        <article class="feed-base island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/128?img=33" alt=""></div>
+            <div class="contents-view-container uni-cell-additional-content">
+              <div class="ds-title-s">Альбина Чика</div>
+              <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">Вчера</div>
+            </div>
+            <label class="button-wrapper __size-28 button-subscribe"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-subscribe__label-default">Подписаться</span><span class="button-subscribe__label-subscribed">Подписан</span></span></span></label>
+          </div></div></div>
+          <div class="feed-text" style="--feed-text-clamp: 3;">
+            <p class="feed-text__body ds-body-m">Запеканка из тыквы с творогом — нашла наконец-то идеальный рецепт. Без манки, нежная и держит форму. Делюсь.</p>
+          </div>
+          <div class="media">
+            <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=720&q=80" alt="" style="width:100%;display:block;">
+          </div>
+          <div class="actions-bar">
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 89;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-klass__icon-outline icon __size-20 __slot-klass-outline"></span><span class="button-klass__icon-filled icon __size-20 __slot-klass-filled"></span>&nbsp;<span class="button-klass__count"></span></span></span></label>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-comment"></span>&nbsp;15</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><span class="icon __size-20 __slot-reshare"></span>&nbsp;4</span></button></div>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" style="width: 36px;"><span class="button-content"><span class="icon __size-20 __slot-dots"></span></span></button></div>
+          </div>
+        </article>
+
+        <div style="height: 96px"></div>
+      </div>
+
+    </div>
+
+    <!-- TABBAR — активна «Трибуна» (книга) -->
+    <div class="ll-tabbar">
+      <div class="tabbar __platform-ios">
+        <div class="tabbar__row">
+          <button class="tabbar-icon __slot-feed" aria-label="Лента"></button>
+          <button class="tabbar-icon __slot-book __state-on" aria-label="Трибуна"></button>
+          <button class="tabbar-icon __slot-message" aria-label="Сообщения"></button>
+          <button class="tabbar-icon __slot-discussion" aria-label="Обсуждения"></button>
+          <button class="tabbar-icon __slot-menu" aria-label="Меню"></button>
+        </div>
+        <div class="tabbar__handle"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="components/tab-bar.js"></script>
+</body>
+</html>
