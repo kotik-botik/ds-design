@@ -96,18 +96,18 @@
         </div>
       </div>
 
-      <!-- Возможно, вы знакомы — ряд DS uni-card -->
-      <section class="ll-pymk" aria-label="Возможно, вы знакомы">
+      <!-- Возможно, вы знакомы — стек vvz-card -->
+      <section class="ll-pymk" data-vvz aria-label="Возможно, вы знакомы">
         <div class="ll-pymk__head">
           <header class="header __size-m"><div class="header__title">Возможно, вы знакомы</div></header>
-          <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24"><span class="button-inline__content">Скрыть</span></button></span>
+          <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" data-vvz-hide-all><span class="button-inline__content">Скрыть</span></button></span>
         </div>
         <div class="ll-pymk__row">
 
           <div class="vvz-card">
             <div class="vvz-card__media">
               <img src="https://i.pravatar.cc/240?img=47" alt="">
-              <button class="vvz-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+              <span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary"><button class="button-inline __size-16" aria-label="Скрыть" data-vvz-hide><span class="button-inline__content"><svg class="button-inline__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button></span>
             </div>
             <div class="vvz-card__content">
               <div class="vvz-card__title ds-title-s">Алёна Ящук</div>
@@ -121,7 +121,7 @@
           <div class="vvz-card">
             <div class="vvz-card__media">
               <img src="https://i.pravatar.cc/240?img=44" alt="">
-              <button class="vvz-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+              <span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary"><button class="button-inline __size-16" aria-label="Скрыть" data-vvz-hide><span class="button-inline__content"><svg class="button-inline__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button></span>
             </div>
             <div class="vvz-card__content">
               <div class="vvz-card__title ds-title-s">Анна Смирнова</div>
@@ -135,11 +135,53 @@
           <div class="vvz-card">
             <div class="vvz-card__media">
               <img src="https://i.pravatar.cc/240?img=45" alt="">
-              <button class="vvz-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+              <span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary"><button class="button-inline __size-16" aria-label="Скрыть" data-vvz-hide><span class="button-inline__content"><svg class="button-inline__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button></span>
             </div>
             <div class="vvz-card__content">
               <div class="vvz-card__title ds-title-s">Мария Иванова</div>
               <div class="vvz-card__subtitle ds-caption-m">10 общих друзей</div>
+              <div class="vvz-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="vvz-card">
+            <div class="vvz-card__media">
+              <img src="https://i.pravatar.cc/240?img=52" alt="">
+              <span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary"><button class="button-inline __size-16" aria-label="Скрыть" data-vvz-hide><span class="button-inline__content"><svg class="button-inline__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button></span>
+            </div>
+            <div class="vvz-card__content">
+              <div class="vvz-card__title ds-title-s">Александр Фёдоров</div>
+              <div class="vvz-card__subtitle ds-caption-m">12 общих друзей</div>
+              <div class="vvz-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="vvz-card">
+            <div class="vvz-card__media">
+              <img src="https://i.pravatar.cc/240?img=33" alt="">
+              <span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary"><button class="button-inline __size-16" aria-label="Скрыть" data-vvz-hide><span class="button-inline__content"><svg class="button-inline__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button></span>
+            </div>
+            <div class="vvz-card__content">
+              <div class="vvz-card__title ds-title-s">Олег Зайцев</div>
+              <div class="vvz-card__subtitle ds-caption-m">8 общих друзей</div>
+              <div class="vvz-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="vvz-card">
+            <div class="vvz-card__media">
+              <img src="https://i.pravatar.cc/240?img=31" alt="">
+              <span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary"><button class="button-inline __size-16" aria-label="Скрыть" data-vvz-hide><span class="button-inline__content"><svg class="button-inline__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button></span>
+            </div>
+            <div class="vvz-card__content">
+              <div class="vvz-card__title ds-title-s">Светлана Орлова</div>
+              <div class="vvz-card__subtitle ds-caption-m">6 общих друзей</div>
               <div class="vvz-card__btn button-wrapper __size-36 __full-width">
                 <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
               </div>
@@ -261,6 +303,7 @@
     </div>
   </div>
 
+  <script src="components/vvz-card.js"></script>
   <script src="components/tab-bar.js"></script>
 </body>
 </html>
