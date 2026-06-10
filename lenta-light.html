@@ -251,25 +251,10 @@
   }
   .ll-promo__text p { margin: 0; }
 
-  /* Иллюстрация справа. Пока CSS-заглушка (монета + оранжевое кольцо) —
-     замени на <img src="…"> с реальным PNG, разметка это поддерживает. */
+  /* Слот под иллюстрацию справа (когда будет реальный PNG):
+     <div class="ll-promo__art"><img src="…"></div> */
   .ll-promo__art { position: relative; flex: 0 0 auto; width: 100px; height: 72px; }
   .ll-promo__art img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .ll-promo__ring,
-  .ll-promo__coin { position: absolute; left: 50%; top: 50%; }
-  .ll-promo__ring {
-    width: 88px; height: 40px;
-    transform: translate(-50%, -50%) rotate(-22deg);
-    border: 7px solid #ff7a2f;
-    border-radius: 50%;
-  }
-  .ll-promo__coin {
-    width: 50px; height: 50px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: radial-gradient(circle at 36% 30%, #ffe79b 0%, #f7c64e 52%, #e2a531 100%);
-    box-shadow: 0 4px 10px rgba(226,165,49,0.45), inset 0 -3px 6px rgba(180,120,20,0.35);
-  }
 
   /* Позиция бейджа — относительно кольцевой «коробки» (ава + орбита 3 + штрих 3 = 6px):
      торчит на 3px за правую границу кольца, снизу — заподлицо с кольцом. */
@@ -342,10 +327,6 @@
           <div class="ll-promo__text">
             <p>Добрый дружеский привет!</p>
             <p>С пожеланием добра!</p>
-          </div>
-          <div class="ll-promo__art" aria-hidden="true">
-            <span class="ll-promo__ring"></span>
-            <span class="ll-promo__coin"></span>
           </div>
         </div>
 
