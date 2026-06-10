@@ -19,6 +19,14 @@
   pointer-events: none;
 }
 
+/* ── Heads-up в приложении: ниже DS-статус-бара (44px) + 4 воздуха.
+   На lock-screen (start.html) сидим на собственных оверрайдах
+   .device .notifs / .device.headsup-notifs .notifs, поэтому это
+   правило туда не достаёт. */
+.notifs.__mode-heads-up {
+  top: 48px;
+}
+
 /* ── Режим «список» (lock-screen) ───────────────────────────── */
 .notifs.__mode-lock {
   display: flex;
