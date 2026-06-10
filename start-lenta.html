@@ -672,8 +672,8 @@
   // Slide back down to the lock screen (Back pressed from the menu).
   function lockDevice() {
     device.classList.remove('unlocked');
+    if (window.OkNotifs) window.OkNotifs.clearShown();   // только видимые — стрим продолжаем
     resetLaunch();
-    stopNotifications(true);          // clear & reset — replay on next unlock
     try { sessionStorage.removeItem(HOME_KEY); } catch (e) {}
   }
 
