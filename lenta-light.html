@@ -152,6 +152,12 @@
   .button-container.__style-on-image .ll-icon {
     filter: brightness(0) invert(1);
   }
+
+  /* Несколько фото в ряду — растягиваем галерею на всю ширину карточки:
+     ячейки делят 100% поровну (flex:1) вместо натуральной ширины по
+     aspect-ratio, поэтому ряд всегда заполняет ширину без пустот/скролла. */
+  .text-feed__media.__row { overflow-x: hidden; }
+  .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
 </style>
 </head>
 <body>
