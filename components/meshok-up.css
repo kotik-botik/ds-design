@@ -39,7 +39,8 @@
   justify-content: space-between;
   height: var(--status-bar-height);
   padding: var(--space-2) var(--space-5) var(--space-2);
-  background-color: transparent;
+  /* Цвет фона зафиксирован — переопределять на странице нельзя */
+  background-color: var(--dynamic-surface-base-secondary) !important;
   color: var(--dynamic-text-and-icons-base-primary);
   font-family: var(--font-family);
 }
@@ -67,7 +68,8 @@
   justify-content: space-between;
   height: 56px;
   padding: 0 var(--space-4);
-  background-color: transparent;
+  /* Цвет фона зафиксирован — переопределять на странице нельзя */
+  background-color: var(--dynamic-surface-base-secondary) !important;
 }
 
 .nav-bar__leading,
@@ -104,10 +106,40 @@
 .nav-bar.__type-publish {
   height: auto;
   padding: var(--space-2) var(--space-4);
-  background-color: transparent;
+  background-color: transparent !important;
 }
 .nav-bar.__type-publish .nav-bar__trailing {
   gap: var(--space-4);
+}
+
+/* ============================================================
+   TYPE: SEARCH — back + растянутый поисковый input + button-circle.
+   Используется в Трибуне и других экранах со встроенным поиском.
+   ============================================================ */
+.nav-bar.__type-search {
+  gap: var(--space-2);
+}
+.nav-bar.__type-search .nav-bar__leading,
+.nav-bar.__type-search .nav-bar__trailing {
+  flex-shrink: 0;
+}
+.nav-bar.__type-search .nav-bar__search {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.nav-bar.__type-search .nav-bar__search .text-input {
+  padding-left: 40px;
+}
+.nav-bar.__type-search .nav-bar__search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--dynamic-text-and-icons-base-secondary);
 }
 
 /* ============================================================

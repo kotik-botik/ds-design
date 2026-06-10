@@ -44,21 +44,29 @@
   color: var(--dynamic-text-and-icons-base-secondary);
 }
 .message-cell__preview {
-  flex: 1 1 auto;
+  flex: 0 1 auto;          /* не растягивается → время липнет к тексту */
   min-width: 0;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 4px;
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 .message-cell__preview img {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
 }
-.message-cell__time { flex-shrink: 0; }
+/* Текст усекается многоточием только при достижении края контейнера */
+.message-cell__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.message-cell__time {
+  flex-shrink: 0;
+  color: var(--dynamic-text-and-icons-base-tertiary);
+}
 
 /* Слот «прочитано» — всегда резервирует место (16px), галочки по модификатору */
 .message-cell__read {
