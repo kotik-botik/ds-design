@@ -27,7 +27,9 @@
 @import url('./components/button-inline.css');
 @import url('./components/button-circle.css');
 @import url('./components/uni-cell.css');
+@import url('./components/message-cell.css');
 @import url('./components/uni-card.css');
+@import url('./components/friend-card.css');
 @import url('./components/content.css');
 @import url('./components/contents-view.css');
 

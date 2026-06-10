@@ -638,6 +638,8 @@
   // sitting on the home screen — so coming Back from a feed lands on the
   // menu instead of the lock screen.
   var HOME_KEY = 'okstart_at_home';
+  // Базовая запись истории = локскрин, чтобы Back с меню всегда вёл сюда.
+  try { if (!history.state || history.state.scr !== 'menu') history.replaceState({ scr: 'lock' }, ''); } catch (e) {}
 
   /* ---- Unlock: tap or swipe-up anywhere on the lock screen ----
      Pushes a history entry for the menu, so pressing Back from the
@@ -666,6 +668,11 @@
     device.classList.remove('no-anim');
     stopNotifications(false);         // cancel any stale timer, keep delivered
     startNotifications();             // resume any remaining notifications
+    // Гарантируем запись истории «меню» (если в меню попали не через unlock),
+    // чтобы Back с меню опускал локскрин, а не уводил со страницы.
+    if (!history.state || history.state.scr !== 'menu') {
+      try { history.pushState({ scr: 'menu' }, ''); } catch (e) {}
+    }
   }
 
   // Clear the launch-zoom overlay (it may be left fullscreen after a
