@@ -194,6 +194,15 @@
   margin-right: 6px;
 }
 
+/* Иконки внутри чипса наследуют цвет текста чипса.
+   Используется DS-примитив <span class="icon __size-20 __src" style="--icon-src:url(...)">
+   — он рендерит SVG как mask поверх currentColor, поэтому в __selected-* иконка
+   автоматически перекрашивается вместе с .chip-color. */
+.chip-container .left-icon .icon,
+.chip-container .right-icon .icon {
+  color: inherit;
+}
+
 /* right-icon появляется при selected default/dropdown — с плавным fade-in */
 .chip-container .right-icon {
   margin-left: 6px;
