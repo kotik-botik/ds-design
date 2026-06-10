@@ -1,40 +1,49 @@
-/* System notifications — компонент для пушей «ОК». Подключается на
-   всех экранах прототипа (start.html и lenta-light.html), стрим
-   хранится в sessionStorage и продолжается между страницами.
+/* System notifications — компонент для пушей. Стрим сохраняется в
+   sessionStorage и продолжается между страницами.
 
    Раскладка стэка зависит от режима контейнера .notifs:
-
      .notifs.__mode-lock      — плоский список (gap 8) для лок-скрина.
-                                 Каждая карточка — отдельный блок,
-                                 entry: лёгкий slide-in сверху.
-     .notifs.__mode-heads-up  — iOS-style «колода»: карточки лежат в
-                                 одной точке, новая поверх, прошлые
-                                 уезжают вглубь (translateY + scale +
-                                 уменьшение opacity).
+     .notifs.__mode-heads-up  — iOS-style «колода»: новая поверх,
+                                 прошлые уезжают вглубь.
+
+   Схема одного пуша (передаётся в setItems / fire):
+     {
+       sender:   'Сергей Федоров',     // bold имя в шапке
+       time:     '15 мин назад',       // правая часть шапки
+       body:     'Добавил...',         // основной текст
+       delay:    2000,                 // optional — через сколько ms
+                                       //   появиться (от start() или
+                                       //   от прошлого пуша). Если
+                                       //   не задан — NOTIF_GAP.
+       lifetime: 30000,                // optional — override времени
+                                       //   жизни карточки
+       image:    'url',                // optional — превью справа 36×36
+       appIcon:  '<svg>...</svg>'      // optional — лого приложения-
+                                       //   отправителя в шапке (по
+                                       //   умолчанию — белый «ОК»)
+     }
 
    API:
-     OkNotifs.start()                 — запустить стрим
-     OkNotifs.stop(clear?)            — пауза или полный сброс (clear=true
-                                         чистит DOM и индекс)
-     OkNotifs.reset()                 — сбросить индекс (стрим начнётся
-                                         с первого пуша)
-     OkNotifs.setMode('lock'|'heads-up') — переключить режим контейнера
-                                            (модификатор класса __mode-)
-     OkNotifs.setItems(array)         — подменить список пушей
-                                         (для других прототипов с другой
-                                         подборкой контента)
-     OkNotifs.clearShown()            — удалить видимые карточки, не
-                                         трогая индекс/таймер */
+     OkNotifs.start()                  — запустить стрим из расписания
+     OkNotifs.stop(clear?)             — пауза или полный сброс
+     OkNotifs.reset()                  — сбросить индекс
+     OkNotifs.setMode('lock'|'heads-up') — переключить раскладку
+     OkNotifs.setItems(array)          — подменить список пушей
+     OkNotifs.fire(itemOrIndex)        — показать пуш СЕЙЧАС (не двигая
+                                          расписание). Можно передать
+                                          объект или индекс из NOTIFS.
+     OkNotifs.fireNext()               — продвинуть стрим на следующий
+                                          элемент немедленно
+     OkNotifs.clearShown()             — снять видимые карточки */
 (function (global) {
   var NOTIFS = [
-    { sender: 'Сергей Федоров', time: '15 мин назад', body: 'Добавил новую заметку «Ездил недавно в отпуск на Алтай, посмотрите»' },
-    { sender: 'Алена Смирнова', time: '2 ч назад',   body: 'Сменила главное фото' },
-    { sender: 'Максим Ясный',   time: '3 ч назад',   body: 'Добавил новое видео' }
+    { sender: 'Сергей Федоров', time: '15 мин назад', body: 'Добавил новую заметку «Ездил недавно в отпуск на Алтай, посмотрите»', delay: 2000 },
+    { sender: 'Алена Смирнова', time: '2 ч назад',   body: 'Сменила главное фото',                                                  delay: 6000 },
+    { sender: 'Максим Ясный',   time: '3 ч назад',   body: 'Добавил новое видео',                                                   delay: 6000 }
   ];
-  var NOTIF_GAP      = 6000;
-  var NOTIF_FIRST    = 2000;
-  var NOTIF_LIFETIME = 30000;
-  var MAX_STACK      = 3;
+  var NOTIF_GAP      = 6000;   // дефолт между пушами, если у элемента не задан delay
+  var NOTIF_LIFETIME = 30000;  // дефолт времени жизни карточки
+  var MAX_STACK      = 3;      // сколько карточек одновременно в стэке
 
   var IDX_KEY  = 'ok_notif_idx';
   var NEXT_KEY = 'ok_notif_next_at';
@@ -174,19 +183,22 @@
   }
 
   /* ── Рендер карточки ──────────────────────────────────────── */
-  function renderCardHTML() {
+  // Дефолтный лого приложения в шапке пуша — PNG бренда ОК.
+  var DEFAULT_APP_ICON = '<img src="assets/icons/appLogoDefault.png" alt="" width="18" height="18">';
+
+  function renderCardHTML(data) {
+    var appIcon = data.appIcon || DEFAULT_APP_ICON;
     return (
-      '<div class="notif__head">' +
-        '<span class="notif__appicon"><svg width="12" height="12" viewBox="0 0 100 100" fill="none">' +
-          '<circle cx="50" cy="34" r="13" fill="#fff"/>' +
-          '<path d="M38 44 L50 64 L38 84" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>' +
-          '<path d="M62 44 L50 64 L62 84" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '</svg></span>' +
-        '<span class="notif__app"></span>' +
-        '<span class="notif__sep">·</span>' +
-        '<span class="notif__time"></span>' +
+      '<div class="notif__main">' +
+        '<div class="notif__head">' +
+          '<span class="notif__appicon">' + appIcon + '</span>' +
+          '<span class="notif__app"></span>' +
+          '<span class="notif__sep">·</span>' +
+          '<span class="notif__time"></span>' +
+        '</div>' +
+        '<div class="notif__body"></div>' +
       '</div>' +
-      '<div class="notif__body"></div>'
+      (data.image ? '<div class="notif__thumb"><img alt=""></div>' : '')
     );
   }
 
@@ -194,10 +206,11 @@
     var b = box(); if (!b) return;
     var el = document.createElement('div');
     el.className = 'notif';
-    el.innerHTML = renderCardHTML();
+    el.innerHTML = renderCardHTML(data);
     el.querySelector('.notif__app').textContent  = data.sender;
     el.querySelector('.notif__time').textContent = data.time;
     el.querySelector('.notif__body').textContent = data.body;
+    if (data.image) el.querySelector('.notif__thumb img').src = data.image;
     b.appendChild(el);
     attachSwipe(el);
 
@@ -227,10 +240,14 @@
       while (alive.length > MAX_STACK) dismiss(alive.shift());
     }
 
-    el.__hideTimer = setTimeout(function () { dismiss(el); }, NOTIF_LIFETIME);
+    el.__hideTimer = setTimeout(function () { dismiss(el); }, data.lifetime || NOTIF_LIFETIME);
   }
 
   /* ── Планирование стрима ─────────────────────────────────── */
+  function itemDelay(item) {
+    return (item && typeof item.delay === 'number') ? item.delay : NOTIF_GAP;
+  }
+
   function scheduleAt(when) {
     if (timer) { clearTimeout(timer); timer = null; }
     var delay = Math.max(0, when - now());
@@ -245,7 +262,7 @@
     idx++;
     setIdx(idx);
     if (idx >= NOTIFS.length) { setNextAt(0); return; }
-    var nextAt = now() + NOTIF_GAP;
+    var nextAt = now() + itemDelay(NOTIFS[idx]);
     setNextAt(nextAt);
     scheduleAt(nextAt);
   }
@@ -257,10 +274,26 @@
     if (idx >= NOTIFS.length) return;
     var nextAt = getNextAt();
     if (!nextAt) {
-      nextAt = now() + NOTIF_FIRST;
+      nextAt = now() + itemDelay(NOTIFS[idx]);
       setNextAt(nextAt);
     }
     scheduleAt(nextAt);
+  }
+
+  /* ── Программные триггеры (вне расписания) ────────────────── */
+  function fire(itemOrIndex) {
+    if (typeof itemOrIndex === 'number') {
+      var item = NOTIFS[itemOrIndex];
+      if (item) addNotif(item);
+    } else if (itemOrIndex && typeof itemOrIndex === 'object') {
+      addNotif(itemOrIndex);
+    }
+  }
+
+  function fireNext() {
+    // Мгновенно показать следующий из расписания (без ожидания delay).
+    if (timer) { clearTimeout(timer); timer = null; }
+    tick();
   }
 
   function clearShown() {
@@ -295,6 +328,8 @@
     reset: reset,
     setMode: setMode,
     setItems: setItems,
+    fire: fire,
+    fireNext: fireNext,
     clearShown: clearShown
   };
 
