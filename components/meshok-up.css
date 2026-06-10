@@ -1,14 +1,18 @@
 /**
  * OK Design System — MeshokUp
  *
- * Sticky top chrome: status-bar + nav-bar + tabs.
+ * Top chrome: status-bar + nav-bar + tabs.
  * border-radius: 0 — не менять.
  *
  *   <div class="meshok-up">
- *     <div class="status-bar">…</div>
- *     <div class="nav-bar">…</div>
- *     <div class="tabs">…</div>
+ *     <div class="status-bar">…</div>            ← sticky (всегда виден)
+ *     <div class="nav-bar">…</div>               ← скроллится с лентой
+ *     <div class="tabs">…</div>                  ← скроллится с лентой
  *   </div>
+ *
+ *   При скролле прилеплен ТОЛЬКО status-bar; nav-bar и tabs уезжают
+ *   вверх вместе с контентом. Sticky висит на .status-bar напрямую,
+ *   чтобы overflow/clipping на .meshok-up не мешал.
  *
  * --status-bar-height — высота status-bar (44px). Опубликована на :root,
  *   чтобы оверлеи (system-notifications heads-up и пр.) отстраивались
@@ -18,22 +22,23 @@
   --status-bar-height: 44px;
 }
 
+/* meshok-up — «прозрачная» обёртка: display:contents убирает её собственный
+   box, но сохраняет дочерние status-bar/nav-bar/tabs в потоке родителя.
+   Так status-bar получает в качестве containing block scroll-контейнер
+   страницы (а не короткий meshok-up), и sticky-top остаётся пинов на
+   весь скролл — nav-bar/tabs уезжают мимо него. */
 .meshok-up {
-  display: flex;
-  flex-direction: column;
+  display: contents;
+}
+
+/* ============================================================
+   STATUS BAR — единственный sticky-элемент в meshok-up
+   ============================================================ */
+.status-bar {
   position: sticky;
   top: 0;
   z-index: 50;
   flex-shrink: 0;
-  background-color: transparent;
-  border-radius: 0; /* не менять */
-  overflow: hidden;
-}
-
-/* ============================================================
-   STATUS BAR
-   ============================================================ */
-.status-bar {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -63,6 +68,7 @@
    NAV BAR
    ============================================================ */
 .nav-bar {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
