@@ -30,12 +30,7 @@
 
   .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
 
-  /* Шапка: статус-бар (стики) + навбар (назад + «Оповещения» + настройки) */
-  .ll-top { flex-shrink: 0; background: var(--dynamic-surface-base-primary); }
-  .status-bar {
-    position: sticky; top: 0; z-index: 60;
-    background: var(--dynamic-surface-base-primary);
-  }
+  /* Шапка — DS-компонент meshok-up (sticky + белый фон + скругление снизу) */
 
   /* Вкладки-фильтр (DS TabsView base) */
   .ll-notifs-tabs {
@@ -70,8 +65,8 @@
   <div class="phone-frame">
     <div class="phone-frame__feed">
 
-      <!-- STATUS + NAVBAR -->
-      <div class="ll-top">
+      <!-- STATUS + NAVBAR — DS meshok-up -->
+      <div class="meshok-up">
         <div class="status-bar">
           <span class="status-bar__time">9:41</span>
           <span class="status-bar__indicators">
