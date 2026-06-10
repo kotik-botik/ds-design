@@ -14,6 +14,15 @@
     --roboto: "Roboto", "Google Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
 
+  /* Брендовый шрифт ОК для подписи на сплеше */
+  @font-face {
+    font-family: "OK Sans Display";
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url("fonts/OK-Sans-Display-Medium.otf") format("opentype");
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html, body {
@@ -139,6 +148,20 @@
   .splash__logo img { display: block; width: 100%; height: 100%; }
   /* оранжевый логотип → белый для контраста на оранжевом фоне */
   .splash__logo-img { filter: brightness(0) invert(1); }
+
+  /* Подпись «народная соцсеть» — 50px от низа (параметры из Figma) */
+  .splash__subtitle {
+    position: absolute;
+    left: 0; right: 0; bottom: 50px;
+    text-align: center;
+    font-family: "OK Sans Display", var(--roboto);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.18;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+  }
   @keyframes splashLogoIn {
     from { transform: scale(0.86); opacity: 0; }
     to   { transform: none; opacity: 1; }
@@ -478,6 +501,7 @@
            CSS-фильтром для контраста. -->
       <img src="assets/icons/splashLogo.png" alt="ОК" class="splash__logo-img">
     </div>
+    <div class="splash__subtitle">народная соцсеть</div>
   </div>
 
   <!-- Punch-hole camera -->
@@ -766,16 +790,39 @@
     }
   }
 
-  lock.addEventListener('click', unlock);
+  /* ---- Lock screen: interactive swipe-up (follows the finger), release past
+     the threshold to unlock, otherwise spring back. A plain tap also unlocks. ---- */
+  (function () {
+    var sy = 0, dy = 0, dragging = false;
 
-  var startY = null;
-  lock.addEventListener('touchstart', function (e) { startY = e.touches[0].clientY; }, { passive: true });
-  lock.addEventListener('touchend', function (e) {
-    if (startY === null) return;
-    var dy = startY - e.changedTouches[0].clientY;
-    if (dy > 40) unlock();
-    startY = null;
-  }, { passive: true });
+    lock.addEventListener('pointerdown', function (e) {
+      if (device.classList.contains('unlocked')) return;
+      dragging = true; sy = e.clientY; dy = 0;
+      lock.style.transition = 'none';
+      try { lock.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    lock.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      dy = Math.min(0, e.clientY - sy);                 // только вверх
+      lock.style.transform = 'translateY(' + dy + 'px)';
+      lock.style.opacity = String(Math.max(0, 1 + dy / 420));
+    });
+
+    function end() {
+      if (!dragging) return;
+      dragging = false;
+      lock.style.transition = '';                       // вернуть CSS-переход
+      lock.style.transform = '';
+      lock.style.opacity = '';
+      if (dy < -70 || Math.abs(dy) < 8) {
+        unlock();                                        // свайп за порог или тап
+      }
+      // иначе — пружинит обратно (transform/opacity сброшены → анимация)
+    }
+    lock.addEventListener('pointerup', end);
+    lock.addEventListener('pointercancel', end);
+  })();
 
   /* ---- Launch an app: zoom the tapped icon to fullscreen, then navigate ---- */
   document.querySelectorAll('.app[data-href]').forEach(function (app) {
