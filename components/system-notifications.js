@@ -12,11 +12,9 @@
    API: window.OkNotifs.start() / .stop(clear) / .reset() */
 (function (global) {
   var NOTIFS = [
-    { title: 'Тамара Белова опубликовала фото', body: 'Поставьте «Класс!» одними из первых' },
-    { title: '3 новых уведомления',             body: 'Алёна Курская и ещё двое отметили вас' },
-    { title: 'Миша Колесников ответил вам',      body: '«Спасибо за совет по кофеварке!»' },
-    { title: 'Прямой эфир скоро начнётся',       body: 'Концерт «Летняя сцена» — через 5 минут' },
-    { title: 'Сегодня день рождения у Ирины 🎂', body: 'Не забудьте поздравить' }
+    { sender: 'Сергей Федоров', time: '15 мин назад', body: 'Добавил новую заметку «Ездил недавно в отпуск на Алтай, посмотрите»' },
+    { sender: 'Алена Смирнова', time: '2 ч назад',   body: 'Сменила главное фото' },
+    { sender: 'Максим Ясный',   time: '3 ч назад',   body: 'Добавил новое видео' }
   ];
   var NOTIF_GAP      = 6000;   // 6s между пушами
   var NOTIF_FIRST    = 2000;   // первый — через 2s после старта
@@ -117,13 +115,14 @@
           '<path d="M38 44 L50 64 L38 84" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>' +
           '<path d="M62 44 L50 64 L62 84" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>' +
         '</svg></span>' +
-        '<span class="notif__app">ОК</span>' +
-        '<span class="notif__sep">·</span><span>сейчас</span>' +
+        '<span class="notif__app"></span>' +
+        '<span class="notif__sep">·</span>' +
+        '<span class="notif__time"></span>' +
       '</div>' +
-      '<div class="notif__title"></div>' +
       '<div class="notif__body"></div>';
-    el.querySelector('.notif__title').textContent = data.title;
-    el.querySelector('.notif__body').textContent  = data.body;
+    el.querySelector('.notif__app').textContent  = data.sender;
+    el.querySelector('.notif__time').textContent = data.time;
+    el.querySelector('.notif__body').textContent = data.body;
     b.appendChild(el);
     attachSwipe(el);
     // приходим над стопкой и опускаемся в положение спереди
