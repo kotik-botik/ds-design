@@ -64,6 +64,8 @@
     /* Без боковых паддингов — острова идут в края экрана */
     padding: var(--space-2) 0 calc(72px + var(--space-6));
   }
+  /* Карточки-острова — во всю ширину, без скруглений по краям экрана */
+  .ll-feed > .island { border-radius: 0; }
 
   /* Tabbar прибит к низу экрана (fixed, потому что .phone-frame
      имеет overflow-y: auto — с position:absolute таббар уезжает
@@ -171,9 +173,10 @@
     display: flex;
     gap: var(--space-3);
     align-items: center;
-    /* верт. паддинг — чтобы outline-кольцо и аддон «+» не резались
-       скролл-контейнером (overflow-x:auto делает overflow-y:auto) */
-    padding: var(--space-2) var(--space-4);
+    /* отступы блока: сверху 8, по бокам 16, снизу 16.
+       Верт. паддинг также даёт место outline-кольцу и аддону «+»,
+       чтобы их не резал скролл-контейнер (overflow-x:auto → overflow-y:auto). */
+    padding: var(--space-2) var(--space-4) var(--space-4);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
