@@ -91,7 +91,11 @@
           <div class="chips-view">
             <div class="chips-view__row __nowrap">
               <button class="chip-container __size-default __view-primary">Все</button>
-              <button class="chip-container __size-default __view-primary __selected-primary">
+              <button class="chip-container __size-default __view-custom __selected-custom" style="
+                --chip-background-color: var(--dynamic-surface-contrast-low);
+                --chip-color-custom: var(--dynamic-text-and-icons-base-primary);
+                --chip-background-selected-color: var(--static-surface-status-accent);
+                --chip-selected-color: #fff;">
                 <span class="left-icon"><span class="icon __size-20 __src" style="--icon-src:url('assets/icons/users_16_20.svg')"></span></span>
                 Люди
               </button>
