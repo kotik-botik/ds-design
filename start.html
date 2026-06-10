@@ -363,11 +363,18 @@
   }
 
   /* App icon — «ОК» (squircle, PNG artwork: jam-jar + OK + tag) */
+  /* appLogoDefault.png — squircle с собственным оранжевым фоном; контейнеру
+     заливка не нужна, иначе через прозрачные углы PNG торчит другой оттенок.
+     Тень даём filter:drop-shadow, чтобы она шла по форме PNG (squircle),
+     а не по прямоугольнику контейнера. */
   .icon-ok {
-    background: radial-gradient(130% 120% at 30% 18%, #ef7d33 0%, #d75f23 52%, #b1471a 100%);
-    border-radius: 24%;                 /* squircle tile, like the artwork */
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.30));
   }
-  .icon-ok img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .icon-ok img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
   /* Hotseat dock — transparent row of system apps (Pixel) */
   .dock {
@@ -550,7 +557,7 @@
       <!-- ОК → lenta-light.html -->
       <button class="app" data-href="lenta-light.html">
         <span class="app__icon icon-ok">
-          <img src="assets/icons/appIcon.png" alt="ОК" width="58" height="58">
+          <img src="assets/icons/appLogoDefault.png" alt="ОК" width="58" height="58">
         </span>
         <span class="app__label">ОК</span>
       </button>
