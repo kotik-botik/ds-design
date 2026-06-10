@@ -240,6 +240,16 @@
   color: var(--tab-label-color);
 }
 
+/* инлайн-счётчик в base-табе (рядом с лейблом, приглушённый) */
+.tab-wrapper .counter-inline {
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--dynamic-text-and-icons-base-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
 .tab-wrapper .left-icon-wrapper  { line-height: 0; color: var(--tab-left-icon-color); }
 .tab-wrapper .right-icon-wrapper { line-height: 0; color: var(--tab-right-icon-color); }
 /* <img>-иконки красим фильтром нельзя по currentColor; для inline-svg работает fill:currentColor */
