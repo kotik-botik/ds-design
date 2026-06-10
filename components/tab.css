@@ -90,6 +90,7 @@
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
+  padding: 0;                /* снимаем нативный паддинг кнопки */
   border: 0;
   font: inherit;
   cursor: pointer;
@@ -165,7 +166,7 @@
   --tab-overlay-color: var(--dynamic-surface-base-inverse-primary);
   --tab-clicked-transform: 0.94;
   --tab-clicked-time: 500ms;
-  --tab-horizontal-padding: var(--space-1);
+  --tab-horizontal-padding: 0;            /* base — без гор. паддингов, расстояние задаёт gap ряда */
   --tab-selected-left-icon-color: var(--dynamic-text-and-icons-base-primary);
   --tab-selected-right-icon-color: var(--dynamic-text-and-icons-base-primary);
   --tab-selected-label-color: var(--dynamic-text-and-icons-base-primary);
@@ -231,21 +232,22 @@
   white-space: nowrap;
 }
 
+/* лейбл — стиль ds-title-s (15/20, вес 600) */
 .tab-wrapper .label {
   font-family: var(--font-family);
   font-size: 15px;
   line-height: 20px;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 0;
   color: var(--tab-label-color);
 }
 
-/* инлайн-счётчик в base-табе (рядом с лейблом, приглушённый) */
+/* инлайн-счётчик в base-табе (рядом с лейблом) — стиль title-s, приглушённый */
 .tab-wrapper .counter-inline {
   font-family: var(--font-family);
   font-size: 15px;
   line-height: 20px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--dynamic-text-and-icons-base-secondary);
   font-variant-numeric: tabular-nums;
 }
