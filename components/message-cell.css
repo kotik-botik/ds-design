@@ -63,7 +63,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.message-cell__time { flex-shrink: 0; }
+.message-cell__time {
+  flex-shrink: 0;
+  color: var(--dynamic-text-and-icons-base-tertiary);
+}
 
 /* Слот «прочитано» — всегда резервирует место (16px), галочки по модификатору */
 .message-cell__read {
