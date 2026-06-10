@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="index.css">
 <link rel="stylesheet" href="components/system-notifications.css">
+<!-- В head синхронно: listener pagereveal должен зарегистрироваться до события -->
+<script src="components/screen-transition.js"></script>
 <style>
   /* Убираем системный синий/серый оверлей при тапе по интерактивным
      элементам (кнопки, лейблы, ссылки) на мобильных. */
@@ -51,21 +53,7 @@
     vertical-align: middle;
   }
 
-  /* Top — status-bar + nav-bar лежат на фоне страницы и скроллятся
-     вместе с лентой (не sticky). flex-shrink: 0 чтобы во флекс-колонке
-     родителя блок не усыхал по высоте. */
-  .ll-top {
-    flex-shrink: 0;
-    background: var(--dynamic-surface-base-primary);
-  }
-  /* Статус-бар прибит к верху скролл-контейнера, фон — background/primary,
-     чтобы контент проезжал под ним, не просвечивая. */
-  .status-bar {
-    position: sticky;
-    top: 0;
-    z-index: 60;
-    background: var(--dynamic-surface-base-primary);
-  }
+  /* Шапка — DS-компонент meshok-up (sticky + скругление снизу) */
 
   /* Локальная кастомная кнопка «Опубликовать» — высота 48.
      Не заносим в DS: используется только в этом прототипе. */
@@ -186,7 +174,7 @@
   .text-feed__media.__row { overflow-x: hidden; }
   .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
 
-  /* «Возможные друзья» — секция + горизонтальный ряд friend-card */
+  /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
   .ll-pymk { padding-top: var(--space-3); }
   .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); }
   .ll-pymk__row {
@@ -303,21 +291,19 @@
 </head>
 <body>
 
-  <div class="phone-frame">
+  <div class="phone-frame" data-screen>
     <div class="phone-frame__feed">
 
-      <!-- STATUS BAR — стики, всегда сверху -->
-      <div class="status-bar">
-        <span class="status-bar__time">9:41</span>
-        <span class="status-bar__indicators">
-          <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
-          <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
-          <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
-        </span>
-      </div>
-
-      <!-- NAVBAR — скроллится с лентой -->
-      <div class="ll-top">
+      <!-- Шапка: DS meshok-up = status-bar + nav-bar __type-publish -->
+      <div class="meshok-up">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">
+            <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+          </span>
+        </div>
         <div class="nav-bar __type-publish">
           <div class="nav-bar__leading">
             <div class="button-wrapper ll-publish-btn">
@@ -333,27 +319,31 @@
         </div>
       </div>
 
-      <!-- МОМЕНТЫ (истории) — вне ленты, между навбаром и фидом -->
+      <!-- МОМЕНТЫ (истории) — вне ленты, между навбаром и фидом.
+           data-stories — сколько сториз у автора (= столько палочек прогресса
+           в viewer'е). data-name — заголовок viewer'а. -->
       <div class="ll-stories" aria-label="Моменты">
-        <div class="ll-stories__row">
-          <!-- Ваша история (оранжевое кольцо + «+») -->
-          <div class="avatar __size-56 __type-image __ring-active __has-addon">
+        <div class="ll-stories__row" id="ll-stories-row">
+          <!-- Ваша история (оранжевое кольцо + «+»). Тап по этой аватарке
+               не открывает viewer (data-skip-viewer). -->
+          <div class="avatar __size-56 __type-image __ring-active __has-addon" data-skip-viewer>
             <img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KtrUxASmukStGfhv8gKAdnO8o0XlTdnM6-KfH9cwylJb75wIpMwrl23su2VU84PVRXgYOXqKlOJNEXEFe1u1a0c0jB7m3EkgrolCyD8RoAAAAp&dpr=2" alt="Ваша история">
             <div class="avatar__addon __pos-br ll-story-add">
               <img class="ll-icon" src="assets/icons/add_24.svg" width="20" height="20" alt="">
             </div>
           </div>
           <!-- Не просмотренные (оранжевое кольцо) -->
-          <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-active" data-stories="3" data-name="Лиза"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-active" data-stories="5" data-name="Алексей"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
           <!-- Просмотренные (серое кольцо) -->
-          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=33" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="4" data-name="Сергей"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="3" data-name="Евгения"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="2" data-name="Елена"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
+          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="6" data-name="Кирилл"><img src="https://i.pravatar.cc/112?img=33" alt=""></div>
         </div>
       </div>
+
 
       <!-- FEED ---------------------------------------------------------- -->
       <div class="ll-feed">
@@ -439,9 +429,9 @@
           </div>
         </article>
 
-        <!-- Возможные друзья — горизонтальный ряд DS uni-card -->
-        <section class="ll-pymk island" aria-label="Возможные друзья">
-          <div class="ll-pymk__title ds-title-l">Возможные друзья</div>
+        <!-- Возможно, вы знакомы — горизонтальный ряд DS uni-card -->
+        <section class="ll-pymk island" aria-label="Возможно, вы знакомы">
+          <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
           <div class="ll-pymk__row">
 
             <div class="friend-card">
@@ -866,6 +856,47 @@
       </div>
     </div>
 
+    <!-- Полноэкранный просмотрщик сториз — лежит поверх всей phone-frame
+         и поднимается по тапу на аватарку сториз. Сам контент (аватар, имя,
+         количество палочек, картинки) подставляется JS из data-* выбранной
+         сториз. -->
+    <div class="moment __fullscreen" id="ll-moment" hidden style="--moment-duration: 4s; z-index: 1000;">
+      <img class="moment__media" src="" alt="">
+      <div class="moment__scrim"></div>
+
+      <div class="moment__statusbar">
+        <span class="moment__statusbar-time">9:41</span>
+      </div>
+
+      <div class="moment__topbar">
+        <div class="moment__progress" id="ll-moment-progress"></div>
+        <div class="moment__header">
+          <div class="avatar __size-36 __type-image">
+            <img src="" alt="">
+          </div>
+          <div class="moment__header-text">
+            <div class="moment__header-title"></div>
+            <div class="moment__header-subtitle">только что</div>
+          </div>
+          <div class="moment__header-actions">
+            <span class="button-inline-wrapper __view-primary-on-color __size-24" role="button" aria-label="Ещё">
+              <img class="ll-icon" src="assets/icons/more_24.svg" width="24" height="24" alt="" style="filter: brightness(0) invert(1);">
+            </span>
+            <span class="button-inline-wrapper __view-primary-on-color __size-24" id="ll-moment-close" role="button" aria-label="Закрыть">
+              <img class="ll-icon" src="assets/icons/close_16_20.svg" width="24" height="24" alt="" style="filter: brightness(0) invert(1);">
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="moment__nav">
+        <button class="moment__nav-zone __side-prev" aria-label="Назад"></button>
+        <button class="moment__nav-zone __side-next" aria-label="Дальше"></button>
+      </div>
+
+      <div class="moment__handle"></div>
+    </div>
+
     <!-- TABBAR (DS-компонент, прибит к низу) -------------------------- -->
     <div class="ll-tabbar">
       <div class="tabbar __platform-ios">
@@ -988,6 +1019,82 @@
     })();
   </script>
   <script src="components/tab-bar.js"></script>
+
+  <!-- Просмотрщик сториз ----------------------------------------------- -->
+  <script src="components/moment.js"></script>
+  <script>
+    // Связка карусели сториз и moment-viewer'а.
+    //  - тап по аватарке → открывается viewer
+    //  - сегментов прогресса столько, сколько указано в data-stories
+    //  - после досмотра (или закрытия ✕) кольцо аватарки → __ring-viewed
+    (function () {
+      var STORY_IMAGES = [
+        'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=720&h=1280&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1559548331-f9cb98280344?w=720&h=1280&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=720&h=1280&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=720&h=1280&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1505765050516-f72dcac9c60a?w=720&h=1280&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=720&h=1280&fit=crop&auto=format'
+      ];
+
+      var row    = document.getElementById('ll-stories-row');
+      var viewer = document.getElementById('ll-moment');
+      var progressEl = document.getElementById('ll-moment-progress');
+      var closeBtn   = document.getElementById('ll-moment-close');
+      var currentAvatar = null;
+      var instance = null;
+
+      if (!row || !viewer) return;
+
+      row.addEventListener('click', function (e) {
+        var ava = e.target.closest('.avatar');
+        if (!ava) return;
+        if (ava.hasAttribute('data-skip-viewer')) return; // «Ваша история» — не открывает
+        open(ava);
+      });
+
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (instance) instance._finish();
+      });
+
+      function open(ava) {
+        currentAvatar = ava;
+        var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
+        var name  = ava.getAttribute('data-name') || '';
+        var avaImg = ava.querySelector('img').src;
+
+        // Подменяем шапку viewer'а
+        viewer.querySelector('.moment__header-title').textContent = name;
+        viewer.querySelector('.moment__header .avatar img').src   = avaImg;
+
+        // Палочек — ровно столько, сколько сториз в этом блоке
+        progressEl.innerHTML = '';
+        var slides = [];
+        for (var i = 0; i < count; i++) {
+          var seg = document.createElement('div');
+          seg.className = 'moment__progress-segment';
+          progressEl.appendChild(seg);
+          slides.push({ src: STORY_IMAGES[i % STORY_IMAGES.length] });
+        }
+
+        viewer.hidden = false;
+
+        if (instance) instance.destroy();
+        instance = window.MomentViewer.init(viewer, {
+          slides: slides,
+          onClose: function () {
+            // Закрыть оверлей и пометить аватарку как просмотренную
+            viewer.hidden = true;
+            if (currentAvatar) {
+              currentAvatar.classList.remove('__ring-active');
+              currentAvatar.classList.add('__ring-viewed');
+            }
+          }
+        });
+      }
+    })();
+  </script>
 
 </body>
 </html>

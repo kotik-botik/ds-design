@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="index.css">
+<!-- В head синхронно: listener pagereveal должен зарегистрироваться до события -->
+<script src="components/screen-transition.js"></script>
 <style>
   * { -webkit-tap-highlight-color: transparent; }
 
@@ -48,14 +50,6 @@
     gap: var(--dynamic-cell-view-vertical-default);
     padding: var(--space-4) var(--space-4) var(--space-8);
   }
-  .ll-notif { display: flex; gap: var(--space-3); align-items: flex-start; }
-  .ll-notif__body { flex: 1 1 0; min-width: 0; }
-  .ll-notif__title { color: var(--dynamic-text-and-icons-base-primary); }
-  .ll-notif__title b { font-weight: 600; }
-  .ll-notif__time { margin-top: 2px; color: var(--dynamic-text-and-icons-base-secondary); }
-  .ll-notif__mutuals { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); }
-  .ll-notif__mutuals span { color: var(--dynamic-text-and-icons-base-secondary); }
-  .ll-notif__actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
 
   /* Таббар прибит к низу */
   .ll-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; }
@@ -79,11 +73,11 @@
 
         <div class="nav-bar __type-feed">
           <div class="nav-bar__leading">
-            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" data-action="back" aria-label="Назад"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/arrow_left_24.svg" width="24" height="24" alt=""></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" data-action="back" aria-label="Назад"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/back_24.svg" width="24" height="24" alt=""></span></button></span>
             <span class="ds-title-l">Оповещения</span>
           </div>
           <div class="nav-bar__trailing">
-            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Настройки"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/settings.svg" width="24" height="24" alt=""></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Настройки"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/settings_24.svg" width="24" height="24" alt=""></span></button></span>
           </div>
         </div>
       </div>
@@ -122,12 +116,12 @@
       <div class="ll-notifs-list" id="notifsList">
 
         <!-- 1. Рекомендуемый друг -->
-        <div class="ll-notif" data-cat="friends">
+        <div class="notification-cell" data-cat="friends">
           <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1Kfo9Zt3gGv4UiAElcWpOIqmTdjPAgyp40BsUSSsVon9r4FKb_aTiJNXob5mDbxorb2lrYZJCYaqDuQdGTOrovgKcx6q31ILx5KIXdZw2sAAAAp&dpr=2" alt=""></div>
-          <div class="ll-notif__body">
-            <div class="ds-body-m ll-notif__title">Новый рекомендуемый друг: <b>Анна Первомайская</b></div>
-            <div class="ds-caption-m ll-notif__time">сегодня в 12:34</div>
-            <div class="ll-notif__mutuals">
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title">Новый рекомендуемый друг: <b>Анна Первомайская</b></div>
+            <div class="ds-caption-m notification-cell__time">сегодня в 12:34</div>
+            <div class="notification-cell__mutuals">
               <div class="avatars-view __size-24">
                 <div class="avatars-view__stack">
                   <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/96?img=32" alt=""></div>
@@ -137,7 +131,7 @@
               </div>
               <span class="ds-caption-m">4 общих друга</span>
             </div>
-            <div class="ll-notif__actions">
+            <div class="notification-cell__actions">
               <div class="button-wrapper __size-28"><button class="button-container __style-primary"><span class="button-content">Дружить</span></button></div>
               <div class="button-wrapper __size-28"><button class="button-container __style-secondary"><span class="button-content">Скрыть</span></button></div>
             </div>
@@ -145,66 +139,66 @@
         </div>
 
         <!-- 2. Подарок -->
-        <div class="ll-notif" data-cat="gifts">
+        <div class="notification-cell" data-cat="gifts">
           <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1LTuMnskCqIRVVNmbIRQm0SyOPKRB5xqO1dDrESkvimyYk1_3Bg6yWFnHdTR3FZ6H0cpIr5ieLa6VEDiSnjOEc3ciYl1SSXw8J7D33_QccAAAAp&dpr=2" alt=""></div>
-          <div class="ll-notif__body">
-            <div class="ds-body-m ll-notif__title"><b>Мария Маяковская</b> подарила вам подарок 🎁</div>
-            <div class="ds-caption-m ll-notif__time">сегодня в 11:20</div>
-            <div class="ll-notif__actions">
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title"><b>Мария Маяковская</b> подарила вам подарок 🎁</div>
+            <div class="ds-caption-m notification-cell__time">сегодня в 11:20</div>
+            <div class="notification-cell__actions">
               <div class="button-wrapper __size-28"><button class="button-container __style-secondary"><span class="button-content">Подарить в ответ</span></button></div>
             </div>
           </div>
         </div>
 
         <!-- 3. Класс -->
-        <div class="ll-notif" data-cat="other">
+        <div class="notification-cell" data-cat="other">
           <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1JaqMKzVCjqHIK2OWNJ5ssBLHcx_EumdtKm02Xcy3EoDOVtR0Qi5PDDAdvSEytm8rgVKhRZBqRI3iEZYQJk8Nb6taKPDy5afugnUQGYcIUAAAAp&dpr=2" alt=""></div>
-          <div class="ll-notif__body">
-            <div class="ds-body-m ll-notif__title"><b>Александр Борщицкий</b> и ещё 8 человек оценили ваше фото</div>
-            <div class="ds-caption-m ll-notif__time">вчера в 19:05</div>
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title"><b>Александр Борщицкий</b> и ещё 8 человек оценили ваше фото</div>
+            <div class="ds-caption-m notification-cell__time">вчера в 19:05</div>
           </div>
         </div>
 
         <!-- 4. Открытка -->
-        <div class="ll-notif" data-cat="gifts">
+        <div class="notification-cell" data-cat="gifts">
           <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1I9HGCfW9fo2EXMv2U4ikeSP2MeOu4OuzjP4S9UEMYj0m1njyr6jFg6ca9umJuV5wq30hV1dtmwUVVLttsWQYn38GuTLO2jof_m9WN7KlsAAAAp&dpr=2" alt=""></div>
-          <div class="ll-notif__body">
-            <div class="ds-body-m ll-notif__title"><b>Евгения Молчанова</b> отправила вам открытку «С добром!»</div>
-            <div class="ds-caption-m ll-notif__time">вчера</div>
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title"><b>Евгения Молчанова</b> отправила вам открытку «С добром!»</div>
+            <div class="ds-caption-m notification-cell__time">вчера</div>
           </div>
         </div>
 
         <!-- 5. Подарок -->
-        <div class="ll-notif" data-cat="gifts">
+        <div class="notification-cell" data-cat="gifts">
           <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KlPJb2p-6eK2lnJ5zICRbTaNaonSN6tKv9jm9OP4liccV1Jgpm_D-XHaUnT4NuMNnP3vDReRbjjmJ7dZqat-wXAZKU9tVWLrcf8vhMiW0AAAAp&dpr=2" alt=""></div>
-          <div class="ll-notif__body">
-            <div class="ds-body-m ll-notif__title"><b>Альберт Фёдоров</b> хочет подарить вам подарок</div>
-            <div class="ds-caption-m ll-notif__time">2 дня назад</div>
-            <div class="ll-notif__actions">
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title"><b>Альберт Фёдоров</b> хочет подарить вам подарок</div>
+            <div class="ds-caption-m notification-cell__time">2 дня назад</div>
+            <div class="notification-cell__actions">
               <div class="button-wrapper __size-28"><button class="button-container __style-primary"><span class="button-content">Принять</span></button></div>
             </div>
           </div>
         </div>
 
         <!-- 6. Группа -->
-        <div class="ll-notif" data-cat="groups">
+        <div class="notification-cell" data-cat="groups">
           <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1JaqMKzVCjqHIK2OWNJ5ssBLHcx_EumdtKm02Xcy3EoDOVtR0Qi5PDDAdvSEytm8rgVKhRZBqRI3iEZYQJk8Nb6taKPDy5afugnUQGYcIUAAAAp&dpr=2" alt=""></div>
-          <div class="ll-notif__body">
-            <div class="ds-body-m ll-notif__title">В группе <b>«6 соток»</b> новая запись: «Готовим грядки к зиме»</div>
-            <div class="ds-caption-m ll-notif__time">сегодня в 09:15</div>
-            <div class="ll-notif__actions">
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title">В группе <b>«6 соток»</b> новая запись: «Готовим грядки к зиме»</div>
+            <div class="ds-caption-m notification-cell__time">сегодня в 09:15</div>
+            <div class="notification-cell__actions">
               <div class="button-wrapper __size-28"><button class="button-container __style-secondary"><span class="button-content">Открыть</span></button></div>
             </div>
           </div>
         </div>
 
         <!-- 7. Игра -->
-        <div class="ll-notif" data-cat="games">
+        <div class="notification-cell" data-cat="games">
           <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1Kfo9Zt3gGv4UiAElcWpOIqmTdjPAgyp40BsUSSsVon9r4FKb_aTiJNXob5mDbxorb2lrYZJCYaqDuQdGTOrovgKcx6q31ILx5KIXdZw2sAAAAp&dpr=2" alt=""></div>
-          <div class="ll-notif__body">
-            <div class="ds-body-m ll-notif__title">В игре <b>«Зоомир»</b> вас ждёт ежедневный подарок 🎁</div>
-            <div class="ds-caption-m ll-notif__time">вчера в 20:40</div>
-            <div class="ll-notif__actions">
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title">В игре <b>«Зоомир»</b> вас ждёт ежедневный подарок 🎁</div>
+            <div class="ds-caption-m notification-cell__time">вчера в 20:40</div>
+            <div class="notification-cell__actions">
               <div class="button-wrapper __size-28"><button class="button-container __style-primary"><span class="button-content">Забрать</span></button></div>
             </div>
           </div>
@@ -240,7 +234,7 @@
         var tab = e.target.closest && e.target.closest('.tab-wrapper');
         if (!tab) return;
         var f = tab.getAttribute('data-filter');
-        Array.prototype.forEach.call(list.querySelectorAll('.ll-notif'), function (n) {
+        Array.prototype.forEach.call(list.querySelectorAll('.notification-cell'), function (n) {
           var cat = n.getAttribute('data-cat');
           n.style.display = (f === 'all' || cat === f) ? '' : 'none';
         });
