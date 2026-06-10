@@ -30,7 +30,12 @@
 
   .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
 
-  /* Шапка — DS-компонент meshok-up (sticky + белый фон + скругление снизу) */
+  /* Шапка — DS-компонент meshok-up. По умолчанию он держит статус-бар
+     secondary (!important); на этой странице вся шапка — background/primary. */
+  .meshok-up .status-bar,
+  .meshok-up .nav-bar {
+    background-color: var(--dynamic-surface-base-primary) !important;
+  }
 
   /* Вкладки-фильтр (DS TabsView base) */
   .ll-notifs-tabs {
