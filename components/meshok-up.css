@@ -106,6 +106,36 @@
 }
 
 /* ============================================================
+   TYPE: SEARCH — back + растянутый поисковый input + button-circle.
+   Используется в Трибуне и других экранах со встроенным поиском.
+   ============================================================ */
+.nav-bar.__type-search {
+  gap: var(--space-2);
+}
+.nav-bar.__type-search .nav-bar__leading,
+.nav-bar.__type-search .nav-bar__trailing {
+  flex-shrink: 0;
+}
+.nav-bar.__type-search .nav-bar__search {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.nav-bar.__type-search .nav-bar__search .text-input {
+  padding-left: 40px;
+}
+.nav-bar.__type-search .nav-bar__search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--dynamic-text-and-icons-base-secondary);
+}
+
+/* ============================================================
    TABS внутри MeshokUp — отступы 16 сверху / 8 снизу
    ============================================================ */
 .meshok-up .tabs {
