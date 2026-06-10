@@ -2,14 +2,21 @@
  * OK Design System — MeshokUp
  *
  * Sticky top chrome: status-bar + nav-bar + tabs.
- * Закруглён снизу на 20px, чтобы совпадать с островами в фиде.
+ * border-radius: 0 — не менять.
  *
  *   <div class="meshok-up">
  *     <div class="status-bar">…</div>
  *     <div class="nav-bar">…</div>
  *     <div class="tabs">…</div>
  *   </div>
+ *
+ * --status-bar-height — высота status-bar (44px). Опубликована на :root,
+ *   чтобы оверлеи (system-notifications heads-up и пр.) отстраивались
+ *   от неё, а не зашивали число.
  */
+:root {
+  --status-bar-height: 44px;
+}
 
 .meshok-up {
   display: flex;
@@ -19,7 +26,7 @@
   z-index: 50;
   flex-shrink: 0;
   background-color: transparent;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0; /* не менять */
   overflow: hidden;
 }
 
@@ -30,7 +37,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  height: 44px;
+  height: var(--status-bar-height);
   padding: var(--space-2) var(--space-5) var(--space-2);
   /* Цвет фона зафиксирован — переопределять на странице нельзя */
   background-color: var(--dynamic-surface-base-secondary) !important;
