@@ -162,6 +162,38 @@
      aspect-ratio, поэтому ряд всегда заполняет ширину без пустот/скролла. */
   .text-feed__media.__row { overflow-x: hidden; }
   .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
+
+  /* Stories (Моменты) — горизонтальный ряд историй под навбаром.
+     Кружки — DS-компонент .avatar (__size-56 + __ring-active/__ring-viewed),
+     «+» своей истории — аддон .avatar__addon. Карточка — .island. */
+  .ll-stories {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+  }
+  .ll-stories__row {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    padding: 0 var(--space-4);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .ll-stories__row::-webkit-scrollbar { display: none; }
+
+  /* «+»-бейдж добавления своей истории — оранжевый кружок в белой обводке */
+  .ll-story-add {
+    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--static-surface-status-accent);
+    border: 3px solid var(--dynamic-surface-base-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ll-story-add .ll-icon { filter: brightness(0) invert(1); }
 </style>
 </head>
 <body>
@@ -197,6 +229,28 @@
 
       <!-- FEED ---------------------------------------------------------- -->
       <div class="ll-feed">
+
+        <!-- 0. Моменты (истории) ---------------------------------------- -->
+        <div class="ll-stories island" aria-label="Моменты">
+          <div class="ll-stories__row">
+            <!-- Ваша история (оранжевое кольцо + «+») -->
+            <div class="avatar __size-56 __type-image __ring-active __has-addon">
+              <img src="https://i.pravatar.cc/112?img=68" alt="Ваша история">
+              <div class="avatar__addon __pos-br ll-story-add">
+                <img class="ll-icon" src="assets/icons/add_24.svg" width="16" height="16" alt="">
+              </div>
+            </div>
+            <!-- Не просмотренные (оранжевое кольцо) -->
+            <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.pravatar.cc/112?img=32" alt=""></div>
+            <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
+            <div class="avatar __size-56 __type-image __ring-active"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
+            <!-- Просмотренные (серое кольцо) -->
+            <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
+            <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
+            <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
+            <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=33" alt=""></div>
+          </div>
+        </div>
 
         <!-- 1. Короткий текст ------------------------------------------- -->
         <article class="text-feed island">
