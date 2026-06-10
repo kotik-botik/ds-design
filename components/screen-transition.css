@@ -1,0 +1,35 @@
+/**
+ * OK Design System (proto) — ScreenTransition
+ *
+ * Системный переход между экранами (push / pop), как в нативных приложениях.
+ * Корень экрана помечается атрибутом [data-screen]. Кнопка «назад» в навбаре —
+ * [data-screen-back] (опц. data-href="…", иначе history.back()).
+ * Логика — components/screen-transition.js.
+ *
+ *   forward (открытие): новый экран въезжает справа
+ *   back (назад):       текущий экран уезжает вправо, предыдущий въезжает слева
+ */
+
+@keyframes screen-in-forward {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes screen-in-back {
+  from { transform: translateX(-24%); }
+  to   { transform: translateX(0); }
+}
+@keyframes screen-out-back {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+[data-screen].screen-enter-forward {
+  animation: screen-in-forward 300ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+[data-screen].screen-enter-back {
+  animation: screen-in-back 300ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+[data-screen].screen-leave-back {
+  animation: screen-out-back 300ms cubic-bezier(0.2, 0, 0, 1) both;
+  z-index: 200;   /* уезжающий экран поверх фона */
+}

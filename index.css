@@ -63,6 +63,7 @@
 @import url('./components/comment-input.css');
 @import url('./components/notification-cell.css');
 @import url('./components/phone-frame.css');
+@import url('./components/screen-transition.css');
 
 /* Override: iOS Dynamic Type "xxLarge" (2XL) — активируется .__type-scale-2xl на <html> */
 @import url('./components/type-scale.css');
