@@ -9,11 +9,15 @@
  * компонентов нет, поэтому композиция вынесена в отдельный компонент.
  * Кнопка «Дружить» — DS .button; типографику задаём классами .ds-* в разметке.
  *
- *   <div class="friend-card">
+ *   <div class="friend-card" data-dismiss-target>
  *     <div class="friend-card__media">
  *       <div class="friend-card__blur" style="background-image:url('…')"></div>
  *       <img src="…" alt="">
- *       <button class="friend-card__close">✕</button>
+ *       <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
+ *         <button class="button-circle" data-dismiss aria-label="Скрыть">
+ *           <span class="icon __size-16 __slot-close"></span>
+ *         </button>
+ *       </span>
  *     </div>
  *     <div class="friend-card__content">
  *       <div class="friend-card__title ds-title-s">Имя</div>
@@ -61,24 +65,14 @@
   object-fit: cover;
 }
 
-/* Крестик «скрыть» поверх фото (on-image, тёмный translucent) */
+/* Крестик «скрыть» поверх фото — DS button-circle __size-24 __style-on-image.
+   Поведение и анимация — components/dismissible.{css,js}. */
 .friend-card__close {
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 0;
-  cursor: pointer;
-  border-radius: 50%;
-  color: var(--static-text-and-icons-base-inverse-primary, #fff);
-  background-color: var(--static-surface-special-layer-tertiary, rgba(0, 0, 0, 0.56));
+  z-index: 1;
 }
-.friend-card__close svg { display: block; width: 14px; height: 14px; }
 
 /* КОНТЕНТ — заголовок + сабтайтл + кнопка */
 .friend-card__content {
