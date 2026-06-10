@@ -1121,6 +1121,21 @@
   <script src="components/system-notifications.js"></script>
   <script>
     if (window.OkNotifs) window.OkNotifs.start();
+
+    // Back из ленты всегда возвращает на меню (start.html), какая бы страница
+    // ни была в реальной истории. Кладём sentinel-state и при popstate
+    // принудительно идём в start.html — там pageshow увидит at_home=1 и
+    // покажет меню без анимации локскрина.
+    (function () {
+      try { sessionStorage.setItem('okstart_at_home', '1'); } catch (e) {}
+      if (!history.state || history.state.scr !== 'feed-back-trap') {
+        history.pushState({ scr: 'feed-back-trap' }, '');
+      }
+      window.addEventListener('popstate', function () {
+        try { sessionStorage.setItem('okstart_at_home', '1'); } catch (e) {}
+        window.location.replace('start.html');
+      });
+    })();
   </script>
   <script src="components/tab-bar.js"></script>
 
