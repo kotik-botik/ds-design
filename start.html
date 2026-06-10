@@ -162,8 +162,10 @@
   .splash.is-loaded .splash__logo { opacity: 1; filter: blur(0); }
   .splash__logo svg,
   .splash__logo img { display: block; width: 100%; height: 100%; }
-  /* оранжевый логотип → белый для контраста на оранжевом фоне */
-  .splash__logo-img { filter: brightness(0) invert(1); }
+  /* splashLogo.png — оранжевая squircle-плитка с белыми буквами «ОК».
+     На оранжевом фоне сплеша плитка визуально сливается с градиентом,
+     остаются только белые буквы. Без фильтра — иначе и плитка, и буквы
+     стали бы одним белым квадратом. */
 
   /* Подпись «народная соцсеть» — 50px от низа (параметры из Figma) */
   .splash__subtitle {
