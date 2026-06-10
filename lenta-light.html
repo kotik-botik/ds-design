@@ -209,12 +209,11 @@
     justify-content: center;
   }
   .ll-story-add .ll-icon { filter: brightness(0) invert(1); }
-  /* Позиция бейджа: торчит на 3px вправо за край аватарки, снизу — заподлицо (0) */
-  .ll-stories .avatar.__size-56 .avatar__addon.__pos-br.ll-story-add {
-    top: auto;
-    bottom: 0;
-    right: -3px;
-  }
+
+  /* Баннер под сторис — картинка во всю ширину контейнера ленты,
+     горизонтальные паддинги = 0 (наследует full-width от .ll-feed). */
+  .ll-banner { display: block; }
+  .ll-banner__img { display: block; width: 100%; height: auto; }
 </style>
 </head>
 <body>
@@ -272,6 +271,11 @@
             <div class="avatar __size-56 __type-image __ring-viewed"><img src="https://i.pravatar.cc/112?img=33" alt=""></div>
           </div>
         </div>
+
+        <!-- BANNER под сторис — картинка во всю ширину контейнера ленты -->
+        <a class="ll-banner" href="#" aria-label="Баннер">
+          <img class="ll-banner__img" src="assets/bannerBack.png" alt="">
+        </a>
 
         <!-- 1. Короткий текст ------------------------------------------- -->
         <article class="text-feed island">
