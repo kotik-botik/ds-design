@@ -595,7 +595,7 @@
   /* ---- App-open splash: показывается ПОСЛЕ тапа по иконке ОК (пока
      приложение «грузится»), затем переходим в ленту. На старте телефона
      не показывается. ---- */
-  var SPLASH_MS = 1150;   // 500ms прилёт + 400ms blur-crossfade + ~250ms показа PNG
+  var SPLASH_MS = 1100;   // 180ms трига кроссфейда + 400ms blur + ~520ms чистого сплеша
 
   function hideSplash() {
     if (!splash) return;
@@ -746,11 +746,12 @@
       splash.style.clipPath = 'circle(' + maxR + 'px at ' + iconCx + 'px ' + iconCy + 'px)';
 
       setTimeout(function () {
-        // Иконка долетела до центра → кроссфейд на PNG-лого сплеша.
+        // Кроссфейд запускаем ещё в полёте иконки: она блюрится и гаснет,
+        // одновременно из блюра проявляется splashLogo.png.
         launch.classList.add('is-arrived');
         splash.classList.add('is-loaded');
         launch.classList.add('is-faded');
-      }, 500);
+      }, 180);
       setTimeout(function () { window.location.href = href; }, SPLASH_MS);
     });
   });
