@@ -182,10 +182,23 @@
   .text-feed__media.__row { overflow-x: hidden; }
   .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
 
-  /* Баннер под сторис — картинка во всю ширину контейнера ленты,
-     горизонтальные паддинги = 0 (наследует full-width от .ll-feed). */
-  .ll-banner { display: block; }
-  .ll-banner__img { display: block; width: 100%; height: auto; }
+  /* Баннер под сторис — PNG на фоне контейнера, паддинги 16, текст внутри. */
+  .ll-banner {
+    display: block;
+    box-sizing: border-box;
+    padding: 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    background-image: url('assets/icons/bannerBack1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  /* Текст баннера — типографика body M, цвет text-primary */
+  .ll-banner__text {
+    display: block;
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
 
   /* Stories (Моменты) — горизонтальный ряд историй между навбаром и лентой
      (вне .ll-feed). Кружки — DS-компонент .avatar (__size-56 +
@@ -328,16 +341,16 @@
       <div class="ll-feed">
 
         <!-- BANNER под сторис — картинка во всю ширину контейнера ленты -->
-        <a class="ll-banner" href="#" aria-label="Баннер">
-          <img class="ll-banner__img" src="assets/icons/bannerBack1.png" alt="">
-        </a>
+        <div class="ll-banner">
+          <span class="ll-banner__text ds-body-m">Добрый дружеский привет!<br>С пожеланием добра!</span>
+        </div>
 
         <!-- 1. Короткий текст ------------------------------------------- -->
         <article class="text-feed island">
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
             <div class="avatar __size-44 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KlPJb2p-6eK2lnJ5zICRbTaNaonSN6tKv9jm9OP4liccV1Jgpm_D-XHaUnT4NuMNnP3vDReRbjjmJ7dZqat-wXAZKU9tVWLrcf8vhMiW0AAAAp&dpr=2" alt=""></div>
             <div class="uni-cell-additional-content">
-              <div class="ds-title-s">Альберт Фёдоров</div>
+              <div class="ds-title-s">Альбина Чика 🍓🍓🍓🍓</div>
               <div class="ds-caption-s text-feed__time">9:12</div>
             </div>
           </div></div></div>
@@ -358,7 +371,7 @@
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
             <div class="avatar __size-44 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1Kfo9Zt3gGv4UiAElcWpOIqmTdjPAgyp40BsUSSsVon9r4FKb_aTiJNXob5mDbxorb2lrYZJCYaqDuQdGTOrovgKcx6q31ILx5KIXdZw2sAAAAp&dpr=2" alt=""></div>
             <div class="uni-cell-additional-content">
-              <div class="ds-title-s">Александра Борщицкий</div>
+              <div class="ds-title-s">Александра Миксунова</div>
               <div class="ds-caption-s text-feed__time">12:48</div>
             </div>
           </div></div></div>
@@ -489,7 +502,7 @@
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
             <div class="avatar __size-44 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1Kfo9Zt3gGv4UiAElcWpOIqmTdjPAgyp40BsUSSsVon9r4FKb_aTiJNXob5mDbxorb2lrYZJCYaqDuQdGTOrovgKcx6q31ILx5KIXdZw2sAAAAp&dpr=2" alt=""></div>
             <div class="uni-cell-additional-content">
-              <div class="ds-title-s">Александра Борщицкий</div>
+              <div class="ds-title-s">Александра Миксунова</div>
               <div class="ds-caption-s text-feed__time">12:48</div>
             </div>
           </div></div></div>
@@ -525,7 +538,7 @@
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
             <div class="avatar __size-44 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1JaqMKzVCjqHIK2OWNJ5ssBLHcx_EumdtKm02Xcy3EoDOVtR0Qi5PDDAdvSEytm8rgVKhRZBqRI3iEZYQJk8Nb6taKPDy5afugnUQGYcIUAAAAp&dpr=2" alt=""></div>
             <div class="uni-cell-additional-content">
-              <div class="ds-title-s">Александр Борщицкий</div>
+              <div class="ds-title-s">Александр Миксунов</div>
               <div class="ds-caption-s text-feed__time">12:48</div>
             </div>
           </div></div></div>
@@ -579,7 +592,7 @@
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
             <div class="avatar __size-44 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1Kfo9Zt3gGv4UiAElcWpOIqmTdjPAgyp40BsUSSsVon9r4FKb_aTiJNXob5mDbxorb2lrYZJCYaqDuQdGTOrovgKcx6q31ILx5KIXdZw2sAAAAp&dpr=2" alt=""></div>
             <div class="uni-cell-additional-content">
-              <div class="ds-title-s">Александра Борщицкий</div>
+              <div class="ds-title-s">Александра Миксунова</div>
               <div class="ds-caption-s text-feed__time">12:48</div>
             </div>
           </div></div></div>
@@ -608,7 +621,7 @@
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
             <div class="avatar __size-44 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1JaqMKzVCjqHIK2OWNJ5ssBLHcx_EumdtKm02Xcy3EoDOVtR0Qi5PDDAdvSEytm8rgVKhRZBqRI3iEZYQJk8Nb6taKPDy5afugnUQGYcIUAAAAp&dpr=2" alt=""></div>
             <div class="uni-cell-additional-content">
-              <div class="ds-title-s">Александр Борщицкий</div>
+              <div class="ds-title-s">Александр Миксунов</div>
               <div class="ds-caption-s text-feed__time">12:48</div>
             </div>
           </div></div></div>
@@ -734,7 +747,7 @@
           <div class="clip-feed__header">
             <div class="avatar __size-44 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1Kfo9Zt3gGv4UiAElcWpOIqmTdjPAgyp40BsUSSsVon9r4FKb_aTiJNXob5mDbxorb2lrYZJCYaqDuQdGTOrovgKcx6q31ILx5KIXdZw2sAAAAp&dpr=2" alt=""></div>
             <div class="clip-feed__txt">
-              <div class="ds-title-s">Александра Борщицкий</div>
+              <div class="ds-title-s">Александра Миксунова</div>
               <div class="ds-caption-s clip-feed__time">12:48</div>
             </div>
           </div>
