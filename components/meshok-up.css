@@ -2,7 +2,7 @@
  * OK Design System — MeshokUp
  *
  * Sticky top chrome: status-bar + nav-bar + tabs.
- * Закруглён снизу на 20px, чтобы совпадать с островами в фиде.
+ * border-radius: 0 — не менять.
  *
  *   <div class="meshok-up">
  *     <div class="status-bar">…</div>
@@ -19,7 +19,7 @@
   z-index: 50;
   flex-shrink: 0;
   background-color: transparent;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0; /* не менять */
   overflow: hidden;
 }
 
