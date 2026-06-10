@@ -79,6 +79,15 @@
   gap: var(--space-2);
 }
 
+/* Иконочные button-inline в навбаре: центрируем контент во весь контейнер
+   (без baseline-зазора inline-block → иконки сидят ровно, контейнер не «прыгает»). */
+.nav-bar .button-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .nav-bar__title {
   flex: 1;
   min-width: 0;
