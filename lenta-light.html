@@ -25,8 +25,17 @@
     max-width: none;
     height: 100dvh;
     min-height: 100dvh;
+    overflow: hidden;                 /* оболочка фиксирована, скроллит фид внутри */
     background: var(--dynamic-surface-base-primary);
   }
+  /* Скролл-контейнер — сам фид. min-height:0 обязателен: флекс-ребёнок иначе
+     не отдаёт переполнение скроллу (min-height:auto), и контент не скроллится. */
+  .phone-frame__feed {
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .phone-frame__feed::-webkit-scrollbar { display: none; }
 
   /* ============================================================
      Иконки — через <img src="…svg">. SVG отдаются Pages напрямую,
