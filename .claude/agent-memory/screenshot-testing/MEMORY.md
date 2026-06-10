@@ -48,6 +48,15 @@ await page.route('**/lenta-light.html', r => r.abort('aborted'));
 ```
 Тогда тап стартует splash, но переход не происходит → можно сэмплировать `#launch` через рАF до конца.
 
+## ScreenTransition (push/pop между страницами) — components/screen-transition.{js,css}
+- Корень экрана: `.phone-frame[data-screen]`. Кнопка назад: `[data-screen-back]` (опц. `data-href`, иначе history.back()).
+- Анимации 300ms cubic-bezier(.2,0,0,1): `screen-leave-back` (translateX 0→100%, z-index 200), `screen-enter-back` (-24%→0), `screen-enter-forward` (100%→0). Наблюдённая длительность класса ~318–334ms (keyframe 300 + хвост до animationend).
+- Направление передаётся через `sessionStorage['screenNavDir']`: `back` ставится кликом по back-кнопке *перед* навигацией; на следующей странице `playEnter()` читает и **удаляет** ключ. Если ключа нет → дефолт ветка `screen-enter-forward`.
+- BACK (messages→lenta): ✅ полностью работает. leave-класс + translateX + navDir='back' + переход + enter-back на lenta, класс снимается по animationend.
+- FORWARD (таббар): навигацию таббара делает **components/tab-bar.js** (делегированный click по `.tabbar-icon`, карта ROUTES: feed→lenta-light, message→messages; пропускает `__state-on`). У самой кнопки `__slot-message` НЕТ ни data-href, ни onclick — всё в tab-bar.js. **tab-bar.js НЕ ставит screenNavDir='forward'** — forward-въезд работает только потому, что default-ветка playEnter и так = forward. Совпадение, не явный сигнал; если когда-нибудь дефолт сменят на back — таббар-форвард сломается молча.
+- Тестировать leave-анимацию: `page.route('**/lenta-light.html', r=>r.abort())` чтобы заморозить навигацию и сэмплить transform середины. Enter — `addInitScript` с MutationObserver на `[data-screen]`, история классов с performance.now().
+- Консольные ошибки на этих страницах: только внешний шум (CDN lottie/jsdelivr CERT_AUTHORITY_INVALID + 404). Фильтровать `/CERT|404|net::/`.
+
 ## Сэмплинг анимаций
 - Для покадровых данных: запусти `requestAnimationFrame`-цикл **внутри страницы** через `page.evaluate(async () => new Promise(resolve => { ... }))` и собирай computed styles в массив. Возврат массива на хост даст ~16 ms точность.
 - `page.screenshot` блокирующий, ~50 ms на кадр — для покадровой анимации использовать `Page.startScreencast` (CDP-сессия): `const cdp = await page.context().newCDPSession(page); cdp.send('Page.startScreencast', ...);`. Получишь по кадру на каждый paint без подтормаживания.

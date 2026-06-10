@@ -25,9 +25,12 @@
     r.addEventListener('animationend', function () { r.classList.remove(cls); }, { once: true });
   }
 
-  // Тап по «назад» в навбаре → уезжаем вправо, затем переход
+  // Тап по «назад» в навбаре → уезжаем вправо, затем переход.
+  // Централизованно ловим стандартную кнопку навбара .nav-bar__back
+  // (button-inline с иконкой назад) — на странице ничего прокидывать не нужно.
+  // По умолчанию history.back(); опц. data-href переопределяет цель.
   document.addEventListener('click', function (e) {
-    var back = e.target.closest ? e.target.closest('[data-screen-back]') : null;
+    var back = e.target.closest ? e.target.closest('.nav-bar__back, [data-screen-back]') : null;
     if (!back) return;
     var r = root();
     if (!r) return;
