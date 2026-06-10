@@ -9,16 +9,22 @@
 (function () {
   function container(el) { return el.closest('[data-vvz]'); }
 
-  function removeContainer(c) { if (c) c.remove(); }
+  function removeContainer(c) {
+    if (!c) return;
+    c.classList.add('__leaving');
+    setTimeout(function () { c.remove(); }, 500);
+  }
 
   function removeCard(card) {
     if (!card) return;
     var c = container(card);
+    // Последняя карточка — гасим весь контейнер целиком (один плавный фейд)
+    if (c && c.querySelectorAll('.vvz-card').length <= 1) {
+      removeContainer(c);
+      return;
+    }
     card.classList.add('__leaving');
-    setTimeout(function () {
-      card.remove();
-      if (c && c.querySelectorAll('.vvz-card').length === 0) removeContainer(c);
-    }, 200);
+    setTimeout(function () { card.remove(); }, 500);
   }
 
   document.addEventListener('click', function (e) {
