@@ -664,14 +664,20 @@
         });
       });
 
-      function playLike(anchor) {
+      function playLike(label) {
+        // Центрируем по видимой «пилюле» кнопки, а не по label (label шире:
+        // в нём иконка + счётчик + &nbsp;, из-за чего центр уезжает вбок).
+        var anchor = label.querySelector('.button-container') || label;
         var rect = anchor.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+
         var host = document.createElement('div');
         host.style.cssText =
           'position:fixed;z-index:9999;pointer-events:none;' +
           'width:' + SIZE + 'px;height:' + SIZE + 'px;' +
-          'left:' + (rect.left + rect.width / 2 - SIZE / 2) + 'px;' +
-          'top:'  + (rect.top + rect.height / 2 - SIZE / 2) + 'px;';
+          'left:' + cx + 'px;top:' + cy + 'px;' +
+          'transform:translate(-50%,-50%);';
         document.body.appendChild(host);
 
         var anim = lottie.loadAnimation({
