@@ -13,13 +13,13 @@
 
   html, body {
     margin: 0; padding: 0; height: 100%;
-    background: var(--dynamic-surface-base-primary);
+    background: var(--dynamic-surface-base-secondary);
   }
   .phone-frame {
     width: 100%; max-width: none;
     height: 100dvh; min-height: 100dvh;
     overflow: hidden;
-    background: var(--dynamic-surface-base-primary);
+    background: var(--dynamic-surface-base-secondary);
   }
   .phone-frame__feed {
     min-height: 0;
@@ -41,11 +41,12 @@
        и разделитель совпали по вертикали */
   }
 
-  /* Список оповещений — плоские ряды на background/primary, гэп 16 */
+  /* Список оповещений — плоские ряды; гэп между ячейками = cell-view-vertical,
+     паддинги: верх 16, бока 16, низ 32 */
   .ll-notifs-list {
     display: flex; flex-direction: column;
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-4) calc(72px + var(--space-6));
+    gap: var(--dynamic-cell-view-vertical-default);
+    padding: var(--space-4) var(--space-4) var(--space-8);
   }
   .ll-notif { display: flex; gap: var(--space-3); align-items: flex-start; }
   .ll-notif__body { flex: 1 1 0; min-width: 0; }
