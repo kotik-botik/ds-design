@@ -11,8 +11,17 @@
 
   function removeContainer(c) {
     if (!c) return;
+    // фиксируем текущую высоту, затем плавно схлопываем до 0 — ячейки ниже подъезжают вверх
+    c.style.height = c.offsetHeight + 'px';
     c.classList.add('__leaving');
-    setTimeout(function () { c.remove(); }, 500);
+    requestAnimationFrame(function () {
+      c.style.height = '0px';
+      c.style.marginTop = '0px';
+      c.style.marginBottom = '0px';
+      c.style.paddingTop = '0px';
+      c.style.paddingBottom = '0px';
+    });
+    setTimeout(function () { c.remove(); }, 550);
   }
 
   function removeCard(card) {
