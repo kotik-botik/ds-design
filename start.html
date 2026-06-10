@@ -355,7 +355,7 @@
   /* Hotseat dock — transparent row of system apps (Pixel) */
   .dock {
     position: absolute;
-    left: 24px; right: 24px; bottom: 116px;
+    left: 24px; right: 24px; bottom: 134px;   /* воздух между прилами и серчем */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -415,12 +415,13 @@
     position: absolute;
     top: 36px; left: 8px; right: 8px;
     z-index: 65;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;                /* стопка карточек, новые снизу */
     pointer-events: none;   /* empty area passes taps to the launcher */
   }
+  /* Карточки накладываются друг на друга (стопка-дека): новая приходит
+     поверх, предыдущие чуть уезжают вглубь и выглядывают снизу. */
   .notif {
+    position: absolute;
+    top: 0; left: 0; right: 0;
     background: rgba(241, 243, 247, 0.97);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -430,15 +431,12 @@
     box-shadow: 0 6px 18px rgba(0,0,0,0.28);
     pointer-events: auto;   /* the card itself catches the swipe */
     touch-action: none;     /* vertical drag stays ours */
+    transform-origin: center top;
     will-change: transform, opacity;
     cursor: grab;
-    animation: notifIn 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    transition: transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease;
   }
   .notif:active { cursor: grabbing; }
-  @keyframes notifIn {
-    from { transform: translateY(-18px) scale(0.96); opacity: 0; }
-    to   { transform: none; opacity: 1; }
-  }
   .notif__head {
     display: flex;
     align-items: center;
@@ -703,9 +701,29 @@
     el.style.transition = 'transform 0.28s ease, opacity 0.28s ease';
     el.style.transform = 'translateY(-150%)';
     el.style.opacity = '0';
-    var done = function () { if (el.parentNode) el.parentNode.removeChild(el); };
+    var done = function () { if (el.parentNode) el.parentNode.removeChild(el); restack(); };
     el.addEventListener('transitionend', done, { once: true });
     setTimeout(done, 360);   // fallback if transitionend is missed
+  }
+
+  // Раскладываем стопку: новейшая карточка спереди (depth 0), предыдущие
+  // уезжают вглубь (смещение вниз + уменьшение), выглядывая снизу.
+  var MAX_STACK = 3;
+  function restack() {
+    var kids = notifBox.children, visible = [];
+    for (var i = 0; i < kids.length; i++) {
+      if (!kids[i].__leaving) visible.push(kids[i]);
+    }
+    var n = visible.length;
+    for (var j = 0; j < n; j++) {
+      var el = visible[j];
+      var depth = n - 1 - j;                 // 0 = новейшая (спереди)
+      if (depth >= MAX_STACK) { dismissNotif(el); continue; }
+      el.style.transition = 'transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease';
+      el.style.zIndex = String(100 - depth);
+      el.style.opacity = depth === 0 ? '1' : (depth === 1 ? '0.92' : '0.8');
+      el.style.transform = 'translateY(' + (depth * 10) + 'px) scale(' + (1 - depth * 0.05) + ')';
+    }
   }
 
   // Flick-up to dismiss: the card follows the finger, releases past a
@@ -729,10 +747,8 @@
       dragging = false;
       if (dy < -34) {                                // flicked far enough → close
         dismissNotif(el);
-      } else {                                       // snap back
-        el.style.transition = 'transform 0.22s ease, opacity 0.22s ease';
-        el.style.transform = '';
-        el.style.opacity = '';
+      } else {                                       // snap back into the stack
+        restack();
       }
     }
     el.addEventListener('pointerup', end);
@@ -756,10 +772,15 @@
       '<div class="notif__body"></div>';
     el.querySelector('.notif__title').textContent = data.title;
     el.querySelector('.notif__body').textContent = data.body;
-    notifBox.appendChild(el);            // новые снизу, старые накапливаются сверху
+    notifBox.appendChild(el);            // новейшая — последняя в DOM = спереди
     attachSwipe(el);
-    // Предыдущие сами скрываются спустя время — карточки накладываются,
-    // пока старая не уедет.
+    // Стартовое состояние: над стопкой и прозрачная — затем «приходит» поверх,
+    // а предыдущие карточки уезжают вглубь.
+    el.style.transition = 'none';
+    el.style.transform = 'translateY(-46px) scale(1)';
+    el.style.opacity = '0';
+    void el.offsetWidth;                 // фиксируем старт перед анимацией
+    restack();
     el.__hideTimer = setTimeout(function () { dismissNotif(el); }, NOTIF_LIFETIME);
   }
 
