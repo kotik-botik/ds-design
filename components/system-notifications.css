@@ -1,24 +1,44 @@
 /* ============================================================
-   System notifications — Android heads-up cards from «ОК».
-   Стек у верхнего края экрана: новая поверх, предыдущие уезжают
-   вглубь. Каждую можно фликнуть вверх, чтобы закрыть.
+   System notifications — компонент для системных пушей «ОК».
 
-   Подключается на всех экранах прототипа (стартовый/лента),
-   чтобы пуши продолжали приходить, когда пользователь зашёл
-   в приложение. Состояние стрима (индекс/следующее время)
-   сохраняется в sessionStorage модулем system-notifications.js.
+   Контейнер .notifs работает в одном из двух режимов:
+     .notifs.__mode-lock      — плоский список карточек одна под
+                                 другой (лок-скрин, как в Figma)
+     .notifs.__mode-heads-up  — колода: новая карточка спереди,
+                                 предыдущие уезжают вглубь (на
+                                 главном экране / в приложении)
+
+   Логика стэка и анимаций в components/system-notifications.js;
+   стрим хранится в sessionStorage, поэтому пуши не сбрасываются
+   при переходе между страницами.
    ============================================================ */
 .notifs {
   position: fixed;
   top: 36px; left: 8px; right: 8px;
   z-index: 1000;
+  pointer-events: none;
+}
+
+/* ── Режим «список» (lock-screen) ───────────────────────────── */
+.notifs.__mode-lock {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  pointer-events: none;
 }
-.notif {
+.notifs.__mode-lock .notif {
   position: relative;
+}
+
+/* ── Режим «колода» (heads-up) ──────────────────────────────── */
+/* Карточки накладываются в одной точке; depth-сдвиг и opacity
+   проставляет JS (см. restackHeadsUp). */
+.notifs.__mode-heads-up .notif {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+}
+
+/* ── Карточка ──────────────────────────────────────────────── */
+.notif {
   background: rgba(241, 243, 247, 0.97);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -50,7 +70,7 @@
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.notif__app { font-weight: 600; color: #3c4043; }
-.notif__sep { opacity: 0.6; }
+.notif__app  { font-weight: 600; color: #3c4043; }
+.notif__sep  { opacity: 0.6; }
 .notif__time { font-weight: 400; }
-.notif__body  { font-size: 13px; color: #3c4043; margin-top: 2px; line-height: 1.4; }
+.notif__body { font-size: 13px; color: #3c4043; margin-top: 2px; line-height: 1.4; }

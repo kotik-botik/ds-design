@@ -602,7 +602,7 @@
   </div>
 
   <!-- System notifications stack (filled from JS while on the menu) -->
-  <div class="notifs" id="notifs"></div>
+  <div class="notifs" id="notifs" data-autostart data-mode="lock"></div>
 
   <!-- Gesture navigation pill (always on top) -->
   <div class="nav-pill"></div>
@@ -651,22 +651,19 @@
     history.pushState({ scr: 'menu' }, '');
     // Стек пушей, прилетевших на локскрин, уезжает вверх ВМЕСТЕ с локскрином:
     // тот же translateY(-100%) + fade, что и у .lockscreen. После анимации
-    // чистим DOM и переключаемся в heads-up (top:36) для будущих пушей.
+    // чистим DOM, переключаем .notifs в heads-up (deck) и поднимаем top:36.
     var nb = document.getElementById('notifs');
     if (nb) {
       nb.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.0, 0, 1), opacity 0.4s ease';
       nb.style.transform  = 'translateY(-100%)';
       nb.style.opacity    = '0';
       setTimeout(function () {
-        for (var i = 0; i < nb.children.length; i++) {
-          var el = nb.children[i];
-          if (el.__hideTimer) clearTimeout(el.__hideTimer);
-        }
-        nb.innerHTML       = '';
+        if (window.OkNotifs) window.OkNotifs.clearShown();
         nb.style.transition = 'none';
         nb.style.transform = '';
         nb.style.opacity   = '';
         device.classList.add('headsup-notifs');   // → notifs.top: 36px
+        if (window.OkNotifs) window.OkNotifs.setMode('heads-up');
       }, 520);
     }
     startNotifications();
@@ -676,6 +673,7 @@
   function lockDevice() {
     device.classList.remove('unlocked');
     device.classList.remove('headsup-notifs');
+    if (window.OkNotifs) window.OkNotifs.setMode('lock');
     resetLaunch();
     stopNotifications(true);          // clear & reset — replay on next unlock
     try { sessionStorage.removeItem(HOME_KEY); } catch (e) {}
@@ -686,6 +684,7 @@
     device.classList.add('no-anim');
     device.classList.add('unlocked');
     device.classList.add('headsup-notifs');   // сразу heads-up, без анимации
+    if (window.OkNotifs) window.OkNotifs.setMode('heads-up');
     void device.offsetWidth;          // commit before re-enabling transitions
     device.classList.remove('no-anim');
     stopNotifications(false);         // cancel any stale timer, keep delivered
