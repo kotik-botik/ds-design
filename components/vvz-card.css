@@ -49,23 +49,22 @@
   object-fit: cover;
 }
 
-/* Крестик «скрыть» в правом верхнем углу карточки (без фона) */
+/* Крестик «скрыть» в правом верхнем углу карточки — DS button-inline size 16 */
 .vvz-card__close {
   position: absolute;
   top: 8px;
   right: 8px;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  color: var(--dynamic-text-and-icons-base-primary);
+  z-index: 1;
 }
 .vvz-card__close svg { display: block; width: 16px; height: 16px; }
+
+/* Уход карточки/контейнера по «скрыть» */
+.vvz-card.__leaving {
+  opacity: 0;
+  transform: scale(0.92);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
 
 /* Контент — по центру */
 .vvz-card__content {
