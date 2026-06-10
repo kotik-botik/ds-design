@@ -61,8 +61,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    /* Без боковых паддингов — острова идут в края экрана */
-    padding: var(--space-2) 0 calc(72px + var(--space-6));
+    /* боковых паддингов нет (острова в края), но нижний клиренс под
+       прибитый таббар нужен, иначе последняя карточка уезжает под него */
+    padding-bottom: calc(72px + var(--space-6));
   }
 
   /* Tabbar прибит к низу экрана (fixed, потому что .phone-frame
@@ -181,17 +182,25 @@
   }
   .ll-stories__row::-webkit-scrollbar { display: none; }
 
-  /* Orbit (зазор кольца) у историй — 3px вместо дефолтных 4px для size-56 */
+  /* Кольцо историй — как в макете: зазор (orbit) 3px и штрих 3px
+     (в DS по умолчанию для size-56 — offset 4px и толщина 2px). */
   .ll-stories .avatar.__size-56.__ring-active,
   .ll-stories .avatar.__size-56.__ring-viewed {
+    outline-width: 3px;
     outline-offset: 3px;
+  }
+  /* outline не занимает место в потоке, поэтому орбиту (зазор 3 + штрих 3 = 6px)
+     выносим в layout через margin — кольцо реально занимает место и влияет
+     на высоту и ширину контейнера (а не торчит за боксом). */
+  .ll-stories .avatar.__size-56 {
+    margin: var(--space-1-5);
   }
 
   /* «+»-бейдж добавления своей истории — оранжевый кружок в белой обводке */
   .ll-story-add {
     box-sizing: border-box;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: var(--static-surface-status-accent);
     border: 3px solid var(--dynamic-surface-base-secondary);
@@ -200,6 +209,12 @@
     justify-content: center;
   }
   .ll-story-add .ll-icon { filter: brightness(0) invert(1); }
+  /* Позиция бейджа: торчит на 3px вправо за край аватарки, снизу — заподлицо (0) */
+  .ll-stories .avatar.__size-56 .avatar__addon.__pos-br.ll-story-add {
+    top: auto;
+    bottom: 0;
+    right: -3px;
+  }
 </style>
 </head>
 <body>
@@ -243,7 +258,7 @@
             <div class="avatar __size-56 __type-image __ring-active __has-addon">
               <img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KtrUxASmukStGfhv8gKAdnO8o0XlTdnM6-KfH9cwylJb75wIpMwrl23su2VU84PVRXgYOXqKlOJNEXEFe1u1a0c0jB7m3EkgrolCyD8RoAAAAp&dpr=2" alt="Ваша история">
               <div class="avatar__addon __pos-br ll-story-add">
-                <img class="ll-icon" src="assets/icons/add_24.svg" width="16" height="16" alt="">
+                <img class="ll-icon" src="assets/icons/add_24.svg" width="20" height="20" alt="">
               </div>
             </div>
             <!-- Не просмотренные (оранжевое кольцо) -->
