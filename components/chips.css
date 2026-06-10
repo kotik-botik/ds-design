@@ -63,7 +63,14 @@
   border: 0;
   border-radius: var(--chip-border-radius);
 
+  /* Типографика чипа — встроена в компонент (ds-title-m: 17/24, weight 600).
+     На странице добавлять ds-title-m на каждый чип не нужно. */
   font-family: var(--font-family);
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+
   cursor: pointer;
   transition:
     background-color var(--ds-animation-duration) var(--ds-animation-easing),
