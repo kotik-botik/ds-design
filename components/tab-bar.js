@@ -8,7 +8,7 @@
 (function () {
   // Слот → страница по умолчанию
   var ROUTES = {
-    feed: 'lenta-light.html',
+    feed: 'lenta-q3.html',
     message: 'messages.html'
   };
 
