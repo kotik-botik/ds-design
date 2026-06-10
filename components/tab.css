@@ -165,7 +165,7 @@
   --tab-overlay-color: var(--dynamic-surface-base-inverse-primary);
   --tab-clicked-transform: 0.94;
   --tab-clicked-time: 500ms;
-  --tab-horizontal-padding: var(--space-1);
+  --tab-horizontal-padding: 0;            /* base — без гор. паддингов, расстояние задаёт gap ряда */
   --tab-selected-left-icon-color: var(--dynamic-text-and-icons-base-primary);
   --tab-selected-right-icon-color: var(--dynamic-text-and-icons-base-primary);
   --tab-selected-label-color: var(--dynamic-text-and-icons-base-primary);
