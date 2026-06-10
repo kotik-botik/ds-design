@@ -29,4 +29,33 @@
     var href = hrefFor(btn);
     if (href) location.href = href;
   });
+
+  /* ---- Home-indicator swipe-up: жест по .tabbar__handle.
+     Свайп вверх на > 40px = «свернуть приложение» → start.html.
+     Имитирует системный gesture iOS home-indicator (быстрый свайп
+     от нижней кромки). ---- */
+  var handle = document.querySelector('.tabbar__handle');
+  if (handle) {
+    var sy = 0, dy = 0, dragging = false;
+
+    handle.addEventListener('pointerdown', function (e) {
+      dragging = true;
+      sy = e.clientY;
+      dy = 0;
+      try { handle.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    handle.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      dy = e.clientY - sy;
+    });
+
+    function endGesture() {
+      if (!dragging) return;
+      dragging = false;
+      if (dy < -40) location.href = 'start.html';
+    }
+    handle.addEventListener('pointerup', endGesture);
+    handle.addEventListener('pointercancel', endGesture);
+  }
 })();
