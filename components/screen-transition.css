@@ -5,11 +5,12 @@
  *   forward (push):  новый экран въезжает справа поверх, старый чуть уходит влево.
  *   back (pop):       текущий экран уезжает вправо поверх, предыдущий выезжает слева.
  *
- * Направление (тип VT 'forward'/'back') проставляется из Navigation API
- * в components/screen-transition.js (pageswap/pagereveal).
+ * Направление back помечается классом html.nav-back, который проставляется
+ * синхронно в pagereveal входящего документа (см. screen-transition.js) — это
+ * надёжнее, чем view-transition types для кросс-документных переходов.
  *
  * Кнопка «назад» в навбаре — стандартная .nav-bar__back → history.back().
- * В браузерах без View Transitions навигация мгновенная (без рывка).
+ * Без поддержки View Transitions навигация мгновенная (без рывка).
  */
 
 @view-transition { navigation: auto; }
@@ -23,11 +24,11 @@
 }
 
 /* ---- pop (back): текущий уезжает вправо ПОВЕРХ предыдущего ---- */
-:active-view-transition-type(back)::view-transition-old(root) {
+html.nav-back::view-transition-old(root) {
   z-index: 2;
   animation: screen-out-right 300ms cubic-bezier(0.2, 0, 0, 1) both;
 }
-:active-view-transition-type(back)::view-transition-new(root) {
+html.nav-back::view-transition-new(root) {
   z-index: 1;
   animation: screen-in-left 300ms cubic-bezier(0.2, 0, 0, 1) both;
 }
