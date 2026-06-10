@@ -434,14 +434,14 @@
      чтобы пуши «ОК» одинаково отображались и в этом стартовом экране,
      и внутри приложения (например, на /lenta-light.html). */
 
-  /* На локскрине стек начинается ПОД блоком время/дата/погода. Гэп после
-     него — 36px (Figma node 2360:88974 gap-36). Блок завершается на ~218px
-     (96 top + 78 время + 26 дата + 18 погода), значит notifs.top ≈ 254.
-     После анлока (.device.unlocked) — стандартный top 36px, как heads-up
-     в Android. Плавный переход — чтобы при свайпе-вверх стек уезжал к
-     самому верху, а не телепортировался. */
-  .device .notifs { top: 254px; transition: top 0.45s cubic-bezier(0.2, 0.0, 0, 1); }
-  .device.unlocked .notifs { top: 36px; }
+  /* На локскрине стек прикреплён к нижней половине под блоком время/дата/
+     погода (top 254 = 218 конец блока + 36 gap из Figma). При свайпе вверх
+     уезжает ВМЕСТЕ с локскрином (transform/opacity inline-driven в JS) —
+     не переезжает сам по себе. После анлока + клинапа .device получает
+     класс headsup-notifs → notifs.top переключается на 36px, как heads-up,
+     для следующих пушей. */
+  .device .notifs { top: 254px; }
+  .device.headsup-notifs .notifs { top: 36px; }
 
   /* ============================================================
      App-launch animation — tapped icon flies to splash logo position
@@ -649,12 +649,33 @@
     device.classList.add('unlocked');
     try { sessionStorage.setItem(HOME_KEY, '1'); } catch (e) {}
     history.pushState({ scr: 'menu' }, '');
+    // Стек пушей, прилетевших на локскрин, уезжает вверх ВМЕСТЕ с локскрином:
+    // тот же translateY(-100%) + fade, что и у .lockscreen. После анимации
+    // чистим DOM и переключаемся в heads-up (top:36) для будущих пушей.
+    var nb = document.getElementById('notifs');
+    if (nb) {
+      nb.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.0, 0, 1), opacity 0.4s ease';
+      nb.style.transform  = 'translateY(-100%)';
+      nb.style.opacity    = '0';
+      setTimeout(function () {
+        for (var i = 0; i < nb.children.length; i++) {
+          var el = nb.children[i];
+          if (el.__hideTimer) clearTimeout(el.__hideTimer);
+        }
+        nb.innerHTML       = '';
+        nb.style.transition = 'none';
+        nb.style.transform = '';
+        nb.style.opacity   = '';
+        device.classList.add('headsup-notifs');   // → notifs.top: 36px
+      }, 520);
+    }
     startNotifications();
   }
 
   // Slide back down to the lock screen (Back pressed from the menu).
   function lockDevice() {
     device.classList.remove('unlocked');
+    device.classList.remove('headsup-notifs');
     resetLaunch();
     stopNotifications(true);          // clear & reset — replay on next unlock
     try { sessionStorage.removeItem(HOME_KEY); } catch (e) {}
@@ -664,6 +685,7 @@
   function showHomeInstant() {
     device.classList.add('no-anim');
     device.classList.add('unlocked');
+    device.classList.add('headsup-notifs');   // сразу heads-up, без анимации
     void device.offsetWidth;          // commit before re-enabling transitions
     device.classList.remove('no-anim');
     stopNotifications(false);         // cancel any stale timer, keep delivered
