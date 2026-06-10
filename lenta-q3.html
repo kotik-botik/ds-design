@@ -1034,14 +1034,9 @@
     //    автору; на самой первой аватарке остаёмся в начале.
     //  - кольцо просмотренной аватарки → __ring-viewed.
     (function () {
-      var STORY_IMAGES = [
-        'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=720&h=1280&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1559548331-f9cb98280344?w=720&h=1280&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=720&h=1280&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=720&h=1280&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1505765050516-f72dcac9c60a?w=720&h=1280&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=720&h=1280&fit=crop&auto=format'
-      ];
+      // На картинку сториз — простая цветная заливка. Палитра ротируется
+      // по индексу сегмента, чтобы между сторизами визуально была разница.
+      var STORY_COLORS = ['#FF7700', '#5856D6', '#34C759', '#FF3B30', '#007AFF', '#AF52DE'];
 
       var row    = document.getElementById('ll-stories-row');
       var viewer = document.getElementById('ll-moment');
@@ -1063,7 +1058,7 @@
         var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
         var slides = [];
         for (var i = 0; i < count; i++) {
-          slides.push({ src: STORY_IMAGES[i % STORY_IMAGES.length] });
+          slides.push({ color: STORY_COLORS[i % STORY_COLORS.length] });
         }
         return slides;
       }
