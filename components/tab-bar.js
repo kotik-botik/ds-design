@@ -9,6 +9,7 @@
   // Слот → страница по умолчанию
   var ROUTES = {
     feed: 'lenta-light.html',
+    book: 'tribune.html',
     message: 'messages.html'
   };
 
