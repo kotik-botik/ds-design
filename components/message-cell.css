@@ -44,7 +44,7 @@
   color: var(--dynamic-text-and-icons-base-secondary);
 }
 .message-cell__preview {
-  flex: 1 1 auto;
+  flex: 0 1 auto;          /* не растягивается → время липнет к тексту */
   min-width: 0;
   display: flex;
   align-items: center;
