@@ -87,7 +87,17 @@
     if (this.slides && this.slides[index]) {
       var s = this.slides[index];
       var media = this.root.querySelector('.moment__media');
-      if (media && s.src) media.src = s.src;
+      if (media) {
+        if (s.src) {
+          media.src = s.src;
+          media.style.display = '';
+        } else if (s.color) {
+          // Сториз без картинки — просто цветная заливка карточки
+          media.removeAttribute('src');
+          media.style.display = 'none';
+        }
+      }
+      if (s.color) this.root.style.backgroundColor = s.color;
       var title = this.root.querySelector('.moment__header-title');
       if (title && s.title != null) title.textContent = s.title;
       var sub = this.root.querySelector('.moment__header-subtitle');

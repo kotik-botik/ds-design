@@ -235,6 +235,13 @@
   gap: var(--space-4);
   flex-shrink: 0;
 }
+.moment__header-actions [role="button"] {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
 
 /* ============================================================
    NAV — невидимые тап-зоны для prev/next.
@@ -242,7 +249,9 @@
    ============================================================ */
 .moment__nav {
   position: absolute;
-  top: 90px;  /* ниже статус-бара + прогресс-бара + header'а */
+  /* ниже status-bar (52) + progress (4+12*2≈26) + header (38) + запас 8
+     = 124. Чтобы тап-зоны не перехватывали клики по крестику/more/avatar. */
+  top: 124px;
   bottom: 80px; /* выше CTA/handle */
   left: 0;
   right: 0;
