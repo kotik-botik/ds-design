@@ -465,8 +465,8 @@
 
 <div class="device" id="device">
 
-  <!-- ========================= SPLASH (boot) ========================= -->
-  <div class="splash" id="splash">
+  <!-- ============== SPLASH приложения ОК (показывается при открытии) ============== -->
+  <div class="splash" id="splash" style="display:none">
     <div class="splash__logo" id="splashLogo">
       <!-- Логотип ОК (78×78). Воспроизведён по присланному изображению;
            при необходимости замени на официальный SVG/PNG из Figma. -->
@@ -658,23 +658,21 @@
   var notifBox = document.getElementById('notifs');
   var splash   = document.getElementById('splash');
 
-  /* ---- Boot splash: shown on cold start, then reveals the lock screen ---- */
-  var SPLASH_MS = 1900;   // авто-уход сплеша
-  var splashTimer = null;
+  /* ---- App-open splash: показывается ПОСЛЕ тапа по иконке ОК (пока
+     приложение «грузится»), затем переходим в ленту. На старте телефона
+     не показывается. ---- */
+  var SPLASH_MS = 1300;   // сколько держим сплеш перед переходом в ленту
 
-  function hideSplash(instant) {
+  function showSplash() {
     if (!splash) return;
-    if (splashTimer) { clearTimeout(splashTimer); splashTimer = null; }
-    if (instant) { splash.style.display = 'none'; }
-    else { splash.classList.add('is-done'); }
+    splash.style.display = 'flex';
+    // перезапустить анимацию появления лого
+    var logo = document.getElementById('splashLogo');
+    if (logo) { logo.style.animation = 'none'; void logo.offsetWidth; logo.style.animation = ''; }
   }
-  function runSplash() {
-    if (!splash) return;
-    splash.style.display = '';
-    splash.classList.remove('is-done');
-    splashTimer = setTimeout(function () { hideSplash(false); }, SPLASH_MS);
+  function hideSplash() {
+    if (splash) splash.style.display = 'none';
   }
-  if (splash) splash.addEventListener('click', function () { hideSplash(false); });
 
   // Remembers, for this tab session, that the phone is already unlocked /
   // sitting on the home screen — so coming Back from a feed lands on the
@@ -861,7 +859,10 @@
       launch.classList.add('is-animating');
 
       launch.addEventListener('animationend', function () {
-        window.location.href = href;
+        // Иконка раскрылась на весь экран → показываем сплеш ОК,
+        // держим момент и переходим в ленту.
+        showSplash();
+        setTimeout(function () { window.location.href = href; }, SPLASH_MS);
       }, { once: true });
     });
   });
@@ -870,14 +871,13 @@
      lock screen. pageshow fires on both fresh loads and bfcache restores. ---- */
   window.addEventListener('pageshow', function () {
     resetLaunch();
+    hideSplash();           // сплеш только при открытии приложения, не на старте
     var atHome = false;
     try { atHome = sessionStorage.getItem(HOME_KEY) === '1'; } catch (e) {}
     if (atHome) {
-      hideSplash(true);     // вернулись в меню — без сплеша и локскрина
-      showHomeInstant();
-    } else {
-      runSplash();          // холодный старт: сплеш → локскрин
+      showHomeInstant();    // вернулись в меню
     }
+    // иначе — остаёмся на локскрине (холодный старт телефона)
   });
 
   /* ---- History-driven screen switching ----
