@@ -53,21 +53,7 @@
     vertical-align: middle;
   }
 
-  /* Top — status-bar + nav-bar лежат на фоне страницы и скроллятся
-     вместе с лентой (не sticky). flex-shrink: 0 чтобы во флекс-колонке
-     родителя блок не усыхал по высоте. */
-  .ll-top {
-    flex-shrink: 0;
-    background: var(--dynamic-surface-base-primary);
-  }
-  /* Статус-бар прибит к верху скролл-контейнера, фон — background/primary,
-     чтобы контент проезжал под ним, не просвечивая. */
-  .status-bar {
-    position: sticky;
-    top: 0;
-    z-index: 60;
-    background: var(--dynamic-surface-base-primary);
-  }
+  /* Шапка — DS-компонент meshok-up (sticky + скругление снизу) */
 
   /* Локальная кастомная кнопка «Опубликовать» — высота 48.
      Не заносим в DS: используется только в этом прототипе. */
@@ -188,7 +174,7 @@
   .text-feed__media.__row { overflow-x: hidden; }
   .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
 
-  /* «Возможные друзья» — секция + горизонтальный ряд friend-card */
+  /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
   .ll-pymk { padding-top: var(--space-3); }
   .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); }
   .ll-pymk__row {
@@ -308,18 +294,16 @@
   <div class="phone-frame" data-screen>
     <div class="phone-frame__feed">
 
-      <!-- STATUS BAR — стики, всегда сверху -->
-      <div class="status-bar">
-        <span class="status-bar__time">9:41</span>
-        <span class="status-bar__indicators">
-          <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
-          <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
-          <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
-        </span>
-      </div>
-
-      <!-- NAVBAR — скроллится с лентой -->
-      <div class="ll-top">
+      <!-- Шапка: DS meshok-up = status-bar + nav-bar __type-publish -->
+      <div class="meshok-up">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">
+            <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+          </span>
+        </div>
         <div class="nav-bar __type-publish">
           <div class="nav-bar__leading">
             <div class="button-wrapper ll-publish-btn">
@@ -441,9 +425,9 @@
           </div>
         </article>
 
-        <!-- Возможные друзья — горизонтальный ряд DS uni-card -->
-        <section class="ll-pymk island" aria-label="Возможные друзья">
-          <div class="ll-pymk__title ds-title-l">Возможные друзья</div>
+        <!-- Возможно, вы знакомы — горизонтальный ряд DS uni-card -->
+        <section class="ll-pymk island" aria-label="Возможно, вы знакомы">
+          <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
           <div class="ll-pymk__row">
 
             <div class="friend-card">

@@ -32,6 +32,8 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  width: 100%;
+  height: auto;
   padding:
     var(--vibe-padding-top,    0)
     var(--vibe-padding-right,  0)
