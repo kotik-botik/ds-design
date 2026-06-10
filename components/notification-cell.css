@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);   /* время → общие друзья: 4px (по Figma) */
 }
 .notification-cell__mutuals span { color: var(--dynamic-text-and-icons-base-secondary); }
 
@@ -58,5 +58,5 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);   /* → кнопки: 8px (по Figma) */
 }
