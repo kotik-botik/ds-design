@@ -1119,6 +1119,20 @@
   <script>
     if (window.OkNotifs) window.OkNotifs.start();
 
+    // Тап по «Поиск» в навбаре — возвращает на локскрин (как Lock в Android).
+    // Сбрасываем at_home, чтобы start.html открылся не на меню, а на локе,
+    // и сбрасываем стрим пушей, чтобы они начались заново.
+    document.querySelectorAll('button[aria-label="Поиск"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        try {
+          sessionStorage.removeItem('okstart_at_home');
+          sessionStorage.removeItem('ok_notif_idx');
+          sessionStorage.removeItem('ok_notif_next_at');
+        } catch (e) {}
+        window.location.href = 'start.html';
+      });
+    });
+
     // Back из ленты всегда возвращает на меню (start.html), какая бы страница
     // ни была в реальной истории. Кладём sentinel-state и при popstate
     // принудительно идём в start.html — там pageshow увидит at_home=1 и
