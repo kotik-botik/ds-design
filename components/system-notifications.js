@@ -18,7 +18,8 @@
   ];
   var NOTIF_GAP      = 6000;   // 6s между пушами
   var NOTIF_FIRST    = 2000;   // первый — через 2s после старта
-  var NOTIF_LIFETIME = 10000;  // карточка сама уходит через 10s
+  var NOTIF_LIFETIME = 30000;  // карточка сама уходит через 30s (хватает,
+                               // чтобы все 3 накопились и были видны вместе)
   var MAX_STACK      = 3;      // сколько карточек одновременно видно
 
   var IDX_KEY  = 'ok_notif_idx';
@@ -56,28 +57,15 @@
     el.style.opacity    = '0';
     var done = function () {
       if (el.parentNode) el.parentNode.removeChild(el);
-      restack();
     };
     el.addEventListener('transitionend', done, { once: true });
     setTimeout(done, 360);
   }
 
-  function restack() {
-    var b = box(); if (!b) return;
-    var kids = b.children, visible = [];
-    for (var i = 0; i < kids.length; i++) {
-      if (!kids[i].__leaving) visible.push(kids[i]);
-    }
-    var n = visible.length;
-    for (var j = 0; j < n; j++) {
-      var el = visible[j];
-      var depth = n - 1 - j;
-      if (depth >= MAX_STACK) { dismiss(el); continue; }
-      el.style.transition = 'transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease';
-      el.style.zIndex     = String(100 - depth);
-      el.style.opacity    = depth === 0 ? '1' : (depth === 1 ? '0.92' : '0.8');
-      el.style.transform  = 'translateY(' + (depth * 10) + 'px) scale(' + (1 - depth * 0.05) + ')';
-    }
+  function snapBack(el) {
+    el.style.transition = 'transform 0.22s ease, opacity 0.22s ease';
+    el.style.transform  = '';
+    el.style.opacity    = '';
   }
 
   function attachSwipe(el) {
@@ -98,7 +86,7 @@
       if (!dragging) return;
       dragging = false;
       if (dy < -34) dismiss(el);
-      else          restack();
+      else          snapBack(el);
     }
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
@@ -125,12 +113,23 @@
     el.querySelector('.notif__body').textContent = data.body;
     b.appendChild(el);
     attachSwipe(el);
-    // приходим над стопкой и опускаемся в положение спереди
+    // Если уже накопилось MAX_STACK — самую старую (первую сверху) убираем,
+    // чтобы стек не уезжал за экран.
+    var alive = [];
+    for (var i = 0; i < b.children.length; i++) {
+      if (!b.children[i].__leaving) alive.push(b.children[i]);
+    }
+    if (alive.length > MAX_STACK) dismiss(alive[0]);
+
+    // Плавно «вываливается» сверху
     el.style.transition = 'none';
-    el.style.transform  = 'translateY(-46px) scale(1)';
+    el.style.transform  = 'translateY(-12px)';
     el.style.opacity    = '0';
     void el.offsetWidth;
-    restack();
+    el.style.transition = 'transform 0.36s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.28s ease';
+    el.style.transform  = '';
+    el.style.opacity    = '';
+
     el.__hideTimer = setTimeout(function () { dismiss(el); }, NOTIF_LIFETIME);
   }
 
