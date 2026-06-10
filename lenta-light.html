@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="components/system-notifications.css">
 <style>
   /* Убираем системный синий/серый оверлей при тапе по интерактивным
      элементам (кнопки, лейблы, ссылки) на мобильных. */
@@ -24,8 +25,17 @@
     max-width: none;
     height: 100dvh;
     min-height: 100dvh;
+    overflow: hidden;                 /* оболочка фиксирована, скроллит фид внутри */
     background: var(--dynamic-surface-base-primary);
   }
+  /* Скролл-контейнер — сам фид. min-height:0 обязателен: флекс-ребёнок иначе
+     не отдаёт переполнение скроллу (min-height:auto), и контент не скроллится. */
+  .phone-frame__feed {
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .phone-frame__feed::-webkit-scrollbar { display: none; }
 
   /* ============================================================
      Иконки — через <img src="…svg">. SVG отдаются Pages напрямую,
@@ -44,7 +54,14 @@
     flex-shrink: 0;
     background: var(--dynamic-surface-base-primary);
   }
-  .ll-top .status-bar { background: transparent; }
+  /* Статус-бар прибит к верху скролл-контейнера, фон — background/primary,
+     чтобы контент проезжал под ним, не просвечивая. */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: var(--dynamic-surface-base-primary);
+  }
 
   /* Локальная кастомная кнопка «Опубликовать» — высота 48.
      Не заносим в DS: используется только в этом прототипе. */
@@ -230,17 +247,18 @@
   <div class="phone-frame">
     <div class="phone-frame__feed">
 
-      <!-- STATUS + NAVBAR ----------------------------------------------- -->
-      <div class="ll-top">
-        <div class="status-bar">
-          <span class="status-bar__time">9:41</span>
-          <span class="status-bar__indicators">
-            <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
-            <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
-            <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
-          </span>
-        </div>
+      <!-- STATUS BAR — стики, всегда сверху -->
+      <div class="status-bar">
+        <span class="status-bar__time">9:41</span>
+        <span class="status-bar__indicators">
+          <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+          <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+          <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+        </span>
+      </div>
 
+      <!-- NAVBAR — скроллится с лентой -->
+      <div class="ll-top">
         <div class="nav-bar __type-publish">
           <div class="nav-bar__leading">
             <div class="button-wrapper ll-publish-btn">
@@ -791,6 +809,15 @@
         });
       }
     })();
+  </script>
+
+  <!-- Stack of system push-notifications from «ОК», прилетающих
+       пока пользователь листает ленту. Стрим начат на стартовом
+       экране (start.html) и продолжается здесь. -->
+  <div class="notifs" id="notifs"></div>
+  <script src="components/system-notifications.js"></script>
+  <script>
+    if (window.OkNotifs) window.OkNotifs.start();
   </script>
 
 </body>
