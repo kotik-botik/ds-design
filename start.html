@@ -434,6 +434,15 @@
      чтобы пуши «ОК» одинаково отображались и в этом стартовом экране,
      и внутри приложения (например, на /lenta-light.html). */
 
+  /* На локскрине стек начинается ПОД блоком время/дата/погода. Гэп после
+     него — 36px (Figma node 2360:88974 gap-36). Блок завершается на ~218px
+     (96 top + 78 время + 26 дата + 18 погода), значит notifs.top ≈ 254.
+     После анлока (.device.unlocked) — стандартный top 36px, как heads-up
+     в Android. Плавный переход — чтобы при свайпе-вверх стек уезжал к
+     самому верху, а не телепортировался. */
+  .device .notifs { top: 254px; transition: top 0.45s cubic-bezier(0.2, 0.0, 0, 1); }
+  .device.unlocked .notifs { top: 36px; }
+
   /* ============================================================
      App-launch animation — tapped icon flies to splash logo position
      while the orange splash background reveals as a growing circle
