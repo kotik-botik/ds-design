@@ -18,7 +18,7 @@
   top: 0;
   z-index: 50;
   flex-shrink: 0;
-  background-color: var(--dynamic-surface-base-secondary);
+  background-color: transparent;
   border-radius: 0 0 20px 20px;
   overflow: hidden;
 }
@@ -32,7 +32,8 @@
   justify-content: space-between;
   height: 44px;
   padding: var(--space-2) var(--space-5) var(--space-2);
-  background-color: var(--dynamic-surface-base-secondary);
+  /* Цвет фона зафиксирован — переопределять на странице нельзя */
+  background-color: var(--dynamic-surface-base-secondary) !important;
   color: var(--dynamic-text-and-icons-base-primary);
   font-family: var(--font-family);
 }
@@ -60,7 +61,8 @@
   justify-content: space-between;
   height: 56px;
   padding: 0 var(--space-4);
-  background-color: var(--dynamic-surface-base-secondary);
+  /* Цвет фона зафиксирован — переопределять на странице нельзя */
+  background-color: var(--dynamic-surface-base-secondary) !important;
 }
 
 .nav-bar__leading,
@@ -97,7 +99,7 @@
 .nav-bar.__type-publish {
   height: auto;
   padding: var(--space-2) var(--space-4);
-  background-color: transparent;
+  background-color: transparent !important;
 }
 .nav-bar.__type-publish .nav-bar__trailing {
   gap: var(--space-4);
