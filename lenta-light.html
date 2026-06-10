@@ -182,10 +182,23 @@
   .text-feed__media.__row { overflow-x: hidden; }
   .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
 
-  /* Баннер под сторис — картинка во всю ширину контейнера ленты,
-     горизонтальные паддинги = 0 (наследует full-width от .ll-feed). */
-  .ll-banner { display: block; }
-  .ll-banner__img { display: block; width: 100%; height: auto; }
+  /* Баннер под сторис — PNG на фоне контейнера, паддинги 16, текст внутри. */
+  .ll-banner {
+    display: block;
+    box-sizing: border-box;
+    padding: 16px;
+    background-image: url('assets/icons/bannerBack1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .ll-banner__text {
+    display: block;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
 
   /* Stories (Моменты) — горизонтальный ряд историй между навбаром и лентой
      (вне .ll-feed). Кружки — DS-компонент .avatar (__size-56 +
@@ -328,8 +341,8 @@
       <div class="ll-feed">
 
         <!-- BANNER под сторис — картинка во всю ширину контейнера ленты -->
-        <a class="ll-banner" href="#" aria-label="Баннер">
-          <img class="ll-banner__img" src="assets/icons/bannerBack1.png" alt="">
+        <a class="ll-banner" href="#">
+          <span class="ll-banner__text">Добрый дружеский привет! С пожеланием добра!</span>
         </a>
 
         <!-- 1. Короткий текст ------------------------------------------- -->
