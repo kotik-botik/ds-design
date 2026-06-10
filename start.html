@@ -792,8 +792,11 @@
     try { atHome = sessionStorage.getItem(HOME_KEY) === '1'; } catch (e) {}
     if (atHome) {
       showHomeInstant();    // вернулись в меню
+    } else {
+      // Холодный старт телефона: пуши должны приходить и на локскрин
+      // (продолжатся после свайпа вверх и дальше в приложении).
+      startNotifications();
     }
-    // иначе — остаёмся на локскрине (холодный старт телефона)
   });
 
   /* ---- History-driven screen switching ----

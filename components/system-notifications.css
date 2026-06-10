@@ -50,5 +50,5 @@
 }
 .notif__app { font-weight: 600; color: #3c4043; }
 .notif__sep { opacity: 0.6; }
-.notif__title { font-size: 14px; font-weight: 600; margin-top: 5px; }
-.notif__body  { font-size: 13px; color: #3c4043; margin-top: 1px; line-height: 1.3; }
+.notif__time { font-weight: 400; }
+.notif__body  { font-size: 13px; color: #3c4043; margin-top: 3px; line-height: 1.3; }
