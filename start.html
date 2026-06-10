@@ -320,9 +320,10 @@
     white-space: nowrap;
   }
 
-  /* App icon — «Лента Light» (round, light tile + orange feed glyph) */
-  .icon-lenta-light {
-    background: radial-gradient(120% 120% at 30% 25%, #ffffff 0%, #eef0f4 100%);
+  /* App icon — «ОК» (squircle, terracotta frame around a jam-jar) */
+  .icon-ok {
+    background: radial-gradient(130% 120% at 30% 18%, #ef7d33 0%, #d75f23 52%, #b1471a 100%);
+    border-radius: 24%;                 /* squircle tile, like the artwork */
   }
 
   /* Hotseat dock — transparent row of system apps (Pixel) */
@@ -536,13 +537,73 @@
 
     <!-- App grid -->
     <div class="home-grid">
-      <!-- Лента Light → lenta-light.html -->
+      <!-- ОК → lenta-light.html -->
       <button class="app" data-href="lenta-light.html">
-        <span class="app__icon icon-lenta-light">
-          <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
-            <rect x="7"  y="9"  width="22" height="4" rx="2" fill="#ff7a00"/>
-            <rect x="7"  y="16" width="22" height="4" rx="2" fill="#ff7a00" fill-opacity="0.85"/>
-            <rect x="7"  y="23" width="14" height="4" rx="2" fill="#ff7a00" fill-opacity="0.7"/>
+        <span class="app__icon icon-ok">
+          <svg width="58" height="58" viewBox="0 0 100 100" fill="none">
+            <defs>
+              <linearGradient id="okJam" x1="50" y1="22" x2="50" y2="90" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#f4a93f"/>
+                <stop offset="0.42" stop-color="#dc6420"/>
+                <stop offset="1" stop-color="#7c1410"/>
+              </linearGradient>
+              <linearGradient id="okLid" x1="50" y1="11" x2="50" y2="25" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#f6d278"/>
+                <stop offset="1" stop-color="#c8902e"/>
+              </linearGradient>
+              <clipPath id="okJarClip">
+                <rect x="16" y="22" width="68" height="66" rx="12"/>
+              </clipPath>
+            </defs>
+
+            <!-- Jar body filled with jam -->
+            <rect x="16" y="22" width="68" height="66" rx="12" fill="url(#okJam)"/>
+
+            <!-- Berries settled at the bottom (clipped to the jar) -->
+            <g clip-path="url(#okJarClip)">
+              <g fill="#a5110f">
+                <circle cx="26" cy="80" r="7"/><circle cx="40" cy="83" r="7"/>
+                <circle cx="54" cy="81" r="7"/><circle cx="68" cy="83" r="7"/>
+                <circle cx="78" cy="79" r="7"/><circle cx="33" cy="73" r="6"/>
+                <circle cx="47" cy="74" r="6"/><circle cx="61" cy="73" r="6"/>
+                <circle cx="74" cy="72" r="6"/><circle cx="22" cy="72" r="6"/>
+              </g>
+              <g fill="#c8211c">
+                <circle cx="30" cy="76" r="5"/><circle cx="44" cy="78" r="5"/>
+                <circle cx="58" cy="76" r="5"/><circle cx="71" cy="77" r="5"/>
+              </g>
+              <g fill="#ff8a7a" fill-opacity="0.7">
+                <circle cx="28" cy="78" r="1.6"/><circle cx="42" cy="81" r="1.6"/>
+                <circle cx="56" cy="79" r="1.6"/><circle cx="70" cy="80" r="1.6"/>
+              </g>
+              <!-- glass highlight -->
+              <rect x="22" y="26" width="8" height="56" rx="4" fill="#ffffff" fill-opacity="0.12"/>
+            </g>
+
+            <!-- Jar neck + gold lid -->
+            <rect x="22" y="18" width="56" height="8" rx="3" fill="#caa24a" fill-opacity="0.55"/>
+            <rect x="24" y="11" width="52" height="11" rx="5" fill="url(#okLid)"/>
+            <!-- twine bow on the lid -->
+            <g stroke="#b5651d" stroke-width="2.4" fill="none" stroke-linecap="round">
+              <path d="M50 16.5 C44 12, 39 12, 41 17 C43 21, 49 18, 50 16.5Z"/>
+              <path d="M50 16.5 C56 12, 61 12, 59 17 C57 21, 51 18, 50 16.5Z"/>
+            </g>
+            <circle cx="50" cy="16.5" r="1.8" fill="#9c4f14"/>
+
+            <!-- Kraft tag «С любовью!» -->
+            <g transform="rotate(-16 26 52)">
+              <line x1="36" y1="40" x2="26" y2="48" stroke="#b5651d" stroke-width="1.6" stroke-linecap="round"/>
+              <rect x="12" y="46" width="24" height="16" rx="3" fill="#decba0" stroke="#bfa676" stroke-width="1"/>
+              <circle cx="16" cy="50" r="1.4" fill="#8f7c52"/>
+              <path d="M23 53.5 a1.7 1.7 0 0 1 3 0 a1.7 1.7 0 0 1 3 0 c0 1.6-3 3.4-3 3.4 c0 0-3-1.8-3-3.4Z" fill="#c0392b"/>
+            </g>
+
+            <!-- ОК figure -->
+            <g fill="#f4ecd6" stroke="#f4ecd6" stroke-width="9.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="50" cy="40" r="9.5" stroke="none"/>
+              <path d="M41 47 L50 63 L41 81" fill="none"/>
+              <path d="M59 47 L50 63 L59 81" fill="none"/>
+            </g>
           </svg>
         </span>
         <span class="app__label">ОК</span>
@@ -659,7 +720,7 @@
   }
 
   /* ============================================================
-     System notifications from «Лента Light» — arrive on the menu
+     System notifications from «ОК» — arrive on the menu
      one after another, 6 seconds apart, while it stays unlocked.
      ============================================================ */
   var NOTIFS = [
@@ -680,10 +741,10 @@
     el.className = 'notif';
     el.innerHTML =
       '<div class="notif__head">' +
-        '<span class="notif__appicon"><svg width="11" height="11" viewBox="0 0 36 36" fill="none">' +
-          '<rect x="7" y="9" width="22" height="4" rx="2" fill="#fff"/>' +
-          '<rect x="7" y="16" width="22" height="4" rx="2" fill="#fff" fill-opacity="0.9"/>' +
-          '<rect x="7" y="23" width="14" height="4" rx="2" fill="#fff" fill-opacity="0.8"/>' +
+        '<span class="notif__appicon"><svg width="12" height="12" viewBox="0 0 100 100" fill="none">' +
+          '<circle cx="50" cy="34" r="13" fill="#fff"/>' +
+          '<path d="M38 44 L50 64 L38 84" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<path d="M62 44 L50 64 L62 84" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>' +
         '</svg></span>' +
         '<span class="notif__app">ОК</span>' +
         '<span class="notif__sep">·</span><span>сейчас</span>' +
@@ -746,7 +807,7 @@
       launch.style.width  = rect.width + 'px';
       launch.style.height = rect.height + 'px';
       launch.className = 'launch';                 // reset
-      launch.classList.add('icon-lenta-light');
+      launch.classList.add('icon-ok');
       glyph.innerHTML = iconEl.innerHTML;
 
       // Remember we're "in the app" so Back returns to the menu
