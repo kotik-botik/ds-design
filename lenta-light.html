@@ -311,6 +311,67 @@
     bottom: -6px;   /* нижняя граница кольца = ава + 6px */
     right: -9px;    /* правая граница кольца (−6) + вылет 3px */
   }
+
+  /* ============================================================
+     Экран «Уведомления» — оверлей внутри .phone-frame, открывается
+     по тапу на колокольчик. z-45: поверх ленты, но под таббаром (z-50).
+     ============================================================ */
+  .ll-notifs-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 45;
+    display: flex;
+    flex-direction: column;
+    background: var(--dynamic-surface-base-primary);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+    visibility: hidden;
+  }
+  .ll-notifs-screen.is-open { transform: none; visibility: visible; }
+
+  .ll-notifs-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: 56px;
+    padding: 0 var(--space-4);
+    background: var(--dynamic-surface-base-primary);
+  }
+  .ll-notifs-back {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; margin-left: -8px;
+    border: 0; background: none; cursor: pointer; border-radius: 50%;
+  }
+  .ll-notifs-title { color: var(--dynamic-text-and-icons-base-primary); }
+
+  .ll-notifs-list {
+    flex: 1; min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex; flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4) calc(72px + var(--space-6));
+  }
+  .ll-notifs-list::-webkit-scrollbar { display: none; }
+
+  /* Карточка-уведомление: аватар слева + контент (заголовок, время,
+     общие друзья, кнопки). */
+  .ll-notif {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    padding: var(--space-4);
+    border-radius: 20px;
+    background: var(--dynamic-surface-base-secondary);
+  }
+  .ll-notif__body { flex: 1 1 0; min-width: 0; }
+  .ll-notif__title { color: var(--dynamic-text-and-icons-base-primary); }
+  .ll-notif__title b { font-weight: 600; }
+  .ll-notif__time { margin-top: 2px; color: var(--dynamic-text-and-icons-base-secondary); }
+  .ll-notif__mutuals { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); }
+  .ll-notif__mutuals span { color: var(--dynamic-text-and-icons-base-secondary); }
+  .ll-notif__actions { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
 </style>
 </head>
 <body>
@@ -339,7 +400,7 @@
             </div>
           </div>
           <div class="nav-bar__trailing">
-            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Уведомления"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/notifications_24.svg" width="24" height="24" alt=""></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" id="notifsBtn" aria-label="Уведомления"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/notifications_24.svg" width="24" height="24" alt=""></span></button></span>
             <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Поиск"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/search_24.svg" width="24" height="24" alt=""></span></button></span>
           </div>
         </div>
@@ -896,7 +957,112 @@
         <div class="tabbar__handle"></div>
       </div>
     </div>
+
+    <!-- ЭКРАН «УВЕДОМЛЕНИЯ» (открывается по тапу на колокольчик) ------- -->
+    <div class="ll-notifs-screen" id="notifsScreen" aria-hidden="true">
+      <!-- статус-бар (тот же, что в ленте) -->
+      <div class="status-bar">
+        <span class="status-bar__time">9:41</span>
+        <span class="status-bar__indicators">
+          <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+          <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+          <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+        </span>
+      </div>
+
+      <!-- шапка: назад + заголовок -->
+      <div class="ll-notifs-head">
+        <button class="ll-notifs-back" id="notifsBack" aria-label="Назад">
+          <img class="ll-icon" src="assets/icons/arrow_left_24.svg" width="24" height="24" alt="">
+        </button>
+        <div class="ds-title-m ll-notifs-title">Уведомления</div>
+      </div>
+
+      <!-- список уведомлений -->
+      <div class="ll-notifs-list">
+
+        <!-- 1. Рекомендуемый друг -->
+        <div class="ll-notif">
+          <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1Kfo9Zt3gGv4UiAElcWpOIqmTdjPAgyp40BsUSSsVon9r4FKb_aTiJNXob5mDbxorb2lrYZJCYaqDuQdGTOrovgKcx6q31ILx5KIXdZw2sAAAAp&dpr=2" alt=""></div>
+          <div class="ll-notif__body">
+            <div class="ds-body-m ll-notif__title">Новый рекомендуемый друг: <b>Анна Первомайская</b></div>
+            <div class="ds-caption-m ll-notif__time">сегодня в 12:34</div>
+            <div class="ll-notif__mutuals">
+              <div class="avatars-view __size-24">
+                <div class="avatars-view__stack">
+                  <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/96?img=32" alt=""></div>
+                  <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/96?img=47" alt=""></div>
+                  <div class="avatar __size-24 __type-image"><img src="https://i.pravatar.cc/96?img=12" alt=""></div>
+                </div>
+              </div>
+              <span class="ds-caption-m">4 общих друга</span>
+            </div>
+            <div class="ll-notif__actions">
+              <div class="button-wrapper __size-28"><button class="button-container __style-primary"><span class="button-content">Дружить</span></button></div>
+              <div class="button-wrapper __size-28"><button class="button-container __style-secondary"><span class="button-content">Скрыть</span></button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Подарок -->
+        <div class="ll-notif">
+          <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1LTuMnskCqIRVVNmbIRQm0SyOPKRB5xqO1dDrESkvimyYk1_3Bg6yWFnHdTR3FZ6H0cpIr5ieLa6VEDiSnjOEc3ciYl1SSXw8J7D33_QccAAAAp&dpr=2" alt=""></div>
+          <div class="ll-notif__body">
+            <div class="ds-body-m ll-notif__title"><b>Мария Маяковская</b> подарила вам подарок 🎁</div>
+            <div class="ds-caption-m ll-notif__time">сегодня в 11:20</div>
+            <div class="ll-notif__actions">
+              <div class="button-wrapper __size-28"><button class="button-container __style-secondary"><span class="button-content">Подарить в ответ</span></button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Класс -->
+        <div class="ll-notif">
+          <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1JaqMKzVCjqHIK2OWNJ5ssBLHcx_EumdtKm02Xcy3EoDOVtR0Qi5PDDAdvSEytm8rgVKhRZBqRI3iEZYQJk8Nb6taKPDy5afugnUQGYcIUAAAAp&dpr=2" alt=""></div>
+          <div class="ll-notif__body">
+            <div class="ds-body-m ll-notif__title"><b>Александр Борщицкий</b> и ещё 8 человек оценили ваше фото</div>
+            <div class="ds-caption-m ll-notif__time">вчера в 19:05</div>
+          </div>
+        </div>
+
+        <!-- 4. Открытка -->
+        <div class="ll-notif">
+          <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1I9HGCfW9fo2EXMv2U4ikeSP2MeOu4OuzjP4S9UEMYj0m1njyr6jFg6ca9umJuV5wq30hV1dtmwUVVLttsWQYn38GuTLO2jof_m9WN7KlsAAAAp&dpr=2" alt=""></div>
+          <div class="ll-notif__body">
+            <div class="ds-body-m ll-notif__title"><b>Евгения Молчанова</b> отправила вам открытку «С добром!»</div>
+            <div class="ds-caption-m ll-notif__time">вчера</div>
+          </div>
+        </div>
+
+        <!-- 5. Подарок -->
+        <div class="ll-notif">
+          <div class="avatar __size-56 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KlPJb2p-6eK2lnJ5zICRbTaNaonSN6tKv9jm9OP4liccV1Jgpm_D-XHaUnT4NuMNnP3vDReRbjjmJ7dZqat-wXAZKU9tVWLrcf8vhMiW0AAAAp&dpr=2" alt=""></div>
+          <div class="ll-notif__body">
+            <div class="ds-body-m ll-notif__title"><b>Альберт Фёдоров</b> хочет подарить вам подарок</div>
+            <div class="ds-caption-m ll-notif__time">2 дня назад</div>
+            <div class="ll-notif__actions">
+              <div class="button-wrapper __size-28"><button class="button-container __style-primary"><span class="button-content">Принять</span></button></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
+
+  <script>
+    // Экран «Уведомления»: открытие по колокольчику, закрытие по «назад».
+    (function () {
+      var btn = document.getElementById('notifsBtn');
+      var screen = document.getElementById('notifsScreen');
+      var back = document.getElementById('notifsBack');
+      if (!btn || !screen) return;
+      function open()  { screen.classList.add('is-open');    screen.setAttribute('aria-hidden', 'false'); }
+      function close() { screen.classList.remove('is-open'); screen.setAttribute('aria-hidden', 'true'); }
+      btn.addEventListener('click', open);
+      if (back) back.addEventListener('click', close);
+    })();
+  </script>
 
   <script>
     // Скрытая «пасхалка»: 3 нажатия по «Опубликовать» в течение 800ms
