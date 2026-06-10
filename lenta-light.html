@@ -182,6 +182,11 @@
   .text-feed__media.__row { overflow-x: hidden; }
   .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
 
+  /* Баннер под сторис — картинка во всю ширину контейнера ленты,
+     горизонтальные паддинги = 0 (наследует full-width от .ll-feed). */
+  .ll-banner { display: block; }
+  .ll-banner__img { display: block; width: 100%; height: auto; }
+
   /* Stories (Моменты) — горизонтальный ряд историй между навбаром и лентой
      (вне .ll-feed). Кружки — DS-компонент .avatar (__size-56 +
      __ring-active/__ring-viewed), «+» своей истории — аддон .avatar__addon.
