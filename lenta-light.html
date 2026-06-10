@@ -51,21 +51,7 @@
     vertical-align: middle;
   }
 
-  /* Top — status-bar + nav-bar лежат на фоне страницы и скроллятся
-     вместе с лентой (не sticky). flex-shrink: 0 чтобы во флекс-колонке
-     родителя блок не усыхал по высоте. */
-  .ll-top {
-    flex-shrink: 0;
-    background: var(--dynamic-surface-base-primary);
-  }
-  /* Статус-бар прибит к верху скролл-контейнера, фон — background/primary,
-     чтобы контент проезжал под ним, не просвечивая. */
-  .status-bar {
-    position: sticky;
-    top: 0;
-    z-index: 60;
-    background: var(--dynamic-surface-base-primary);
-  }
+  /* Шапка — DS-компонент meshok-up (sticky + скругление снизу) */
 
   /* Локальная кастомная кнопка «Опубликовать» — высота 48.
      Не заносим в DS: используется только в этом прототипе. */
@@ -306,18 +292,17 @@
   <div class="phone-frame">
     <div class="phone-frame__feed">
 
-      <!-- STATUS BAR — стики, всегда сверху -->
-      <div class="status-bar">
-        <span class="status-bar__time">9:41</span>
-        <span class="status-bar__indicators">
-          <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
-          <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
-          <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
-        </span>
-      </div>
+      <!-- STATUS + NAVBAR — DS meshok-up -->
+      <div class="meshok-up">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">
+            <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+          </span>
+        </div>
 
-      <!-- NAVBAR — скроллится с лентой -->
-      <div class="ll-top">
         <div class="nav-bar __type-publish">
           <div class="nav-bar__leading">
             <div class="button-wrapper ll-publish-btn">
