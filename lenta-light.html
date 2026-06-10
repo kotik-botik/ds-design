@@ -167,11 +167,8 @@
 
   /* Stories (Моменты) — горизонтальный ряд историй между навбаром и лентой
      (вне .ll-feed). Кружки — DS-компонент .avatar (__size-56 +
-     __ring-active/__ring-viewed), «+» своей истории — аддон .avatar__addon. */
-  .ll-stories {
-    /* гасим 4px-гэп flex-контейнера .phone-frame__feed сверху → гэп с навбаром 0 */
-    margin-top: calc(var(--space-1) * -1);
-  }
+     __ring-active/__ring-viewed), «+» своей истории — аддон .avatar__addon.
+     Гэп до навбара = 0 благодаря gap:0 у .phone-frame__feed. */
   .ll-stories__row {
     display: flex;
     gap: var(--space-3);
