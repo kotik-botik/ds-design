@@ -1,34 +1,43 @@
 /**
  * OK Design System (proto) — ScreenTransition
  *
- * Системный переход между экранами-страницами через нативный
- * View Transitions API: кросс-документный переход включается для всех
- * same-origin навигаций (@view-transition { navigation: auto }).
+ * Системный направленный переход между экранами через View Transitions API.
+ *   forward (push):  новый экран въезжает справа поверх, старый чуть уходит влево.
+ *   back (pop):       текущий экран уезжает вправо поверх, предыдущий выезжает слева.
  *
- * Кнопка «назад» в навбаре — стандартная .nav-bar__back (button-inline +
- * иконка назад, size 24): по тапу делает history.back() (см.
- * components/screen-transition.js). Ничего прокидывать на страницу не нужно.
+ * Направление (тип VT 'forward'/'back') проставляется из Navigation API
+ * в components/screen-transition.js (pageswap/pagereveal).
  *
- * В браузерах без поддержки View Transitions навигация просто происходит
- * мгновенно — без рывка и анимации.
+ * Кнопка «назад» в навбаре — стандартная .nav-bar__back → history.back().
+ * В браузерах без View Transitions навигация мгновенная (без рывка).
  */
 
 @view-transition { navigation: auto; }
 
+/* ---- по умолчанию = push (forward) ---- */
 ::view-transition-old(root) {
-  animation: screen-vt-old 220ms cubic-bezier(0.2, 0, 0, 1) both;
+  animation: screen-out-left 300ms cubic-bezier(0.2, 0, 0, 1) both;
 }
 ::view-transition-new(root) {
-  animation: screen-vt-new 260ms cubic-bezier(0.2, 0, 0, 1) both;
+  animation: screen-in-right 300ms cubic-bezier(0.2, 0, 0, 1) both;
 }
-@keyframes screen-vt-old {
-  to { opacity: 0; transform: scale(0.985); }
+
+/* ---- pop (back): текущий уезжает вправо ПОВЕРХ предыдущего ---- */
+:active-view-transition-type(back)::view-transition-old(root) {
+  z-index: 2;
+  animation: screen-out-right 300ms cubic-bezier(0.2, 0, 0, 1) both;
 }
-@keyframes screen-vt-new {
-  from { opacity: 0; transform: translateX(24px); }
+:active-view-transition-type(back)::view-transition-new(root) {
+  z-index: 1;
+  animation: screen-in-left 300ms cubic-bezier(0.2, 0, 0, 1) both;
 }
+
+@keyframes screen-in-right  { from { transform: translateX(100%); }  to { transform: translateX(0); } }
+@keyframes screen-out-left  { from { transform: translateX(0); }     to { transform: translateX(-25%); } }
+@keyframes screen-in-left   { from { transform: translateX(-25%); }  to { transform: translateX(0); } }
+@keyframes screen-out-right { from { transform: translateX(0); }     to { transform: translateX(100%); } }
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
-  ::view-transition-new(root) { animation: none; }
+  ::view-transition-new(root) { animation: none !important; }
 }
