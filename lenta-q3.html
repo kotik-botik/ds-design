@@ -429,16 +429,16 @@
           </div>
         </article>
 
-        <!-- Возможно, вы знакомы — горизонтальный ряд DS uni-card -->
-        <section class="ll-pymk island" aria-label="Возможно, вы знакомы">
+        <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible) -->
+        <section class="ll-pymk island" data-dismiss-row aria-label="Возможно, вы знакомы">
           <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
           <div class="ll-pymk__row">
 
-            <div class="friend-card">
+            <div class="friend-card" data-dismiss-target>
               <div class="friend-card__media">
                 <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=47')"></div>
                 <img src="https://i.pravatar.cc/240?img=47" alt="">
-                <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
               </div>
               <div class="friend-card__content">
                 <div class="friend-card__title ds-title-s">Алёна Ящук</div>
@@ -449,11 +449,11 @@
               </div>
             </div>
 
-            <div class="friend-card">
+            <div class="friend-card" data-dismiss-target>
               <div class="friend-card__media">
                 <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=44')"></div>
                 <img src="https://i.pravatar.cc/240?img=44" alt="">
-                <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
               </div>
               <div class="friend-card__content">
                 <div class="friend-card__title ds-title-s">Анна Смирнова</div>
@@ -464,11 +464,11 @@
               </div>
             </div>
 
-            <div class="friend-card">
+            <div class="friend-card" data-dismiss-target>
               <div class="friend-card__media">
                 <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=52')"></div>
                 <img src="https://i.pravatar.cc/240?img=52" alt="">
-                <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
               </div>
               <div class="friend-card__content">
                 <div class="friend-card__title ds-title-s">Александр Фёдоров</div>
@@ -479,11 +479,11 @@
               </div>
             </div>
 
-            <div class="friend-card">
+            <div class="friend-card" data-dismiss-target>
               <div class="friend-card__media">
                 <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=45')"></div>
                 <img src="https://i.pravatar.cc/240?img=45" alt="">
-                <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
               </div>
               <div class="friend-card__content">
                 <div class="friend-card__title ds-title-s">Мария Иванова</div>
@@ -494,11 +494,11 @@
               </div>
             </div>
 
-            <div class="friend-card">
+            <div class="friend-card" data-dismiss-target>
               <div class="friend-card__media">
                 <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=33')"></div>
                 <img src="https://i.pravatar.cc/240?img=33" alt="">
-                <button class="friend-card__close" aria-label="Скрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
               </div>
               <div class="friend-card__content">
                 <div class="friend-card__title ds-title-s">Олег Зайцев</div>
@@ -1019,6 +1019,7 @@
     })();
   </script>
   <script src="components/tab-bar.js"></script>
+  <script src="components/dismissible.js"></script>
 
   <!-- Просмотрщик сториз ----------------------------------------------- -->
   <script src="components/moment.js"></script>
