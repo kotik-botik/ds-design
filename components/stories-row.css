@@ -1,0 +1,86 @@
+/**
+ * OK Design System — StoriesRow
+ *
+ * Горизонтальный ряд аватарок-сториз под навбаром (вне ленты-острова).
+ * Кружки — DS-компонент .avatar (__size-56 + __ring-active/__ring-viewed).
+ * Первая аватарка опционально — «Ваша история» с «+»-аддоном.
+ *
+ *   <div class="stories-row">
+ *     <!-- Своя история (orange ring + «+») -->
+ *     <div class="avatar __size-56 __type-image __ring-active __has-addon"
+ *          data-skip-viewer>
+ *       <img src="…">
+ *       <div class="avatar__addon __pos-br stories-row__add">
+ *         <img src="assets/icons/add_24.svg" width="20" height="20" alt="">
+ *       </div>
+ *     </div>
+ *
+ *     <!-- Сториз друга — открывает viewer. Количество палочек прогресса в
+ *          viewer'е = data-stories. data-cta-label (опц.) рендерит кнопку
+ *          снизу сториз. -->
+ *     <div class="avatar __size-56 __type-image __ring-active"
+ *          data-stories="3" data-name="Лиза"
+ *          data-cta-label="Поздравить">
+ *       <img src="…">
+ *     </div>
+ *     …
+ *   </div>
+ *
+ * Кольцо: зазор (orbit) 3px и штрих 3px — отличается от DS-дефолта для
+ * size-56 (offset 4 / толщина 2), даём более «инстаграмное» кольцо.
+ * Аватарка получает margin 6, чтобы orbit реально занимал место в потоке
+ * (outline сам по себе не двигает соседей).
+ */
+
+.stories-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  /* отступы блока: сверху 8, по бокам 16, снизу 16. Верт. паддинг также
+     даёт место outline-кольцу и аддону «+», чтобы их не резал скролл-
+     контейнер (overflow-x:auto → overflow-y:auto). */
+  padding: var(--space-2) var(--space-4) var(--space-4);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.stories-row::-webkit-scrollbar { display: none; }
+
+/* Кольцо историй — orbit 3px + штрих 3px (вместо DS-дефолта 4/2 для size-56) */
+.stories-row .avatar.__size-56.__ring-active,
+.stories-row .avatar.__size-56.__ring-viewed {
+  outline-width: 3px;
+  outline-offset: 3px;
+}
+/* outline не занимает место в потоке — выносим орбиту в layout через margin */
+.stories-row .avatar.__size-56 {
+  margin: var(--space-1-5);
+  cursor: pointer;
+}
+
+/* Open viewer — лёгкий бамп при тапе */
+.stories-row .avatar:not([data-skip-viewer]):active {
+  transform: scale(0.95);
+}
+
+/* «+»-бейдж добавления своей истории — оранжевый кружок в белой обводке */
+.stories-row__add {
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--static-surface-status-accent);
+  border: 3px solid var(--dynamic-surface-base-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stories-row__add img { filter: brightness(0) invert(1); }
+
+/* Позиция бейджа — относительно кольцевой «коробки» (ава + орбита 3 + штрих 3 = 6px):
+   торчит на 3px за правую границу кольца, снизу — заподлицо с кольцом. */
+.stories-row .avatar.__size-56 .avatar__addon.__pos-br.stories-row__add {
+  top: auto;
+  bottom: -6px;
+  right: -9px;
+}

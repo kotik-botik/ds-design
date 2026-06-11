@@ -54,6 +54,7 @@
 @import url('./components/feed-discussion.css');
 @import url('./components/feed-questions.css');
 @import url('./components/feed-stories.css');
+@import url('./components/stories-row.css');
 @import url('./components/moment.css');
 @import url('./components/text-feed.css');
 @import url('./components/clip-feed.css');

@@ -111,6 +111,29 @@
       if (sub && s.subtitle != null) sub.textContent = s.subtitle;
       var avaImg = this.root.querySelector('.moment__header .avatar img');
       if (avaImg && s.avatar) avaImg.src = s.avatar;
+
+      // CTA — кнопка снизу. Если slide.cta = {label, onClick} — рендерим,
+      // иначе скрываем слот. Кликовый обработчик навешиваем напрямую
+      // (один раз на сегмент).
+      var cta = this.root.querySelector('.moment__cta');
+      if (cta) {
+        if (s.cta && s.cta.label) {
+          cta.style.display = '';
+          cta.innerHTML =
+            '<div class="button-wrapper __size-44 __style-primary __full-width">' +
+              '<button class="button-container __style-primary" type="button">' +
+                '<span class="button-content"></span>' +
+              '</button>' +
+            '</div>';
+          cta.querySelector('.button-content').textContent = s.cta.label;
+          if (typeof s.cta.onClick === 'function') {
+            cta.querySelector('button').addEventListener('click', s.cta.onClick);
+          }
+        } else {
+          cta.style.display = 'none';
+          cta.innerHTML = '';
+        }
+      }
     }
 
     if (typeof this.options.onChange === 'function') {
