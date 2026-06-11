@@ -125,10 +125,13 @@
       var avaImg = this.root.querySelector('.moment__header .avatar img');
       if (avaImg && s.avatar) avaImg.src = s.avatar;
 
-      // BDAY — именинный шаблон: фото-фон + блюр снизу + три строки текста.
+      // BDAY — именинный шаблон: фото-фон + блюр снизу + три строки текста +
+      // 3 PNG-шарика, вылетающие снизу при открытии (см. .moment__bday-balloons
+      // — отдельный слой поверх контента, на весь размер карточки).
       // Слайд с `s.bday = { kicker, heading, name }` включает .__view-bday
       // и рендерит блок .moment__bday. Header остаётся видимым.
       var bdayHost = this.root.querySelector('.moment__bday');
+      var balloonsHost = this.root.querySelector('.moment__bday-balloons');
       if (s.bday) {
         if (!bdayHost) {
           bdayHost = document.createElement('div');
@@ -156,12 +159,42 @@
           '</div>' +
           '<div class="moment__bday-content">' +
             '<p class="moment__bday-kicker">' + (s.bday.kicker || 'Сегодня') + '</p>' +
-            '<h2 class="moment__bday-heading">' + (s.bday.heading || 'День рождения') + '</h2>' +
-            '<p class="moment__bday-name">' + (s.bday.name || '') + '</p>' +
+            // Заголовок и ФИ — каждое слово на свой строке (как в макете):
+            // «День / рождения», «Анастасии / Фоминой».
+            '<h2 class="moment__bday-heading">' +
+              (s.bday.heading || 'День рождения').split(' ').join('<br>') +
+            '</h2>' +
+            '<p class="moment__bday-name">' +
+              (s.bday.name || '').split(' ').join('<br>') +
+            '</p>' +
           '</div>';
+
+        // Шары — отдельный слой на всю карточку (sibling .moment__bday).
+        // Пересоздаём каждый раз, чтобы CSS-анимация вылета перезапускалась
+        // при повторном открытии сториз.
+        if (balloonsHost) balloonsHost.remove();
+        balloonsHost = document.createElement('div');
+        balloonsHost.className = 'moment__bday-balloons';
+        // Имена файлов с пробелами/кириллицей — URL-encoded, чтобы не
+        // зависеть от поведения конкретного браузера.
+        balloonsHost.innerHTML =
+          // шарик_1 2 — зелёный пудель, шарик_1 4 — оранжевый ОК-шар,
+          // шарик_1 8 — оранжевый круглый.
+          '<div class="moment__bday-balloon __b-poodle">' +
+            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%202.png" alt="">' +
+          '</div>' +
+          '<div class="moment__bday-balloon __b-ok">' +
+            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%204.png" alt="">' +
+          '</div>' +
+          '<div class="moment__bday-balloon __b-round">' +
+            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%208.png" alt="">' +
+          '</div>';
+        bdayHost.insertAdjacentElement('afterend', balloonsHost);
+
         this.root.classList.add('__view-bday');
-      } else if (bdayHost) {
-        bdayHost.remove();
+      } else {
+        if (bdayHost) bdayHost.remove();
+        if (balloonsHost) balloonsHost.remove();
         this.root.classList.remove('__view-bday');
       }
 

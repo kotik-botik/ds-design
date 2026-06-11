@@ -9,6 +9,23 @@
 
 ## Селекторы и интеракции по страницам
 
+### moment-viewer (bday-сториз на lenta-q3) — 2026-06-11
+- Лиза-сториз = `.stories-row .avatar[data-bday][data-name="Лиза"]` (радужное кольцо `__ring-active` + 🎂-бейдж `.stories-row__bday-badge`). ВВЗ-сториз = `.stories-row .avatar[data-stories]:not([data-bday])`.
+- ~~app-shell.css НЕ подключён~~ → **FIXED commit 4a58308**: `index.css:72` теперь делает `@import url('./components/app-shell.css');`. Подтверждено: lenta-q3.html открывается БЕЗ инжекта, `.phone-frame.__fullscreen` = 844px (== viewport), docH=844 — никаких 6800px больше нет. Viewer и шары рендерятся в первом viewport «из коробки».
+- Закрытие viewer'а: кнопка × в `.moment__topbar .button-inline:last-child` (`aria-label` отсутствует). **НЕ закрывается** ни force-click через Playwright, ни вызовом `.click()` из page.evaluate — viewer не реагирует. Альтернативы: `page.goto(...)` (полная перезагрузка) или nav-зоны внутри слайдов.
+- Pointer-intercepts: `.moment__nav-zone.__side-prev/__side-next` (центр левая/правая половины), `.moment.__fullscreen` сам перехватывает всё → на клик «.stories-row .avatar» поверх viewer Playwright не пускает.
+- `MomentViewer.prototype.go(index)` (moment.js:79) **пересоздаёт `.moment__bday-balloons` innerHTML на каждом переходе** между слайдами (см. commit b037b70). Эмпирически подтверждено: клик в `.__side-next` → клик в `.__side-prev` → балунный слой создан заново, на +17ms после клика opacity 0.83/0.64/0.31, translateY 89/190/411 — анимация перезапустилась с нуля. **ВАЖНО**: ловить mid-flight нужно ДО первого `waitForTimeout` — `page.waitForSelector('.moment__bday-balloon')` сразу после клика возвращает через ~17ms, и снимать кадр в этот момент.
+- bday-карточка содержит push-уведомления `#notifs` поверх viewer'а — для чистого скриншота их прячь: `#notifs, .ok-notif, .notif-card { display:none !important; }` через addInitScript.
+- Фон-фото (i.okcdn.ru) даёт `ERR_CERT_AUTHORITY_INVALID` в Playwright и не грузится — фотография девушки на bday-слайде отсутствует, фон чёрный. Не регрессия, особенность теста.
+
+### bday-balloons файлы↔классы (commit e25cbd7, после свопа — verified 2026-06-11)
+- `__b-poodle` (left:-27% top:47% rotate:-12.74° width:70%, delay 0.05s) → `assets/icons/шарик_1 2.png` = **зелёный пудель** (491×491). Сходится с контрактом.
+- `__b-ok` (left:12% top:27% rotate:0° width:68%, delay 0.18s) → `assets/icons/шарик_1 4.png` = **оранжевый ОК-шар**. Сходится.
+- `__b-round` (left:37% top:36% rotate:10.68° width:77%, delay 0.30s) → `assets/icons/шарик_1 8.png` = оранжевый круглый. Сходится.
+- Финальные координаты (390-wide, без фрейма-карточки .moment 390×844): poodle left=-132 top=370 w=326; ok left=47 top=228 w=265; round left=119 top=279 w=351. Поверни ↔ замени `__b-*` ↔ замени PNG — все три измерения должны двигаться синхронно.
+- Анимация: animationName=`bday-balloon-rise`, duration 1.1s, timing `cubic-bezier(0.22,1,0.36,1)`, fill `both`. Computed transform matrix-углы соответствуют CSS rotate (0.9753=cos(-12.74°), 0.9827=cos(10.68°)).
+- `aspect-ratio:1` + `object-fit:contain` на не-квадратных PNG → визуальный шар уже bbox-а: poodle/round визуально шире-уже центральной полоски своего bbox-а. Это важно при оценке «лежит ли шар где надо».
+
 ### start.html
 - Локскрин `.lockscreen` — клик в любое место разблокирует. **Кликать ниже области пушей** (например `page.mouse.click(195, 720)`), иначе пуш в верхней зоне ловит клик первым → unlock не срабатывает.
 - Меню (после анлока): `.home-grid .app` — кнопка приложения «ОК». Тап стартует splash-анимацию.
