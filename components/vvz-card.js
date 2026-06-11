@@ -13,8 +13,8 @@
  *   });
  *
  * Dismiss-поведение: при клике на ✕ внутри карточки на корне ставится класс
- * .__state-hidden, контент сменяется на «Рекомендация скрыта». Слушатель —
- * делегированный на document, навешивается один раз при загрузке скрипта.
+ * .__state-hidden, контент сменяется на «Рекомендация скрыта». Тап на кнопку
+ * «Отменить» возвращает карточку. Слушатели делегированы на document.
  */
 (function () {
   function avatarHtml(id) {
@@ -56,11 +56,8 @@
     ].join('');
   }
 
-  // Делегированные listener'ы — один раз на весь документ. Работают с любыми
-  // карточками .vvz-card (включая вставленные через innerHTML).
-  //
   // dismiss (✕ → V1): запоминаем оригинальные тексты title и кнопки в
-  // data-original-*, ставим .__state-hidden, подменяем тексты на
+  // dataset.originalText, ставим .__state-hidden, подменяем тексты на
   // «Рекомендация скрыта» и «Отменить».
   document.addEventListener('click', function (e) {
     var dismiss = e.target.closest && e.target.closest('[data-vvz-dismiss]');
@@ -82,8 +79,8 @@
     card.classList.add('__state-hidden');
   });
 
-  // «Отменить» в state-hidden — снимаем класс и возвращаем оригинальные
-  // тексты. Слушаем клик по кнопке внутри карточки в hidden-состоянии.
+  // «Отменить» в state-hidden — клик по .vvz-card__btn внутри карточки с
+  // __state-hidden: снимаем класс и возвращаем оригинальные тексты.
   document.addEventListener('click', function (e) {
     var btn = e.target.closest && e.target.closest('.vvz-card.__state-hidden .vvz-card__btn');
     if (!btn) return;
