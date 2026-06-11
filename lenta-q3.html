@@ -241,6 +241,67 @@
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
 
+  /* «Годовщина дружбы» — постер-баннер. Полностью кастомная композиция
+     («ОК подготовила видеоролик о вас»): оранжевый градиент, два аватара,
+     декор-эмодзи 🎈/🎁, крупный счётчик подарков и подпись с датой.
+     Не паттерн — оставляем локально. */
+  .ll-anniv-poster {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 343/492;
+    border-radius: 19px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 80% at 30% 30%, #ffb56b 0%, transparent 60%),
+      linear-gradient(160deg, #ff7700 0%, #d76200 100%);
+    color: #fff;
+  }
+  .ll-anniv-poster__avatars {
+    position: absolute;
+    top: 26px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+  }
+  .ll-anniv-poster__avatars > * + * { margin-left: -16px; }
+  .ll-anniv-poster__balloon {
+    position: absolute;
+    top: 32px; left: 16px;
+    width: 56px; height: 56px;
+    transform: rotate(-12deg);
+    pointer-events: none;
+  }
+  .ll-anniv-poster__gift {
+    position: absolute;
+    bottom: 116px; right: 24px;
+    width: 96px; height: 96px;
+    pointer-events: none;
+  }
+  /* Тёмный градиент снизу — чтобы текст читался поверх любой подложки */
+  .ll-anniv-poster::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 160px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none;
+  }
+  .ll-anniv-poster__count {
+    position: absolute;
+    left: 0; right: 0; bottom: 56px;
+    text-align: center;
+    font-family: "OK Sans Display", var(--font-family);
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 36px;
+    z-index: 1;
+  }
+  .ll-anniv-poster__since {
+    position: absolute;
+    left: 0; right: 0; bottom: 28px;
+    text-align: center;
+    z-index: 1;
+  }
+
 
 </style>
 </head>
@@ -595,6 +656,45 @@
           </div>
         </article>
 
+        <!-- В браке с N — memory-карточка (пара аватаров + mosaic + CTA) ---- -->
+        <article class="text-feed island">
+          <div class="text-feed__avatars">
+            <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+            <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=33" alt=""></div>
+          </div>
+          <div class="ds-title-xl">В браке с Сергеем уже 7 лет 💜</div>
+          <div class="ds-body-m">Примите поздравления от команды ОК. Вместе с 28 мая 2024</div>
+
+          <div>
+            <span class="button-inline-wrapper __size-20 __view-primary">
+              <button class="button-inline __size-20">
+                <span class="button-inline__content">
+                  <img class="button-inline__icon ll-icon" src="assets/icons/edit_16_20.svg" width="16" height="16" alt="">
+                  Указать дату годовщины и годы брака
+                </span>
+              </button>
+            </span>
+          </div>
+
+          <div class="text-feed__media __mosaic">
+            <div class="text-feed__media-cell"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=750&q=80" alt=""></div>
+            <div class="text-feed__media-cell"><img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&q=80" alt=""></div>
+            <div class="text-feed__media-cell"><img src="https://images.unsplash.com/photo-1502635385003-ee1e6a1a742d?w=400&q=80" alt=""></div>
+            <div class="text-feed__media-cell">
+              <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=400&q=80" alt="">
+              <div class="text-feed__media-cell-more ds-body-l">Ещё 5</div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 __full-width">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
+              </span></button>
+            </div>
+          </div>
+        </article>
+
         <!-- 6. Репост-фид: автор шапки + встроенная карточка (бордер) -- -->
         <article class="text-feed island">
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
@@ -773,6 +873,33 @@
               <button class="button-container __style-secondary"><span class="button-content">🎁&nbsp;Отправить открытку</span></button>
             </div>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- Годовщина дружбы — memory-карточка с кастомным постером -------- -->
+        <article class="text-feed island">
+          <div class="ds-title-xl">Анна, поздравляем с годовщиной дружбы</div>
+          <div class="ds-body-m">Мы подготовили видеоролик о вас</div>
+
+          <div>
+            <div class="ll-anniv-poster">
+              <img class="ll-anniv-poster__balloon" src="assets/icons/balloons_24.svg" alt="" aria-hidden="true">
+              <div class="ll-anniv-poster__avatars">
+                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+              </div>
+              <img class="ll-anniv-poster__gift" src="assets/icons/gift_24.svg" alt="" aria-hidden="true">
+              <div class="ll-anniv-poster__count">478 подарков</div>
+              <div class="ll-anniv-poster__since ds-body-m">С 1 июня 2023 года</div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 __full-width">
+              <button class="button-container __style-primary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/gift_16_20.svg" width="20" height="20" alt="">&nbsp;Отправить другу
+              </span></button>
+            </div>
           </div>
         </article>
 
