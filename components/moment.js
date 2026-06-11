@@ -32,10 +32,7 @@
   function MomentViewer(root, options) {
     this.root = root;
     this.options = options || {};
-    this.segments = Array.prototype.slice.call(
-      root.querySelectorAll('.moment__progress-segment')
-    );
-    this.slides = this.options.slides || null; // [{src, title, subtitle, avatar}]
+    this.slides = null;
     this.current = 0;
 
     this._onPrev = this._onPrev.bind(this);
@@ -52,6 +49,16 @@
     root.addEventListener('animationend', this._onAnimEnd);
 
     document.addEventListener('keydown', this._onKey);
+
+    // Если slides переданы в опциях — сразу собираем сегменты прогресс-бара.
+    // Если нет — компонент работает с уже разложенными в HTML сегментами.
+    if (this.options.slides) {
+      this.setSlides(this.options.slides);
+    } else {
+      this.segments = Array.prototype.slice.call(
+        root.querySelectorAll('.moment__progress-segment')
+      );
+    }
 
     this.go(0);
   }
