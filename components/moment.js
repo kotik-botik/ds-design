@@ -40,10 +40,10 @@
     this._onAnimEnd = this._onAnimEnd.bind(this);
     this._onKey = this._onKey.bind(this);
 
-    var prev = root.querySelector('.moment__nav-zone.__side-prev');
-    var next = root.querySelector('.moment__nav-zone.__side-next');
-    if (prev) prev.addEventListener('click', this._onPrev);
-    if (next) next.addEventListener('click', this._onNext);
+    this._prev = root.querySelector('.moment__nav-zone.__side-prev');
+    this._next = root.querySelector('.moment__nav-zone.__side-next');
+    if (this._prev) this._prev.addEventListener('click', this._onPrev);
+    if (this._next) this._next.addEventListener('click', this._onNext);
 
     // Завершение анимации активного сегмента → автоматический next
     root.addEventListener('animationend', this._onAnimEnd);
@@ -212,6 +212,8 @@
   MomentViewer.prototype.destroy = function () {
     document.removeEventListener('keydown', this._onKey);
     this.root.removeEventListener('animationend', this._onAnimEnd);
+    if (this._prev) this._prev.removeEventListener('click', this._onPrev);
+    if (this._next) this._next.removeEventListener('click', this._onNext);
   };
 
   // ============================================================
