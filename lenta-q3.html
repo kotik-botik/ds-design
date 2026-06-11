@@ -1214,13 +1214,16 @@
             var pair = FULL[name] || [name, ''];
             var firstGen = pair[0];
             var fullGen = (pair[0] + ' ' + pair[1]).trim();
-            return [MomentViewer.bdaySlide({
+            var slide = MomentViewer.bdaySlide({
               photo:          img ? img.src : '',
               name:           fullGen,
               headerTitle:    'День рождения ' + firstGen,
               headerSubtitle: '3 часа назад',
               cta:            'Поздравить'
-            })];
+            });
+            // CTA «Поздравить» уводит в каталог подарков.
+            slide.cta.onClick = function () { location.href = 'gifts-catalog.html'; };
+            return [slide];
           }
           // Годовщина дружбы — пакет из 2 слайдов
           if (ava.hasAttribute('data-friendship')) {
