@@ -50,6 +50,15 @@
 - Атрибут переименован: было `data-href`, стало `data-launch`. Если ищешь иконку в DOM — селектор сейчас `.app[data-launch]`.
 - Перед стартом dispatch'ит `app-launch:start` на document — хост (start.html) ставит `okstart_at_home=1`.
 
+### guests.html (2026-06-11)
+- Viewport 360×800: статусбар + навбар «Гости» сверху, баннер «Невидимка» в шапке. Тайтл — `.ds-title-s`, bg на нём `rgba(0,0,0,0)` — оранжевая подложка задаётся родителю-карточке, не самому тайтлу. Проверяй цвет на 1–2 уровня выше.
+- Тоггл: `.ll-switch` 52×32.
+- Заголовки секций: класс `.header__title` (НЕ `h2/h3`). Для «Возможно вы знакомы» — `.ll-pymk__title.ds-title-l`. Кнопка «Ещё» = `.button-inline__content`.
+- Аватары: `.avatar.__size-56` (56×56) + онлайн-точка `.avatar__addon.__pos-bl` (12×12).
+- friend-card: 220×330. Close — 24×24 (`.friend-card__close.button-circle-wrapper.__size-24.__style-o`). CTA-текст «Дружить».
+- Таббар `.ll-tabbar`, position:fixed; на 360×800 top=727, height=73.
+- Консоль: только `ERR_CERT_AUTHORITY_INVALID` для i.okcdn.ru аватарок — особенность контейнера, не баг страницы.
+
 ## App-shell / fullscreen layout (lenta-q3, messages, notifications, tribune, gifts)
 Эти 5 экранов используют `.phone-frame.__fullscreen` shell (components/app-shell.css, импорт в index.css, commit b82939e). Структура (проверено браузером, идентична по числам PRE/POST рефактора):
 - `.phone-frame.__fullscreen`: width:100%, height/min-height:100dvh, overflow:hidden. Фон НЕ задаётся в app-shell — берётся базовый `.phone-frame { background:base-primary }` (phone-frame.css) либо локальный override на странице (messages/notifications/tribune/gifts ставят `secondary`). На 390×844 frame = 0..844, fills viewport.
