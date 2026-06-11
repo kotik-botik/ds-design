@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="index.css">
-<!-- В head синхронно: pagereveal — направление перехода (вперёд/назад). -->
+<!-- В head синхронно: pagereveal — направление перехода. -->
 <script src="components/screen-transition.js"></script>
 <style>
   * { -webkit-tap-highlight-color: transparent; }
@@ -17,9 +17,6 @@
     background: var(--dynamic-surface-base-secondary);
   }
 
-  /* Сцена — флекс-колонка во всю ширину, как другие прототипы.
-     Карточки внутри центрируются по горизонтали относительно середины
-     viewport (см. .gp-card { left: 50%; translateX } и JS). */
   .gp-scene {
     position: relative;
     width: 100%;
@@ -27,15 +24,14 @@
     min-height: 100dvh;
     overflow: hidden;
     background: var(--dynamic-surface-base-secondary);
+    touch-action: pan-y; /* разрешаем вертикальный скролл, горизонталь обрабатываем сами */
   }
 
   .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
 
-  /* Status bar — DS-компонент в обычном меше */
   .gp-scene .meshok-up { position: absolute; left: 0; right: 0; top: 0; z-index: 5; }
 
-  /* Крестик закрытия — в правом верхнем углу, привязан к правому краю
-     viewport (а не к 360-сетке). По Figma расстояние до правого края 13px. */
+  /* Крестик закрытия — у правого края viewport */
   .gp__close {
     position: absolute;
     top: 67px;
@@ -48,8 +44,7 @@
   }
   .gp__close .icon { width: 24px; height: 24px; }
 
-  /* Заголовок — абсолют, по центру через 50%+translateX. width=312 (Figma).
-     top анимируется JS-спрингом, CSS-transition только для opacity. */
+  /* Заголовок — по центру по горизонтали через 50% + translateX(-50%). */
   .gp__title {
     position: absolute;
     left: 50%;
@@ -65,63 +60,39 @@
     transition: opacity 280ms ease-out;
   }
   .gp.__state-2 .gp__title,
-  .gp.__state-3 .gp__title { top: 130px; }
+  .gp.__state-3 .gp__title,
+  .gp.__state-4 .gp__title { top: 130px; }
 
-  /* Карточка-подарок — left/top/width/height/transform тянутся JS-спрингом.
-     Базовая позиция (left: 50%) задаёт точку отсчёта по центру viewport;
-     JS дополняет inline-стилем точный сдвиг и размер. */
-  .gp-card {
+  /* Карточка — DS-компонент .gift-card 300×350. Позиция/размер/угол
+     задаются исключительно через transform (JS-спринг). */
+  .gp .gift-card {
     position: absolute;
+    top: 0;
     left: 50%;
-    border-radius: 36px;
-    overflow: hidden;
-    background: #fff;
-    border: 0.744px solid rgba(0,0,0,0.1);
-    box-shadow: 0 22.332px 22.332px rgba(0,0,0,0.07);
-    transform-origin: 50% 50%;
-    cursor: pointer;
+    /* JS будет писать transform: translate(tx, ty) scale(s) rotate(r)
+       и обновлять CSS-переменную --gift-card-scale */
+    margin-left: 0; /* card box левый край прижат к центру viewport */
   }
 
-  /* z-index: Gift 1 — самая ближняя, Gift 3 — самая дальняя */
-  .gp-card[data-i="1"] { z-index: 3; }
-  .gp-card[data-i="2"] { z-index: 2; }
-  .gp-card[data-i="3"] { z-index: 1; }
+  /* z-index в стейтах 1-2 (стак-веер): Gift 1 — самая ближняя сверху. */
+  .gp .gift-card[data-i="1"] { z-index: 3; }
+  .gp .gift-card[data-i="2"] { z-index: 2; }
+  .gp .gift-card[data-i="3"] { z-index: 1; }
 
-  /* Внутренности карточки — uniCell (avatar + имя) + постер */
-  .gp-card__head {
-    position: absolute; top: 10px; left: 10px; right: 36px;
-    display: flex; align-items: center; gap: 6px;
-    z-index: 2;
-  }
-  .gp-card__head .avatar { width: 20px; height: 20px; border-radius: 50%; overflow: hidden; flex: 0 0 auto; background: #eee; }
-  .gp-card__head .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .gp-card__head .name {
-    font-size: 11px; line-height: 14px; font-weight: 600;
-    color: rgba(0,0,0,.72);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  /* В стейтах 3+ (карточки в ряд) z-index одинаковый — порядок не важен. */
+  .gp.__state-3 .gift-card,
+  .gp.__state-4 .gift-card { z-index: 2; }
 
-  .gp-card__poster {
-    position: absolute; left: 0; right: 0; top: 36px; bottom: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; padding: 12px;
-    color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.18);
+  /* Постеры — декоративный градиент под каждый id */
+  .gp .gift-card[data-i="3"] .gift-card__poster {
+    background: linear-gradient(140deg, #ff6fa3 0%, #c2185b 100%);
   }
-  .gp-card[data-i="3"] .gp-card__poster { background: linear-gradient(140deg, #ff6fa3 0%, #c2185b 100%); }
-  .gp-card[data-i="2"] .gp-card__poster {
+  .gp .gift-card[data-i="2"] .gift-card__poster {
     background: linear-gradient(140deg, #fff1d6 0%, #ffb7a3 60%, #ff8a65 100%);
     color: #6a3b1c; text-shadow: 0 1px 0 rgba(255,255,255,.4);
   }
-  .gp-card[data-i="1"] .gp-card__poster { background: linear-gradient(140deg, #a07a55 0%, #5e4226 100%); }
-  .gp-card__poster .emoji {
-    font-size: 48px; line-height: 1; margin-bottom: 4px;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));
-  }
-  .gp-card__poster .text {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-style: italic; font-weight: 700;
-    font-size: 18px; line-height: 22px; letter-spacing: -0.01em;
+  .gp .gift-card[data-i="1"] .gift-card__poster {
+    background: linear-gradient(140deg, #a07a55 0%, #5e4226 100%);
   }
 
   /* Нижний CTA */
@@ -134,7 +105,6 @@
   .gp__bottom .button-wrapper { width: 100%; }
   .gp__bottom .button-container { width: 100%; }
 
-  /* Home-indicator */
   .gp__handle {
     position: absolute; left: 0; right: 0; bottom: 0;
     height: 24px;
@@ -149,15 +119,14 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .gp__title, .gp-card { transition: none !important; }
+    .gp__title { transition: none !important; }
   }
 </style>
 </head>
 <body>
 
-<div class="gp-scene">
+<div class="gp-scene" id="gpScene">
 
-  <!-- Статус-бар -->
   <div class="meshok-up">
     <div class="status-bar">
       <span class="status-bar__time">9:41</span>
@@ -169,50 +138,83 @@
     </div>
   </div>
 
-  <!-- Крестик закрытия — поверх контента -->
   <button class="gp__close nav-bar__back" aria-label="Закрыть">
     <span class="icon __slot-close"></span>
   </button>
 
-  <!-- Тело экрана: заголовок + 3 карточки -->
   <main class="gp" id="gp">
     <h1 class="gp__title">Вам подарили<br>3 подарка!</h1>
 
-    <article class="gp-card" data-i="3">
-      <div class="gp-card__head">
-        <span class="avatar"><img src="https://i.pravatar.cc/40?img=23" alt=""></span>
-        <span class="name">Виктория Петрова</span>
+    <article class="gift-card" data-i="3">
+      <div class="gift-card__slot">
+        <div class="gift-card__cell">
+          <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=23" alt=""></div>
+          <span class="gift-card__name ds-body-m">Виктория Петрова</span>
+        </div>
+        <div class="gift-card__img">
+          <div class="gift-card__poster">
+            <div class="gift-card__poster-emoji">💐</div>
+            <div class="gift-card__poster-text">Спасибо<br>за дружбу</div>
+          </div>
+        </div>
       </div>
-      <div class="gp-card__poster">
-        <div class="emoji">💐</div>
-        <div class="text">Спасибо<br>за дружбу</div>
+      <div class="gift-card__accept">
+        <div class="button-wrapper __size-56">
+          <button class="button-container __style-primary"><span class="button-content">Принять</span></button>
+        </div>
       </div>
+      <button class="gift-card__trash" aria-label="Удалить">
+        <img src="assets/icons/trash_16_20.svg" alt="">
+      </button>
     </article>
 
-    <article class="gp-card" data-i="2">
-      <div class="gp-card__head">
-        <span class="avatar"><img src="https://i.pravatar.cc/40?img=47" alt=""></span>
-        <span class="name">Мария Иванова</span>
+    <article class="gift-card" data-i="2">
+      <div class="gift-card__slot">
+        <div class="gift-card__cell">
+          <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=47" alt=""></div>
+          <span class="gift-card__name ds-body-m">Мария Иванова</span>
+        </div>
+        <div class="gift-card__img">
+          <div class="gift-card__poster">
+            <div class="gift-card__poster-emoji">🌷</div>
+            <div class="gift-card__poster-text">Любимой</div>
+          </div>
+        </div>
       </div>
-      <div class="gp-card__poster">
-        <div class="emoji">🌷</div>
-        <div class="text">Любимой</div>
+      <div class="gift-card__accept">
+        <div class="button-wrapper __size-56">
+          <button class="button-container __style-primary"><span class="button-content">Принять</span></button>
+        </div>
       </div>
+      <button class="gift-card__trash" aria-label="Удалить">
+        <img src="assets/icons/trash_16_20.svg" alt="">
+      </button>
     </article>
 
-    <article class="gp-card" data-i="1">
-      <div class="gp-card__head">
-        <span class="avatar"><img src="https://i.pravatar.cc/40?img=12" alt=""></span>
-        <span class="name">Дмитрий Кузнецов</span>
+    <article class="gift-card" data-i="1">
+      <div class="gift-card__slot">
+        <div class="gift-card__cell">
+          <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=12" alt=""></div>
+          <span class="gift-card__name ds-body-m">Дмитрий Кузнецов</span>
+        </div>
+        <div class="gift-card__img">
+          <div class="gift-card__poster">
+            <div class="gift-card__poster-emoji">🐱</div>
+            <div class="gift-card__poster-text">Шашлычков<br>очень хочется!</div>
+          </div>
+        </div>
       </div>
-      <div class="gp-card__poster">
-        <div class="emoji">🐱</div>
-        <div class="text">Шашлычков<br>очень хочется!</div>
+      <div class="gift-card__accept">
+        <div class="button-wrapper __size-56">
+          <button class="button-container __style-primary"><span class="button-content">Принять</span></button>
+        </div>
       </div>
+      <button class="gift-card__trash" aria-label="Удалить">
+        <img src="assets/icons/trash_16_20.svg" alt="">
+      </button>
     </article>
   </main>
 
-  <!-- Нижний CTA -->
   <div class="gp__bottom">
     <div class="button-wrapper __size-56">
       <button class="button-container __style-primary" id="gpAcceptAll">
@@ -227,21 +229,14 @@
 
 <script src="components/back-button.js"></script>
 <script>
-  // Спринг (k=96, c=6, m=1, ζ≈0.306 — недодемпфированный с лёгким перехлёстом).
-  // Прогоняет left/top/width/height/rotation у трёх карточек и top у заголовка
-  // в одной rAF-петле. Все 5 величин на каждом объекте бегут одной spring-кривой.
   (function () {
-    var root = document.getElementById('gp');
+    var root  = document.getElementById('gp');
+    var scene = document.getElementById('gpScene');
     if (!root) return;
 
-    // Дефолтный спринг для первого перехода (стейт 1 → 2).
+    // ── СПРИНГ ──────────────────────────────────────────────────
     var SPRING = { k: 96, c: 6, m: 1, duration: 2000, delay: 500 };
 
-    // Фабрика progress-функции под произвольные spring-параметры.
-    // Корректно покрывает все три режима по ζ = c/(2√(km)):
-    //   ζ < 1 — underdamped (с перехлёстом), cos/sin
-    //   ζ = 1 — critically damped
-    //   ζ > 1 — overdamped, cosh/sinh
     function makeSpring(k, c, m) {
       var w0 = Math.sqrt(k / m);
       var z  = c / (2 * Math.sqrt(k * m));
@@ -259,7 +254,6 @@
             (Math.cos(wd * t) + (z * w0 / wd) * Math.sin(wd * t));
         };
       }
-      // overdamped (z > 1)
       var wd2 = w0 * Math.sqrt(z * z - 1);
       return function (tMs) {
         var t = tMs / 1000;
@@ -268,145 +262,326 @@
       };
     }
 
-    // Три стейта, каждый описывает где лежат карточки (по data-i) и top
-    // заголовка. Координаты — из Figma get_design_context.
-    //   0 — стейт 1 (закрытый стак)
-    //   1 — стейт 2 (раскрытый веер)
-    //   2 — стейт 3 (карточки в ряд, как в свайп-карусели)
+    // ── СТЕЙТЫ ──────────────────────────────────────────────────
+    // У каждого стейта — позиция центра карточки в Figma-сетке (cx, cy),
+    // её unrotated-ширина (для scale) и угол поворота. CSS-карточка имеет
+    // фиксированный размер 300×350; всё движение — только через transform.
+    //
+    // Конверсия в transform-translate:
+    //   tx = cx - 330  (= cx - 180 (центр 360-сетки) - 150 (половина CSS-карточки))
+    //   ty = cy - 175
+    //   scale = unrotated_w / 300
     var STATES = [
+      // Стейт 1 — закрытый стак.
       { title: 249, cards: {
-          3: { l: 110.23, t: 434.90, w: 150.737, h: 183.298, r: -6.46  },
-          2: { l: 110.13, t: 448.69, w: 150.737, h: 183.298, r:  0.5   },
-          1: { l: 104.47, t: 466.47, w: 150.737, h: 183.298, r:  9.78  }
+          3: { cx: 185.600, cy: 526.545, s: 0.50246, r: -6.46  },
+          2: { cx: 185.503, cy: 540.341, s: 0.50246, r:  0.50  },
+          1: { cx: 179.842, cy: 558.120, s: 0.50246, r:  9.78  }
       }},
+      // Стейт 2 — раскрытый веер.
       { title: 130, cards: {
-          3: { l: 42.36,  t: 246.98, w: 223.319, h: 260.539, r: -7.21  },
-          2: { l: 126.21, t: 349.48, w: 223.319, h: 260.539, r:  15    },
-          1: { l: 23.46,  t: 429.91, w: 223.319, h: 260.539, r: -16.48 }
+          3: { cx: 154.014, cy: 377.251, s: 0.74440, r: -7.21  },
+          2: { cx: 237.871, cy: 479.750, s: 0.74440, r:  15    },
+          1: { cx: 135.122, cy: 560.177, s: 0.74440, r: -16.48 }
       }},
-      // Стейт 3 — карточки в ряд. Виктория (i=3) на позиции из Figma (l=125),
-      // gap между карточками 12px (300+12=312 шаг).
+      // Стейт 3 — в ряд, шаг 312 (300 + gap 12), первая на x=125.
       { title: 130, cards: {
-          3: { l: 125, t: 266, w: 300, h: 350, r: 0 },
-          2: { l: 437, t: 266, w: 300, h: 350, r: 0 },
-          1: { l: 749, t: 266, w: 300, h: 350, r: 0 }
+          3: { cx: 275, cy: 441, s: 1, r: 0 },
+          2: { cx: 587, cy: 441, s: 1, r: 0 },
+          1: { cx: 899, cy: 441, s: 1, r: 0 }
       }},
-      // Стейт 4 — весь стак сдвигается влево на 95px (равномерно).
-      // Виктория (i=3) встаёт ровно по центру (l = (360-300)/2 = 30).
-      // Gap=12px сохраняется, остальные карточки следуют справа-налево.
+      // Стейт 4 — сдвинут влево, первая ровно по центру (cx=180).
       { title: 130, cards: {
-          3: { l:  30, t: 266, w: 300, h: 350, r: 0 },
-          2: { l: 342, t: 266, w: 300, h: 350, r: 0 },
-          1: { l: 654, t: 266, w: 300, h: 350, r: 0 }
+          3: { cx: 180, cy: 441, s: 1, r: 0 },
+          2: { cx: 492, cy: 441, s: 1, r: 0 },
+          1: { cx: 804, cy: 441, s: 1, r: 0 }
       }}
     ];
-
+    // data-i отражает порядок «спереди-назад» в стопочно-веерных стейтах
+    // (i=1 — самая ближняя/верхняя, i=3 — самая дальняя/нижняя), поэтому
+    // нумерация инвертирована относительно визуального ряда в стейте 4:
+    //   data-i=3 → Виктория (leftmost в ряду, back в стопке)
+    //   data-i=2 → Мария    (middle)
+    //   data-i=1 → Дмитрий  (rightmost в ряду, front в стопке)
+    // Итерация IDX=[3,2,1] идёт «back → front», чтобы applyCard перерисовал
+    // нижние карточки первыми (z-index уже задан в CSS).
     var IDX = [3, 2, 1];
+
     var els = {};
     IDX.forEach(function (i) {
-      els[i] = root.querySelector('.gp-card[data-i="' + i + '"]');
+      els[i] = root.querySelector('.gift-card[data-i="' + i + '"]');
     });
     var titleEl = root.querySelector('.gp__title');
 
-    // s.l — это left в 360-сетке Figma. Сдвиг -180 переводит его в
-     // координаты относительно центра viewport (CSS даёт left: 50%).
-    function applyCard(el, s) {
-      el.style.top    = s.t.toFixed(3) + 'px';
-      el.style.width  = s.w.toFixed(3) + 'px';
-      el.style.height = s.h.toFixed(3) + 'px';
+    // Применить состояние одной карточки. dxPan — горизонтальный сдвиг (от свайпа).
+    function applyCard(el, s, dxPan) {
+      var tx = (s.cx - 330) + (dxPan || 0);
+      var ty = s.cy - 175;
       el.style.transform =
-        'translateX(' + (s.l - 180).toFixed(3) + 'px) rotate(' + s.r.toFixed(3) + 'deg)';
+        'translate(' + tx.toFixed(3) + 'px, ' + ty.toFixed(3) + 'px) ' +
+        'scale(' + s.s.toFixed(5) + ') ' +
+        'rotate(' + s.r.toFixed(3) + 'deg)';
+      el.style.setProperty('--gift-card-scale', s.s.toFixed(5));
     }
 
-    // Начинаем в стейте 0 (state 1) — выставляем inline-стилем сразу.
     var current = 0;
     var animating = false;
+    var panOffset = 0;  // активный горизонтальный сдвиг (свайп пользователя)
 
     function applyState(idx) {
-      var s = STATES[idx];
-      IDX.forEach(function (i) { applyCard(els[i], s.cards[i]); });
-      titleEl.style.top = s.title + 'px';
+      var st = STATES[idx];
+      IDX.forEach(function (i) { applyCard(els[i], st.cards[i], 0); });
+      titleEl.style.top = st.title + 'px';
     }
     applyState(0);
+    root.classList.add('__state-1');
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    // Считываем live при каждом transitionTo — юзер может переключить
+    // OS-preference во время сессии.
+    function reducedMotion() {
+      try { return matchMedia('(prefers-reduced-motion: reduce)').matches; }
+      catch (_) { return false; }
+    }
 
     function transitionTo(toIdx, opts) {
       opts = opts || { mode: 'spring' };
       if (animating || toIdx === current) return;
       animating = true;
-      var from = STATES[current];
-      var to   = STATES[toIdx];
-      root.classList.remove('__state-1', '__state-2', '__state-3');
+      // Снапшоты «откуда» делаем явно и до любых мутаций (`current` и
+      // root.classList меняются ниже). Если позже кто-то переместит
+      // `current = toIdx` выше этих строк, тождество from===to сразу
+      // сломает анимацию — поэтому фиксируем явно.
+      var prevIdx = current;
+      var from    = STATES[prevIdx];
+      var to      = STATES[toIdx];
+      // Коммитим current ДО смены классов: re-entrant observer-ы увидят
+      // согласованное состояние (класс и current указывают на один индекс).
+      current = toIdx;
+      root.classList.remove('__state-1', '__state-2', '__state-3', '__state-4');
       root.classList.add('__state-' + (toIdx + 1));
 
-      if (opts.mode === 'spring') {
-        // JS-rAF спринг по всем 5 величинам карточек + top заголовка.
-        var k   = opts.k        || SPRING.k;
-        var c   = opts.c        || SPRING.c;
-        var m   = opts.m        || SPRING.m;
-        var dur = opts.duration || SPRING.duration;
-        var progress = makeSpring(k, c, m);
-        var t0 = performance.now();
-        (function frame(now) {
-          var elapsed = Math.min(dur, now - t0);
-          var p = progress(elapsed);
-          IDX.forEach(function (i) {
-            var fc = from.cards[i], tc = to.cards[i];
-            applyCard(els[i], {
-              l: fc.l + (tc.l - fc.l) * p,
-              t: fc.t + (tc.t - fc.t) * p,
-              w: fc.w + (tc.w - fc.w) * p,
-              h: fc.h + (tc.h - fc.h) * p,
-              r: fc.r + (tc.r - fc.r) * p
-            });
-          });
-          titleEl.style.top =
-            (from.title + (to.title - from.title) * p).toFixed(3) + 'px';
-          if (elapsed < dur) requestAnimationFrame(frame);
-          else {
-            applyState(toIdx);
-            current = toIdx;
-            animating = false;
-          }
-        })(performance.now());
-      } else {
-        // CSS-transition: один шаг с указанным duration/easing.
-        var dur = opts.duration || 300;
-        var ease = opts.easing || 'ease-out';
-        var props = ['top', 'width', 'height', 'transform'];
-        var trans = props.map(function (p) { return p + ' ' + dur + 'ms ' + ease; }).join(', ');
-        IDX.forEach(function (i) { els[i].style.transition = trans; });
-        titleEl.style.transition = 'top ' + dur + 'ms ' + ease;
-        // Применяем целевые значения уже в следующем кадре, чтобы браузер
-        // успел зафиксировать transition-стиль до изменения свойств.
-        requestAnimationFrame(function () { applyState(toIdx); });
-        setTimeout(function () {
-          IDX.forEach(function (i) { els[i].style.transition = ''; });
-          titleEl.style.transition = '';
-          current = toIdx;
-          animating = false;
-        }, dur);
+      function done() {
+        applyState(toIdx);
+        animating = false;
+        if (toIdx === 3) attachSwipe();
+        if (opts.onDone) opts.onDone();
       }
+
+      // Accessibility: при prefers-reduced-motion сразу перескакиваем
+      // в финальное состояние, никаких rAF-кривых.
+      if (reducedMotion()) { done(); return; }
+
+      // Оба режима — на JS-rAF с собственной progress-функцией. Это даёт
+      // детерминистичный тайминг и обходит проблемы @property-поддержки.
+      var dur, progress;
+      if (opts.mode === 'spring') {
+        dur = opts.duration || SPRING.duration;
+        progress = makeSpring(opts.k || SPRING.k, opts.c || SPRING.c, opts.m || SPRING.m);
+      } else {
+        dur = opts.duration || 300;
+        progress = function (tMs) { return easeOutCubic(Math.min(1, tMs / dur)); };
+      }
+
+      var t0 = performance.now();
+      (function frame(now) {
+        var elapsed = Math.min(dur, now - t0);
+        var p = progress(elapsed);
+        IDX.forEach(function (i) {
+          var fc = from.cards[i], tc = to.cards[i];
+          applyCard(els[i], {
+            cx: fc.cx + (tc.cx - fc.cx) * p,
+            cy: fc.cy + (tc.cy - fc.cy) * p,
+            s:  fc.s  + (tc.s  - fc.s)  * p,
+            r:  fc.r  + (tc.r  - fc.r)  * p
+          }, 0);
+        });
+        titleEl.style.top =
+          (from.title + (to.title - from.title) * p).toFixed(3) + 'px';
+        if (elapsed < dur) requestAnimationFrame(frame);
+        else done();
+      })(performance.now());
     }
 
-    // Сценарий проигрывается сам:
-    //   t = 500мс                → стейт 1 → 2 (веер, спринг 2000мс, k=96 c=6 m=1)
-    //   t = 500+2000+800 = 3300мс  → стейт 2 → 3 (в ряд, ease-out 300мс)
-    //   t = 3300+300+1   = 3601мс  → стейт 3 → 4 (сдвиг влево, overdamped спринг
-    //                                            600мс, k=80 c=20 m=1)
+    // ── СВАЙП КАРУСЕЛИ ──────────────────────────────────────────
+    // После стейта 4: пользователь может свайпать ряд горизонтально.
+    // Активируем модификатор .__active на всех карточках, пока пользователь
+    // не вернулся в исходное положение (panOffset≈0).
+    function attachSwipe() {
+      if (scene.dataset.swipeAttached) return;
+      scene.dataset.swipeAttached = '1';
+
+      // STEP и minSnap выводим из STATES[3] — единственный источник правды
+      // для геометрии ряда (изменение gap/количества карт сразу отразится).
+      var rowState = STATES[3].cards;
+      var STEP = rowState[2].cx - rowState[3].cx;   // шаг между соседними карточками
+      var minSnap = -(IDX.length - 1);              // n карт → 0..-(n-1)
+
+      var startX = 0, startY = 0;
+      var dragging = false;
+      var locked = false;             // зафиксировали направление как «горизонталь»
+      var pointerId = null;
+      var snapRaf = null;             // активная rAF снапа
+      var GUTTER = 5;
+      var snapped = 0;                // последняя зафиксированная позиция
+
+      function setActiveAll(on) {
+        IDX.forEach(function (i) { els[i].classList.toggle('__active', on); });
+      }
+      // Округление «от нуля» — симметрично для ±0.5 (Math.round даёт асимметрию).
+      function symmetricRound(x) {
+        return x < 0 ? -Math.round(-x) : Math.round(x);
+      }
+
+      function onDown(e) {
+        if (animating) return;
+        if (dragging) return;                                  // блок второго пальца
+        if (e.target && e.target.closest && e.target.closest('button')) return;
+
+        // Снап НЕ отменяем сразу — это сделает onMove, когда подтвердит,
+        // что началось горизонтальное движение. Тап без движения
+        // (или вертикальный жест) не должен прерывать снап.
+        startX = e.clientX;
+        startY = e.clientY;
+        dragging = true;
+        locked = false;
+        pointerId = e.pointerId;
+        try { scene.setPointerCapture(pointerId); } catch (_) {}
+      }
+      function releaseCapture() {
+        if (pointerId !== null) {
+          try { scene.releasePointerCapture(pointerId); } catch (_) {}
+          pointerId = null;
+        }
+      }
+      function endDrag() {
+        // Универсальный «выход из drag-режима»: чистим состояние и
+        // освобождаем pointer capture. Безопасно вызывать повторно.
+        dragging = false;
+        locked = false;
+        releaseCapture();
+      }
+      function onMove(e) {
+        if (!dragging) return;
+        if (e.pointerId !== pointerId) return;                 // другие пальцы — мимо
+        var dx = e.clientX - startX;
+        var dy = e.clientY - startY;
+        if (!locked) {
+          if (Math.abs(dx) < GUTTER && Math.abs(dy) < GUTTER) return;
+          if (Math.abs(dy) > Math.abs(dx)) {
+            // Жест вертикальный — отпускаем capture, чтобы не блокировать
+            // нативный pan-y. Снап (если был) продолжает идти своим ходом.
+            endDrag();
+            return;
+          }
+          // Защищаем нативный gesture-classifier preventDefault'ом ДО
+          // любых вычислений: на iOS Safari это надёжнее на первом кадре.
+          if (e.cancelable) e.preventDefault();
+          locked = true;
+          // Подтвердили горизонталь — отменяем доигрывающийся снап
+          // и подкручиваем startX, чтобы pan продолжился с visual'а без скачка.
+          if (snapRaf) {
+            cancelAnimationFrame(snapRaf);
+            snapRaf = null;
+            startX = e.clientX - (panOffset - snapped * STEP);
+            dx = e.clientX - startX;
+          }
+        } else if (e.cancelable) {
+          e.preventDefault();
+        }
+        var pan = snapped * STEP + dx;
+        // Резинка: позитивная сторона — только при snapped===0.
+        if (pan > 0 && snapped === 0) pan = pan * 0.3;
+        var minPan = minSnap * STEP;
+        if (pan < minPan) pan = minPan + (pan - minPan) * 0.3;
+        panOffset = pan;
+        IDX.forEach(function (i) { applyCard(els[i], rowState[i], pan); });
+        setActiveAll(Math.abs(pan) >= 1);
+      }
+      function onUp(e) {
+        if (e && pointerId !== null && e.pointerId !== pointerId) return;
+        var wasLocked = locked;
+        // endDrag сбрасывает dragging + releaseCapture даже если мы уже
+        // вышли в vertical-lock (там dragging уже false). Capture-leak'а
+        // больше не происходит.
+        endDrag();
+        if (!wasLocked) return;   // tap или вертикаль — снап идёт сам собой
+        var raw = panOffset / STEP;
+        var target = symmetricRound(raw);
+        if (target > 0) target = 0;
+        if (target < minSnap) target = minSnap;
+        snapped = target;
+        animateSnap(target * STEP);
+      }
+      function onCancel(e) {
+        // Браузер/ОС прервали жест — возвращаемся к последней зафиксированной
+        // позиции, не «коммитим» промежуточный pan.
+        if (e && pointerId !== null && e.pointerId !== pointerId) return;
+        var wasLocked = locked;
+        endDrag();
+        if (!wasLocked) return;   // pre-lock cancel — snap'у нечего отменять
+        animateSnap(snapped * STEP);
+      }
+      function animateSnap(targetPan) {
+        if (snapRaf) { cancelAnimationFrame(snapRaf); snapRaf = null; }
+        var fromPan = panOffset;
+        var t0 = performance.now();
+        var dur = 280;
+        function frame(now) {
+          var p = Math.min(1, (now - t0) / dur);
+          var eased = 1 - Math.pow(1 - p, 3);
+          var pan = fromPan + (targetPan - fromPan) * eased;
+          panOffset = pan;
+          IDX.forEach(function (i) { applyCard(els[i], rowState[i], pan); });
+          setActiveAll(Math.abs(pan) >= 1);
+          if (p < 1) snapRaf = requestAnimationFrame(frame);
+          else snapRaf = null;
+        }
+        snapRaf = requestAnimationFrame(frame);
+      }
+
+      scene.addEventListener('pointerdown', onDown);
+      scene.addEventListener('pointermove', onMove);
+      scene.addEventListener('pointerup', onUp);
+      scene.addEventListener('pointercancel', onCancel);
+    }
+
+    // ── СЦЕНАРИЙ ────────────────────────────────────────────────
+    //   1 → 2 (спринг 2000мс, k=96 c=6 m=1) — после старта SPRING.delay
+    //   2 → 3 (ease-out 300мс)              — пауза PAUSE_BETWEEN после 1→2
+    //   3 → 4 (overdamped спринг 600мс)     — Figma: delay 1мс после 2→3
+    //
+    // Используем onDone-колбэки вместо хрупких setTimeout-цепочек:
+    // 3→4 стартует строго после finalize 2→3, без гонки с animating-флагом.
     var PAUSE_BETWEEN = 800;
     var EASE_DUR = 300;
-    setTimeout(function () {
-      transitionTo(1, { mode: 'spring' });
+
+    // При prefers-reduced-motion прыгаем сразу в стейт 4 без пауз
+    // (иначе юзер ждёт 2.8с статичного экрана перед мгновенным переходом).
+    if (reducedMotion()) {
+      // Тот же порядок что и в transitionTo: current → class → applyState.
+      current = 3;
+      root.classList.remove('__state-1');
+      root.classList.add('__state-4');
+      applyState(3);
+      attachSwipe();
+    } else {
       setTimeout(function () {
-        transitionTo(2, { mode: 'css', duration: EASE_DUR, easing: 'ease-out' });
-        // Стейт 3 → 4 запускаем сразу после окончания ease-out
-        // (Figma даёт delay 1мс, мы держим небольшой запас, чтобы
-        // animating-флаг успел сброситься).
-        setTimeout(function () {
-          transitionTo(3, { mode: 'spring', k: 80, c: 20, m: 1, duration: 600 });
-        }, EASE_DUR + 16);
-      }, SPRING.duration + PAUSE_BETWEEN);
-    }, SPRING.delay);
+        transitionTo(1, {
+          mode: 'spring',
+          onDone: function () {
+            setTimeout(function () {
+              transitionTo(2, {
+                mode: 'css', duration: EASE_DUR, easing: 'ease-out',
+                onDone: function () {
+                  transitionTo(3, { mode: 'spring', k: 80, c: 20, m: 1, duration: 600 });
+                }
+              });
+            }, PAUSE_BETWEEN);
+          }
+        });
+      }, SPRING.delay);
+    }
   })();
 </script>
 
