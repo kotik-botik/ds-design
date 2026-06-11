@@ -229,10 +229,13 @@
 
       // CTA — кнопка снизу. Если slide.cta = {label, onClick} — рендерим,
       // иначе скрываем слот. Кликовый обработчик навешиваем напрямую
-      // (один раз на сегмент).
+      // (один раз на сегмент). Также ставим .__has-cta на корень — в этом
+      // режиме сториз превращается в «карточку» с rounded-corners,
+      // а CTA лежит ниже на тёмном фоне viewer'а.
       var cta = this.root.querySelector('.moment__cta');
       if (cta) {
         if (s.cta && s.cta.label) {
+          this.root.classList.add('__has-cta');
           cta.style.display = '';
           // По умолчанию CTA-кнопка во ВВЗ-стиле «secondary-on-color»
           // (стеклянная). Для именинной сториз и любых других кейсов можно
@@ -249,6 +252,7 @@
             cta.querySelector('button').addEventListener('click', s.cta.onClick);
           }
         } else {
+          this.root.classList.remove('__has-cta');
           cta.style.display = 'none';
           cta.innerHTML = '';
         }
