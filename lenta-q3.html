@@ -1083,53 +1083,8 @@
     })();
   </script>
 
-  <!-- Lottie «Класс!» burst on like -->
-  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
-  <script>
-    // Проигрывает лотти-анимацию поверх кнопки «Класс!» в момент лайка
-    // (checkbox становится checked). На анлайк — не играет.
-    (function () {
-      if (!window.lottie) return;
-      var SIZE = 160;   // px — размер оверлея анимации
-
-      document.querySelectorAll('.button-klass').forEach(function (label) {
-        var input = label.querySelector('input[type="checkbox"]');
-        if (!input) return;
-        input.addEventListener('change', function () {
-          if (input.checked) playLike(label);
-        });
-      });
-
-      function playLike(label) {
-        // Центрируем по видимой «пилюле» кнопки, а не по label (label шире:
-        // в нём иконка + счётчик + &nbsp;, из-за чего центр уезжает вбок).
-        var anchor = label.querySelector('.button-container') || label;
-        var rect = anchor.getBoundingClientRect();
-        var cx = rect.left + rect.width / 2;
-        var cy = rect.top + rect.height / 2;
-
-        var host = document.createElement('div');
-        host.style.cssText =
-          'position:fixed;z-index:9999;pointer-events:none;' +
-          'width:' + SIZE + 'px;height:' + SIZE + 'px;' +
-          'left:' + cx + 'px;top:' + cy + 'px;' +
-          'transform:translate(-50%,-50%);';
-        document.body.appendChild(host);
-
-        var anim = lottie.loadAnimation({
-          container: host,
-          renderer: 'svg',
-          loop: false,
-          autoplay: true,
-          path: 'assets/lottie/like.json'
-        });
-        anim.addEventListener('complete', function () {
-          anim.destroy();
-          host.remove();
-        });
-      }
-    })();
-  </script>
+  <!-- Lottie «Класс!» burst on like — компонент, лениво подгружает lottie-web -->
+  <script src="components/button-klass.js"></script>
 
   <!-- Stack of system push-notifications from «ОК», прилетающих
        пока пользователь листает ленту. Стрим начат на стартовом
