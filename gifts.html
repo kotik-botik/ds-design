@@ -450,6 +450,11 @@
       function setActiveAll(on) {
         IDX.forEach(function (i) { els[i].classList.toggle('__active', on); });
       }
+      // При единственной карточке свайпнуть некуда — __active залипает в on,
+      // иначе Accept/Trash нельзя достать (тогда atRest всегда true).
+      function isActiveForPan(pan) {
+        return liveCards.length <= 1 || Math.abs(pan) >= 1;
+      }
       // Округление «от нуля» — симметрично для ±0.5 (Math.round даёт асимметрию).
       function symmetricRound(x) {
         return x < 0 ? -Math.round(-x) : Math.round(x);
@@ -518,7 +523,7 @@
         if (pan < minPan) pan = minPan + (pan - minPan) * 0.3;
         panOffset = pan;
         IDX.forEach(function (i) { applyCard(els[i], rowState[i], pan); });
-        setActiveAll(Math.abs(pan) >= 1);
+        setActiveAll(isActiveForPan(pan));
       }
       function onUp(e) {
         if (e && pointerId !== null && e.pointerId !== pointerId) return;
@@ -555,7 +560,7 @@
           var pan = fromPan + (targetPan - fromPan) * eased;
           panOffset = pan;
           IDX.forEach(function (i) { applyCard(els[i], rowState[i], pan); });
-          setActiveAll(Math.abs(pan) >= 1);
+          setActiveAll(isActiveForPan(pan));
           if (p < 1) snapRaf = requestAnimationFrame(frame);
           else snapRaf = null;
         }
@@ -607,7 +612,7 @@
             liveCards.forEach(function (j) {
               applyCard(els[j], rowState[j], newPan);
             });
-            setActiveAll(Math.abs(newPan) >= 1);
+            setActiveAll(isActiveForPan(newPan));
           });
           setTimeout(function () {
             liveCards.forEach(function (j) {
