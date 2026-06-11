@@ -192,29 +192,6 @@
 }
 
 /* ============================================================
-   __has-cta — если у текущего слайда есть CTA-кнопка, сториз превращается
-   в «карточку» с rounded-corners: media/scrim/topbar/body ужимаются по
-   вертикали, CTA + handle лежат ниже на тёмном фоне самого viewer'а.
-   Status-bar тоже не overlay на сторisе, а на чёрном.
-   ============================================================ */
-.moment.__has-cta .moment__media,
-.moment.__has-cta .moment__scrim,
-.moment.__has-cta .moment__body {
-  top: 52px;
-  bottom: 96px; /* выше CTA (44 от низа + ~44 высота кнопки = ~88) + воздух */
-  border-radius: 20px;
-}
-.moment.__has-cta .moment__topbar {
-  top: 52px;
-  /* верхние углы скруглены, чтобы прогресс/header лежали внутри карточки */
-  border-radius: 20px 20px 0 0;
-}
-/* Для media и scrim — overflow-hidden чтобы радиус по углам сработал */
-.moment.__has-cta .moment__media {
-  overflow: hidden;
-}
-
-/* ============================================================
    LONG-PRESS — при удержании прячем все UI-контролы (как в Instagram),
    оставляем только контент сториз и опц. CTA-кнопку. Анимация прогресса
    ставится на паузу через .__state-paused (см. выше).
