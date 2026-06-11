@@ -74,8 +74,8 @@
    Поведение и анимация — components/dismissible.{css,js}. */
 .vvz-card__close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 8px;
+  right: 8px;
   z-index: 1;
 }
 

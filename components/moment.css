@@ -218,18 +218,20 @@
 
 .moment__body-title {
   font-family: var(--font-family);
-  font-size: 21px;
-  line-height: 28px;
+  font-size: 27px;
+  line-height: 34px;
   font-weight: 600;
+  letter-spacing: 0.24px;
+  text-align: center;
   color: var(--static-text-and-icons-base-inverse-primary);
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-2);
 }
 
 /* Сетка 2×2 для карточек ВВЗ внутри body. */
 .moment__body-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 /* В сетке карточка занимает всю ячейку — снимаем фикс. ширину 160px из vvz-card */
 .moment__body-grid > .vvz-card {
