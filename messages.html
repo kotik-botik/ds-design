@@ -58,6 +58,8 @@
     border-radius: 50%;
     box-shadow: 0 8px 20px -6px rgba(0,0,0,0.32);
   }
+  /* иконка FAB — белая (asset-svg чёрный) на оранжевом button-circle */
+  .ll-fab__icon { display: block; width: 28px; height: 28px; filter: brightness(0) invert(1); }
 
   /* Таббар прибит к низу */
   .ll-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; }
@@ -301,7 +303,7 @@
 
     <!-- FAB — DS button-circle -->
     <div class="ll-fab button-circle-wrapper __size-56 __style-primary">
-      <button class="button-circle" aria-label="Написать сообщение"><span class="icon __src" style="--icon-src:url('assets/icons/plus.svg')"></span></button>
+      <button class="button-circle" aria-label="Написать сообщение"><img class="ll-fab__icon" src="assets/icons/add_24.svg" width="28" height="28" alt=""></button>
     </div>
 
     <!-- TABBAR -->
