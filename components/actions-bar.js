@@ -1,11 +1,12 @@
 /**
- * OK Design System — Button Klass (like burst)
+ * OK Design System — ActionsBar (JS-часть)
  *
- * Привязывает Lottie-анимацию «Класс!» ко всем `.button-klass` на странице.
- * Срабатывает на постановку лайка (checkbox checked); на анлайк — не играет.
+ * Поведение action-кнопок в `.actions-bar`. Сейчас — единственное поведение:
+ * Lottie-анимация «Класс!» при постановке лайка на любом `.button-klass`
+ * на странице. На анлайк не играет.
  *
- * Подключение:
- *   <script src="components/button-klass.js"></script>
+ * Подключение (один раз на странице, где есть actions-bar):
+ *   <script src="components/actions-bar.js"></script>
  * (lottie-web CDN подгружается лениво при первом тапе, если ещё не загружен)
  *
  * Реализация:
