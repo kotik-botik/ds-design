@@ -233,6 +233,19 @@ screen-transition.js теперь подключён синхронным `<scri
 - Tile «Поиск по контактам» / «Импорт из ВКонтакте» / «Школьные друзья» / «Поделиться профилем»: 2×2 grid, каждая 162×56 (12/186 left, 160/228 top), иконка 24×24 + двустрочный текст. Лейаут чистый.
 - «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
 - iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
+### gifts-catalog.html (наблюдено 2026-06-11, viewport 360×820)
+- На 360-wide грид `.ll-gc-grid` объявлен `grid-template-columns: 1fr 1fr`, но resolved-значение в браузере = `"235px 206px"` — **колонки выползают за правый край viewport** (правая колонка right=469 на vw=360). Карточки в скриншоте справа обрезаны. Причина: `.ll-gift__poster-text` («СПАСИБО!» и др.) с fontSize 36px / line-height 1 / padding 16 даёт min-content по горизонтали ~235px, и `1fr` неявно резервирует `minmax(auto,1fr)` → колонки тянутся к min-content. Фикс: `grid-template-columns: minmax(0,1fr) minmax(0,1fr)` или уменьшить fz/padding постера/добавить `word-break: break-word`/min-width:0 на самой карточке. На viewport 390 (lenta) проблема может маскироваться — проверяй на 360 явно.
+- `bodyScrollW` = 360 (равно viewport) — overflow не создаёт горизонтального скролла; визуально просто резку справа.
+- Хедер «Подарки» — в nav-bar (class `ds-title-l ll-sg-navtitle__title-like`). «День рождения!» — внутри `.ll-gc-section-head .header__title.ds-title-l` в острове. Не путать.
+- Тап `.ll-gift` → навигация на `send-gift.html?gift=<key>` (через `<a href="send-gift.html?gift=thanks">…`). Работает.
+
+### send-gift.html (наблюдено 2026-06-11) — БАГ в handler «Отправить» per-friend
+- В каждой friend-row кнопка `[data-give]` лежит ВНУТРИ `.button-wrapper`, **сразу под `.uni-cell`**, рядом с `.uni-cell-additional-content` (не внутри неё). См. DOM: `.uni-cell > .avatar | .uni-cell-additional-content | .button-wrapper > button[data-give]`.
+- Обработчик в `send-gift.html:346` делает `btn.closest('.uni-cell-additional-content').parentNode` → **возвращает null**, поэтому `.parentNode` бросает `TypeError: Cannot read properties of null (reading 'parentNode')`. Доказано: `page.on('pageerror')` ловит этот TypeError на каждом клике, кнопка НЕ заменяется на «Отправлено», тост `#sgToast` остаётся `hidden=true`. Визуально — только hover-подсветка строки (`.uni-cell-container.__state-enabled`).
+- Фикс — убрать неиспользуемую строку с `var cell = btn.closest('.uni-cell-additional-content').parentNode;` (переменная `cell` дальше не используется), или поправить на `btn.closest('.uni-cell')`.
+- Счётчик `#sgCount` показывает только число, плейсхолдер «/200» статичный → итог в DOM «16/200» (после `fill('С Днём Рождения!')`). Селектор для теста: `#sgCount` (числовая часть), либо ищи текст `/^\d+\/200$/` на родителе.
+- meshok-up корректно: `.ds-title-m.ll-sg-navtitle__title` = «Отправка открытки», `.ds-caption-m.ll-sg-navtitle__subtitle` = «На счёте: 79 ОК».
+
 ## menu.html — новый экран (наблюдено 2026-06-11)
 - Использует тот же fullscreen-shell, что и messages/lenta-q3: `.phone-frame.__fullscreen` (390×844, overflow:hidden), скроллер `.phone-frame__feed` (top:0..844). На свежей загрузке feed.scrollHeight==clientHeight==844 → контент помещается без скролла, прокрутка вниз ничего не двигает. Если контент позже разрастётся — тогда скролл активируется.
 - `.ll-tabbar`: position:fixed, top=771, bottom=844, h=73 — стандартное место. На menu.html таббар присутствует и НЕ уезжает при попытке скролла.
