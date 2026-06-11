@@ -116,6 +116,13 @@ screen-transition.js теперь подключён синхронным `<scri
 - Лог переживает навигацию только через `sessionStorage` (объект window.__vtlog обнуляется на новой странице).
 - Направление визуально доказывать НЕ скриншотом, а `getAnimations().effect.pseudoElement` + `.animationName` + `getKeyframes()` на входящей странице сразу после reveal (rAF×4). Имя кейфрейма = бесспорное доказательство ветки.
 
+## tab-bar.js навигация (verified 2026-06-11, ВСЁ PASS)
+- ROUTES: feed→lenta-q3.html, book→tribune.html, message→messages.html. Селектор иконки `.tabbar-icon.__slot-<feed|book|message>`. Подключён на lenta-q3 / messages / notifications / tribune.
+- Активная вкладка имеет класс `.__state-on` (на feed-иконке lenta-q3) → click-хендлер делает early-return, навигации/перезагрузки НЕТ (подтверждено: framenavigated=false, url не меняется).
+- Переход forward = cross-document View Transitions API ФАЕРИТСЯ (`e.viewTransition` truthy на pagereveal входящего дока) → 300ms push-left. Tabbar = forward всегда (нет sessionStorage[BACK_KEY], navType≠traverse), поэтому back-ветка не задействована — это к лучшему (см. баг back-направления выше, к таббару не относится).
+- Рецепт детекта VT: `addInitScript(() => window.addEventListener('pagereveal', e => window.__vt = !!e.viewTransition))`, после waitForURL читать `page.evaluate(()=>window.__vt)`. Default chromium.launch() (без флага) уже даёт VT на localhost.
+- Тап через `.locator(sel).click({force:true})` + `page.waitForURL('**/<file>')`. 5 forward-нав + 1 active-noop отработали с первого прогона, селекторы стабильны.
+
 ## Сэмплинг анимаций
 - Для покадровых данных: запусти `requestAnimationFrame`-цикл **внутри страницы** через `page.evaluate(async () => new Promise(resolve => { ... }))` и собирай computed styles в массив. Возврат массива на хост даст ~16 ms точность.
 - `page.screenshot` блокирующий, ~50 ms на кадр — для покадровой анимации использовать `Page.startScreencast` (CDP-сессия): `const cdp = await page.context().newCDPSession(page); cdp.send('Page.startScreencast', ...);`. Получишь по кадру на каждый paint без подтормаживания.
