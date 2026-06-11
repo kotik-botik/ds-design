@@ -51,6 +51,35 @@
 ### tabbar (`components/tabbar.css` + `components/tab-bar.js`)
 - Навигация вынесена в компонентный скрипт: карта `__slot-* → страница` + приоритет `data-href`; активная вкладка `__state-on` не реагирует.
 - Свайп вверх по `.tabbar__handle` (> 40px) → `start.html` (имитация home-indicator).
+- Заводя новый экран, добавь маршрут в `ROUTES` в `tab-bar.js` (напр. `book: 'tribune.html'`) — иначе тап по табу ничего не делает.
+
+### chips (`components/chips.css`)
+- Семейство: `.chips-view → .chips-view__row(.__nowrap) → .chip-container` (с текстом) **или** `.chip-icon-container` (только иконка).
+- Размеры: `__size-default` (44h) / `__size-large` (56h). Border-radius = высота/4.
+- Views: `__view-primary` (нейтральный) + `__selected-primary` (тёмный фон, inverse-текст). Для брендового — `__view-custom __selected-custom` + 4 переменные инлайн:
+  ```
+  style="--chip-background-color: ...; --chip-color-custom: ...;
+         --chip-background-selected-color: var(--static-surface-status-accent);
+         --chip-selected-color: #fff;"
+  ```
+- Press уже встроен: `:active/.__clicked → scale(0.95)` + overlay-вспышка через `::after`.
+- Типографика **title-m (17/24/600) вшита в компонент** — не нужно вешать `ds-title-m` на каждый чип.
+
+### vibe (`components/vibe.css`)
+- Empty-state / результат запроса: иллюстрация + title + subtitle + опц. кнопки.
+- Контексты `.vibe.__context-page|island|float` задают max-width и предполагаемые размеры детей (illustration 112/96/96, title 27b/21b/17b).
+- Структура: `.vibe-wrapper → .vibe.__context-* → .vibe__illustration/title/subtitle/buttons`.
+- ⚠️ В скролл-контейнере типа `.phone-frame__feed` (`flex-direction:column`) первый «остров» с vibe **схлопывается** из-за дефолтного `flex-shrink:1` и клипа `.island{overflow:hidden}`. Лечится `flex-shrink: 0` на обёртке секции.
+
+### text-feed: расширенные стили body
+- `.__poem` / `.poem` — Source Serif Pro, 24/28, letter-spacing 0.24, 400, **clamp 4 строки + ellipsis**.
+- `.__news` / `.news` — Roboto Regular, 24/28, letter-spacing 0.24, 400, **clamp 4 строки + ellipsis**.
+- Клэмп зашит прямо в стиль через `-webkit-line-clamp:4` (display:-webkit-box + overflow:hidden + text-overflow:ellipsis). На странице ничего настраивать не нужно.
+- Для poem нужен `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400">` в `<head>` страницы.
+
+### nav-bar.__type-search (в `meshok-up.css`)
+- Шапка с поисковым полем: `back + .text-input __size-36 + button-inline (фильтр)`. Используется в Трибуне.
+- Поисковое поле растягивается (`flex:1`); leading/trailing — `flex-shrink:0`. Иконка лупы — позиционируется абсолютно в `.nav-bar__search-icon`, текст-input получает левый паддинг 40px.
 
 ---
 
@@ -119,6 +148,8 @@ behaviour-компонент с `data-*`-хуками, а не копируем 
 - Шеврон ≠ стрелка: в макетах рядом с тайтлом — тонкий **chevron** («⌄», без стебля), а не `arrow_down` (со стеблем). Завели `chevron_down_24.svg`.
 - Звонок в макете — **контурный** (outline), а не залитый: завели `call_24.svg` (stroke).
 - Навбар держим целиком на ассетных иконках (без инлайновых SVG).
+- 📌 **Перекраска иконки внутри активного чипса (или другого «inverse» состояния)**: иконка остаётся `<img>` (исходные цвета по умолчанию), а в selected-варианте добавляем инлайн `style="filter: brightness(0) invert(1)"` — чёрный SVG → белый. Альтернатива (mask с currentColor) тоже работает, но требует замены `<img>` на `<span class="icon __src" style="--icon-src:url(...)">`, что не всегда нужно.
+- `.icon.__slot-back` → `back_24.svg`: канонический слот для back-кнопки, используется везде вместо «голого» `<img>`.
 
 ---
 
@@ -149,7 +180,9 @@ behaviour-компонент с `data-*`-хуками, а не копируем 
 - `figma.com` закрыт network-allowlist окружения → `curl`/`WebFetch` к ассетам Figma не работают (403 / Host not in allowlist). MCP отдаёт **ссылку/превью, а не байты**.
 - Картинка, **вставленная в чат текстом**, на диск не сохраняется (байтов нет). Нужно прикладывать **файлом-вложением** — тогда попадает в `assets/icons/` (так доехали `splashLogo.png`, `bannerBack1.png`).
 - Иногда файлы приезжают в корень репо — переносим в `assets/icons/`.
+- ⚠️ **Регистр имён файлов важен**: PNG может приехать как `Resourses.png`, а ссылка в HTML — на `resourses.png`; Linux/raw.githack case-sensitive → 404 + срабатывает `onerror`-фолбэк, и кажется, что асссет «не приехал». При втыкании ссылки на ассет — сверять регистр через `ls`.
 - Параллельные правки/переименования в репозитории случаются (напр. `lenta-light.html` → `lenta-q3.html`); при слиянии используем `merge -X ours` и проверяем, что ссылки (`tab-bar.js` ROUTES, навигация) согласованы и нет битых путей.
+- 📌 **Главред-агенты** (Figma MCP, GitHub MCP) подключаются с задержкой — если их инструменты ещё не появились в начале сессии, их схемы догружаются через ToolSearch по мере нужды.
 - Интерактив/анимации/последовательности переходов проверяем реальным прогоном в браузере (Playwright/Chromium-агент): измеряем computed styles, `getAnimations()`, `sessionStorage`, снимаем кадры середины перехода — юнит-тест это не ловит.
 
 ---
