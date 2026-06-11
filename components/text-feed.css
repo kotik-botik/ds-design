@@ -386,19 +386,19 @@
 }
 
 /* ============================================================
-   AVATARS — альтернатива uni-cell для шапки, когда субъект не один.
-   Используется в memory-карточках: годовщина брака (пара), годовщина
-   дружбы (трио и т.п.). Аватары наслаиваются справа налево.
+   AVATARS-VIEW КАК ШАПКА — альтернатива uni-cell для memory-карточек,
+   когда субъект не один (пара / трио аватаров без имени).
    ============================================================
-   <div class="text-feed__avatars">
-     <div class="avatar __size-72 __type-image"><img …></div>
-     <div class="avatar __size-72 __type-image"><img …></div>
+   <div class="avatars-view __size-72">
+     <div class="avatars-view__stack">
+       <div class="avatar __size-72 __type-image"><img …></div>
+       <div class="avatar __size-72 __type-image"><img …></div>
+     </div>
    </div>
-*/
-.text-feed__avatars {
-  display: flex;
-  align-items: center;
-}
-.text-feed__avatars > * + * {
-  margin-left: var(--text-feed-avatars-overlap, -12px);
+
+   Компенсируем 2px белого outline вокруг каждой аватарки внутри
+   .avatars-view__stack — иначе самая левая «уезжает» на 2px правее
+   текста, который выравнен по .text-feed > * (padding-left: 16). */
+.text-feed > .avatars-view {
+  margin-left: -2px;
 }
