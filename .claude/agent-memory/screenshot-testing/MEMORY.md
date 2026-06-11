@@ -99,6 +99,14 @@ screen-transition.js теперь подключён синхронным `<scri
 - Лог переживает навигацию только через `sessionStorage` (объект window.__vtlog обнуляется на новой странице).
 - Направление визуально доказывать НЕ скриншотом, а `getAnimations().effect.pseudoElement` + `.animationName` + `getKeyframes()` на входящей странице сразу после reveal (rAF×4). Имя кейфрейма = бесспорное доказательство ветки.
 
+### MomentViewer bdaySlide — фото фоном НЕ рендерится (наблюдён 2026-06-11, lenta-q3.html)
+- Сториз с `data-bday` на аватарке открывают `MomentViewer.bdaySlide({photo, name, headerTitle, headerSubtitle, cta})`. В `setSlide()` (moment.js:96) фото присваивается через `this.root.querySelector('.moment__media').src = s.src`. В DOM шаблона bday элемента `.moment__media` НЕТ → querySelector возвращает null, photo silently drops. Карточка отрисовывается на чистом черном фоне (`.moment { background-color:#000 }`). Backdrop-blur 40px на нижней половине теряет смысл — ему нечего блюрить.
+- CTA `Поздравить` приходит как `cta: { label: ... }` → wrapper получает `__style-secondary-on-color` (стеклянный белый-16%, **не оранжевый**). В bdaySlide нет способа задать orange-style.
+- Header (avatar 36 + title + subtitle + ... + ×) рендерится корректно. Прогресс-бар 1 сегмент 60% opaque сверху, home-handle снизу — тоже корректны. Тексты «Сегодня/День рождения/Лизы» — 17/48/22 px, цвета как в спеке. Заголовок «День рождения» при 48px на 390px viewport ВСЕГДА переносится на две строки (нет noWrap / letter-spacing tightening).
+- Ring на аватарке стека — псевдоэлемент `[data-name="Лиза"]::before` с `conic-gradient(8 hues)`, анимация `stories-bday-ring 1.6s cubic-bezier(.22,.61,.36,1)`. Бейдж `.stories-row__bday-badge` (🎂 emoji) — `__pos-br` (right-bottom).
+- **Закрытие через × button НЕ маркирует viewed**: после клика `[aria-label="Закрыть"]` ring остаётся `__ring-active`. Только `Escape` корректно флипает на `__ring-viewed`. Click-handler на × кнопку либо не привязан в bindRow/MomentViewer, либо stopPropagation мешает — стоит копнуть в moment.js.
+- В test container CDN `i.okcdn.ru` недоступен → аватарки = placeholder. Чтобы убедиться, что отсутствие фото — структурное, а не сетевое: `page.route('https://i.okcdn.ru/**', r => r.fulfill({contentType:'image/svg+xml', body:'<svg ...>...</svg>'}))`. Карточка остаётся чёрной → подтверждено: проблема в шаблоне.
+
 ## Сэмплинг анимаций
 - Для покадровых данных: запусти `requestAnimationFrame`-цикл **внутри страницы** через `page.evaluate(async () => new Promise(resolve => { ... }))` и собирай computed styles в массив. Возврат массива на хост даст ~16 ms точность.
 - `page.screenshot` блокирующий, ~50 ms на кадр — для покадровой анимации использовать `Page.startScreencast` (CDP-сессия): `const cdp = await page.context().newCDPSession(page); cdp.send('Page.startScreencast', ...);`. Получишь по кадру на каждый paint без подтормаживания.
