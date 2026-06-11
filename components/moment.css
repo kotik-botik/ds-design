@@ -269,12 +269,6 @@
   width: auto;
   min-width: 0;
 }
-/* Крестик в ВВЗ-сториз — 12px от правого/верхнего края (по дизайну).
-   В мессаджах остаётся 8px (см. vvz-card.css). */
-.moment__body-grid > .vvz-card .vvz-card__close {
-  top: 12px;
-  right: 12px;
-}
 
 
 .moment__header {
