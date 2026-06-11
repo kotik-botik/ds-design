@@ -1016,19 +1016,21 @@
 
       function vvzCardHtml(p) {
         var hasMutuals = p.mutuals && p.m;
-        var mutualsBlock = '';
+        // Блок mutuals рендерится ВСЕГДА. Если данных нет — пустой плейсхолдер,
+        // чтобы место под аватарки было зарезервировано (visibility: hidden из CSS).
+        var mutAvas = '';
         if (hasMutuals) {
-          var mutAvas = p.m.map(function (id) {
+          mutAvas = p.m.map(function (id) {
             return '<div class="avatar __size-32 __type-image"><img src="https://i.pravatar.cc/64?img=' + id + '" alt=""></div>';
           }).join('');
-          mutualsBlock = [
-            '<div class="vvz-card__mutuals">',
-              '<div class="avatars-view __size-32">',
-                '<div class="avatars-view__stack">' + mutAvas + '</div>',
-              '</div>',
-            '</div>'
-          ].join('');
         }
+        var mutualsBlock = [
+          '<div class="vvz-card__mutuals">',
+            '<div class="avatars-view __size-32">',
+              '<div class="avatars-view__stack">' + mutAvas + '</div>',
+            '</div>',
+          '</div>'
+        ].join('');
         return [
           '<div class="vvz-card' + (hasMutuals ? ' __has-mutuals' : '') + '" data-vvz-card>',
             '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',
