@@ -118,6 +118,17 @@
     opacity: .9;
   }
 
+  /* Lottie-конфетти на финал «Принять все». Хост — fullscreen overlay,
+     SVG-render. Сам файл — assets/lottie/confetti.json (DS-pattern,
+     уже используется на lenta.html). */
+  .gp-confetti {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 20;
+  }
+  .gp-confetti svg { display: block; }
+
   @media (prefers-reduced-motion: reduce) {
     .gp__title { transition: none !important; }
   }
@@ -228,9 +239,13 @@
 
   <div class="gp__handle"></div>
 
+  <div class="gp-confetti" id="gpConfetti" aria-hidden="true"></div>
+
 </div>
 
 <script src="components/back-button.js"></script>
+<!-- Lottie-плеер для конфетти на финал «Принять все». -->
+<script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
 <script>
   (function () {
     var root  = document.getElementById('gp');
@@ -348,7 +363,52 @@
     applyState(0);
     root.classList.add('__state-1');
 
+    // Предзагружаем lottie-конфетти. Запустим один раз после exit-цепочки
+    // «Принять все». Lottie-web подключён ниже как <script>.
+    var confettiHost = document.getElementById('gpConfetti');
+    var confettiData = null;
+    fetch('assets/lottie/confetti.json')
+      .then(function (r) { return r.json(); })
+      .then(function (d) { confettiData = d; })
+      .catch(function () { /* offline / file missing — silently skip */ });
+    function fireConfetti() {
+      if (!confettiData || !window.lottie || !confettiHost) return;
+      var anim = window.lottie.loadAnimation({
+        container: confettiHost,
+        renderer: 'svg', loop: false, autoplay: true,
+        animationData: JSON.parse(JSON.stringify(confettiData))
+      });
+      anim.addEventListener('complete', function () {
+        anim.destroy();
+        confettiHost.innerHTML = '';
+      });
+    }
+    // Финальный экран: меняем заголовок + конфетти. Вызывается и из exit-
+    // цепочки «Принять все», и из processCard, когда liveCards опустел.
+    function showAllAccepted() {
+      titleEl.innerHTML = 'Вы приняли<br>все подарки';
+      fireConfetti();
+    }
+
     function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    // CSS cubic-bezier(x1, y1, x2, y2) реализация: по x находим u через
+    // Ньютона, потом считаем y(u). Используем для exit-«падения»
+    // (Figma даёт bezier 0, 0, 1, -0.01 — почти линейно с лёгким overshoot'ом).
+    function makeBezier(x1, y1, x2, y2) {
+      return function (t) {
+        var u = t;
+        for (var i = 0; i < 8; i++) {
+          var omu = 1 - u;
+          var x  = 3 * omu * omu * u * x1 + 3 * omu * u * u * x2 + u * u * u;
+          var dx = 3 * omu * omu * x1 + 6 * omu * u * (x2 - x1) + 3 * u * u * (1 - x2);
+          if (Math.abs(dx) < 1e-6) break;
+          u -= (x - t) / dx;
+          if (u < 0) u = 0; else if (u > 1) u = 1;
+        }
+        var omu2 = 1 - u;
+        return 3 * omu2 * omu2 * u * y1 + 3 * omu2 * u * u * y2 + u * u * u;
+      };
+    }
     // Считываем live при каждом transitionTo — юзер может переключить
     // OS-preference во время сессии.
     function reducedMotion() {
@@ -390,6 +450,12 @@
       if (opts.mode === 'spring') {
         dur = opts.duration || SPRING.duration;
         progress = makeSpring(opts.k || SPRING.k, opts.c || SPRING.c, opts.m || SPRING.m);
+      } else if (opts.mode === 'bezier') {
+        // opts.bezier = [x1, y1, x2, y2]
+        dur = opts.duration || 300;
+        var bz = opts.bezier;
+        var ease = makeBezier(bz[0], bz[1], bz[2], bz[3]);
+        progress = function (tMs) { return ease(Math.min(1, tMs / dur)); };
       } else {
         dur = opts.duration || 300;
         progress = function (tMs) { return easeOutCubic(Math.min(1, tMs / dur)); };
@@ -619,6 +685,10 @@
               els[j].style.transition = '';
             });
           }, SHIFT_DUR + 30);
+          // Все карточки приняты по одной — финальный экран.
+          if (liveCards.length === 0) {
+            setTimeout(showAllAccepted, SHIFT_DUR);
+          }
         }
 
         if (kind === 'accept') {
@@ -669,14 +739,19 @@
             snapped = 0;
           }
           setActiveAll(false);
-          // Шаг 1: обратно в веер (state 2 = index 1) спрингом.
+          // Шаг 1 — «сборка в кулечек»: обратно в веер (state 2).
+          //   Overdamped spring k=80, c=20, m=1, 600мс (Figma custom spring).
+          // Шаг 2 — «падают и исчезают» (state 5 = exit).
+          //   Cubic-bezier(0, 0, 1, -0.01), 500мс, delay 1мс.
           transitionTo(1, {
-            mode: 'spring', duration: 700,
+            mode: 'spring', k: 80, c: 20, m: 1, duration: 600,
             onDone: function () {
               setTimeout(function () {
-                // Шаг 2: вниз + ужать + opacity 0 (state 5 = index 4).
-                transitionTo(4, { mode: 'spring', duration: 900 });
-              }, 200);
+                transitionTo(4, {
+                  mode: 'bezier', bezier: [0, 0, 1, -0.01], duration: 500,
+                  onDone: showAllAccepted
+                });
+              }, 1);
             }
           });
         });
