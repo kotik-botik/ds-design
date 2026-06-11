@@ -219,6 +219,11 @@
     color: var(--dynamic-text-and-icons-base-secondary);
   }
   .ll-otd__caption > svg { flex-shrink: 0; }
+  /* Между caption «Видите только вы» и крупным заголовком — 4px вместо
+     дефолтных 12px gap от .text-feed (margin-top компенсирует gap). */
+  .ll-otd__caption + .ds-title-xl {
+    margin-top: calc(var(--space-1) - var(--space-3));
+  }
   .ll-otd__likes {
     display: flex;
     align-items: center;
