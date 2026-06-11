@@ -1,20 +1,35 @@
 /**
- * OK Design System (proto) — VvzCard «ВВЗ в сообщениях»
+ * OK Design System (proto) — VvzCard «ВВЗ»
  *
- * Карточка «Возможно, вы знакомы» из экрана сообщений
- * (Figma «ВВЗ в сообщениях», 2260:68033). Используется ТОЛЬКО здесь.
+ * Карточка «Возможно, вы знакомы». Используется в двух местах:
+ *  - в сообщениях — горизонтальный ряд, ширина 160px, без общих друзей
+ *  - в сториз ВВЗ — вертикальный стек, ширина 100%, с общими друзьями
  *
- * Вид: круглый аватар по центру + крестик «×» в углу карточки (без фона)
- *      + имя и сабтайтл по центру + кнопка «Дружить» во всю ширину.
+ * Вид: круглый аватар по центру + крестик «×» в углу + имя и сабтайтл по
+ * центру + (опц.) ряд общих друзей + кнопка «Дружить» во всю ширину.
  *
  *   <div class="vvz-card">
  *     <div class="vvz-card__media"><img …><button class="vvz-card__close">✕</button></div>
  *     <div class="vvz-card__content">
  *       <div class="vvz-card__title ds-title-s">Имя</div>
- *       <div class="vvz-card__subtitle ds-caption-m">N общих друзей</div>
+ *       <div class="vvz-card__subtitle ds-caption-m">28 лет, Москва</div>
+ *       <!-- (опц.) общие друзья: показ через .__has-mutuals на корне -->
+ *       <div class="vvz-card__mutuals">
+ *         <div class="avatars-view __size-32">
+ *           <div class="avatars-view__stack">…</div>
+ *           <span class="avatars-view__text">18 общих друзей</span>
+ *         </div>
+ *       </div>
  *       <div class="vvz-card__btn button-wrapper __size-36 __full-width">…Дружить…</div>
  *     </div>
  *   </div>
+ *
+ * MODIFIERS:
+ *   .__has-mutuals  — показать блок общих друзей (без модификатора — скрыт)
+ *   .__full-width   — растянуть карточку на 100% ширины родителя
+ *                     (по умолчанию 160px — для горизонтального ряда)
+ *   .__state-hidden — состояние «Рекомендация скрыта»: контент карточки
+ *                     заменяется на заглушку, высота сохраняется
  */
 
 .vvz-card {
@@ -33,6 +48,12 @@
 }
 .vvz-card:active,
 .vvz-card.__clicked { transform: scale(0.98); }
+
+/* Full-width — карточка занимает всю ширину родителя (использует сториз ВВЗ) */
+.vvz-card.__full-width {
+  flex: 1 1 auto;
+  width: 100%;
+}
 
 /* Круглый аватар по центру */
 .vvz-card__media {
@@ -58,9 +79,12 @@
   z-index: 1;
 }
 
-/* Контент — по центру */
+/* Контент — по центру. flex: 1 + margin-top:auto на .vvz-card__btn даёт
+   выравнивание кнопок по низу карточки, когда в сетке (grid stretch) одни
+   карточки с mutuals, другие — без. */
 .vvz-card__content {
   width: 100%;
+  flex: 1 1 auto;
   box-sizing: border-box;
   padding: 8px 12px 12px;
   display: flex;
@@ -84,8 +108,48 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* Общие друзья — стек аватарок + текст. По умолчанию скрыт; включается через
+   .__has-mutuals на корне карточки (в мессаджах не используется, в сториз — да). */
+.vvz-card__mutuals {
+  display: none;
+  margin-top: 8px;
+}
+.vvz-card.__has-mutuals .vvz-card__mutuals {
+  display: flex;
+}
+
 .vvz-card__btn {
-  margin-top: 12px;
+  margin-top: auto; /* прижимает кнопку к низу — выравнивает высоту карточек */
+  padding-top: 12px;
   display: block;
   width: 100%;
+}
+
+/* ============================================================
+   STATE: HIDDEN — «Рекомендация скрыта»
+   Высота карточки сохраняется (height не меняется), контент заменяется
+   на текст-заглушку по центру. Включается из JS при тапе на ✕.
+   ============================================================ */
+.vvz-card.__state-hidden {
+  cursor: default;
+}
+.vvz-card.__state-hidden .vvz-card__media,
+.vvz-card.__state-hidden .vvz-card__content,
+.vvz-card.__state-hidden .vvz-card__close {
+  visibility: hidden;
+}
+.vvz-card.__state-hidden::after {
+  content: 'Рекомендация скрыта';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 16px;
+  font-family: var(--font-family);
+  font-size: 13px;
+  line-height: 16px;
+  color: var(--dynamic-text-and-icons-base-secondary);
 }

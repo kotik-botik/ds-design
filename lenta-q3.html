@@ -205,51 +205,8 @@
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
-  /* Stories (Моменты) — горизонтальный ряд историй между навбаром и лентой
-     (вне .ll-feed). Кружки — DS-компонент .avatar (__size-56 +
-     __ring-active/__ring-viewed), «+» своей истории — аддон .avatar__addon.
-     Гэп до навбара = 0 благодаря gap:0 у .phone-frame__feed. */
-  .ll-stories__row {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-    /* отступы блока: сверху 8, по бокам 16, снизу 16.
-       Верт. паддинг также даёт место outline-кольцу и аддону «+»,
-       чтобы их не резал скролл-контейнер (overflow-x:auto → overflow-y:auto). */
-    padding: var(--space-2) var(--space-4) var(--space-4);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .ll-stories__row::-webkit-scrollbar { display: none; }
-
-  /* Кольцо историй — как в макете: зазор (orbit) 3px и штрих 3px
-     (в DS по умолчанию для size-56 — offset 4px и толщина 2px). */
-  .ll-stories .avatar.__size-56.__ring-active,
-  .ll-stories .avatar.__size-56.__ring-viewed {
-    outline-width: 3px;
-    outline-offset: 3px;
-  }
-  /* outline не занимает место в потоке, поэтому орбиту (зазор 3 + штрих 3 = 6px)
-     выносим в layout через margin — кольцо реально занимает место и влияет
-     на высоту и ширину контейнера (а не торчит за боксом). */
-  .ll-stories .avatar.__size-56 {
-    margin: var(--space-1-5);
-  }
-
-  /* «+»-бейдж добавления своей истории — оранжевый кружок в белой обводке */
-  .ll-story-add {
-    box-sizing: border-box;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--static-surface-status-accent);
-    border: 3px solid var(--dynamic-surface-base-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .ll-story-add .ll-icon { filter: brightness(0) invert(1); }
+  /* Карусель сториз — вынесена в DS как .stories-row.
+     Локальные правки здесь больше не нужны. */
 
   /* Баннер под сторис — картинка во всю ширину контейнера ленты,
      горизонтальные паддинги = 0 (наследует full-width от .ll-feed). */
@@ -279,13 +236,6 @@
   .ll-promo__art { position: relative; flex: 0 0 auto; width: 100px; height: 72px; }
   .ll-promo__art img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-  /* Позиция бейджа — относительно кольцевой «коробки» (ава + орбита 3 + штрих 3 = 6px):
-     торчит на 3px за правую границу кольца, снизу — заподлицо с кольцом. */
-  .ll-stories .avatar.__size-56 .avatar__addon.__pos-br.ll-story-add {
-    top: auto;
-    bottom: -6px;   /* нижняя граница кольца = ава + 6px */
-    right: -9px;    /* правая граница кольца (−6) + вылет 3px */
-  }
 
 </style>
 </head>
@@ -322,26 +272,32 @@
       <!-- МОМЕНТЫ (истории) — вне ленты, между навбаром и фидом.
            data-stories — сколько сториз у автора (= столько палочек прогресса
            в viewer'е). data-name — заголовок viewer'а. -->
-      <div class="ll-stories" aria-label="Моменты">
-        <div class="ll-stories__row" id="ll-stories-row">
-          <!-- Ваша история (оранжевое кольцо + «+»). Тап по этой аватарке
-               не открывает viewer (data-skip-viewer). -->
-          <div class="avatar __size-56 __type-image __ring-active __has-addon" data-skip-viewer>
-            <img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KtrUxASmukStGfhv8gKAdnO8o0XlTdnM6-KfH9cwylJb75wIpMwrl23su2VU84PVRXgYOXqKlOJNEXEFe1u1a0c0jB7m3EkgrolCyD8RoAAAAp&dpr=2" alt="Ваша история">
-            <div class="avatar__addon __pos-br ll-story-add">
-              <img class="ll-icon" src="assets/icons/add_24.svg" width="20" height="20" alt="">
-            </div>
+      <div class="stories-row" id="ll-stories-row" aria-label="Моменты">
+        <!-- Ваша история (оранжевое кольцо + «+»). Тап по этой аватарке
+             не открывает viewer (data-skip-viewer). -->
+        <div class="avatar __size-56 __type-image __ring-active __has-addon" data-skip-viewer>
+          <img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KtrUxASmukStGfhv8gKAdnO8o0XlTdnM6-KfH9cwylJb75wIpMwrl23su2VU84PVRXgYOXqKlOJNEXEFe1u1a0c0jB7m3EkgrolCyD8RoAAAAp&dpr=2" alt="Ваша история">
+          <div class="avatar__addon __pos-br stories-row__add">
+            <img src="assets/icons/add_24.svg" width="20" height="20" alt="">
           </div>
-          <!-- Не просмотренные (оранжевое кольцо) -->
-          <div class="avatar __size-56 __type-image __ring-active" data-stories="3" data-name="Лиза"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-active" data-stories="5" data-name="Алексей"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
-          <!-- Просмотренные (серое кольцо) -->
-          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="4" data-name="Сергей"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="3" data-name="Евгения"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="2" data-name="Елена"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
-          <div class="avatar __size-56 __type-image __ring-viewed" data-stories="6" data-name="Кирилл"><img src="https://i.pravatar.cc/112?img=33" alt=""></div>
         </div>
+        <!-- Не просмотренные (оранжевое кольцо). -->
+        <div class="avatar __size-56 __type-image __ring-active" data-stories="3" data-name="Лиза"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
+        <div class="avatar __size-56 __type-image __ring-active" data-stories="5" data-name="Алексей"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
+
+        <!-- ВВЗ-сториз: одна палочка, заголовок и сетка 2×2 карточек.
+             CTA-кнопка снизу — только у ВВЗ. -->
+        <div class="avatar __size-56 __type-image __ring-active"
+             data-stories="1" data-name="Возможно вы знакомы" data-vvz
+             aria-label="Возможно вы знакомы">
+          <img src="assets/icons/vvz_stories.png" alt="">
+        </div>
+        <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
+        <!-- Просмотренные (серое кольцо) -->
+        <div class="avatar __size-56 __type-image __ring-viewed" data-stories="4" data-name="Сергей"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
+        <div class="avatar __size-56 __type-image __ring-viewed" data-stories="3" data-name="Евгения"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
+        <div class="avatar __size-56 __type-image __ring-viewed" data-stories="2" data-name="Елена"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
+        <div class="avatar __size-56 __type-image __ring-viewed" data-stories="6" data-name="Кирилл"><img src="https://i.pravatar.cc/112?img=33" alt=""></div>
       </div>
 
 
@@ -898,6 +854,14 @@
         <button class="moment__nav-zone __side-next" aria-label="Дальше"></button>
       </div>
 
+      <!-- Body-слот. Заполняется из slide.body в MomentViewer (см. moment.js).
+           По умолчанию скрыт — обычные сториз показывают только media+color. -->
+      <div class="moment__body" style="display: none;"></div>
+
+      <!-- CTA-слот. Заполняется из slide.cta в MomentViewer (см. moment.js).
+           Если у текущей сториз нет cta — слот скрыт через display: none. -->
+      <div class="moment__cta" style="display: none;"></div>
+
       <div class="moment__handle"></div>
     </div>
 
@@ -1028,100 +992,107 @@
   <!-- Просмотрщик сториз ----------------------------------------------- -->
   <script src="components/moment.js"></script>
   <script>
-    // Связка карусели сториз и moment-viewer'а.
-    //  - тап по аватарке → открывается viewer
-    //  - сегментов прогресса столько, сколько указано в data-stories
-    //  - тап на правую половину / таймер: следующий сегмент. На последнем —
-    //    переход к следующему автору в карусели (как в инсте). Если автор
-    //    последний — viewer закрывается.
-    //  - тап на левую половину: предыдущий сегмент. На нулевом — к предыдущему
-    //    автору; на самой первой аватарке остаёмся в начале.
-    //  - кольцо просмотренной аватарки → __ring-viewed.
+    // Связка карусели сториз и moment-viewer'а через DS-метод
+    // MomentViewer.bindRow. Всё поведение (тапы lev/prav, переход между
+    // авторами, маркировка просмотренных, открытие/закрытие) — внутри.
+    // Снаружи остаётся только выбор того, чем заполнить слайды.
     (function () {
-      // На картинку сториз — простая цветная заливка. Палитра ротируется
-      // по индексу сегмента, чтобы между сторизами визуально была разница.
       var STORY_COLORS = ['#FF7700', '#5856D6', '#34C759', '#FF3B30', '#007AFF', '#AF52DE'];
 
       var row    = document.getElementById('ll-stories-row');
       var viewer = document.getElementById('ll-moment');
-      var closeBtn   = document.getElementById('ll-moment-close');
-      var currentAvatar = null;
-      var instance = null;
-
       if (!row || !viewer) return;
 
-      // Аватарки, которые реально открывают viewer (без «Вашей истории»)
-      function avatars() {
-        return Array.prototype.filter.call(
-          row.querySelectorAll('.avatar'),
-          function (a) { return !a.hasAttribute('data-skip-viewer'); }
-        );
-      }
+      // Данные для ВВЗ-сториз — 4 человека. У части указаны общие друзья,
+      // у части нет. Карточки без mutuals растягиваются по высоте до тех,
+      // у которых mutuals есть — выравнивание идёт через grid stretch +
+      // margin-top: auto у кнопки внутри vvz-card__content.
+      var VVZ_PEOPLE = [
+        { name: 'Карина Затонская', sub: '28 лет, Рига, Латвия',  img: 'https://i.pravatar.cc/192?img=47', mutuals: 18, m: [44, 12, 5] },
+        { name: 'Илья Воронов',     sub: '31 год, Москва',         img: 'https://i.pravatar.cc/192?img=33' },
+        { name: 'Анна Соколова',    sub: '25 лет, Санкт-Петербург',img: 'https://i.pravatar.cc/192?img=44', mutuals: 12, m: [12, 5, 23] },
+        { name: 'Мария Лебедева',   sub: '29 лет, Казань',         img: 'https://i.pravatar.cc/192?img=45' }
+      ];
 
-      function slidesFor(ava) {
-        var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
-        var slides = [];
-        for (var i = 0; i < count; i++) {
-          slides.push({ color: STORY_COLORS[i % STORY_COLORS.length] });
+      function vvzCardHtml(p) {
+        var hasMutuals = p.mutuals && p.m;
+        var mutualsBlock = '';
+        if (hasMutuals) {
+          var mutAvas = p.m.map(function (id) {
+            return '<div class="avatar __size-32 __type-image"><img src="https://i.pravatar.cc/64?img=' + id + '" alt=""></div>';
+          }).join('');
+          mutualsBlock = [
+            '<div class="vvz-card__mutuals">',
+              '<div class="avatars-view __size-32">',
+                '<div class="avatars-view__stack">' + mutAvas + '</div>',
+              '</div>',
+            '</div>'
+          ].join('');
         }
-        return slides;
+        return [
+          '<div class="vvz-card' + (hasMutuals ? ' __has-mutuals' : '') + '" data-vvz-card>',
+            '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',
+              '<button class="button-inline __size-16" aria-label="Скрыть" data-vvz-dismiss>',
+                '<span class="button-inline__content">',
+                  '<span class="button-inline__icon icon __size-16 __slot-close"></span>',
+                '</span>',
+              '</button>',
+            '</span>',
+            '<div class="vvz-card__media"><img src="' + p.img + '" alt=""></div>',
+            '<div class="vvz-card__content">',
+              '<div class="vvz-card__title ds-title-s">' + p.name + '</div>',
+              '<div class="vvz-card__subtitle ds-caption-m">' + (hasMutuals ? p.mutuals + ' общих друзей' : p.sub) + '</div>',
+              mutualsBlock,
+              '<div class="vvz-card__btn button-wrapper __size-36 __style-primary __full-width">',
+                '<button class="button-container __style-primary" type="button" style="width:100%;">',
+                  '<span class="button-content">Дружить</span>',
+                '</button>',
+              '</div>',
+            '</div>',
+          '</div>'
+        ].join('');
       }
 
-      function applyAuthor(ava) {
-        currentAvatar = ava;
-        viewer.querySelector('.moment__header-title').textContent = ava.getAttribute('data-name') || '';
-        viewer.querySelector('.moment__header .avatar img').src   = ava.querySelector('img').src;
+      function vvzBodyHtml() {
+        var cards = VVZ_PEOPLE.map(vvzCardHtml).join('');
+        return [
+          '<h2 class="moment__body-title">Возможно вы знакомы</h2>',
+          '<div class="moment__body-grid">' + cards + '</div>'
+        ].join('');
       }
 
-      function markViewed(ava) {
-        if (!ava) return;
-        ava.classList.remove('__ring-active');
-        ava.classList.add('__ring-viewed');
-      }
-
-      // Переход к соседнему автору карусели. dir = +1 (вправо) | -1 (влево).
-      // true  — переход выполнен (страница подменила слайды), viewer не закрываем.
-      // false — соседа нет: для +1 компонент сам вызовет onClose, для -1 останется
-      //         на текущем сегменте (clamp на 0).
-      function step(dir) {
-        var list = avatars();
-        var i = list.indexOf(currentAvatar);
-        var nextAva = list[i + dir];
-        if (!nextAva) return false;
-        if (dir > 0) markViewed(currentAvatar);
-        applyAuthor(nextAva);
-        instance.setSlides(slidesFor(nextAva));
-        instance.go(0);
-        return true;
-      }
-
-      row.addEventListener('click', function (e) {
-        var ava = e.target.closest('.avatar');
-        if (!ava) return;
-        if (ava.hasAttribute('data-skip-viewer')) return;
-        open(ava);
-      });
-
-      closeBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (instance) instance._finish();
-      });
-
-      function open(ava) {
-        applyAuthor(ava);
-        viewer.hidden = false;
-
-        if (instance) instance.destroy();
-        instance = window.MomentViewer.init(viewer, {
-          slides: slidesFor(ava),
-          onNext: function () { return step(+1); },
-          onPrev: function () { return step(-1); },
-          onClose: function () {
-            viewer.hidden = true;
-            markViewed(currentAvatar);
+      window.MomentViewer.bindRow(row, viewer, {
+        slides: function (ava) {
+          // ВВЗ-сториз — одна палочка, body вместо media, CTA «Показать всех»
+          if (ava.hasAttribute('data-vvz')) {
+            return [{
+              color: '#2E2F33', // тёмный фон под body (PNG появится позже)
+              body: vvzBodyHtml(),
+              cta: { label: 'Показать всех' }
+            }];
           }
-        });
-      }
+          // Обычная сториз — цветной фон + опц. CTA из data-cta-label
+          var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
+          var ctaLabel = ava.getAttribute('data-cta-label');
+          var list = [];
+          for (var i = 0; i < count; i++) {
+            var s = { color: STORY_COLORS[i % STORY_COLORS.length] };
+            if (ctaLabel) s.cta = { label: ctaLabel };
+            list.push(s);
+          }
+          return list;
+        }
+      });
+
+      // Тап на ✕ в карточке ВВЗ → состояние «Рекомендация скрыта».
+      // Делегируем на viewer, потому что карточки рендерятся уже после init'а.
+      viewer.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-vvz-dismiss]');
+        if (!btn) return;
+        e.stopPropagation();
+        var card = btn.closest('[data-vvz-card]');
+        if (card) card.classList.add('__state-hidden');
+      });
     })();
   </script>
 

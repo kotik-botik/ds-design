@@ -40,10 +40,10 @@
     this._onAnimEnd = this._onAnimEnd.bind(this);
     this._onKey = this._onKey.bind(this);
 
-    var prev = root.querySelector('.moment__nav-zone.__side-prev');
-    var next = root.querySelector('.moment__nav-zone.__side-next');
-    if (prev) prev.addEventListener('click', this._onPrev);
-    if (next) next.addEventListener('click', this._onNext);
+    this._prev = root.querySelector('.moment__nav-zone.__side-prev');
+    this._next = root.querySelector('.moment__nav-zone.__side-next');
+    if (this._prev) this._prev.addEventListener('click', this._onPrev);
+    if (this._next) this._next.addEventListener('click', this._onNext);
 
     // Завершение анимации активного сегмента → автоматический next
     root.addEventListener('animationend', this._onAnimEnd);
@@ -111,6 +111,52 @@
       if (sub && s.subtitle != null) sub.textContent = s.subtitle;
       var avaImg = this.root.querySelector('.moment__header .avatar img');
       if (avaImg && s.avatar) avaImg.src = s.avatar;
+
+      // BODY — произвольный контент поверх media (ВВЗ-сториз, например).
+      // slide.body — HTML-строка или DOM-узел. Если задан, заменяем содержимое
+      // .moment__body и показываем слот; иначе слот скрыт.
+      // Также включаем .moment.__view-body — в этом режиме скрываются
+      // аватарка и текст автора в header'е (остаётся только прогресс + ✕).
+      var body = this.root.querySelector('.moment__body');
+      if (body) {
+        if (s.body) {
+          body.style.display = '';
+          if (typeof s.body === 'string') {
+            body.innerHTML = s.body;
+          } else {
+            body.innerHTML = '';
+            body.appendChild(s.body);
+          }
+          this.root.classList.add('__view-body');
+        } else {
+          body.style.display = 'none';
+          body.innerHTML = '';
+          this.root.classList.remove('__view-body');
+        }
+      }
+
+      // CTA — кнопка снизу. Если slide.cta = {label, onClick} — рендерим,
+      // иначе скрываем слот. Кликовый обработчик навешиваем напрямую
+      // (один раз на сегмент).
+      var cta = this.root.querySelector('.moment__cta');
+      if (cta) {
+        if (s.cta && s.cta.label) {
+          cta.style.display = '';
+          cta.innerHTML =
+            '<div class="button-wrapper __size-44 __style-primary __full-width">' +
+              '<button class="button-container __style-primary" type="button">' +
+                '<span class="button-content"></span>' +
+              '</button>' +
+            '</div>';
+          cta.querySelector('.button-content').textContent = s.cta.label;
+          if (typeof s.cta.onClick === 'function') {
+            cta.querySelector('button').addEventListener('click', s.cta.onClick);
+          }
+        } else {
+          cta.style.display = 'none';
+          cta.innerHTML = '';
+        }
+      }
     }
 
     if (typeof this.options.onChange === 'function') {
@@ -166,10 +212,128 @@
   MomentViewer.prototype.destroy = function () {
     document.removeEventListener('keydown', this._onKey);
     this.root.removeEventListener('animationend', this._onAnimEnd);
+    if (this._prev) this._prev.removeEventListener('click', this._onPrev);
+    if (this._next) this._next.removeEventListener('click', this._onNext);
   };
+
+  // ============================================================
+  // BIND-ROW — связка карусели аватарок (.stories-row) с viewer'ом
+  //
+  //   MomentViewer.bindRow(rowEl, viewerEl, {
+  //     slides: function (avatarEl) { return [{ color, src, cta, ... }, …]; },
+  //     // Не обязателен. Если не передан — по data-stories на аватарке
+  //     // и data-cta-label делается базовый набор пустых сегментов.
+  //   });
+  //
+  // Из data-атрибутов аватарки берётся:
+  //   data-stories     — количество сегментов прогресса (default 1)
+  //   data-name        — заголовок в шапке viewer'а
+  //   data-cta-label   — лейбл CTA-кнопки снизу (если есть)
+  //   data-skip-viewer — аватарка не открывает viewer
+  //
+  // Сам viewer должен содержать:
+  //   .moment__progress, .moment__header-title, .moment__header .avatar img,
+  //   .moment__cta (опц.), [aria-label="Закрыть"] (опц., для тапа на крестик).
+  // ============================================================
+  function bindRow(rowEl, viewerEl, options) {
+    options = options || {};
+    var currentAva = null;
+    var instance = null;
+
+    function avatars() {
+      return Array.prototype.filter.call(
+        rowEl.querySelectorAll('.avatar'),
+        function (a) { return !a.hasAttribute('data-skip-viewer'); }
+      );
+    }
+
+    function slidesFor(ava) {
+      if (typeof options.slides === 'function') return options.slides(ava);
+      var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
+      var ctaLabel = ava.getAttribute('data-cta-label');
+      var list = [];
+      for (var i = 0; i < count; i++) {
+        var s = {};
+        if (ctaLabel) s.cta = { label: ctaLabel };
+        list.push(s);
+      }
+      return list;
+    }
+
+    function applyAuthor(ava) {
+      currentAva = ava;
+      var titleEl = viewerEl.querySelector('.moment__header-title');
+      if (titleEl) titleEl.textContent = ava.getAttribute('data-name') || '';
+
+      // Аватар в шапке viewer'а — копия аватарки из стака сториз.
+      // Копируем тип (__type-image / __type-placeholder / __type-emoji / …)
+      // и содержимое (img / emoji-символ), сохраняя свой __size-36.
+      var headerAva = viewerEl.querySelector('.moment__header > .avatar');
+      if (headerAva) {
+        Array.prototype.slice.call(headerAva.classList).forEach(function (c) {
+          if (/^__type-/.test(c)) headerAva.classList.remove(c);
+        });
+        Array.prototype.slice.call(ava.classList).forEach(function (c) {
+          if (/^__type-/.test(c)) headerAva.classList.add(c);
+        });
+        headerAva.innerHTML = ava.innerHTML;
+      }
+    }
+
+    function markViewed(ava) {
+      if (!ava) return;
+      ava.classList.remove('__ring-active');
+      ava.classList.add('__ring-viewed');
+    }
+
+    // Шаг к соседней аватарке. dir = +1 | -1. true = переход выполнен.
+    function step(dir) {
+      var list = avatars();
+      var i = list.indexOf(currentAva);
+      var nextAva = list[i + dir];
+      if (!nextAva) return false;
+      if (dir > 0) markViewed(currentAva);
+      applyAuthor(nextAva);
+      instance.setSlides(slidesFor(nextAva));
+      instance.go(0);
+      return true;
+    }
+
+    function open(ava) {
+      applyAuthor(ava);
+      viewerEl.hidden = false;
+
+      if (instance) instance.destroy();
+      instance = new MomentViewer(viewerEl, {
+        slides: slidesFor(ava),
+        onNext: function () { return step(+1); },
+        onPrev: function () { return step(-1); },
+        onClose: function () {
+          viewerEl.hidden = true;
+          markViewed(currentAva);
+        }
+      });
+    }
+
+    rowEl.addEventListener('click', function (e) {
+      var ava = e.target.closest('.avatar');
+      if (!ava || !rowEl.contains(ava)) return;
+      if (ava.hasAttribute('data-skip-viewer')) return;
+      open(ava);
+    });
+
+    var closeBtn = viewerEl.querySelector('[aria-label="Закрыть"]');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (instance) instance._finish();
+      });
+    }
+  }
 
   // Экспорт
   window.MomentViewer = {
-    init: function (root, options) { return new MomentViewer(root, options); }
+    init: function (root, options) { return new MomentViewer(root, options); },
+    bindRow: bindRow
   };
 })();
