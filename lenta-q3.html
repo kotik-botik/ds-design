@@ -281,22 +281,17 @@
             <img src="assets/icons/add_24.svg" width="20" height="20" alt="">
           </div>
         </div>
-        <!-- Не просмотренные (оранжевое кольцо). data-cta-label рендерит
-             кнопку снизу сториз (например «Поздравить» на дне рождения). -->
-        <div class="avatar __size-56 __type-image __ring-active"
-             data-stories="3" data-name="Лиза"
-             data-cta-label="Поздравить"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
+        <!-- Не просмотренные (оранжевое кольцо). -->
+        <div class="avatar __size-56 __type-image __ring-active" data-stories="3" data-name="Лиза"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="5" data-name="Алексей"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
 
-        <!-- ВВЗ-сториз: одна палочка, заголовок и список карточек ВВЗ.
-             data-vvz отличает её от обычных сториз в JS-связке.
+        <!-- ВВЗ-сториз: одна палочка, заголовок и сетка 2×2 карточек.
+             CTA-кнопка снизу — только у ВВЗ.
              TODO: PNG-заливка для аватарки — пока placeholder. -->
         <div class="avatar __size-56 __type-placeholder __ring-active"
              data-stories="1" data-name="Возможно вы знаете" data-vvz
              aria-label="Возможно вы знаете"></div>
-        <div class="avatar __size-56 __type-image __ring-active"
-             data-stories="2" data-name="Дима"
-             data-cta-label="Подписаться"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
+        <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
         <!-- Просмотренные (серое кольцо) -->
         <div class="avatar __size-56 __type-image __ring-viewed" data-stories="4" data-name="Сергей"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
         <div class="avatar __size-56 __type-image __ring-viewed" data-stories="3" data-name="Евгения"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
@@ -1020,7 +1015,7 @@
           return '<div class="avatar __size-32 __type-image"><img src="https://i.pravatar.cc/64?img=' + id + '" alt=""></div>';
         }).join('');
         return [
-          '<div class="vvz-card __full-width __has-mutuals" data-vvz-card>',
+          '<div class="vvz-card __has-mutuals" data-vvz-card>',
             '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',
               '<button class="button-inline __size-16" aria-label="Скрыть" data-vvz-dismiss>',
                 '<span class="button-inline__content">',
@@ -1052,7 +1047,7 @@
         var cards = VVZ_PEOPLE.map(vvzCardHtml).join('');
         return [
           '<h2 class="moment__body-title">Возможно вы знаете</h2>',
-          '<div class="moment__body-stack">' + cards + '</div>'
+          '<div class="moment__body-grid">' + cards + '</div>'
         ].join('');
       }
 
