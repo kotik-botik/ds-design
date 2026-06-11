@@ -234,10 +234,14 @@ screen-transition.js теперь подключён синхронным `<scri
 - «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
 - iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
 ### gifts-catalog.html (наблюдено 2026-06-11, viewport 360×820)
-- На 360-wide грид `.ll-gc-grid` объявлен `grid-template-columns: 1fr 1fr`, но resolved-значение в браузере = `"235px 206px"` — **колонки выползают за правый край viewport** (правая колонка right=469 на vw=360). Карточки в скриншоте справа обрезаны. Причина: `.ll-gift__poster-text` («СПАСИБО!» и др.) с fontSize 36px / line-height 1 / padding 16 даёт min-content по горизонтали ~235px, и `1fr` неявно резервирует `minmax(auto,1fr)` → колонки тянутся к min-content. Фикс: `grid-template-columns: minmax(0,1fr) minmax(0,1fr)` или уменьшить fz/padding постера/добавить `word-break: break-word`/min-width:0 на самой карточке. На viewport 390 (lenta) проблема может маскироваться — проверяй на 360 явно.
-- `bodyScrollW` = 360 (равно viewport) — overflow не создаёт горизонтального скролла; визуально просто резку справа.
+- ПОЧИНЕНО: грид теперь `grid-template-columns: minmax(0, 1fr)` — **1 колонка** во всю ширину острова. Резолвится в `328px` (vw 360 − 2×16 side padding). Gap=12, padding `0 16px 36px`. Никакого horizontal overflow (`docScrollW===360`).
+- Карточка `.ll-gift` — flex column, `align-items:center`, `gap:4px`. Постер 1:1, занимает 100% ширины (328×328). Под ним — `.price-tag` 24px.
+- **price-tag визуально центрирован под карточкой**, НО его `getBoundingClientRect()` врёт: компонент `.price-tag` имеет `margin-left: 14px` (`--price-tag-tip-width`) — это компенсация под «язычок», который рендерится через `::before` с `right:100%` и торчит ВЛЕВО за пределы body. Реальный визуальный bbox = `[bodyLeft-14, bodyRight]`. На vw=360: cardCenter=180, bodyCenter=187 (+7), visualCenter=180 (с учётом язычка). Δ=0. Если кто-то увидит «тег смещён вправо на 7px» из tag.getBoundingClientRect — это ОЖИДАЕМО, не баг. Чтобы измерять true center — вычитай `--price-tag-tip-width` из left, или мерь по `::before` через CSSOM/range.
 - Хедер «Подарки» — в nav-bar (class `ds-title-l ll-sg-navtitle__title-like`). «День рождения!» — внутри `.ll-gc-section-head .header__title.ds-title-l` в острове. Не путать.
 - Тап `.ll-gift` → навигация на `send-gift.html?gift=<key>` (через `<a href="send-gift.html?gift=thanks">…`). Работает.
+
+#### Старая запись (2-колоночный вариант, устарела)
+- ~~На 360-wide грид `.ll-gc-grid` объявлен `grid-template-columns: 1fr 1fr`, но resolved = `"235px 206px"` — колонки выползали за правый край viewport~~. Фикс применён: `minmax(0, 1fr)` + одна колонка.
 
 ### send-gift.html (наблюдено 2026-06-11) — БАГ в handler «Отправить» per-friend
 - В каждой friend-row кнопка `[data-give]` лежит ВНУТРИ `.button-wrapper`, **сразу под `.uni-cell`**, рядом с `.uni-cell-additional-content` (не внутри неё). См. DOM: `.uni-cell > .avatar | .uni-cell-additional-content | .button-wrapper > button[data-give]`.
