@@ -118,6 +118,17 @@
     opacity: .9;
   }
 
+  /* Lottie-конфетти на финал «Принять все». Хост — fullscreen overlay,
+     SVG-render. Сам файл — assets/lottie/confetti.json (DS-pattern,
+     уже используется на lenta.html). */
+  .gp-confetti {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 20;
+  }
+  .gp-confetti svg { display: block; }
+
   @media (prefers-reduced-motion: reduce) {
     .gp__title { transition: none !important; }
   }
@@ -228,9 +239,13 @@
 
   <div class="gp__handle"></div>
 
+  <div class="gp-confetti" id="gpConfetti" aria-hidden="true"></div>
+
 </div>
 
 <script src="components/back-button.js"></script>
+<!-- Lottie-плеер для конфетти на финал «Принять все». -->
+<script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
 <script>
   (function () {
     var root  = document.getElementById('gp');
@@ -347,6 +362,33 @@
     }
     applyState(0);
     root.classList.add('__state-1');
+
+    // Предзагружаем lottie-конфетти. Запустим один раз после exit-цепочки
+    // «Принять все». Lottie-web подключён ниже как <script>.
+    var confettiHost = document.getElementById('gpConfetti');
+    var confettiData = null;
+    fetch('assets/lottie/confetti.json')
+      .then(function (r) { return r.json(); })
+      .then(function (d) { confettiData = d; })
+      .catch(function () { /* offline / file missing — silently skip */ });
+    function fireConfetti() {
+      if (!confettiData || !window.lottie || !confettiHost) return;
+      var anim = window.lottie.loadAnimation({
+        container: confettiHost,
+        renderer: 'svg', loop: false, autoplay: true,
+        animationData: JSON.parse(JSON.stringify(confettiData))
+      });
+      anim.addEventListener('complete', function () {
+        anim.destroy();
+        confettiHost.innerHTML = '';
+      });
+    }
+    // Финальный экран: меняем заголовок + конфетти. Вызывается и из exit-
+    // цепочки «Принять все», и из processCard, когда liveCards опустел.
+    function showAllAccepted() {
+      titleEl.innerHTML = 'Вы приняли<br>все подарки';
+      fireConfetti();
+    }
 
     function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
     // CSS cubic-bezier(x1, y1, x2, y2) реализация: по x находим u через
@@ -643,6 +685,10 @@
               els[j].style.transition = '';
             });
           }, SHIFT_DUR + 30);
+          // Все карточки приняты по одной — финальный экран.
+          if (liveCards.length === 0) {
+            setTimeout(showAllAccepted, SHIFT_DUR);
+          }
         }
 
         if (kind === 'accept') {
@@ -702,7 +748,8 @@
             onDone: function () {
               setTimeout(function () {
                 transitionTo(4, {
-                  mode: 'bezier', bezier: [0, 0, 1, -0.01], duration: 500
+                  mode: 'bezier', bezier: [0, 0, 1, -0.01], duration: 500,
+                  onDone: showAllAccepted
                 });
               }, 1);
             }
