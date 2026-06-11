@@ -218,7 +218,7 @@
     gap: var(--space-1);
     color: var(--dynamic-text-and-icons-base-secondary);
   }
-  .ll-otd__caption .ll-icon { flex-shrink: 0; }
+  .ll-otd__caption > svg { flex-shrink: 0; }
   .ll-otd__likes {
     display: flex;
     align-items: center;
@@ -242,8 +242,8 @@
   }
 
   /* «Годовщина дружбы» — постер-баннер. Полностью кастомная композиция
-     («ОК подготовила видеоролик о вас»): оранжевый градиент, два аватара,
-     декор-эмодзи 🎈/🎁, крупный счётчик подарков и подпись с датой.
+     («ОК подготовила видеоролик о вас»): праздничный анимированный
+     градиент-фон, два аватара, крупный счётчик подарков и подпись с датой.
      Не паттерн — оставляем локально. */
   .ll-anniv-poster {
     position: relative;
@@ -251,31 +251,57 @@
     aspect-ratio: 343/492;
     border-radius: 19px;
     overflow: hidden;
-    background:
-      radial-gradient(120% 80% at 30% 30%, #ffb56b 0%, transparent 60%),
-      linear-gradient(160deg, #ff7700 0%, #d76200 100%);
     color: #fff;
+    /* Несколько разноцветных radial-«пятен» поверх базовой заливки.
+       Каждое пятно — отдельный background-layer с большим размером,
+       чтобы анимировать background-position и получить плавучий эффект. */
+    background:
+      radial-gradient(closest-side at 30% 30%, #ff4ecd 0%, transparent 70%),
+      radial-gradient(closest-side at 75% 20%, #ffd84d 0%, transparent 70%),
+      radial-gradient(closest-side at 70% 80%, #9b4dff 0%, transparent 70%),
+      radial-gradient(closest-side at 20% 75%, #ff7a00 0%, transparent 70%),
+      linear-gradient(135deg, #ff5e3a 0%, #ff2a98 100%);
+    background-size: 180% 180%, 160% 160%, 200% 200%, 170% 170%, 100% 100%;
+    background-repeat: no-repeat;
+    animation: ll-anniv-flow 14s ease-in-out infinite alternate;
+  }
+  @keyframes ll-anniv-flow {
+    0% {
+      background-position:
+        0% 0%,
+        100% 0%,
+        80% 100%,
+        0% 100%,
+        0% 0%;
+    }
+    50% {
+      background-position:
+        60% 40%,
+        20% 70%,
+        30% 20%,
+        80% 30%,
+        0% 0%;
+    }
+    100% {
+      background-position:
+        100% 100%,
+        0% 100%,
+        20% 0%,
+        100% 50%,
+        0% 0%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ll-anniv-poster { animation: none; }
   }
   .ll-anniv-poster__avatars {
     position: absolute;
     top: 26px; left: 50%;
     transform: translateX(-50%);
     display: flex;
+    z-index: 1;
   }
   .ll-anniv-poster__avatars > * + * { margin-left: -16px; }
-  .ll-anniv-poster__balloon {
-    position: absolute;
-    top: 32px; left: 16px;
-    width: 48px; height: 48px;
-    transform: rotate(-12deg);
-    pointer-events: none;
-  }
-  .ll-anniv-poster__gift {
-    position: absolute;
-    bottom: 116px; right: 24px;
-    width: 96px; height: 96px;
-    pointer-events: none;
-  }
   /* Тёмный градиент снизу — чтобы текст читался поверх любой подложки */
   .ll-anniv-poster::after {
     content: '';
@@ -551,7 +577,9 @@
         <!-- На этот день — карточка-воспоминание (только вы видите) -------- -->
         <article class="text-feed island">
           <div class="ll-otd__caption ds-body-m">
-            <img class="ll-icon" src="assets/icons/view_off_16_20.svg" width="16" height="16" alt="">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M2.73401 4.68055L1.12801 3.07055C0.796007 2.74055 0.796007 2.20055 1.12801 1.87055C1.46001 1.54055 1.99801 1.54055 2.33001 1.87055L4.09601 3.64055C5.21101 2.93055 6.55501 2.46055 8.00001 2.46055C10.333 2.46055 12.408 3.70055 13.69 5.09055C14.625 6.10055 15.123 7.21055 15.123 8.00055C15.123 8.79055 14.625 9.90055 13.69 10.9105C13.338 11.2905 12.925 11.6705 12.463 12.0005L14.051 13.5905C14.383 13.9205 14.383 14.4605 14.051 14.7905C13.72 15.1205 13.181 15.1205 12.849 14.7905L10.944 12.8905H10.935L9.69801 11.6505H9.70801L8.89501 10.8405H8.88601L5.18001 7.14055L5.18301 7.13055L3.86301 5.81055H3.85701L2.72701 4.68055H2.73401ZM1.45701 6.24055L2.62801 7.41055C2.53201 7.62055 2.47901 7.83055 2.47701 8.01055C2.47401 8.50055 2.88201 9.17055 3.48101 9.82055C4.32801 10.7405 5.60301 11.5905 7.07301 11.8605L8.71701 13.5005C8.48201 13.5305 8.24201 13.5405 8.00001 13.5405C5.66801 13.5405 3.58701 12.3005 2.30401 10.9005C1.36701 9.88055 0.871007 8.77055 0.877007 7.99055C0.881007 7.50055 1.07901 6.88055 1.45701 6.24055ZM11.316 10.8605C11.774 10.5505 12.177 10.1905 12.514 9.83055C13.114 9.17055 13.523 8.51055 13.523 8.00055C13.523 7.49055 13.114 6.83055 12.514 6.17055C11.494 5.07055 9.85501 4.06055 8.00001 4.06055C7.00101 4.06055 6.06601 4.35055 5.25801 4.80055L6.15401 5.69055C6.66001 5.27055 7.30801 5.03055 8.01301 5.03055C9.64601 5.03055 10.974 6.36055 10.974 8.00055C10.974 8.70055 10.73 9.35055 10.318 9.86055L11.316 10.8605ZM9.17201 8.71055L7.29701 6.84055C7.50301 6.70055 7.74901 6.63055 8.01301 6.63055C8.76601 6.63055 9.37401 7.24055 9.37401 8.00055C9.37401 8.26055 9.30201 8.51055 9.17201 8.71055Z" fill="currentColor"/>
+            </svg>
             <span>Видите только вы</span>
           </div>
           <div class="ds-title-xl">7 лет назад в этот день</div>
@@ -676,14 +704,15 @@
             <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
             <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=33" alt=""></div>
           </div>
-          <div class="ds-title-xl">В браке с Сергеем уже 7 лет 💜</div>
+          <div class="ds-title-xl">В браке с Сергеем уже 7 лет <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="color:#8B5CF6;vertical-align:-4px;display:inline-block">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+          </svg></div>
           <div class="ds-body-m">Примите поздравления от команды ОК. Вместе с 28 мая 2024</div>
 
           <div>
             <span class="button-inline-wrapper __size-20 __view-primary">
               <button class="button-inline __size-20">
                 <span class="button-inline__content">
-                  <img class="button-inline__icon ll-icon" src="assets/icons/edit_16_20.svg" width="16" height="16" alt="">
                   Указать дату годовщины и годы брака
                 </span>
               </button>
@@ -897,12 +926,10 @@
 
           <div>
             <div class="ll-anniv-poster">
-              <img class="ll-anniv-poster__balloon" src="assets/icons/balloons_24.svg" alt="" aria-hidden="true">
               <div class="ll-anniv-poster__avatars">
                 <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
                 <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
               </div>
-              <img class="ll-anniv-poster__gift" src="assets/icons/gift_24.svg" alt="" aria-hidden="true">
               <div class="ll-anniv-poster__count">478 подарков</div>
               <div class="ll-anniv-poster__since ds-body-m">С 1 июня 2023 года</div>
             </div>
