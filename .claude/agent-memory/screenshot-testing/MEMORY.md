@@ -2,6 +2,20 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+## Грабли icon.css (2026-06-11, vvz.html)
+- `<span class="icon __src" style="--icon-src: url('assets/icons/foo.svg')">` ломается: запрос уходит на `/components/assets/icons/foo.svg` → 404. Причина: `mask-image: var(--icon-src)` объявлено в `components/icon.css`, и CSS `url()` resolve'ится относительно файла-объявления, а не документа. Передача через CSS-переменную НЕ меняет точку resolve.
+- Фиксы: либо `url('../assets/icons/...')` в инлайне (relative-to-icon.css), либо абсолютный путь `url('/assets/icons/...')`, либо использовать готовый `__slot-*` класс (там пути уже с `../`).
+- Видно в DOM так: `getComputedStyle(span).maskImage === 'none'` потому что mask — на `::before`, а не на самом span. Чтобы проверить — смотри `.icon::before` или просто visual: круглые кнопки без глифов.
+
+## vvz.html — «Найдите друзей» Tinder-карточки (2026-06-11)
+- DOM-стэк: 3 `.vvz-card` рендерятся одновременно, последняя в DOM = TOP (z-index 3, scale 1, translateY 0). Background card scale 0.96/translateY -12, back-back 0.92/-24. Drag-handlers вешаются ТОЛЬКО на top card. `document.querySelector('.vvz-card')` вернёт самую заднюю — для теста бери `querySelectorAll('.vvz-card')[length-1]`.
+- Photo использует `i.pravatar.cc/600?img=N` — Playwright/Chromium ругается `ERR_CERT_AUTHORITY_INVALID`, фото не грузится. Стаб через `page.route('https://i.pravatar.cc/**', ...)` с 1×1 PNG работает. Реальный браузер пользователя cert примет, не регрессия.
+- Подложка из back-cards визуально почти НЕ видна, пока top card стоит на месте: back cards уже на ~6.5px с каждой стороны и выше, plus drop-shadow от top card. Видно только когда top card сдвинут (drag/fly).
+- Drag — `pointerdown` на карточке + `pointermove`/`pointerup` на window. Tinder-формула: rotate = dx/16, stamp-opacity = min(1, |dx|/120). Порог fly: |dx| > 120.
+- Tap-кнопки: `#vvz-skip`/`#vvz-like` → `fly('skip'|'like')` → 320ms трансформа off-screen + 300ms cooldown → новый render. Очередь: первые 3 видны, по мере fly() подтягиваются следующие.
+- Empty-state: после исчерпания массива `PEOPLE` — `.vvz-empty` display:none → flex, кнопки `disabled=true` (`pointer-events:none`, opacity 0.36).
+- Чтобы шёл правильный `PointerEvent` через `dispatchEvent`, обязательно `pointerType:'touch'`, `pointerId:1`, `isPrimary:true`. `page.mouse.down/move` в `isMobile:true`-контексте у меня НЕ триггерил `pointerdown` на этой странице — drag не начинался.
+
 ## Окружение
 - `python3 -m http.server 8765 --bind 127.0.0.1` — поднимает статику из репы. Один и тот же порт; перед стартом проверять, не поднят ли уже (`curl 127.0.0.1:8765`).
 - Playwright: `/opt/node22/lib/node_modules/playwright`, запуск через `NODE_PATH=/opt/node22/lib/node_modules node /tmp/<name>.js`. Версия 1.56.
@@ -49,6 +63,15 @@
 - Вытащен из start.html. Тап по `.app[data-launch="<url>"]` стартует splash-анимацию и навигирует.
 - Атрибут переименован: было `data-href`, стало `data-launch`. Если ищешь иконку в DOM — селектор сейчас `.app[data-launch]`.
 - Перед стартом dispatch'ит `app-launch:start` на document — хост (start.html) ставит `okstart_at_home=1`.
+
+### guests.html (2026-06-11)
+- Viewport 360×800: статусбар + навбар «Гости» сверху, баннер «Невидимка» в шапке. Тайтл — `.ds-title-s`, bg на нём `rgba(0,0,0,0)` — оранжевая подложка задаётся родителю-карточке, не самому тайтлу. Проверяй цвет на 1–2 уровня выше.
+- Тоггл: `.ll-switch` 52×32.
+- Заголовки секций: класс `.header__title` (НЕ `h2/h3`). Для «Возможно вы знакомы» — `.ll-pymk__title.ds-title-l`. Кнопка «Ещё» = `.button-inline__content`.
+- Аватары: `.avatar.__size-56` (56×56) + онлайн-точка `.avatar__addon.__pos-bl` (12×12).
+- friend-card: 220×330. Close — 24×24 (`.friend-card__close.button-circle-wrapper.__size-24.__style-o`). CTA-текст «Дружить».
+- Таббар `.ll-tabbar`, position:fixed; на 360×800 top=727, height=73.
+- Консоль: только `ERR_CERT_AUTHORITY_INVALID` для i.okcdn.ru аватарок — особенность контейнера, не баг страницы.
 
 ## App-shell / fullscreen layout (lenta-q3, messages, notifications, tribune, gifts)
 Эти 5 экранов используют `.phone-frame.__fullscreen` shell (components/app-shell.css, импорт в index.css, commit b82939e). Структура (проверено браузером, идентична по числам PRE/POST рефактора):
@@ -172,3 +195,22 @@ screen-transition.js теперь подключён синхронным `<scri
 - Карточка «В браке с Сергеем уже 7 лет 💜»: верстается корректно. Avatars `__size-72`: 1-й ml=0, 2-й ml=**-12px** (overlap слева, как в спеке). Title 27px/600. Subtitle `ds-body-m` единственный. Inline-link «Указать дату годовщины и годы брака» color `rgb(215, 98, 0)` (#D76200), иконка edit_16_20.svg 16×16 слева. Mosaic: верхнее фото 388×198, ряд из 3 миниатюр 125×120 каждая. На последней оверлей «Ещё 5» — белый текст rgb(255,255,255), фон родителя rgba(131,102,86,0.12). Share-btn `__style-secondary`, width 358, без «···» (`hasEllipsis:false`).
 - Карточка «Анна, поздравляем с годовщиной дружбы»: оранжевый постер `.ll-anniv-poster` 358×514 (aspect 0.697, спека ~343/492=0.697 совпадает), borderRadius **19px**, bg = radial-gradient (255,181,107)→transparent + linear-gradient 160deg (255,119,0)→(215,98,0). Avatars 96×96 пара внутри постера сверху. balloons_24.svg 66×66 с transform matrix rotate (-12° по cos/sin) в верхнем-левом, gift_24.svg 96×96 в нижнем-правом. «478 подарков» 34px/700 white. «С 1 июня 2023 года» 15px white. Primary-кнопка «Отправить другу» `__style-primary` bg rgb(255,119,0), width 358, с иконкой.
 - ВАЖНО про порт http-сервера: основной dev-port — **8000** (как в задаче), не 8765. Перед стартом curl 127.0.0.1:8000.
+
+## friends.html (наблюдено 2026-06-11)
+- Скроллер — `.phone-frame__feed` (overflow-y:auto, scrollH=1282px при viewport 360×800). bodyScrolls=false; чтобы сделать честный full-page screenshot, нужно временно `feed.style.height = feed.scrollHeight + 'px'; feed.style.overflow='visible'`, потом `page.setViewportSize({w:360, h:scrollH+20})` и `page.screenshot({fullPage:true})`. Прямой `fullPage:true` на дефолтном viewport вернёт только 360×800 (внутренний скролл).
+- 4 вкладки в одну строку, на 360 шириной «Вы знакомы» **обрезается** до «Вы знаком» (нет горизонт-скролла у бара, последний таб уезжает за правый край вьюпорта). Видимая проблема — нужно либо уменьшить шрифт/паддинги, либо включить horiz-scroll, либо переименовать.
+- Карточки секции «Возможно, вы знакомы» — broken avatar images (нет ресурсов: маленький значок «битой картинки» в углу большого square-placeholder'а и на круглых аватарах рядов). Это про отсутствующие ассеты, не верстка — `<img src>` указывает на CDN, который в контейнере недоступен. Layout сам корректный: квадратное фото с крестиком сверху-справа, имя 16px, сабтайтл «N общих друзей», оранжевая primary-кнопка «Дружить» внизу.
+- В подписях есть пропавший пробел: «3 общих**друга**», «12 общих**друзей**» — рендерится слитно. Скорее всего вёрстка из двух inline-нод без пробела между ними или whitespace схлопан.
+- Tile «Поиск по контактам» / «Импорт из ВКонтакте» / «Школьные друзья» / «Поделиться профилем»: 2×2 grid, каждая 162×56 (12/186 left, 160/228 top), иконка 24×24 + двустрочный текст. Лейаут чистый.
+- «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
+- iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
+## menu.html — новый экран (наблюдено 2026-06-11)
+- Использует тот же fullscreen-shell, что и messages/lenta-q3: `.phone-frame.__fullscreen` (390×844, overflow:hidden), скроллер `.phone-frame__feed` (top:0..844). На свежей загрузке feed.scrollHeight==clientHeight==844 → контент помещается без скролла, прокрутка вниз ничего не двигает. Если контент позже разрастётся — тогда скролл активируется.
+- `.ll-tabbar`: position:fixed, top=771, bottom=844, h=73 — стандартное место. На menu.html таббар присутствует и НЕ уезжает при попытке скролла.
+- Таббар на messages.html / menu.html содержит 5 кнопок, каждая 78×48, y=772:
+  1. `.tabbar-icon.__slot-feed` x=0
+  2. `.tabbar-icon.__slot-book` x=78
+  3. `.tabbar-icon.__slot-message` x=156 (с `__state-on` на messages)
+  4. `.tabbar-icon.__slot-clip` x=234
+  5. `.tabbar-icon.__slot-menu` x=312 (≡)
+- Селектор иконки меню: `.ll-tabbar .__slot-menu` (или `.tabbar-icon.__slot-menu`). Тап ведёт на `menu.html` (подтверждено finalUrl). На самом menu.html `__slot-menu` должен бы получить `__state-on` — проверять отдельно.

@@ -117,7 +117,13 @@
           media.style.display = 'none';
         }
       }
-      if (s.color) this.root.style.backgroundColor = s.color;
+      if (s.background) {
+        // Произвольный CSS-background (например radial/linear gradient).
+        this.root.style.background = s.background;
+      } else if (s.color) {
+        this.root.style.background = '';
+        this.root.style.backgroundColor = s.color;
+      }
       // s.duration — опциональный override длительности сегмента (CSS-переменная
       // --moment-duration). Используется, например, в bdaySlide, чтобы после
       // улёта шариков (~5.7s) оставалось ещё 2s «передышки» на тап «Поздравить».
@@ -579,7 +585,13 @@
       '<h2 class="moment__body-title ds-title-xl">' + (opts.title || '') + '</h2>',
       '<div class="moment__body-grid">' + cards + '</div>'
     ].join('');
-    var slide = { color: opts.color || '#2E2F33', body: body };
+    var slide = {
+      body: body,
+      // Фон ВВЗ-сториз — мягкий оранжево-чёрный градиент сверху-вниз
+      // (по Figma 2260:68464). Радиус и blur не воспроизводим точно,
+      // визуально близко.
+      background: opts.background || 'radial-gradient(120% 80% at 50% 0%, #4c2400 0%, #1a0a02 55%, #000 100%)'
+    };
     if (opts.cta) slide.cta = opts.cta;
     return slide;
   }
@@ -629,8 +641,20 @@
     var avas = (opts.avatars || []).map(function (src) {
       return '<div class="avatar __size-96 __type-image"><img src="' + src + '" alt=""></div>';
     }).join('');
+    // 5 оранжевых шариков-декораций (figma 2258-34952).
+    // Координаты — % от 360×644 figma-фрейма: [leftPct, topPct, widthPct, rotateDeg]
+    var balloons = [
+      [-5.8,  16.6, 16.5,  10.7],
+      [92.5,  64.4, 15.0,  -3.5],
+      [ 2.5,  44.3, 36.0,  -3.5],
+      [65.0,  13.5, 38.3,   7.8],
+      [65.0,  51.9, 30.0,  -9.2]
+    ].map(function (b) {
+      return '<span class="friendship-story__balloon" style="left:' + b[0] + '%;top:' + b[1] + '%;width:' + b[2] + '%;transform:rotate(' + b[3] + 'deg)"></span>';
+    }).join('');
     var body = [
       '<div class="friendship-story">',
+        '<div class="friendship-story__balloons">' + balloons + '</div>',
         '<div class="friendship-story__avatars">' + avas + '</div>',
         '<h2 class="friendship-story__title">' + (opts.title || '') + '</h2>',
         '<p class="friendship-story__sub">' + (opts.sub || '') + '</p>',
