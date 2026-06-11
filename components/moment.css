@@ -220,6 +220,8 @@
    с .moment__body-title. Здесь только специфика: цвет, выравнивание,
    отступ под сетку. */
 .moment__body-title {
+  display: block;
+  width: 100%;
   text-align: center;
   color: var(--static-text-and-icons-base-inverse-primary);
   margin: 0 0 var(--space-2);
