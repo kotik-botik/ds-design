@@ -234,17 +234,38 @@
     var root = document.getElementById('gp');
     if (!root) return;
 
+    // Дефолтный спринг для первого перехода (стейт 1 → 2).
     var SPRING = { k: 96, c: 6, m: 1, duration: 2000, delay: 500 };
-    var omega0 = Math.sqrt(SPRING.k / SPRING.m);
-    var zeta   = SPRING.c / (2 * Math.sqrt(SPRING.k * SPRING.m));
-    var omegaD = omega0 * Math.sqrt(Math.max(0, 1 - zeta * zeta));
-    function springProgress(tMs) {
-      var t = tMs / 1000;
-      if (zeta < 1) {
-        return 1 - Math.exp(-zeta * omega0 * t) *
-          (Math.cos(omegaD * t) + (zeta * omega0 / omegaD) * Math.sin(omegaD * t));
+
+    // Фабрика progress-функции под произвольные spring-параметры.
+    // Корректно покрывает все три режима по ζ = c/(2√(km)):
+    //   ζ < 1 — underdamped (с перехлёстом), cos/sin
+    //   ζ = 1 — critically damped
+    //   ζ > 1 — overdamped, cosh/sinh
+    function makeSpring(k, c, m) {
+      var w0 = Math.sqrt(k / m);
+      var z  = c / (2 * Math.sqrt(k * m));
+      if (Math.abs(z - 1) < 1e-6) {
+        return function (tMs) {
+          var t = tMs / 1000;
+          return 1 - (1 + w0 * t) * Math.exp(-w0 * t);
+        };
       }
-      return 1 - (1 + omega0 * t) * Math.exp(-omega0 * t);
+      if (z < 1) {
+        var wd = w0 * Math.sqrt(1 - z * z);
+        return function (tMs) {
+          var t = tMs / 1000;
+          return 1 - Math.exp(-z * w0 * t) *
+            (Math.cos(wd * t) + (z * w0 / wd) * Math.sin(wd * t));
+        };
+      }
+      // overdamped (z > 1)
+      var wd2 = w0 * Math.sqrt(z * z - 1);
+      return function (tMs) {
+        var t = tMs / 1000;
+        return 1 - Math.exp(-z * w0 * t) *
+          (Math.cosh(wd2 * t) + (z * w0 / wd2) * Math.sinh(wd2 * t));
+      };
     }
 
     // Три стейта, каждый описывает где лежат карточки (по data-i) и top
@@ -263,10 +284,20 @@
           2: { l: 126.21, t: 349.48, w: 223.319, h: 260.539, r:  15    },
           1: { l: 23.46,  t: 429.91, w: 223.319, h: 260.539, r: -16.48 }
       }},
+      // Стейт 3 — карточки в ряд. Виктория (i=3) на позиции из Figma (l=125),
+      // gap между карточками 12px (300+12=312 шаг).
       { title: 130, cards: {
           3: { l: 125, t: 266, w: 300, h: 350, r: 0 },
-          2: { l: 435, t: 266, w: 300, h: 350, r: 0 },
-          1: { l: 745, t: 266, w: 300, h: 350, r: 0 }
+          2: { l: 437, t: 266, w: 300, h: 350, r: 0 },
+          1: { l: 749, t: 266, w: 300, h: 350, r: 0 }
+      }},
+      // Стейт 4 — весь стак сдвигается влево на 95px (равномерно).
+      // Виктория (i=3) встаёт ровно по центру (l = (360-300)/2 = 30).
+      // Gap=12px сохраняется, остальные карточки следуют справа-налево.
+      { title: 130, cards: {
+          3: { l:  30, t: 266, w: 300, h: 350, r: 0 },
+          2: { l: 342, t: 266, w: 300, h: 350, r: 0 },
+          1: { l: 654, t: 266, w: 300, h: 350, r: 0 }
       }}
     ];
 
@@ -309,10 +340,15 @@
 
       if (opts.mode === 'spring') {
         // JS-rAF спринг по всем 5 величинам карточек + top заголовка.
+        var k   = opts.k        || SPRING.k;
+        var c   = opts.c        || SPRING.c;
+        var m   = opts.m        || SPRING.m;
+        var dur = opts.duration || SPRING.duration;
+        var progress = makeSpring(k, c, m);
         var t0 = performance.now();
         (function frame(now) {
-          var elapsed = Math.min(SPRING.duration, now - t0);
-          var p = springProgress(elapsed);
+          var elapsed = Math.min(dur, now - t0);
+          var p = progress(elapsed);
           IDX.forEach(function (i) {
             var fc = from.cards[i], tc = to.cards[i];
             applyCard(els[i], {
@@ -325,7 +361,7 @@
           });
           titleEl.style.top =
             (from.title + (to.title - from.title) * p).toFixed(3) + 'px';
-          if (elapsed < SPRING.duration) requestAnimationFrame(frame);
+          if (elapsed < dur) requestAnimationFrame(frame);
           else {
             applyState(toIdx);
             current = toIdx;
@@ -348,18 +384,27 @@
           titleEl.style.transition = '';
           current = toIdx;
           animating = false;
-        }, dur + 30);
+        }, dur);
       }
     }
 
     // Сценарий проигрывается сам:
-    //   t = 500мс              → стейт 1 → 2 (расхлоп веером, спринг 2000мс)
-    //   t = 500+2000+800 = 3300мс → стейт 2 → 3 (в ряд, ease-out 300мс)
+    //   t = 500мс                → стейт 1 → 2 (веер, спринг 2000мс, k=96 c=6 m=1)
+    //   t = 500+2000+800 = 3300мс  → стейт 2 → 3 (в ряд, ease-out 300мс)
+    //   t = 3300+300+1   = 3601мс  → стейт 3 → 4 (сдвиг влево, overdamped спринг
+    //                                            600мс, k=80 c=20 m=1)
     var PAUSE_BETWEEN = 800;
+    var EASE_DUR = 300;
     setTimeout(function () {
       transitionTo(1, { mode: 'spring' });
       setTimeout(function () {
-        transitionTo(2, { mode: 'css', duration: 300, easing: 'ease-out' });
+        transitionTo(2, { mode: 'css', duration: EASE_DUR, easing: 'ease-out' });
+        // Стейт 3 → 4 запускаем сразу после окончания ease-out
+        // (Figma даёт delay 1мс, мы держим небольшой запас, чтобы
+        // animating-флаг успел сброситься).
+        setTimeout(function () {
+          transitionTo(3, { mode: 'spring', k: 80, c: 20, m: 1, duration: 600 });
+        }, EASE_DUR + 16);
       }, SPRING.duration + PAUSE_BETWEEN);
     }, SPRING.delay);
   })();
