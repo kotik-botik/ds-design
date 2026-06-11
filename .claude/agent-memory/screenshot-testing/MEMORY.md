@@ -2,6 +2,20 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+## Грабли icon.css (2026-06-11, vvz.html)
+- `<span class="icon __src" style="--icon-src: url('assets/icons/foo.svg')">` ломается: запрос уходит на `/components/assets/icons/foo.svg` → 404. Причина: `mask-image: var(--icon-src)` объявлено в `components/icon.css`, и CSS `url()` resolve'ится относительно файла-объявления, а не документа. Передача через CSS-переменную НЕ меняет точку resolve.
+- Фиксы: либо `url('../assets/icons/...')` в инлайне (relative-to-icon.css), либо абсолютный путь `url('/assets/icons/...')`, либо использовать готовый `__slot-*` класс (там пути уже с `../`).
+- Видно в DOM так: `getComputedStyle(span).maskImage === 'none'` потому что mask — на `::before`, а не на самом span. Чтобы проверить — смотри `.icon::before` или просто visual: круглые кнопки без глифов.
+
+## vvz.html — «Найдите друзей» Tinder-карточки (2026-06-11)
+- DOM-стэк: 3 `.vvz-card` рендерятся одновременно, последняя в DOM = TOP (z-index 3, scale 1, translateY 0). Background card scale 0.96/translateY -12, back-back 0.92/-24. Drag-handlers вешаются ТОЛЬКО на top card. `document.querySelector('.vvz-card')` вернёт самую заднюю — для теста бери `querySelectorAll('.vvz-card')[length-1]`.
+- Photo использует `i.pravatar.cc/600?img=N` — Playwright/Chromium ругается `ERR_CERT_AUTHORITY_INVALID`, фото не грузится. Стаб через `page.route('https://i.pravatar.cc/**', ...)` с 1×1 PNG работает. Реальный браузер пользователя cert примет, не регрессия.
+- Подложка из back-cards визуально почти НЕ видна, пока top card стоит на месте: back cards уже на ~6.5px с каждой стороны и выше, plus drop-shadow от top card. Видно только когда top card сдвинут (drag/fly).
+- Drag — `pointerdown` на карточке + `pointermove`/`pointerup` на window. Tinder-формула: rotate = dx/16, stamp-opacity = min(1, |dx|/120). Порог fly: |dx| > 120.
+- Tap-кнопки: `#vvz-skip`/`#vvz-like` → `fly('skip'|'like')` → 320ms трансформа off-screen + 300ms cooldown → новый render. Очередь: первые 3 видны, по мере fly() подтягиваются следующие.
+- Empty-state: после исчерпания массива `PEOPLE` — `.vvz-empty` display:none → flex, кнопки `disabled=true` (`pointer-events:none`, opacity 0.36).
+- Чтобы шёл правильный `PointerEvent` через `dispatchEvent`, обязательно `pointerType:'touch'`, `pointerId:1`, `isPrimary:true`. `page.mouse.down/move` в `isMobile:true`-контексте у меня НЕ триггерил `pointerdown` на этой странице — drag не начинался.
+
 ## Окружение
 - `python3 -m http.server 8765 --bind 127.0.0.1` — поднимает статику из репы. Один и тот же порт; перед стартом проверять, не поднят ли уже (`curl 127.0.0.1:8765`).
 - Playwright: `/opt/node22/lib/node_modules/playwright`, запуск через `NODE_PATH=/opt/node22/lib/node_modules node /tmp/<name>.js`. Версия 1.56.
@@ -49,6 +63,15 @@
 - Вытащен из start.html. Тап по `.app[data-launch="<url>"]` стартует splash-анимацию и навигирует.
 - Атрибут переименован: было `data-href`, стало `data-launch`. Если ищешь иконку в DOM — селектор сейчас `.app[data-launch]`.
 - Перед стартом dispatch'ит `app-launch:start` на document — хост (start.html) ставит `okstart_at_home=1`.
+
+### guests.html (2026-06-11)
+- Viewport 360×800: статусбар + навбар «Гости» сверху, баннер «Невидимка» в шапке. Тайтл — `.ds-title-s`, bg на нём `rgba(0,0,0,0)` — оранжевая подложка задаётся родителю-карточке, не самому тайтлу. Проверяй цвет на 1–2 уровня выше.
+- Тоггл: `.ll-switch` 52×32.
+- Заголовки секций: класс `.header__title` (НЕ `h2/h3`). Для «Возможно вы знакомы» — `.ll-pymk__title.ds-title-l`. Кнопка «Ещё» = `.button-inline__content`.
+- Аватары: `.avatar.__size-56` (56×56) + онлайн-точка `.avatar__addon.__pos-bl` (12×12).
+- friend-card: 220×330. Close — 24×24 (`.friend-card__close.button-circle-wrapper.__size-24.__style-o`). CTA-текст «Дружить».
+- Таббар `.ll-tabbar`, position:fixed; на 360×800 top=727, height=73.
+- Консоль: только `ERR_CERT_AUTHORITY_INVALID` для i.okcdn.ru аватарок — особенность контейнера, не баг страницы.
 
 ## App-shell / fullscreen layout (lenta-q3, messages, notifications, tribune, gifts)
 Эти 5 экранов используют `.phone-frame.__fullscreen` shell (components/app-shell.css, импорт в index.css, commit b82939e). Структура (проверено браузером, идентична по числам PRE/POST рефактора):

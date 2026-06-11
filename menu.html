@@ -22,6 +22,7 @@
 
   /* Профиль-строка: имя + «Перейти в профиль» слева, аватар справа.
      Базируется на uni-cell, лишь меняем отступы и порядок слотов. */
+  .ll-profile { display: block; text-decoration: none; color: inherit; }
   .ll-profile .uni-cell { align-items: center; gap: var(--space-3); }
   .ll-profile-title    { color: var(--dynamic-text-and-icons-base-primary); }
   .ll-profile-subtitle { color: var(--dynamic-text-and-icons-base-secondary); margin-top: 2px; }
@@ -109,7 +110,7 @@
       </div>
 
       <!-- ПРОФИЛЬ-СТРОКА -->
-      <div class="uni-cell-wrapper ll-profile">
+      <a class="uni-cell-wrapper ll-profile" href="profile.html">
         <div class="uni-cell-container __state-enabled">
           <div class="uni-cell">
             <div class="uni-cell-additional-content">
@@ -119,7 +120,7 @@
             <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/120?img=49" alt=""></div>
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- БЫСТРЫЕ ДЕЙСТВИЯ — 4×2 -->
       <div class="ll-quick">
@@ -137,7 +138,7 @@
           </span>
           <span class="ll-quick__label">События</span>
         </button>
-        <button class="ll-quick__item" type="button">
+        <button class="ll-quick__item" type="button" data-href="guests.html">
           <span class="ll-quick__tile">
             <img class="ll-icon" src="assets/icons/guests_24.svg" width="28" height="28" alt="">
             <span class="ll-badge">1</span>
@@ -198,7 +199,7 @@
           </div>
         </div>
 
-        <div class="uni-cell-wrapper ll-menu-item">
+        <div class="uni-cell-wrapper ll-menu-item" data-href="gifts-catalog.html" role="link" tabindex="0">
           <div class="uni-cell-container __state-enabled">
             <div class="uni-cell">
               <span class="ll-menu-icon"><img class="ll-icon" src="assets/icons/gift_24.svg" width="24" height="24" alt=""></span>
@@ -255,13 +256,21 @@
   </div>
 
   <script src="components/tab-bar.js"></script>
-  <!-- Делегированный переход по data-href на кнопках разделов -->
+
+  <!-- Делегированный переход по data-href (quick-actions / menu items) -->
   <script>
     document.addEventListener('click', function (e) {
-      var btn = e.target.closest && e.target.closest('button[data-href]');
+      var btn = e.target.closest && e.target.closest('[data-href]');
       if (!btn) return;
       e.preventDefault();
       location.href = btn.getAttribute('data-href');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var item = e.target.closest && e.target.closest('[data-href][tabindex]');
+      if (!item) return;
+      e.preventDefault();
+      location.href = item.getAttribute('data-href');
     });
   </script>
 </body>
