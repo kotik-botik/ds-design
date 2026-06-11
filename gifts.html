@@ -376,6 +376,12 @@
       var anim = window.lottie.loadAnimation({
         container: confettiHost,
         renderer: 'svg', loop: false, autoplay: true,
+        rendererSettings: {
+          // Растягиваем lottie от верха до низа viewport, по ширине
+          // обрезаем (composition 1100×800, экран ≤390×800 — крайние
+          // частицы уходят за края, это норм).
+          preserveAspectRatio: 'xMidYMid slice'
+        },
         animationData: JSON.parse(JSON.stringify(confettiData))
       });
       anim.addEventListener('complete', function () {
