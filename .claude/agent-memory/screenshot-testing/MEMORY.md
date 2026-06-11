@@ -2,6 +2,20 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+## Грабли icon.css (2026-06-11, vvz.html)
+- `<span class="icon __src" style="--icon-src: url('assets/icons/foo.svg')">` ломается: запрос уходит на `/components/assets/icons/foo.svg` → 404. Причина: `mask-image: var(--icon-src)` объявлено в `components/icon.css`, и CSS `url()` resolve'ится относительно файла-объявления, а не документа. Передача через CSS-переменную НЕ меняет точку resolve.
+- Фиксы: либо `url('../assets/icons/...')` в инлайне (relative-to-icon.css), либо абсолютный путь `url('/assets/icons/...')`, либо использовать готовый `__slot-*` класс (там пути уже с `../`).
+- Видно в DOM так: `getComputedStyle(span).maskImage === 'none'` потому что mask — на `::before`, а не на самом span. Чтобы проверить — смотри `.icon::before` или просто visual: круглые кнопки без глифов.
+
+## vvz.html — «Найдите друзей» Tinder-карточки (2026-06-11)
+- DOM-стэк: 3 `.vvz-card` рендерятся одновременно, последняя в DOM = TOP (z-index 3, scale 1, translateY 0). Background card scale 0.96/translateY -12, back-back 0.92/-24. Drag-handlers вешаются ТОЛЬКО на top card. `document.querySelector('.vvz-card')` вернёт самую заднюю — для теста бери `querySelectorAll('.vvz-card')[length-1]`.
+- Photo использует `i.pravatar.cc/600?img=N` — Playwright/Chromium ругается `ERR_CERT_AUTHORITY_INVALID`, фото не грузится. Стаб через `page.route('https://i.pravatar.cc/**', ...)` с 1×1 PNG работает. Реальный браузер пользователя cert примет, не регрессия.
+- Подложка из back-cards визуально почти НЕ видна, пока top card стоит на месте: back cards уже на ~6.5px с каждой стороны и выше, plus drop-shadow от top card. Видно только когда top card сдвинут (drag/fly).
+- Drag — `pointerdown` на карточке + `pointermove`/`pointerup` на window. Tinder-формула: rotate = dx/16, stamp-opacity = min(1, |dx|/120). Порог fly: |dx| > 120.
+- Tap-кнопки: `#vvz-skip`/`#vvz-like` → `fly('skip'|'like')` → 320ms трансформа off-screen + 300ms cooldown → новый render. Очередь: первые 3 видны, по мере fly() подтягиваются следующие.
+- Empty-state: после исчерпания массива `PEOPLE` — `.vvz-empty` display:none → flex, кнопки `disabled=true` (`pointer-events:none`, opacity 0.36).
+- Чтобы шёл правильный `PointerEvent` через `dispatchEvent`, обязательно `pointerType:'touch'`, `pointerId:1`, `isPrimary:true`. `page.mouse.down/move` в `isMobile:true`-контексте у меня НЕ триггерил `pointerdown` на этой странице — drag не начинался.
+
 ## Окружение
 - `python3 -m http.server 8765 --bind 127.0.0.1` — поднимает статику из репы. Один и тот же порт; перед стартом проверять, не поднят ли уже (`curl 127.0.0.1:8765`).
 - Playwright: `/opt/node22/lib/node_modules/playwright`, запуск через `NODE_PATH=/opt/node22/lib/node_modules node /tmp/<name>.js`. Версия 1.56.
@@ -44,6 +58,15 @@
 ### components/lockscreen.js + lockscreen.css (новое, 2026-06-11)
 - Вытащен из start.html: вешает pointerdown/move/up на `.lockscreen`, на свайп вверх / короткий тап стреляет `lockscreen:unlock` на document. Хост слушает и сам делает `.device.classList.add('unlocked')`, pushState, и пр.
 - На свежей загрузке start.html инициализируется на DOMContentLoaded, успевает к первому юзер-инпуту. `el.__lockWired === true` после wiring (можно проверить в тесте).
+
+### gifts.html (verified 2026-06-11 — CTA «Принять все» видимость)
+- `.gp__bottom` = position:absolute; left:0; right:0; bottom:24px; z-index:5; display:flex; **высота 56px** (button-wrapper __size-56). bbox на 390×844: top=764, left=0, w=390, h=56 → bot=820 (handle 24px ниже). Всегда в viewport.
+- Виден во ВСЕХ 4 стейтах: state-1 (initial, карты opacity 0), state-4 (ряд), state-5 (после клика «Принять все», title=312px), и после поштучного accept (state остаётся `__state-4`, title через `showAllAccepted()` без перехода в state-5 — слегка несимметрично с «Принять все»-флоу, но btn видна одинаково).
+- Конфликтов z-index НЕТ: `.meshok-up` z=5 но `display:contents` (height 0), `.gp__handle` z=auto под кнопкой, `.gp-confetti` z=20 но `pointer-events:none` — визуально оверлеит, но клики проходят. `elementsFromPoint` в центре кнопки даёт `.button-content > #gpAcceptAll > .button-wrapper > .gp__bottom` — никаких перекрытий.
+- **СВАЙП-АКЦЕПТ ловушка**: accept-strip в `.gift-card__accept` появляется только когда у карты есть класс `__active` (выставляется через `setActiveAll(true)` в `attachSwipe()` при `|panOffset|>=1`). После snap-back panOffset→0 и `__active` снимается → strip скрыт. Кликнуть accept через `page.mouse.click(x,y)` НЕ выйдет, потому что после отпускания пальца strip уходит. Решение: **программный** `el.click()` через `page.evaluate` — listener `accBtn.addEventListener('click', ...)` срабатывает напрямую без pointer-флоу. Это надёжно процессит accept-цепочку FILL(700)+FLY(600)+SHIFT(350)ms.
+- Цикл анимации до state-4: SPRING.delay 500 + state1→2 spring 2000 + PAUSE 800 + 2→3 300 + 3→4 600 = **4200ms** от load до settled state-4. `page.waitForFunction(() => gp.classList.contains('__state-4'))` + ещё ~800ms на settle.
+- При acceptAll (клик `#gpAcceptAll`): spring 1→веер (600ms) → 1ms delay → bezier exit (500ms) → showAllAccepted. State становится `__state-5`. Title едет на top=312, но `.gp__bottom` НЕ двигается.
+- `.gp-confetti` z=20 покрывает весь экран НО `pointer-events:none` — клики по кнопке проходят сквозь конфетти OK.
 
 ### components/app-launch.js + app-launch.css (новое, 2026-06-11)
 - Вытащен из start.html. Тап по `.app[data-launch="<url>"]` стартует splash-анимацию и навигирует.
@@ -182,6 +205,26 @@ screen-transition.js теперь подключён синхронным `<scri
 - Карточка «Анна, поздравляем с годовщиной дружбы»: оранжевый постер `.ll-anniv-poster` 358×514 (aspect 0.697, спека ~343/492=0.697 совпадает), borderRadius **19px**, bg = radial-gradient (255,181,107)→transparent + linear-gradient 160deg (255,119,0)→(215,98,0). Avatars 96×96 пара внутри постера сверху. balloons_24.svg 66×66 с transform matrix rotate (-12° по cos/sin) в верхнем-левом, gift_24.svg 96×96 в нижнем-правом. «478 подарков» 34px/700 white. «С 1 июня 2023 года» 15px white. Primary-кнопка «Отправить другу» `__style-primary` bg rgb(255,119,0), width 358, с иконкой.
 - ВАЖНО про порт http-сервера: основной dev-port — **8000** (как в задаче), не 8765. Перед стартом curl 127.0.0.1:8000.
 
+### add-friends-sheet.html (verified 2026-06-11) — клон gifts по структуре, 5 стейтов «У вас N новых друзей»
+- Цикл стейтов: state-1 (стак, opacity 0) → state-2 (веер) → state-3 (ряд, не используется как остановка) → state-4 (ряд сдвинутый на гаттер 16). Тайминги: SPRING.delay 500 + state1→2 spring 2000 + PAUSE_BETWEEN 800 + 2→3 ease 300 + 3→4 spring 600 = **4200 ms** до settled state-4 (как в gifts).
+- DOM: `<main class="fp">`, 3 `.friend-big-card[data-i="1|2|3"]`. data-i отражает порядок стопки (1=front/right, 3=back/left). Имена: i=3 Ольга Вайнер, i=2 Александр Соколов, i=1 Михаил Фёдоров.
+- В каждой карточке: `.friend-big-card__photo > img` (i.pravatar.cc — внешний CDN), `__name`, `__caption` (возраст/город), `__mutual` с `.avatars-view .__size-16` + 3 аватара и текстом «N общих друзей», `__accept` с кнопкой «Дружить» (primary orange).
+- Сцена: `.fp__bottom > #fpAcceptAll` «Дружить со всеми» — primary 56-button внизу. Виден во всех стейтах, включая финальный (после showAllAccepted) — потенциально «висит без дела», логика блокирует повторный клик через `if (!liveCards.length) return;`, но визуально остаётся. Дизайн-вопрос, не баг.
+- Accept-флоу карточки (`processCard`): `__flying-up` класс + transform translate Y -800px + rotate 22° (FLY_DUR 600ms), потом display:none и пересборка `liveCards`, остальные карточки едут с transition 350ms. Если liveCards=0 → showAllAccepted через +350ms.
+- AcceptAll: spring state→2 (600ms) → 1ms → bezier state→5 exit (500ms) → showAllAccepted (title заменяется на «Вы подружились<br>со всеми», fireConfetti).
+- Конфетти: lottie с jsdelivr.net + локальный `assets/lottie/confetti.json`. В sandbox jsdelivr CDN недоступен → `window.lottie` undefined → fireConfetti silently skip. **В production-окружении с интернетом конфетти отработает**. Тест-замер: `#fpConfetti.children.length === 0`, `hasConfettiSvg=false`.
+- Фото i.pravatar.cc и google fonts тоже даёт ERR_CERT_AUTHORITY_INVALID в sandbox — карточки показываются с серыми placeholder и broken-image иконками в углу photo и в avatars-view. Layout/anim работает корректно, только пиксели фото отсутствуют.
+- Свайп ряда: `attachSwipe` навешивается по `onDone` стейта 3 (т.е. в момент когда current стал 3 → state-4 активирован). STEP=312 (gap 12 + width 300). Программно эмулируется через `page.mouse.down/move/up`; в mid-swipe карточки сдвигаются translateX на dx, проверено.
+- Title рендерится двухстрочно через `<br>` («У вас<br>7 новых друзей»); `textContent` склеит без пробела — это просто свойство DOM API, не верстка.
+
+## friends.html (наблюдено 2026-06-11)
+- Скроллер — `.phone-frame__feed` (overflow-y:auto, scrollH=1282px при viewport 360×800). bodyScrolls=false; чтобы сделать честный full-page screenshot, нужно временно `feed.style.height = feed.scrollHeight + 'px'; feed.style.overflow='visible'`, потом `page.setViewportSize({w:360, h:scrollH+20})` и `page.screenshot({fullPage:true})`. Прямой `fullPage:true` на дефолтном viewport вернёт только 360×800 (внутренний скролл).
+- 4 вкладки в одну строку, на 360 шириной «Вы знакомы» **обрезается** до «Вы знаком» (нет горизонт-скролла у бара, последний таб уезжает за правый край вьюпорта). Видимая проблема — нужно либо уменьшить шрифт/паддинги, либо включить horiz-scroll, либо переименовать.
+- Карточки секции «Возможно, вы знакомы» — broken avatar images (нет ресурсов: маленький значок «битой картинки» в углу большого square-placeholder'а и на круглых аватарах рядов). Это про отсутствующие ассеты, не верстка — `<img src>` указывает на CDN, который в контейнере недоступен. Layout сам корректный: квадратное фото с крестиком сверху-справа, имя 16px, сабтайтл «N общих друзей», оранжевая primary-кнопка «Дружить» внизу.
+- В подписях есть пропавший пробел: «3 общих**друга**», «12 общих**друзей**» — рендерится слитно. Скорее всего вёрстка из двух inline-нод без пробела между ними или whitespace схлопан.
+- Tile «Поиск по контактам» / «Импорт из ВКонтакте» / «Школьные друзья» / «Поделиться профилем»: 2×2 grid, каждая 162×56 (12/186 left, 160/228 top), иконка 24×24 + двустрочный текст. Лейаут чистый.
+- «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
+- iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
 ## menu.html — новый экран (наблюдено 2026-06-11)
 - Использует тот же fullscreen-shell, что и messages/lenta-q3: `.phone-frame.__fullscreen` (390×844, overflow:hidden), скроллер `.phone-frame__feed` (top:0..844). На свежей загрузке feed.scrollHeight==clientHeight==844 → контент помещается без скролла, прокрутка вниз ничего не двигает. Если контент позже разрастётся — тогда скролл активируется.
 - `.ll-tabbar`: position:fixed, top=771, bottom=844, h=73 — стандартное место. На menu.html таббар присутствует и НЕ уезжает при попытке скролла.

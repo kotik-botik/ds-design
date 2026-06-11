@@ -303,10 +303,8 @@
     position: absolute;
     top: 26px; left: 50%;
     transform: translateX(-50%);
-    display: flex;
     z-index: 1;
   }
-  .ll-anniv-poster__avatars > * + * { margin-left: -16px; }
   /* Тёмный градиент снизу — чтобы текст читался поверх любой подложки */
   .ll-anniv-poster::after {
     content: '';
@@ -318,7 +316,7 @@
   }
   .ll-anniv-poster__count {
     position: absolute;
-    left: 0; right: 0; bottom: 56px;
+    left: 0; right: 0; bottom: 72px;
     text-align: center;
     font-family: "OK Sans Display", var(--font-family);
     font-weight: 700;
@@ -328,7 +326,7 @@
   }
   .ll-anniv-poster__since {
     position: absolute;
-    left: 0; right: 0; bottom: 28px;
+    left: 0; right: 0; bottom: 32px;
     text-align: center;
     z-index: 1;
   }
@@ -933,9 +931,11 @@
 
           <div>
             <div class="ll-anniv-poster">
-              <div class="ll-anniv-poster__avatars">
-                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
-                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+              <div class="avatars-view __size-96 ll-anniv-poster__avatars">
+                <div class="avatars-view__stack">
+                  <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+                  <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+                </div>
               </div>
               <div class="ll-anniv-poster__count">478 подарков</div>
               <div class="ll-anniv-poster__since ds-body-m">С 1 июня 2023 года</div>
@@ -1071,11 +1071,12 @@
 
     <!-- TABBAR (DS-компонент, прибит к низу) -------------------------- -->
     <div class="ll-tabbar">
-      <div class="tabbar __platform-ios">
+      <div class="tabbar __platform-android">
         <div class="tabbar__row">
           <button class="tabbar-icon __slot-feed __state-on" aria-label="Лента"></button>
           <button class="tabbar-icon __slot-book" aria-label="Книга"></button>
           <button class="tabbar-icon __slot-message" aria-label="Сообщения"></button>
+          <button class="tabbar-icon __slot-discussion" aria-label="Обсуждения"></button>
           <button class="tabbar-icon __slot-clip" aria-label="Клипы"></button>
           <button class="tabbar-icon __slot-menu" aria-label="Меню"></button>
         </div>
@@ -1117,53 +1118,8 @@
     })();
   </script>
 
-  <!-- Lottie «Класс!» burst on like -->
-  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
-  <script>
-    // Проигрывает лотти-анимацию поверх кнопки «Класс!» в момент лайка
-    // (checkbox становится checked). На анлайк — не играет.
-    (function () {
-      if (!window.lottie) return;
-      var SIZE = 160;   // px — размер оверлея анимации
-
-      document.querySelectorAll('.button-klass').forEach(function (label) {
-        var input = label.querySelector('input[type="checkbox"]');
-        if (!input) return;
-        input.addEventListener('change', function () {
-          if (input.checked) playLike(label);
-        });
-      });
-
-      function playLike(label) {
-        // Центрируем по видимой «пилюле» кнопки, а не по label (label шире:
-        // в нём иконка + счётчик + &nbsp;, из-за чего центр уезжает вбок).
-        var anchor = label.querySelector('.button-container') || label;
-        var rect = anchor.getBoundingClientRect();
-        var cx = rect.left + rect.width / 2;
-        var cy = rect.top + rect.height / 2;
-
-        var host = document.createElement('div');
-        host.style.cssText =
-          'position:fixed;z-index:9999;pointer-events:none;' +
-          'width:' + SIZE + 'px;height:' + SIZE + 'px;' +
-          'left:' + cx + 'px;top:' + cy + 'px;' +
-          'transform:translate(-50%,-50%);';
-        document.body.appendChild(host);
-
-        var anim = lottie.loadAnimation({
-          container: host,
-          renderer: 'svg',
-          loop: false,
-          autoplay: true,
-          path: 'assets/lottie/like.json'
-        });
-        anim.addEventListener('complete', function () {
-          anim.destroy();
-          host.remove();
-        });
-      }
-    })();
-  </script>
+  <!-- Lottie «Класс!» burst on like — компонент, лениво подгружает lottie-web -->
+  <script src="components/actions-bar.js"></script>
 
   <!-- Stack of system push-notifications from «ОК», прилетающих
        пока пользователь листает ленту. Стрим начат на стартовом
@@ -1217,7 +1173,7 @@
         return MomentViewer.vvzSlide({
           title:  'Возможно вы знакомы',
           people: VVZ_PEOPLE,
-          cta:    { label: 'Показать всех' }
+          cta:    { label: 'Показать всех', onClick: function () { location.href = 'vvz.html'; } }
         });
       }
 
@@ -1259,13 +1215,16 @@
             var pair = FULL[name] || [name, ''];
             var firstGen = pair[0];
             var fullGen = (pair[0] + ' ' + pair[1]).trim();
-            return [MomentViewer.bdaySlide({
+            var slide = MomentViewer.bdaySlide({
               photo:          img ? img.src : '',
               name:           fullGen,
               headerTitle:    'День рождения ' + firstGen,
               headerSubtitle: '3 часа назад',
               cta:            'Поздравить'
-            })];
+            });
+            // CTA «Поздравить» уводит в каталог подарков.
+            slide.cta.onClick = function () { location.href = 'gifts-catalog.html'; };
+            return [slide];
           }
           // Годовщина дружбы — пакет из 2 слайдов
           if (ava.hasAttribute('data-friendship')) {

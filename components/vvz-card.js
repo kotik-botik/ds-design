@@ -17,14 +17,14 @@
  * «Отменить» возвращает карточку. Слушатели делегированы на document.
  */
 (function () {
-  // Заглушка-аватарка того же размера, что и реальная (32×32 + border 2)
+  // Заглушка-аватарка того же размера, что и реальная (36×36 + border 2)
   // — используется в стеке mutuals когда данных нет, чтобы плейсхолдер
   // занимал реальное место (через visibility:hidden на родителе).
-  var PLACEHOLDER_AVATAR = '<div class="avatar __size-32 __type-placeholder"></div>';
+  var PLACEHOLDER_AVATAR = '<div class="avatar __size-36 __type-placeholder"></div>';
 
   function avatarHtml(id) {
-    return '<div class="avatar __size-32 __type-image">' +
-             '<img src="https://i.pravatar.cc/64?img=' + id + '" alt="">' +
+    return '<div class="avatar __size-36 __type-image">' +
+             '<img src="https://i.pravatar.cc/72?img=' + id + '" alt="">' +
            '</div>';
   }
 
@@ -53,7 +53,7 @@
           '<div class="vvz-card__title ds-title-s">' + (p.name || '') + '</div>',
           '<div class="vvz-card__subtitle ds-caption-m">' + subtitle + '</div>',
           '<div class="vvz-card__mutuals">',
-            '<div class="avatars-view __size-32">',
+            '<div class="avatars-view __size-36">',
               '<div class="avatars-view__stack">' + mutAvas + '</div>',
             '</div>',
           '</div>',

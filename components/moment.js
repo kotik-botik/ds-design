@@ -29,6 +29,26 @@
  * вызывает instance.setSlides(newSlides) — viewer пересоберёт сегменты.
  */
 (function () {
+  // Ленивая подгрузка lottie-web с CDN — используется именинной сториз для
+  // полноэкранной конфетти-анимации (см. блок BDAY ниже). Тот же паттерн
+  // используется в actions-bar.js для лайка; здесь свой promise-кэш на случай,
+  // если страница ещё не загрузила lottie.
+  var LOTTIE_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
+  var lottieLoading = null;
+  function ensureLottie() {
+    if (window.lottie) return Promise.resolve(window.lottie);
+    if (lottieLoading) return lottieLoading;
+    lottieLoading = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = LOTTIE_CDN;
+      s.async = true;
+      s.onload = function () { resolve(window.lottie); };
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    return lottieLoading;
+  }
+
   function MomentViewer(root, options) {
     this.root = root;
     this.options = options || {};
@@ -117,7 +137,13 @@
           media.style.display = 'none';
         }
       }
-      if (s.color) this.root.style.backgroundColor = s.color;
+      if (s.background) {
+        // Произвольный CSS-background (например radial/linear gradient).
+        this.root.style.background = s.background;
+      } else if (s.color) {
+        this.root.style.background = '';
+        this.root.style.backgroundColor = s.color;
+      }
       // s.duration — опциональный override длительности сегмента (CSS-переменная
       // --moment-duration). Используется, например, в bdaySlide, чтобы после
       // улёта шариков (~5.7s) оставалось ещё 2s «передышки» на тап «Поздравить».
@@ -175,32 +201,71 @@
             '</p>' +
           '</div>';
 
+        // Confetti — лотти-конфетти позади шаров, на всю карточку. Lottie-web
+        // подключается страницей (см. lenta-q3.html — он же нужен для лайка);
+        // если её нет в окне — пропускаем, шары работают и без конфетти.
+        var confettiHost = this.root.querySelector('.moment__bday-confetti');
+        if (confettiHost) {
+          // Чистим прошлый прогон (если кэшировался .lottie-instance).
+          if (confettiHost._lottieAnim) {
+            try { confettiHost._lottieAnim.destroy(); } catch (err) {}
+          }
+          confettiHost.remove();
+        }
+        confettiHost = document.createElement('div');
+        confettiHost.className = 'moment__bday-confetti';
+        bdayHost.insertAdjacentElement('afterend', confettiHost);
+        // Lottie может быть ещё не загружена (страница ленится). ensureLottie
+        // подгружает с CDN при первом вызове. Сохраняем target-узел в замыкании
+        // и в момент resolve проверяем, что он всё ещё в DOM — иначе сториз
+        // могли уже переключить, и пихать туда лотти не надо.
+        (function (host) {
+          ensureLottie().then(function (lottie) {
+            if (!host.isConnected) return;
+            host._lottieAnim = lottie.loadAnimation({
+              container: host,
+              renderer:  'svg',
+              loop:      false,
+              autoplay:  true,
+              path:      'assets/lottie/confetti.json'
+            });
+          }).catch(function () {/* нет интернета — конфетти просто не покажем */});
+        })(confettiHost);
+
         // Шары — отдельный слой на всю карточку (sibling .moment__bday).
         // Пересоздаём каждый раз, чтобы CSS-анимация вылета перезапускалась
-        // при повторном открытии сториз.
+        // при повторном открытии сториз. Кладём ПОСЛЕ конфетти — шары
+        // поверх (порядок в DOM решает stacking).
         if (balloonsHost) balloonsHost.remove();
         balloonsHost = document.createElement('div');
         balloonsHost.className = 'moment__bday-balloons';
         // Имена файлов с пробелами/кириллицей — URL-encoded, чтобы не
         // зависеть от поведения конкретного браузера.
         balloonsHost.innerHTML =
-          // шарик_1 2 — зелёный пудель, шарик_1 4 — оранжевый ОК-шар,
+          // шарик_1 2 — зелёный пудель, шарик_1 — оранжевый ОК-шар,
           // шарик_1 8 — оранжевый круглый.
           '<div class="moment__bday-balloon __b-poodle">' +
             '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%202.png" alt="">' +
           '</div>' +
           '<div class="moment__bday-balloon __b-ok">' +
-            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%204.png" alt="">' +
+            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1.png" alt="">' +
           '</div>' +
           '<div class="moment__bday-balloon __b-round">' +
             '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%208.png" alt="">' +
           '</div>';
-        bdayHost.insertAdjacentElement('afterend', balloonsHost);
+        confettiHost.insertAdjacentElement('afterend', balloonsHost);
 
         this.root.classList.add('__view-bday');
       } else {
         if (bdayHost) bdayHost.remove();
         if (balloonsHost) balloonsHost.remove();
+        var existingConfetti = this.root.querySelector('.moment__bday-confetti');
+        if (existingConfetti) {
+          if (existingConfetti._lottieAnim) {
+            try { existingConfetti._lottieAnim.destroy(); } catch (err) {}
+          }
+          existingConfetti.remove();
+        }
         this.root.classList.remove('__view-bday');
       }
 
@@ -229,13 +294,10 @@
 
       // CTA — кнопка снизу. Если slide.cta = {label, onClick} — рендерим,
       // иначе скрываем слот. Кликовый обработчик навешиваем напрямую
-      // (один раз на сегмент). Также ставим .__has-cta на корень — в этом
-      // режиме сториз превращается в «карточку» с rounded-corners,
-      // а CTA лежит ниже на тёмном фоне viewer'а.
+      // (один раз на сегмент).
       var cta = this.root.querySelector('.moment__cta');
       if (cta) {
         if (s.cta && s.cta.label) {
-          this.root.classList.add('__has-cta');
           cta.style.display = '';
           // По умолчанию CTA-кнопка во ВВЗ-стиле «secondary-on-color»
           // (стеклянная). Для именинной сториз и любых других кейсов можно
@@ -252,7 +314,6 @@
             cta.querySelector('button').addEventListener('click', s.cta.onClick);
           }
         } else {
-          this.root.classList.remove('__has-cta');
           cta.style.display = 'none';
           cta.innerHTML = '';
         }
@@ -583,7 +644,13 @@
       '<h2 class="moment__body-title ds-title-xl">' + (opts.title || '') + '</h2>',
       '<div class="moment__body-grid">' + cards + '</div>'
     ].join('');
-    var slide = { color: opts.color || '#2E2F33', body: body };
+    var slide = {
+      body: body,
+      // Фон ВВЗ-сториз — мягкий оранжево-чёрный градиент сверху-вниз
+      // (по Figma 2260:68464). Радиус и blur не воспроизводим точно,
+      // визуально близко.
+      background: opts.background || 'radial-gradient(120% 80% at 50% 0%, #4c2400 0%, #1a0a02 55%, #000 100%)'
+    };
     if (opts.cta) slide.cta = opts.cta;
     return slide;
   }
@@ -633,8 +700,20 @@
     var avas = (opts.avatars || []).map(function (src) {
       return '<div class="avatar __size-96 __type-image"><img src="' + src + '" alt=""></div>';
     }).join('');
+    // 5 оранжевых шариков-декораций (figma 2258-34952).
+    // Координаты — % от 360×644 figma-фрейма: [leftPct, topPct, widthPct, rotateDeg]
+    var balloons = [
+      [-5.8,  16.6, 16.5,  10.7],
+      [92.5,  64.4, 15.0,  -3.5],
+      [ 2.5,  44.3, 36.0,  -3.5],
+      [65.0,  13.5, 38.3,   7.8],
+      [65.0,  51.9, 30.0,  -9.2]
+    ].map(function (b) {
+      return '<span class="friendship-story__balloon" style="left:' + b[0] + '%;top:' + b[1] + '%;width:' + b[2] + '%;transform:rotate(' + b[3] + 'deg)"></span>';
+    }).join('');
     var body = [
       '<div class="friendship-story">',
+        '<div class="friendship-story__balloons">' + balloons + '</div>',
         '<div class="friendship-story__avatars">' + avas + '</div>',
         '<h2 class="friendship-story__title">' + (opts.title || '') + '</h2>',
         '<p class="friendship-story__sub">' + (opts.sub || '') + '</p>',
