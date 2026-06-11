@@ -176,7 +176,13 @@
 
   /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
   .ll-pymk { padding-top: var(--space-3); }
-  .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); }
+  .ll-pymk__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--space-2); padding: 0 var(--space-4) var(--space-3);
+  }
+  .ll-pymk__title { /* в head — паддинги задаёт сам __head */
+    padding: 0;
+  }
   .ll-pymk__row {
     display: flex;
     gap: var(--space-2);
@@ -387,7 +393,10 @@
 
         <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible) -->
         <section class="ll-pymk island" data-dismiss-row aria-label="Возможно, вы знакомы">
-          <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
+          <div class="ll-pymk__head">
+            <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
+            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24"><span class="button-inline__content">Все</span></button></span>
+          </div>
           <div class="ll-pymk__row">
 
             <div class="friend-card" data-dismiss-target>
