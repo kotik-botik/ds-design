@@ -10,7 +10,8 @@
   var ROUTES = {
     feed: 'lenta-q3.html',
     book: 'tribune.html',
-    message: 'messages.html'
+    message: 'messages.html',
+    menu: 'menu.html'
   };
 
   function hrefFor(btn) {

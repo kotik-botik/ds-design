@@ -303,10 +303,8 @@
     position: absolute;
     top: 26px; left: 50%;
     transform: translateX(-50%);
-    display: flex;
     z-index: 1;
   }
-  .ll-anniv-poster__avatars > * + * { margin-left: -16px; }
   /* Тёмный градиент снизу — чтобы текст читался поверх любой подложки */
   .ll-anniv-poster::after {
     content: '';
@@ -318,7 +316,7 @@
   }
   .ll-anniv-poster__count {
     position: absolute;
-    left: 0; right: 0; bottom: 56px;
+    left: 0; right: 0; bottom: 72px;
     text-align: center;
     font-family: "OK Sans Display", var(--font-family);
     font-weight: 700;
@@ -328,7 +326,7 @@
   }
   .ll-anniv-poster__since {
     position: absolute;
-    left: 0; right: 0; bottom: 28px;
+    left: 0; right: 0; bottom: 32px;
     text-align: center;
     z-index: 1;
   }
@@ -933,9 +931,11 @@
 
           <div>
             <div class="ll-anniv-poster">
-              <div class="ll-anniv-poster__avatars">
-                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
-                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+              <div class="avatars-view __size-96 ll-anniv-poster__avatars">
+                <div class="avatars-view__stack">
+                  <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+                  <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+                </div>
               </div>
               <div class="ll-anniv-poster__count">478 подарков</div>
               <div class="ll-anniv-poster__since ds-body-m">С 1 июня 2023 года</div>
@@ -1117,53 +1117,8 @@
     })();
   </script>
 
-  <!-- Lottie «Класс!» burst on like -->
-  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
-  <script>
-    // Проигрывает лотти-анимацию поверх кнопки «Класс!» в момент лайка
-    // (checkbox становится checked). На анлайк — не играет.
-    (function () {
-      if (!window.lottie) return;
-      var SIZE = 160;   // px — размер оверлея анимации
-
-      document.querySelectorAll('.button-klass').forEach(function (label) {
-        var input = label.querySelector('input[type="checkbox"]');
-        if (!input) return;
-        input.addEventListener('change', function () {
-          if (input.checked) playLike(label);
-        });
-      });
-
-      function playLike(label) {
-        // Центрируем по видимой «пилюле» кнопки, а не по label (label шире:
-        // в нём иконка + счётчик + &nbsp;, из-за чего центр уезжает вбок).
-        var anchor = label.querySelector('.button-container') || label;
-        var rect = anchor.getBoundingClientRect();
-        var cx = rect.left + rect.width / 2;
-        var cy = rect.top + rect.height / 2;
-
-        var host = document.createElement('div');
-        host.style.cssText =
-          'position:fixed;z-index:9999;pointer-events:none;' +
-          'width:' + SIZE + 'px;height:' + SIZE + 'px;' +
-          'left:' + cx + 'px;top:' + cy + 'px;' +
-          'transform:translate(-50%,-50%);';
-        document.body.appendChild(host);
-
-        var anim = lottie.loadAnimation({
-          container: host,
-          renderer: 'svg',
-          loop: false,
-          autoplay: true,
-          path: 'assets/lottie/like.json'
-        });
-        anim.addEventListener('complete', function () {
-          anim.destroy();
-          host.remove();
-        });
-      }
-    })();
-  </script>
+  <!-- Lottie «Класс!» burst on like — компонент, лениво подгружает lottie-web -->
+  <script src="components/actions-bar.js"></script>
 
   <!-- Stack of system push-notifications from «ОК», прилетающих
        пока пользователь листает ленту. Стрим начат на стартовом
@@ -1211,16 +1166,42 @@
 
       var FRIENDSHIP_AVATARS = ['https://i.pravatar.cc/192?img=47', 'https://i.pravatar.cc/192?img=49'];
 
+      // ВВЗ-фабрика — один и тот же slide-объект и для тапа на аватарку
+      // ВВЗ, и для рекламной вставки между сторизами.
+      function makeVvzSlide() {
+        return MomentViewer.vvzSlide({
+          title:  'Возможно вы знакомы',
+          people: VVZ_PEOPLE,
+          cta:    { label: 'Показать всех' }
+        });
+      }
+
+      // Логика «ВВЗ как реклама»:
+      //  - считаем обычные сториз в карусели (= не data-skip-viewer / vvz /
+      //    friendship / bday). Если их ≥2 — убираем ВВЗ-аватарку из DOM,
+      //    флаг vvzAsAd включается.
+      //  - В callback slides() для обычной сториз ВВЗ-слайд один раз за
+      //    сессию вставляется случайной позицией в середину массива.
+      var vvzAva = row.querySelector('[data-vvz]');
+      var regularStoriesCount = Array.prototype.filter.call(
+        row.querySelectorAll('.avatar'),
+        function (a) {
+          return !a.hasAttribute('data-skip-viewer')
+              && !a.hasAttribute('data-vvz')
+              && !a.hasAttribute('data-friendship')
+              && !a.hasAttribute('data-bday');
+        }
+      ).length;
+      var vvzAsAd = regularStoriesCount >= 2;
+      var vvzAdShown = false;
+      if (vvzAsAd && vvzAva) vvzAva.remove();
+
       MomentViewer.bindRow(row, viewer, {
         slides: function (ava) {
           // ВВЗ-сториз — собирается из готового хелпера, иначе null → fallback
           // на дефолтную палитру из bindRow (см. MomentViewer.palette).
           if (ava.hasAttribute('data-vvz')) {
-            return [MomentViewer.vvzSlide({
-              title:  'Возможно вы знакомы',
-              people: VVZ_PEOPLE,
-              cta:    { label: 'Показать всех' }
-            })];
+            return [makeVvzSlide()];
           }
           // Именинная сториз — фото-фон именинника + блюр снизу + текст.
           // Фото берём прямо с аватарки из стака.
@@ -1258,7 +1239,21 @@
               })
             ];
           }
-          return null;
+          // Обычная сториз с цветной заливкой. Если ВВЗ работает в режиме
+          // рекламы и ещё не показывался — вставляем ВВЗ-слайд в случайную
+          // позицию (не самом начале, чтобы был между обычными).
+          var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
+          var palette = MomentViewer.palette;
+          var slides = [];
+          for (var i = 0; i < count; i++) {
+            slides.push({ color: palette[i % palette.length] });
+          }
+          if (vvzAsAd && !vvzAdShown && slides.length >= 2) {
+            vvzAdShown = true;
+            var pos = 1 + Math.floor(Math.random() * (slides.length - 1));
+            slides.splice(pos, 0, makeVvzSlide());
+          }
+          return slides;
         }
       });
     })();

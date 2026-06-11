@@ -229,10 +229,13 @@
 
       // CTA — кнопка снизу. Если slide.cta = {label, onClick} — рендерим,
       // иначе скрываем слот. Кликовый обработчик навешиваем напрямую
-      // (один раз на сегмент).
+      // (один раз на сегмент). Также ставим .__has-cta на корень — в этом
+      // режиме сториз превращается в «карточку» с rounded-corners,
+      // а CTA лежит ниже на тёмном фоне viewer'а.
       var cta = this.root.querySelector('.moment__cta');
       if (cta) {
         if (s.cta && s.cta.label) {
+          this.root.classList.add('__has-cta');
           cta.style.display = '';
           // По умолчанию CTA-кнопка во ВВЗ-стиле «secondary-on-color»
           // (стеклянная). Для именинной сториз и любых других кейсов можно
@@ -249,6 +252,7 @@
             cta.querySelector('button').addEventListener('click', s.cta.onClick);
           }
         } else {
+          this.root.classList.remove('__has-cta');
           cta.style.display = 'none';
           cta.innerHTML = '';
         }
@@ -629,8 +633,20 @@
     var avas = (opts.avatars || []).map(function (src) {
       return '<div class="avatar __size-96 __type-image"><img src="' + src + '" alt=""></div>';
     }).join('');
+    // 5 оранжевых шариков-декораций (figma 2258-34952).
+    // Координаты — % от 360×644 figma-фрейма: [leftPct, topPct, widthPct, rotateDeg]
+    var balloons = [
+      [-5.8,  16.6, 16.5,  10.7],
+      [92.5,  64.4, 15.0,  -3.5],
+      [ 2.5,  44.3, 36.0,  -3.5],
+      [65.0,  13.5, 38.3,   7.8],
+      [65.0,  51.9, 30.0,  -9.2]
+    ].map(function (b) {
+      return '<span class="friendship-story__balloon" style="left:' + b[0] + '%;top:' + b[1] + '%;width:' + b[2] + '%;transform:rotate(' + b[3] + 'deg)"></span>';
+    }).join('');
     var body = [
       '<div class="friendship-story">',
+        '<div class="friendship-story__balloons">' + balloons + '</div>',
         '<div class="friendship-story__avatars">' + avas + '</div>',
         '<h2 class="friendship-story__title">' + (opts.title || '') + '</h2>',
         '<p class="friendship-story__sub">' + (opts.sub || '') + '</p>',
