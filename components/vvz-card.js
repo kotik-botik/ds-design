@@ -36,7 +36,9 @@
     var mutAvas = hasMutuals
       ? p.m.map(avatarHtml).join('')
       : PLACEHOLDER_AVATAR + PLACEHOLDER_AVATAR + PLACEHOLDER_AVATAR;
-    var subtitle = hasMutuals ? (p.mutuals + ' общих друзей') : (p.sub || '');
+    // Без общих друзей сабтайтл фиксированный «Подобрали для вас» (по Figma
+     // 2260:68219). С общими — «N общих друзей».
+    var subtitle = hasMutuals ? (p.mutuals + ' общих друзей') : 'Подобрали для вас';
     return [
       '<div class="vvz-card' + (hasMutuals ? ' __has-mutuals' : '') + '" data-vvz-card>',
         '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',

@@ -143,8 +143,8 @@
         if (s.cta && s.cta.label) {
           cta.style.display = '';
           cta.innerHTML =
-            '<div class="button-wrapper __size-44 __style-primary-on-color">' +
-              '<button class="button-container __style-primary-on-color" type="button">' +
+            '<div class="button-wrapper __size-44 __style-secondary-on-color">' +
+              '<button class="button-container __style-secondary-on-color" type="button">' +
                 '<span class="button-content"></span>' +
               '</button>' +
             '</div>';

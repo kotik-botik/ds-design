@@ -314,6 +314,7 @@
   bottom: 44px;
   left: 0;
   right: 0;
+  padding: 0 var(--space-4);
   display: flex;
   z-index: 4;
 }

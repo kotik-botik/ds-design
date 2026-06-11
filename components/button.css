@@ -134,6 +134,13 @@
   --button-background-color: var(--static-surface-base-inverse-primary);
 }
 
+/* Secondary on color — полупрозрачный белый фон, белый текст.
+   Для кнопок поверх тёмного фона (сториз, on-image, и т.п.). */
+.button-container.__style-secondary-on-color {
+  --button-color: var(--static-text-and-icons-base-inverse-primary);
+  --button-background-color: rgba(255, 255, 255, 0.16);
+}
+
 /* On image — translucent dark bg, white text. Для пилюль поверх медиа
    (клип, фото и т.п.), где обычный secondary сливается с подложкой. */
 .button-container.__style-on-image {
