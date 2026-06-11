@@ -9,25 +9,30 @@
  *
  * USAGE:
  *   MomentViewer.init(rootEl, {
- *     onClose:  () => { … },        // вызывается, когда сториз закончились или
- *                                   // пользователь явно закрыл (esc/✕).
- *                                   // Тут лента ставит .__ring-viewed аватарке.
- *     onChange: (index) => { … },   // опц.: при смене активного сегмента
+ *     onChange: (index) => { … },        // опц.: при смене активного сегмента
+ *     onNext:   () => true | false,      // тап вправо/таймер за последним
+ *                                        //   сегментом. true → компонент НЕ
+ *                                        //   закрывается, страница сама
+ *                                        //   подменила контент (см. setSlides).
+ *     onPrev:   () => true | false,      // тап влево на первом сегменте.
+ *                                        //   true → страница перешла к
+ *                                        //   предыдущему автору.
+ *     onClose:  () => { … },             // явное закрытие (Esc/✕) или досмотр
+ *                                        //   последней сториз последнего
+ *                                        //   автора. Тут лента ставит ✕ и
+ *                                        //   .__ring-viewed аватарке.
  *   });
  *
- * Сколько палочек прогресса — столько и «сториз». Их количество и список
- * картинок задаётся снаружи через data-моменты на сегментах или через опции
- * (см. moment.html). Сам компонент не знает, откуда они пришли — лента или
- * любой другой блок собирает их и кладёт сюда.
+ * Сколько палочек прогресса — столько и «сториз». Количество и список картинок
+ * задаются снаружи: при первом init либо через `slides`, либо просто разметкой
+ * .moment__progress-segment в HTML. На переходе между авторами страница
+ * вызывает instance.setSlides(newSlides) — viewer пересоберёт сегменты.
  */
 (function () {
   function MomentViewer(root, options) {
     this.root = root;
     this.options = options || {};
-    this.segments = Array.prototype.slice.call(
-      root.querySelectorAll('.moment__progress-segment')
-    );
-    this.slides = this.options.slides || null; // [{src, title, subtitle, avatar}]
+    this.slides = null;
     this.current = 0;
 
     this._onPrev = this._onPrev.bind(this);
@@ -45,12 +50,31 @@
 
     document.addEventListener('keydown', this._onKey);
 
+    // Если slides переданы в опциях — сразу собираем сегменты прогресс-бара.
+    // Если нет — компонент работает с уже разложенными в HTML сегментами.
+    if (this.options.slides) {
+      this.setSlides(this.options.slides);
+    } else {
+      this.segments = Array.prototype.slice.call(
+        root.querySelectorAll('.moment__progress-segment')
+      );
+    }
+
     this.go(0);
   }
 
   MomentViewer.prototype.go = function (index) {
-    if (index < 0) index = 0;
+    if (index < 0) {
+      // Выход за левую границу — спрашиваем страницу, переходить ли к
+      // предыдущему автору. Если страница вернёт true — она сама вызовет
+      // setSlides + go(0); мы дальше ничего не делаем.
+      if (typeof this.options.onPrev === 'function' && this.options.onPrev() === true) return;
+      index = 0;
+    }
     if (index >= this.segments.length) {
+      // Выход за правую границу — следующий автор. Если страницы нет / нечего
+      // показать — закрываемся (досмотр последнего сегмента последнего автора).
+      if (typeof this.options.onNext === 'function' && this.options.onNext() === true) return;
       this._finish();
       return;
     }
@@ -70,13 +94,46 @@
     if (this.slides && this.slides[index]) {
       var s = this.slides[index];
       var media = this.root.querySelector('.moment__media');
-      if (media && s.src) media.src = s.src;
+      if (media) {
+        if (s.src) {
+          media.src = s.src;
+          media.style.display = '';
+        } else if (s.color) {
+          // Сториз без картинки — просто цветная заливка карточки
+          media.removeAttribute('src');
+          media.style.display = 'none';
+        }
+      }
+      if (s.color) this.root.style.backgroundColor = s.color;
       var title = this.root.querySelector('.moment__header-title');
       if (title && s.title != null) title.textContent = s.title;
       var sub = this.root.querySelector('.moment__header-subtitle');
       if (sub && s.subtitle != null) sub.textContent = s.subtitle;
       var avaImg = this.root.querySelector('.moment__header .avatar img');
       if (avaImg && s.avatar) avaImg.src = s.avatar;
+
+      // CTA — кнопка снизу. Если slide.cta = {label, onClick} — рендерим,
+      // иначе скрываем слот. Кликовый обработчик навешиваем напрямую
+      // (один раз на сегмент).
+      var cta = this.root.querySelector('.moment__cta');
+      if (cta) {
+        if (s.cta && s.cta.label) {
+          cta.style.display = '';
+          cta.innerHTML =
+            '<div class="button-wrapper __size-44 __style-primary __full-width">' +
+              '<button class="button-container __style-primary" type="button">' +
+                '<span class="button-content"></span>' +
+              '</button>' +
+            '</div>';
+          cta.querySelector('.button-content').textContent = s.cta.label;
+          if (typeof s.cta.onClick === 'function') {
+            cta.querySelector('button').addEventListener('click', s.cta.onClick);
+          }
+        } else {
+          cta.style.display = 'none';
+          cta.innerHTML = '';
+        }
+      }
     }
 
     if (typeof this.options.onChange === 'function') {
@@ -101,6 +158,23 @@
 
   MomentViewer.prototype.pause  = function () { this.root.classList.add('__state-paused'); };
   MomentViewer.prototype.resume = function () { this.root.classList.remove('__state-paused'); };
+
+  // Подменить сториз нового автора: пересобрать сегменты прогресса и слайды.
+  // Страница вызывает это из onNext/onPrev перед тем как вернуть true.
+  MomentViewer.prototype.setSlides = function (slides) {
+    this.slides = slides || [];
+    var bar = this.root.querySelector('.moment__progress');
+    if (bar) {
+      bar.innerHTML = '';
+      for (var i = 0; i < this.slides.length; i++) {
+        var seg = document.createElement('div');
+        seg.className = 'moment__progress-segment';
+        bar.appendChild(seg);
+      }
+      this.segments = Array.prototype.slice.call(bar.children);
+    }
+    this.current = 0;
+  };
 
   MomentViewer.prototype._finish = function () {
     // Залить все сегменты «done», убрать активный

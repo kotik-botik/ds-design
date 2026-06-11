@@ -53,6 +53,263 @@
 
   /* Таббар прибит к низу */
   .ll-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; }
+
+  /* ============================================================
+     GIFTS BOTTOM SHEET — штора с тремя подарками
+     ============================================================ */
+  .gift-trigger { cursor: pointer; }
+  .gift-trigger:active .notification-cell__title { opacity: 0.6; }
+
+  .gift-sheet {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .gift-sheet.__visible {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .gift-sheet__backdrop {
+    position: absolute; inset: 0;
+    background: rgba(20, 14, 10, 0.48);
+    opacity: 0;
+    transition: opacity 320ms cubic-bezier(.2,.8,.2,1);
+  }
+  .gift-sheet.__visible .gift-sheet__backdrop { opacity: 1; }
+
+  .gift-sheet__panel {
+    position: relative;
+    background: var(--dynamic-surface-base-secondary);
+    border-radius: 24px 24px 0 0;
+    padding: 8px 0 24px;
+    transform: translateY(100%);
+    transition: transform 420ms cubic-bezier(.2,.8,.2,1);
+    box-shadow: 0 -12px 48px rgba(0,0,0,.18);
+    will-change: transform;
+  }
+  .gift-sheet.__visible .gift-sheet__panel { transform: translateY(0); }
+
+  .gift-sheet__handle {
+    width: 36px; height: 4px;
+    background: var(--dynamic-stroke-contrast-mid);
+    border-radius: 2px;
+    margin: 0 auto 8px;
+  }
+
+  .gift-sheet__close {
+    position: absolute; top: 24px; right: 16px;
+    width: 44px; height: 44px;
+    border: 0; background: transparent; padding: 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
+  .gift-sheet__close svg { display: block; }
+
+  .gift-sheet__title {
+    margin: 16px 24px 0;
+    font-size: 28px; line-height: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--dynamic-text-and-icons-base-primary);
+    transition: opacity 240ms ease-out, transform 320ms cubic-bezier(.2,.8,.2,1);
+  }
+  .gift-sheet.__accepted .gift-sheet__title {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  .gift-stack {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    margin: 8px 0 0;
+    overflow: hidden;
+  }
+
+  .gift-card {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 64%;
+    max-width: 240px;
+    aspect-ratio: 240 / 290;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.06);
+    transform: translate(-50%, -50%) scale(0.4) rotate(0);
+    opacity: 0;
+    transition:
+      transform 520ms cubic-bezier(0, -0.3, 0.5, 1.3),
+      opacity 280ms ease-out;
+    will-change: transform, opacity;
+  }
+
+  /* После открытия — карточки занимают стек-позиции (веером) */
+  .gift-sheet.__entered .gift-card[data-i="2"] {
+    transform: translate(-78%, -62%) rotate(-9deg);
+    opacity: 1;
+    transition-delay: 40ms;
+  }
+  .gift-sheet.__entered .gift-card[data-i="1"] {
+    transform: translate(-22%, -48%) rotate(7deg);
+    opacity: 1;
+    transition-delay: 140ms;
+  }
+  .gift-sheet.__entered .gift-card[data-i="0"] {
+    transform: translate(-48%, -22%) rotate(-3deg);
+    opacity: 1;
+    transition-delay: 240ms;
+  }
+
+  /* «Принять все» — карточки улетают вверх со стэгером */
+  .gift-sheet.__accepted .gift-card {
+    transition:
+      transform 560ms cubic-bezier(.5, 0, .75, 0),
+      opacity 360ms ease-in;
+  }
+  .gift-sheet.__accepted .gift-card[data-i="0"] {
+    transform: translate(-50%, -260%) rotate(-22deg);
+    opacity: 0; transition-delay: 0ms;
+  }
+  .gift-sheet.__accepted .gift-card[data-i="1"] {
+    transform: translate(-20%, -260%) rotate(18deg);
+    opacity: 0; transition-delay: 80ms;
+  }
+  .gift-sheet.__accepted .gift-card[data-i="2"] {
+    transform: translate(-80%, -260%) rotate(-28deg);
+    opacity: 0; transition-delay: 160ms;
+  }
+
+  /* Постер-визуал внутри карточки — градиент + шрифт-плашка */
+  .gift-card__head {
+    position: absolute; top: 10px; left: 10px; right: 10px;
+    display: flex; align-items: center; gap: 6px;
+    z-index: 2;
+  }
+  .gift-card__head .avatar { width: 20px; height: 20px; border-radius: 50%; flex: 0 0 auto; overflow: hidden; }
+  .gift-card__head .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gift-card__head .name {
+    font-size: 11px; line-height: 14px; font-weight: 600;
+    color: rgba(0,0,0,.72);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .gift-card__trash {
+    position: absolute; top: 8px; right: 8px;
+    width: 28px; height: 28px;
+    border: 0; padding: 0; border-radius: 50%;
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .gift-card__trash img { width: 16px; height: 16px; }
+
+  .gift-card__poster {
+    position: absolute; left: 0; right: 0; bottom: 0; top: 36px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,.18);
+    padding: 12px;
+  }
+  .gift-card[data-i="0"] .gift-card__poster {
+    background: linear-gradient(140deg, #ff6fa3 0%, #c2185b 100%);
+  }
+  .gift-card[data-i="1"] .gift-card__poster {
+    background: linear-gradient(140deg, #fff1d6 0%, #ffb7a3 60%, #ff8a65 100%);
+    color: #6a3b1c;
+    text-shadow: 0 1px 0 rgba(255,255,255,.4);
+  }
+  .gift-card[data-i="2"] .gift-card__poster {
+    background: linear-gradient(140deg, #a07a55 0%, #5e4226 100%);
+  }
+  .gift-card__poster .emoji {
+    font-size: 56px; line-height: 1; margin-bottom: 6px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));
+  }
+  .gift-card__poster .text {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 22px; line-height: 26px;
+    letter-spacing: -0.01em;
+  }
+
+  /* CTA внизу шторы */
+  .gift-sheet__cta-wrap {
+    padding: 16px 16px 0;
+    transition: opacity 240ms ease-out;
+  }
+  .gift-sheet.__accepted .gift-sheet__cta-wrap { opacity: 0; pointer-events: none; }
+
+  .gift-sheet__cta {
+    width: 100%;
+    height: 56px;
+    border: 0; border-radius: 18px;
+    background: var(--dynamic-stroke-status-accent, #D76200);
+    color: #fff;
+    font-size: 17px; font-weight: 600;
+    cursor: pointer;
+    transition: transform 200ms cubic-bezier(.2,.8,.2,1);
+  }
+  .gift-sheet__cta:active { transform: scale(.97); }
+
+  /* Финальный экран — «Вы приняли все подарки» */
+  .gift-sheet__final {
+    position: absolute;
+    left: 0; right: 0; top: 16px;
+    bottom: 88px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 320ms ease-out 280ms;
+  }
+  .gift-sheet.__accepted .gift-sheet__final { opacity: 1; pointer-events: auto; }
+  .gift-sheet__final-title {
+    font-size: 28px; line-height: 32px; font-weight: 700;
+    text-align: center;
+    color: var(--dynamic-text-and-icons-base-primary);
+    letter-spacing: -0.01em;
+  }
+  .gift-sheet__done {
+    height: 56px; padding: 0 32px;
+    border: 0; border-radius: 18px;
+    background: var(--dynamic-stroke-status-accent, #D76200);
+    color: #fff;
+    font-size: 17px; font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Конфетти — кучка частиц, разлёт + поворот */
+  .confetti {
+    position: relative;
+    width: 220px; height: 120px;
+  }
+  .confetti i {
+    position: absolute; top: 50%; left: 50%;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  .gift-sheet.__accepted .confetti i {
+    animation: confetti-burst 1100ms cubic-bezier(.2,.7,.2,1) forwards;
+    animation-delay: var(--d, 0ms);
+  }
+  @keyframes confetti-burst {
+    0%   { transform: translate(-50%, -50%) scale(0) rotate(0); opacity: 0; }
+    20%  { opacity: 1; }
+    100% { transform:
+             translate(calc(-50% + var(--x, 0px)), calc(-50% + var(--y, 0px)))
+             scale(1) rotate(var(--r, 360deg));
+           opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -73,7 +330,7 @@
 
         <div class="nav-bar __type-feed">
           <div class="nav-bar__leading">
-            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" aria-label="Назад"><span class="button-inline__content"><span class="icon __size-24 __slot-back"></span></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" aria-label="Назад"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/back_24.svg" width="24" height="24" alt=""></span></button></span>
             <span class="ds-title-l">Оповещения</span>
           </div>
           <div class="nav-bar__trailing">
@@ -114,6 +371,25 @@
 
       <!-- список оповещений -->
       <div class="ll-notifs-list" id="notifsList">
+
+        <!-- 0. Триггер: подарили 3 подарка → открывает штору -->
+        <div class="notification-cell gift-trigger" data-cat="gifts" id="giftsTrigger" role="button" tabindex="0">
+          <div class="avatars-view __size-56">
+            <div class="avatars-view__stack">
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=47" alt=""></div>
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
+            </div>
+          </div>
+          <div class="notification-cell__body">
+            <div class="ds-body-m notification-cell__title"><b>Виктория, Мария и Дмитрий</b> подарили вам 3 подарка 🎁</div>
+            <div class="ds-caption-m notification-cell__time">сегодня в 13:02</div>
+            <div class="notification-cell__actions">
+              <div class="button-wrapper __size-28"><button class="button-container __style-primary" data-action="open-gifts"><span class="button-content">Принять все</span></button></div>
+              <div class="button-wrapper __size-28"><button class="button-container __style-secondary"><span class="button-content">Посмотреть</span></button></div>
+            </div>
+          </div>
+        </div>
 
         <!-- 1. Рекомендуемый друг -->
         <div class="notification-cell" data-cat="friends">
@@ -207,6 +483,73 @@
       </div>
     </div>
 
+    <!-- ШТОРА С ПОДАРКАМИ -->
+    <div class="gift-sheet" id="giftSheet" aria-hidden="true">
+      <div class="gift-sheet__backdrop" data-action="close-gifts"></div>
+      <div class="gift-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="giftSheetTitle">
+        <div class="gift-sheet__handle"></div>
+        <button class="gift-sheet__close" data-action="close-gifts" aria-label="Закрыть">
+          <img src="assets/icons/close_16_20.svg" width="20" height="20" alt="">
+        </button>
+
+        <h2 class="gift-sheet__title" id="giftSheetTitle">Вам подарили<br>3 подарка!</h2>
+
+        <div class="gift-stack" id="giftStack">
+          <article class="gift-card" data-i="2">
+            <div class="gift-card__head">
+              <div class="avatar"><img src="https://i.pravatar.cc/40?img=12" alt=""></div>
+              <span class="name">Дмитрий Кузнецов</span>
+            </div>
+            <button class="gift-card__trash" aria-label="Удалить">
+              <img src="assets/icons/trash_16_20.svg" alt="">
+            </button>
+            <div class="gift-card__poster">
+              <div class="emoji">🐱</div>
+              <div class="text">Котиков<br>очень хочется!</div>
+            </div>
+          </article>
+
+          <article class="gift-card" data-i="1">
+            <div class="gift-card__head">
+              <div class="avatar"><img src="https://i.pravatar.cc/40?img=47" alt=""></div>
+              <span class="name">Мария Иванова</span>
+            </div>
+            <button class="gift-card__trash" aria-label="Удалить">
+              <img src="assets/icons/trash_16_20.svg" alt="">
+            </button>
+            <div class="gift-card__poster">
+              <div class="emoji">🌷</div>
+              <div class="text">Любимой</div>
+            </div>
+          </article>
+
+          <article class="gift-card" data-i="0">
+            <div class="gift-card__head">
+              <div class="avatar"><img src="https://i.pravatar.cc/40?img=23" alt=""></div>
+              <span class="name">Виктория Петрова</span>
+            </div>
+            <button class="gift-card__trash" aria-label="Удалить">
+              <img src="assets/icons/trash_16_20.svg" alt="">
+            </button>
+            <div class="gift-card__poster">
+              <div class="emoji">💐</div>
+              <div class="text">Спасибо<br>за дружбу</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="gift-sheet__final">
+          <div class="gift-sheet__final-title">Вы приняли<br>все подарки</div>
+          <div class="confetti" id="giftConfetti"></div>
+          <button class="gift-sheet__done" data-action="close-gifts">Готово</button>
+        </div>
+
+        <div class="gift-sheet__cta-wrap">
+          <button class="gift-sheet__cta" data-action="accept-all">Принять все</button>
+        </div>
+      </div>
+    </div>
+
     <!-- TABBAR -->
     <div class="ll-tabbar">
       <div class="tabbar __platform-ios">
@@ -243,5 +586,95 @@
   </script>
   <!-- навигация по таббару (feed → лента, message → сообщения) -->
   <script src="components/tab-bar.js"></script>
+
+  <!-- Штора с подарками: открытие, «Принять все», конфетти -->
+  <script>
+    (function () {
+      var sheet   = document.getElementById('giftSheet');
+      var trigger = document.getElementById('giftsTrigger');
+      var confetti = document.getElementById('giftConfetti');
+      if (!sheet || !trigger) return;
+
+      var colors = ['#ff6fa3', '#ffb547', '#3da9fc', '#7bd389', '#c084fc', '#ff6b6b'];
+      var built = false;
+
+      function buildConfetti() {
+        if (built) return;
+        built = true;
+        var N = 28;
+        for (var i = 0; i < N; i++) {
+          var p = document.createElement('i');
+          var ang = (Math.PI * 2 * i) / N + (Math.random() - 0.5) * 0.4;
+          var dist = 70 + Math.random() * 50;
+          var x = Math.cos(ang) * dist;
+          var y = Math.sin(ang) * dist - 10;
+          var r = (Math.random() * 720 - 360) | 0;
+          p.style.background = colors[i % colors.length];
+          p.style.setProperty('--x', x.toFixed(0) + 'px');
+          p.style.setProperty('--y', y.toFixed(0) + 'px');
+          p.style.setProperty('--r', r + 'deg');
+          p.style.setProperty('--d', (Math.random() * 220).toFixed(0) + 'ms');
+          confetti.appendChild(p);
+        }
+      }
+
+      function openSheet() {
+        sheet.classList.add('__visible');
+        sheet.classList.remove('__accepted');
+        sheet.setAttribute('aria-hidden', 'false');
+        // Чуть позже включаем «расклад в веер», чтобы дождаться сначала
+        // приезда панели — иначе карточки стартуют не из центра шторы.
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            sheet.classList.add('__entered');
+          });
+        });
+      }
+
+      function closeSheet() {
+        sheet.classList.remove('__entered', '__accepted', '__visible');
+        sheet.setAttribute('aria-hidden', 'true');
+        // Перезапускаем конфетти: пересоздаём ноды, чтобы анимация
+        // сыграла заново при следующем открытии.
+        if (confetti) confetti.innerHTML = '';
+        built = false;
+      }
+
+      function acceptAll() {
+        buildConfetti();
+        sheet.classList.add('__accepted');
+      }
+
+      // Открытие шторы — клик по ячейке (вне кнопок) или по «Принять все».
+      trigger.addEventListener('click', function (e) {
+        var btn = e.target.closest && e.target.closest('.button-container');
+        if (btn) {
+          if (btn.getAttribute('data-action') === 'open-gifts') openSheet();
+          // «Посмотреть» — пусть тоже открывает штору, шаг-в-шаг с CTA
+          else openSheet();
+          return;
+        }
+        openSheet();
+      });
+
+      trigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSheet(); }
+      });
+
+      // Делегирование внутри шторы
+      sheet.addEventListener('click', function (e) {
+        var t = e.target.closest && e.target.closest('[data-action]');
+        if (!t) return;
+        var act = t.getAttribute('data-action');
+        if (act === 'close-gifts') closeSheet();
+        else if (act === 'accept-all') acceptAll();
+      });
+
+      // Esc — закрыть
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sheet.classList.contains('__visible')) closeSheet();
+      });
+    })();
+  </script>
 </body>
 </html>
