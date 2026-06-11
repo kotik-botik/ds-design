@@ -289,8 +289,8 @@
              CTA-кнопка снизу — только у ВВЗ.
              TODO: PNG-заливка для аватарки — пока placeholder. -->
         <div class="avatar __size-56 __type-placeholder __ring-active"
-             data-stories="1" data-name="Возможно вы знаете" data-vvz
-             aria-label="Возможно вы знаете"></div>
+             data-stories="1" data-name="Возможно вы знакомы" data-vvz
+             aria-label="Возможно вы знакомы"></div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
         <!-- Просмотренные (серое кольцо) -->
         <div class="avatar __size-56 __type-image __ring-viewed" data-stories="4" data-name="Сергей"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
@@ -1055,7 +1055,7 @@
       function vvzBodyHtml() {
         var cards = VVZ_PEOPLE.map(vvzCardHtml).join('');
         return [
-          '<h2 class="moment__body-title">Возможно вы знаете</h2>',
+          '<h2 class="moment__body-title">Возможно вы знакомы</h2>',
           '<div class="moment__body-grid">' + cards + '</div>'
         ].join('');
       }
