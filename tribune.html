@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400&display=swap">
 <link rel="stylesheet" href="index.css">
 <style>
   * { -webkit-tap-highlight-color: transparent; }
@@ -150,6 +151,32 @@
 
       <!-- Лента постов — визуал text-feed из lenta-q3 -->
       <div class="feed-container">
+
+        <!-- 0. Стих — text-feed с __poem (Source Serif Pro 24/28) -->
+        <article class="text-feed island">
+          <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
+            <div class="avatar __size-44 __type-image"><img src="https://i.pravatar.cc/128?img=47" alt=""></div>
+            <div class="uni-cell-additional-content">
+              <div class="ds-title-s">Вера Шеняева (Селицкая)</div>
+              <div class="ds-caption-s text-feed__time">3 ч</div>
+            </div>
+            <label class="button-wrapper __size-28 button-subscribe"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><span class="button-subscribe__label-default">Подписаться</span><span class="button-subscribe__label-subscribed">Подписан</span></span></span></label>
+          </div></div></div>
+
+          <p class="text-feed__body __poem">
+            Опять у солнца выходной…<br>
+            А может просто отсыпной?<br>
+            Устало солнце нам светить<br>
+            Пора такое прекратить…
+          </p>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/comment_16_20.svg" width="20" height="20" alt="">&nbsp;11</span></button></div>
+            <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt=""></span></button></div>
+            <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 8;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
+            <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
 
         <!-- 1. Авторский пост с фото (как на скрине Figma — бишбармак) -->
         <article class="text-feed island">
