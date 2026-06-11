@@ -17,14 +17,14 @@
     background: var(--dynamic-surface-base-secondary);
   }
 
-  /* Сцена 360×800 — координаты карточек/заголовка взяты прямо из Figma.
-     На широких экранах сцена центрируется. */
+  /* Сцена — флекс-колонка во всю ширину, как другие прототипы.
+     Карточки внутри центрируются по горизонтали относительно середины
+     viewport (см. .gp-card { left: 50%; translateX } и JS). */
   .gp-scene {
     position: relative;
-    width: 360px;
+    width: 100%;
     height: 100dvh;
     min-height: 100dvh;
-    margin: 0 auto;
     overflow: hidden;
     background: var(--dynamic-surface-base-secondary);
   }
@@ -34,12 +34,12 @@
   /* Status bar — DS-компонент в обычном меше */
   .gp-scene .meshok-up { position: absolute; left: 0; right: 0; top: 0; z-index: 5; }
 
-  /* Крестик закрытия — отдельный icon в правом верхнем углу.
-     Координаты по Figma: x=315, y=79, size 24. Кликабельная область 44×44. */
+  /* Крестик закрытия — в правом верхнем углу, привязан к правому краю
+     viewport (а не к 360-сетке). По Figma расстояние до правого края 13px. */
   .gp__close {
     position: absolute;
-    top: 67px;            /* (79 - 12) — центрируем 44×44 цели вокруг 24×24 иконки */
-    left: 303px;          /* (315 - 12) */
+    top: 67px;
+    right: 13px;
     width: 44px; height: 44px;
     border: 0; padding: 0; background: transparent;
     display: flex; align-items: center; justify-content: center;
@@ -48,55 +48,42 @@
   }
   .gp__close .icon { width: 24px; height: 24px; }
 
-  /* Заголовок — абсолют. left=24, width=312 (Figma). top анимируется. */
+  /* Заголовок — абсолют, по центру через 50%+translateX. width=312 (Figma).
+     top анимируется JS-спрингом, CSS-transition только для opacity. */
   .gp__title {
     position: absolute;
-    left: 24px; width: 312px;
+    left: 50%;
+    width: 312px;
+    transform: translateX(-50%);
     text-align: center;
     font-size: 32px; line-height: 1.2;
     font-weight: 700;
     letter-spacing: 0;
     color: var(--dynamic-text-and-icons-base-primary);
     margin: 0;
-    /* Стейт 1 — title чуть выше центра, под крестиком */
     top: 249px;
-    transition: top 1500ms linear, opacity 280ms ease-out;
+    transition: opacity 280ms ease-out;
   }
   .gp.__state-2 .gp__title { top: 130px; }
 
-  /* Карточка-подарок — позиция/размер берутся из Figma, анимируются линейно. */
+  /* Карточка-подарок — left/top/width/height/transform тянутся JS-спрингом.
+     Базовая позиция (left: 50%) задаёт точку отсчёта по центру viewport;
+     JS дополняет inline-стилем точный сдвиг и размер. */
   .gp-card {
     position: absolute;
+    left: 50%;
     border-radius: 36px;
     overflow: hidden;
     background: #fff;
     border: 0.744px solid rgba(0,0,0,0.1);
     box-shadow: 0 22.332px 22.332px rgba(0,0,0,0.07);
     transform-origin: 50% 50%;
-    transition:
-      left   1500ms linear,
-      top    1500ms linear,
-      width  1500ms linear,
-      height 1500ms linear,
-      transform 1500ms linear,
-      opacity 1500ms linear;
   }
 
   /* z-index: Gift 1 — самая ближняя, Gift 3 — самая дальняя */
   .gp-card[data-i="1"] { z-index: 3; }
   .gp-card[data-i="2"] { z-index: 2; }
   .gp-card[data-i="3"] { z-index: 1; }
-
-  /* СТЕЙТ 1 — закрытый стак. Размер карточки 150.737×183.298, координаты
-     по top-left анротированной карточки (учитывается оффсет от bbox-обёртки). */
-  .gp-card[data-i="3"] { left: 110.23px; top: 434.90px; width: 150.737px; height: 183.298px; transform: rotate(-6.46deg); }
-  .gp-card[data-i="2"] { left: 110.13px; top: 448.69px; width: 150.737px; height: 183.298px; transform: rotate(0.5deg);  }
-  .gp-card[data-i="1"] { left: 104.47px; top: 466.47px; width: 150.737px; height: 183.298px; transform: rotate(9.78deg); }
-
-  /* СТЕЙТ 2 — раскрытый веер. Размер карточки 223.319×260.539. */
-  .gp.__state-2 .gp-card[data-i="3"] { left: 42.36px;  top: 246.98px; width: 223.319px; height: 260.539px; transform: rotate(-7.21deg);  }
-  .gp.__state-2 .gp-card[data-i="2"] { left: 126.21px; top: 349.48px; width: 223.319px; height: 260.539px; transform: rotate(15deg);    }
-  .gp.__state-2 .gp-card[data-i="1"] { left: 23.46px;  top: 429.91px; width: 223.319px; height: 260.539px; transform: rotate(-16.48deg);}
 
   /* Внутренности карточки — uniCell (avatar + имя) + постер */
   .gp-card__head {
@@ -238,15 +225,85 @@
 
 <script src="components/back-button.js"></script>
 <script>
-  // Простой переключатель state-1 → state-2 после короткой паузы.
-  // CSS-transitions с linear 1500ms тянут left/top/width/height/transform.
+  // Спринг (k=96, c=6, m=1, ζ≈0.306 — недодемпфированный с лёгким перехлёстом).
+  // Прогоняет left/top/width/height/rotation у трёх карточек и top у заголовка
+  // в одной rAF-петле. Все 5 величин на каждом объекте бегут одной spring-кривой.
   (function () {
     var root = document.getElementById('gp');
     if (!root) return;
-    var DELAY = 500;     // пауза перед запуском
+
+    var SPRING = { k: 96, c: 6, m: 1, duration: 2000, delay: 500 };
+    var omega0 = Math.sqrt(SPRING.k / SPRING.m);
+    var zeta   = SPRING.c / (2 * Math.sqrt(SPRING.k * SPRING.m));
+    var omegaD = omega0 * Math.sqrt(Math.max(0, 1 - zeta * zeta));
+    function springProgress(tMs) {
+      var t = tMs / 1000;
+      if (zeta < 1) {
+        return 1 - Math.exp(-zeta * omega0 * t) *
+          (Math.cos(omegaD * t) + (zeta * omega0 / omegaD) * Math.sin(omegaD * t));
+      }
+      return 1 - (1 + omega0 * t) * Math.exp(-omega0 * t);
+    }
+
+    // Стейт 1 → стейт 2 для каждой карточки и заголовка.
+    var CARDS = [
+      { i: 3, from: { l: 110.23, t: 434.90, w: 150.737, h: 183.298, r: -6.46  },
+              to:   { l: 42.36,  t: 246.98, w: 223.319, h: 260.539, r: -7.21  } },
+      { i: 2, from: { l: 110.13, t: 448.69, w: 150.737, h: 183.298, r:  0.5   },
+              to:   { l: 126.21, t: 349.48, w: 223.319, h: 260.539, r: 15     } },
+      { i: 1, from: { l: 104.47, t: 466.47, w: 150.737, h: 183.298, r:  9.78  },
+              to:   { l: 23.46,  t: 429.91, w: 223.319, h: 260.539, r: -16.48 } }
+    ];
+    var TITLE = { from: 249, to: 130 };
+
+    var els = CARDS.map(function (c) {
+      return root.querySelector('.gp-card[data-i="' + c.i + '"]');
+    });
+    var titleEl = root.querySelector('.gp__title');
+
+    // s.l — это left в 360-сетке Figma. Сдвиг -180 переводит его в
+     // координаты относительно центра viewport (CSS даёт left: 50%).
+    function applyCard(el, s) {
+      el.style.top    = s.t.toFixed(3) + 'px';
+      el.style.width  = s.w.toFixed(3) + 'px';
+      el.style.height = s.h.toFixed(3) + 'px';
+      el.style.transform =
+        'translateX(' + (s.l - 180).toFixed(3) + 'px) rotate(' + s.r.toFixed(3) + 'deg)';
+    }
+
+    // Стартовое состояние выставляем инлайн-стилем — это совпадает с CSS,
+    // но защищает от конфликта с .__state-2-правилом во время анимации.
+    CARDS.forEach(function (c, idx) { applyCard(els[idx], c.from); });
+    titleEl.style.top = TITLE.from + 'px';
+
     setTimeout(function () {
+      // Перекидываем класс — карточки и так уже на старте через inline,
+      // .__state-2 пригодится для финального оседания и для accept-all.
       root.classList.add('__state-2');
-    }, DELAY);
+
+      var t0 = performance.now();
+      function frame(now) {
+        var elapsed = Math.min(SPRING.duration, now - t0);
+        var p = springProgress(elapsed);
+        CARDS.forEach(function (c, idx) {
+          applyCard(els[idx], {
+            l: c.from.l + (c.to.l - c.from.l) * p,
+            t: c.from.t + (c.to.t - c.from.t) * p,
+            w: c.from.w + (c.to.w - c.from.w) * p,
+            h: c.from.h + (c.to.h - c.from.h) * p,
+            r: c.from.r + (c.to.r - c.from.r) * p
+          });
+        });
+        titleEl.style.top = (TITLE.from + (TITLE.to - TITLE.from) * p).toFixed(3) + 'px';
+        if (elapsed < SPRING.duration) requestAnimationFrame(frame);
+        else {
+          // Финальное точное состояние — оставляем inline с точными to-значениями.
+          CARDS.forEach(function (c, idx) { applyCard(els[idx], c.to); });
+          titleEl.style.top = TITLE.to + 'px';
+        }
+      }
+      requestAnimationFrame(frame);
+    }, SPRING.delay);
   })();
 </script>
 
