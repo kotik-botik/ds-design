@@ -298,6 +298,14 @@
           3: { cx: 180, cy: 441, s: 1, r: 0, o: 1 },
           2: { cx: 492, cy: 441, s: 1, r: 0, o: 1 },
           1: { cx: 804, cy: 441, s: 1, r: 0, o: 1 }
+      }},
+      // Стейт 5 (exit) — «Принять все» внизу. Карточки ужимаются до
+      // стейта 1 (scale 0.50246, рутации той же стопки) и уходят ВНИЗ
+      // за viewport (cy ≈ +310 к state 1), opacity → 0. Title едет вниз.
+      { title: 312, cards: {
+          3: { cx: 185.600, cy: 836.510, s: 0.50246, r: -6.46,  o: 0 },
+          2: { cx: 185.503, cy: 850.341, s: 0.50246, r:  0.50,  o: 0 },
+          1: { cx: 179.842, cy: 868.120, s: 0.50246, r:  9.78,  o: 0 }
       }}
     ];
     // data-i отражает порядок «спереди-назад» в стопочно-веерных стейтах
@@ -362,7 +370,7 @@
       // Коммитим current ДО смены классов: re-entrant observer-ы увидят
       // согласованное состояние (класс и current указывают на один индекс).
       current = toIdx;
-      root.classList.remove('__state-1', '__state-2', '__state-3', '__state-4');
+      root.classList.remove('__state-1', '__state-2', '__state-3', '__state-4', '__state-5');
       root.classList.add('__state-' + (toIdx + 1));
 
       function done() {
@@ -634,6 +642,40 @@
       scene.addEventListener('pointermove', onMove);
       scene.addEventListener('pointerup', onUp);
       scene.addEventListener('pointercancel', onCancel);
+
+      // ── «Принять все» (нижний CTA) ─────────────────────────────
+      // Возвращаем карточки в стейт 2 (веер), потом ужимаем до стейта 1
+      // и уводим вниз за viewport с opacity 0 (STATES[4] / __state-5).
+      var acceptAllBtn = document.getElementById('gpAcceptAll');
+      if (acceptAllBtn && !acceptAllBtn.dataset.wired) {
+        acceptAllBtn.dataset.wired = '1';
+        acceptAllBtn.addEventListener('click', function () {
+          if (animating) return;
+          if (!liveCards.length) return;
+          // Останавливаем активный снап + бэйкаем текущий panOffset в
+          // STATES[3].cards.cx, чтобы from-снапшот transitionTo был
+          // визуально точным (без рывка из off-axis в state-2-fan).
+          if (snapRaf) { cancelAnimationFrame(snapRaf); snapRaf = null; }
+          if (panOffset !== 0) {
+            liveCards.forEach(function (j) {
+              STATES[3].cards[j].cx += panOffset;
+            });
+            panOffset = 0;
+            snapped = 0;
+          }
+          setActiveAll(false);
+          // Шаг 1: обратно в веер (state 2 = index 1) спрингом.
+          transitionTo(1, {
+            mode: 'spring', duration: 700,
+            onDone: function () {
+              setTimeout(function () {
+                // Шаг 2: вниз + ужать + opacity 0 (state 5 = index 4).
+                transitionTo(4, { mode: 'spring', duration: 900 });
+              }, 200);
+            }
+          });
+        });
+      }
     }
 
     // ── СЦЕНАРИЙ ────────────────────────────────────────────────
