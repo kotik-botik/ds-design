@@ -191,6 +191,25 @@
   animation-play-state: paused;
 }
 
+/* ============================================================
+   LONG-PRESS — при удержании прячем все UI-контролы (как в Instagram),
+   оставляем только контент сториз и опц. CTA-кнопку. Анимация прогресса
+   ставится на паузу через .__state-paused (см. выше).
+   ============================================================ */
+.moment__statusbar,
+.moment__topbar,
+.moment__scrim,
+.moment__handle {
+  transition: opacity 200ms ease;
+}
+.moment.__state-pressed .moment__statusbar,
+.moment.__state-pressed .moment__topbar,
+.moment.__state-pressed .moment__scrim,
+.moment.__state-pressed .moment__handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
 @keyframes moment-progress {
   from { transform: translateX(-100%); }
   to   { transform: translateX(0); }
