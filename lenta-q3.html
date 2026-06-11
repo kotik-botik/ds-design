@@ -288,7 +288,12 @@
           </div>
         </div>
         <!-- Не просмотренные (оранжевое кольцо). -->
-        <div class="avatar __size-56 __type-image __ring-active" data-stories="3" data-name="Лиза"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
+        <!-- Сториз именинника: радужное кольцо + 🎂-бейдж + спец-шаблон в viewer'е. -->
+        <div class="avatar __size-56 __type-image __ring-active __has-addon"
+             data-bday data-stories="1" data-name="Лиза">
+          <img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt="">
+          <div class="avatar__addon __pos-br stories-row__bday-badge">🎂</div>
+        </div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="5" data-name="Алексей"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
 
         <!-- ВВЗ-сториз: одна палочка, заголовок и сетка 2×2 карточек.
@@ -978,6 +983,22 @@
               title:  'Возможно вы знакомы',
               people: VVZ_PEOPLE,
               cta:    { label: 'Показать всех' }
+            })];
+          }
+          // Именинная сториз — фото-фон именинника + блюр снизу + текст.
+          // Фото берём прямо с аватарки из стака.
+          if (ava.hasAttribute('data-bday')) {
+            var img = ava.querySelector('img');
+            var name = ava.getAttribute('data-name') || '';
+            // Под "День рождения …" — род. падеж имени.
+            var GENITIVE = { 'Лиза': 'Лизы', 'Алексей': 'Алексея', 'Дима': 'Димы' };
+            var gen = GENITIVE[name] || name;
+            return [MomentViewer.bdaySlide({
+              photo:          img ? img.src : '',
+              name:           gen,
+              headerTitle:    'День рождения ' + gen,
+              headerSubtitle: '3 часа назад',
+              cta:            'Поздравить'
             })];
           }
           return null;

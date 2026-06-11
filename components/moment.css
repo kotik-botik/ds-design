@@ -259,6 +259,10 @@
   padding: 0 var(--space-3);
   min-height: 38px;
 }
+/* Аватарка в шапке копируется из стака целиком (applyAuthor → innerHTML).
+   Возможные DS-аддоны (🎂, «+» и т.п.) в маленькой шапочной аватарке
+   выглядят инородно — гасим их там. */
+.moment__header .avatar__addon { display: none; }
 .moment__header-text {
   flex: 1 1 0;
   min-width: 0;
@@ -337,6 +341,78 @@
 }
 .moment__cta .button-container {
   width: 100%;
+}
+
+/* ============================================================
+   BDAY — именинный шаблон сториз.
+   Включается через .moment.__view-bday. Внутри слот .moment__bday
+   занимает нижнюю половину карточки и состоит из:
+     • blur-слоя (backdrop-blur, маска снизу-вверх — плавный fade-in
+       блюра, чтобы верхняя часть фото оставалась резкой);
+     • контентного блока с тремя строками текста (kicker / heading
+       / name), отцентрированными по горизонтали.
+   Header (avatar + title + subtitle) остаётся видимым.
+   ============================================================ */
+.moment__bday {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+.moment__bday-blur {
+  position: absolute;
+  inset: 0;
+  -webkit-backdrop-filter: blur(40px);
+          backdrop-filter: blur(40px);
+  background-color: rgba(0, 0, 0, 0.2);
+  /* Маска: блюр прозрачен сверху и набирает силу к низу — резкая
+     верхняя половина фото плавно переходит в размытый низ. */
+  -webkit-mask-image: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 25%);
+          mask-image: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 25%);
+}
+.moment__bday-content {
+  position: relative;
+  z-index: 1;
+  /* Над CTA-кнопкой ещё 44 (bottom CTA) + 44 (высота CTA) + 16 (gap). */
+  padding: 0 var(--space-3) calc(44px + 44px + var(--space-4));
+  text-align: center;
+  color: var(--static-text-and-icons-base-inverse-primary);
+}
+.moment__bday-kicker {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-family);
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: 0.24px;
+  color: rgba(255, 255, 255, 0.64);
+}
+.moment__bday-heading {
+  margin: 0 0 var(--space-1-5);
+  /* OK Sans Display не подключён глобально — даём фолбэк на общий
+     системный шрифт. Размер/жирность точно как в Figma. */
+  font-family: 'OK Sans Display', var(--font-family);
+  font-size: 48px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+.moment__bday-name {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: 0.24px;
 }
 
 /* ============================================================
