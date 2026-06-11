@@ -191,8 +191,113 @@
     this.root.removeEventListener('animationend', this._onAnimEnd);
   };
 
+  // ============================================================
+  // BIND-ROW — связка карусели аватарок (.stories-row) с viewer'ом
+  //
+  //   MomentViewer.bindRow(rowEl, viewerEl, {
+  //     slides: function (avatarEl) { return [{ color, src, cta, ... }, …]; },
+  //     // Не обязателен. Если не передан — по data-stories на аватарке
+  //     // и data-cta-label делается базовый набор пустых сегментов.
+  //   });
+  //
+  // Из data-атрибутов аватарки берётся:
+  //   data-stories     — количество сегментов прогресса (default 1)
+  //   data-name        — заголовок в шапке viewer'а
+  //   data-cta-label   — лейбл CTA-кнопки снизу (если есть)
+  //   data-skip-viewer — аватарка не открывает viewer
+  //
+  // Сам viewer должен содержать:
+  //   .moment__progress, .moment__header-title, .moment__header .avatar img,
+  //   .moment__cta (опц.), [aria-label="Закрыть"] (опц., для тапа на крестик).
+  // ============================================================
+  function bindRow(rowEl, viewerEl, options) {
+    options = options || {};
+    var currentAva = null;
+    var instance = null;
+
+    function avatars() {
+      return Array.prototype.filter.call(
+        rowEl.querySelectorAll('.avatar'),
+        function (a) { return !a.hasAttribute('data-skip-viewer'); }
+      );
+    }
+
+    function slidesFor(ava) {
+      if (typeof options.slides === 'function') return options.slides(ava);
+      var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
+      var ctaLabel = ava.getAttribute('data-cta-label');
+      var list = [];
+      for (var i = 0; i < count; i++) {
+        var s = {};
+        if (ctaLabel) s.cta = { label: ctaLabel };
+        list.push(s);
+      }
+      return list;
+    }
+
+    function applyAuthor(ava) {
+      currentAva = ava;
+      var titleEl = viewerEl.querySelector('.moment__header-title');
+      if (titleEl) titleEl.textContent = ava.getAttribute('data-name') || '';
+      var avaImg = viewerEl.querySelector('.moment__header .avatar img');
+      var srcImg = ava.querySelector('img');
+      if (avaImg && srcImg) avaImg.src = srcImg.src;
+    }
+
+    function markViewed(ava) {
+      if (!ava) return;
+      ava.classList.remove('__ring-active');
+      ava.classList.add('__ring-viewed');
+    }
+
+    // Шаг к соседней аватарке. dir = +1 | -1. true = переход выполнен.
+    function step(dir) {
+      var list = avatars();
+      var i = list.indexOf(currentAva);
+      var nextAva = list[i + dir];
+      if (!nextAva) return false;
+      if (dir > 0) markViewed(currentAva);
+      applyAuthor(nextAva);
+      instance.setSlides(slidesFor(nextAva));
+      instance.go(0);
+      return true;
+    }
+
+    function open(ava) {
+      applyAuthor(ava);
+      viewerEl.hidden = false;
+
+      if (instance) instance.destroy();
+      instance = new MomentViewer(viewerEl, {
+        slides: slidesFor(ava),
+        onNext: function () { return step(+1); },
+        onPrev: function () { return step(-1); },
+        onClose: function () {
+          viewerEl.hidden = true;
+          markViewed(currentAva);
+        }
+      });
+    }
+
+    rowEl.addEventListener('click', function (e) {
+      var ava = e.target.closest('.avatar');
+      if (!ava || !rowEl.contains(ava)) return;
+      if (ava.hasAttribute('data-skip-viewer')) return;
+      open(ava);
+    });
+
+    var closeBtn = viewerEl.querySelector('[aria-label="Закрыть"]');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (instance) instance._finish();
+      });
+    }
+  }
+
   // Экспорт
   window.MomentViewer = {
-    init: function (root, options) { return new MomentViewer(root, options); }
+    init: function (root, options) { return new MomentViewer(root, options); },
+    bindRow: bindRow
   };
 })();

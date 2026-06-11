@@ -985,103 +985,30 @@
   <!-- Просмотрщик сториз ----------------------------------------------- -->
   <script src="components/moment.js"></script>
   <script>
-    // Связка карусели сториз и moment-viewer'а.
-    //  - тап по аватарке → открывается viewer
-    //  - сегментов прогресса столько, сколько указано в data-stories
-    //  - тап на правую половину / таймер: следующий сегмент. На последнем —
-    //    переход к следующему автору в карусели (как в инсте). Если автор
-    //    последний — viewer закрывается.
-    //  - тап на левую половину: предыдущий сегмент. На нулевом — к предыдущему
-    //    автору; на самой первой аватарке остаёмся в начале.
-    //  - кольцо просмотренной аватарки → __ring-viewed.
+    // Связка карусели сториз и moment-viewer'а через DS-метод
+    // MomentViewer.bindRow. Всё поведение (тапы lev/prav, переход между
+    // авторами, маркировка просмотренных, открытие/закрытие) — внутри.
+    // Снаружи остаётся только выбор того, чем заполнить слайды.
     (function () {
-      // На картинку сториз — простая цветная заливка. Палитра ротируется
-      // по индексу сегмента, чтобы между сторизами визуально была разница.
       var STORY_COLORS = ['#FF7700', '#5856D6', '#34C759', '#FF3B30', '#007AFF', '#AF52DE'];
 
       var row    = document.getElementById('ll-stories-row');
       var viewer = document.getElementById('ll-moment');
-      var closeBtn   = document.getElementById('ll-moment-close');
-      var currentAvatar = null;
-      var instance = null;
-
       if (!row || !viewer) return;
 
-      // Аватарки, которые реально открывают viewer (без «Вашей истории»)
-      function avatars() {
-        return Array.prototype.filter.call(
-          row.querySelectorAll('.avatar'),
-          function (a) { return !a.hasAttribute('data-skip-viewer'); }
-        );
-      }
-
-      function slidesFor(ava) {
-        var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
-        var ctaLabel = ava.getAttribute('data-cta-label');
-        var slides = [];
-        for (var i = 0; i < count; i++) {
-          var slide = { color: STORY_COLORS[i % STORY_COLORS.length] };
-          if (ctaLabel) slide.cta = { label: ctaLabel };
-          slides.push(slide);
-        }
-        return slides;
-      }
-
-      function applyAuthor(ava) {
-        currentAvatar = ava;
-        viewer.querySelector('.moment__header-title').textContent = ava.getAttribute('data-name') || '';
-        viewer.querySelector('.moment__header .avatar img').src   = ava.querySelector('img').src;
-      }
-
-      function markViewed(ava) {
-        if (!ava) return;
-        ava.classList.remove('__ring-active');
-        ava.classList.add('__ring-viewed');
-      }
-
-      // Переход к соседнему автору карусели. dir = +1 (вправо) | -1 (влево).
-      // true  — переход выполнен (страница подменила слайды), viewer не закрываем.
-      // false — соседа нет: для +1 компонент сам вызовет onClose, для -1 останется
-      //         на текущем сегменте (clamp на 0).
-      function step(dir) {
-        var list = avatars();
-        var i = list.indexOf(currentAvatar);
-        var nextAva = list[i + dir];
-        if (!nextAva) return false;
-        if (dir > 0) markViewed(currentAvatar);
-        applyAuthor(nextAva);
-        instance.setSlides(slidesFor(nextAva));
-        instance.go(0);
-        return true;
-      }
-
-      row.addEventListener('click', function (e) {
-        var ava = e.target.closest('.avatar');
-        if (!ava) return;
-        if (ava.hasAttribute('data-skip-viewer')) return;
-        open(ava);
-      });
-
-      closeBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (instance) instance._finish();
-      });
-
-      function open(ava) {
-        applyAuthor(ava);
-        viewer.hidden = false;
-
-        if (instance) instance.destroy();
-        instance = window.MomentViewer.init(viewer, {
-          slides: slidesFor(ava),
-          onNext: function () { return step(+1); },
-          onPrev: function () { return step(-1); },
-          onClose: function () {
-            viewer.hidden = true;
-            markViewed(currentAvatar);
+      window.MomentViewer.bindRow(row, viewer, {
+        slides: function (ava) {
+          var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
+          var ctaLabel = ava.getAttribute('data-cta-label');
+          var list = [];
+          for (var i = 0; i < count; i++) {
+            var s = { color: STORY_COLORS[i % STORY_COLORS.length] };
+            if (ctaLabel) s.cta = { label: ctaLabel };
+            list.push(s);
           }
-        });
-      }
+          return list;
+        }
+      });
     })();
   </script>
 
