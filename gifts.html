@@ -152,10 +152,7 @@
           <span class="gift-card__name ds-body-m">Виктория Петрова</span>
         </div>
         <div class="gift-card__img">
-          <div class="gift-card__poster">
-            <div class="gift-card__poster-emoji">💐</div>
-            <div class="gift-card__poster-text">Спасибо<br>за дружбу</div>
-          </div>
+          <img class="gift-card__photo" src="https://gifotkrytki.ru/_ph/2/2/933237960.gif" alt="" loading="lazy">
         </div>
       </div>
       <div class="gift-card__accept">
@@ -179,10 +176,7 @@
           <span class="gift-card__name ds-body-m">Мария Иванова</span>
         </div>
         <div class="gift-card__img">
-          <div class="gift-card__poster">
-            <div class="gift-card__poster-emoji">🌷</div>
-            <div class="gift-card__poster-text">Любимой</div>
-          </div>
+          <img class="gift-card__photo" src="https://i.pinimg.com/originals/66/e6/94/66e694e55cbeb513cb966a8fe3eace42.gif" alt="" loading="lazy">
         </div>
       </div>
       <div class="gift-card__accept">
@@ -206,10 +200,7 @@
           <span class="gift-card__name ds-body-m">Дмитрий Кузнецов</span>
         </div>
         <div class="gift-card__img">
-          <div class="gift-card__poster">
-            <div class="gift-card__poster-emoji">🐱</div>
-            <div class="gift-card__poster-text">Шашлычков<br>очень хочется!</div>
-          </div>
+          <img class="gift-card__photo" src="https://i.pinimg.com/originals/6a/ce/be/6acebe49b3f9ded9c96e66c095d0a4c0.gif" alt="" loading="lazy">
         </div>
       </div>
       <div class="gift-card__accept">
@@ -284,29 +275,29 @@
     //   ty = cy - 175
     //   scale = unrotated_w / 300
     var STATES = [
-      // Стейт 1 — закрытый стак.
+      // Стейт 1 — закрытый стак. opacity 0.3 (карточки приглушены).
       { title: 249, cards: {
-          3: { cx: 185.600, cy: 526.545, s: 0.50246, r: -6.46  },
-          2: { cx: 185.503, cy: 540.341, s: 0.50246, r:  0.50  },
-          1: { cx: 179.842, cy: 558.120, s: 0.50246, r:  9.78  }
+          3: { cx: 185.600, cy: 526.545, s: 0.50246, r: -6.46,  o: 0.3 },
+          2: { cx: 185.503, cy: 540.341, s: 0.50246, r:  0.50,  o: 0.3 },
+          1: { cx: 179.842, cy: 558.120, s: 0.50246, r:  9.78,  o: 0.3 }
       }},
       // Стейт 2 — раскрытый веер.
       { title: 130, cards: {
-          3: { cx: 154.014, cy: 377.251, s: 0.74440, r: -7.21  },
-          2: { cx: 237.871, cy: 479.750, s: 0.74440, r:  15    },
-          1: { cx: 135.122, cy: 560.177, s: 0.74440, r: -16.48 }
+          3: { cx: 154.014, cy: 377.251, s: 0.74440, r: -7.21,  o: 1 },
+          2: { cx: 237.871, cy: 479.750, s: 0.74440, r:  15,    o: 1 },
+          1: { cx: 135.122, cy: 560.177, s: 0.74440, r: -16.48, o: 1 }
       }},
       // Стейт 3 — в ряд, шаг 312 (300 + gap 12), первая на x=125.
       { title: 130, cards: {
-          3: { cx: 275, cy: 441, s: 1, r: 0 },
-          2: { cx: 587, cy: 441, s: 1, r: 0 },
-          1: { cx: 899, cy: 441, s: 1, r: 0 }
+          3: { cx: 275, cy: 441, s: 1, r: 0, o: 1 },
+          2: { cx: 587, cy: 441, s: 1, r: 0, o: 1 },
+          1: { cx: 899, cy: 441, s: 1, r: 0, o: 1 }
       }},
       // Стейт 4 — сдвинут влево, первая ровно по центру (cx=180).
       { title: 130, cards: {
-          3: { cx: 180, cy: 441, s: 1, r: 0 },
-          2: { cx: 492, cy: 441, s: 1, r: 0 },
-          1: { cx: 804, cy: 441, s: 1, r: 0 }
+          3: { cx: 180, cy: 441, s: 1, r: 0, o: 1 },
+          2: { cx: 492, cy: 441, s: 1, r: 0, o: 1 },
+          1: { cx: 804, cy: 441, s: 1, r: 0, o: 1 }
       }}
     ];
     // data-i отражает порядок «спереди-назад» в стопочно-веерных стейтах
@@ -334,6 +325,7 @@
         'scale(' + s.s.toFixed(5) + ') ' +
         'rotate(' + s.r.toFixed(3) + 'deg)';
       el.style.setProperty('--gift-card-scale', s.s.toFixed(5));
+      if (s.o !== undefined) el.style.opacity = s.o.toFixed(3);
     }
 
     var current = 0;
@@ -401,11 +393,14 @@
         var p = progress(elapsed);
         IDX.forEach(function (i) {
           var fc = from.cards[i], tc = to.cards[i];
+          var fo = fc.o !== undefined ? fc.o : 1;
+          var to_ = tc.o !== undefined ? tc.o : 1;
           applyCard(els[i], {
             cx: fc.cx + (tc.cx - fc.cx) * p,
             cy: fc.cy + (tc.cy - fc.cy) * p,
             s:  fc.s  + (tc.s  - fc.s)  * p,
-            r:  fc.r  + (tc.r  - fc.r)  * p
+            r:  fc.r  + (tc.r  - fc.r)  * p,
+            o:  fo    + (to_   - fo)    * p
           }, 0);
         });
         titleEl.style.top =
@@ -581,7 +576,6 @@
             el.style.transform =
               'translate(' + tx.toFixed(2) + 'px, ' + ty.toFixed(2) + 'px) ' +
               'scale(1) rotate(' + rot + 'deg)';
-            el.style.opacity = '0';
           });
           setTimeout(removeFromRow, FLY_DUR);
         }
