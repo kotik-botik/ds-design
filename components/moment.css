@@ -209,10 +209,14 @@
   right: 0;
   bottom: 80px;  /* выше CTA/handle */
   z-index: 2;
-  padding: var(--space-4);
+  /* 16 сверху и по бокам, 32 снизу (по дизайну).
+     Flex column — чтобы сетка растягивалась на всю доступную высоту. */
+  padding: var(--space-4) var(--space-4) var(--space-8);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
 }
 .moment__body::-webkit-scrollbar { display: none; }
 
@@ -227,11 +231,13 @@
   margin: 0 0 var(--space-2);
 }
 
-/* Сетка 2×2 для карточек ВВЗ внутри body. */
+/* Сетка 2×2 для карточек ВВЗ внутри body. Растягивается на всю доступную
+   высоту (заголовок занимает свой размер, остаток — карточки). */
 .moment__body-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-2);
+  flex: 1 1 auto;
 }
 /* В сетке карточка занимает всю ячейку — снимаем фикс. ширину 160px из vvz-card */
 .moment__body-grid > .vvz-card {
