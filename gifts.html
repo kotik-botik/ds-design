@@ -92,17 +92,16 @@
   .gp.__phase-start .gp-card {
     opacity: 0.3;
   }
-  /* Старт — уже компактный веер (стак-веером): карточки заметно
-     разнесены по углам и tx/ty, но в меньшем масштабе (0.682 = 150/220).
-     Цифры повёрнуты под CSS-конвенцию (Figma положительный = CCW). */
+  /* Старт — компактный фан-стак: карточки под углами, но плотно сгруппированы.
+     Масштаб 0.682 = 150/220. Знаки повёрнуты под CSS-конвенцию. */
   .gp.__phase-start .gp-card[data-i="0"] {
-    transform: translate(-65%, -32%) scale(0.682) rotate(6deg);
+    transform: translate(-55%, -14%) scale(0.682) rotate(6deg);
   }
   .gp.__phase-start .gp-card[data-i="1"] {
-    transform: translate(-35%, -26%) scale(0.682) rotate(0.5deg);
+    transform: translate(-43%, -8%) scale(0.682) rotate(0.5deg);
   }
   .gp.__phase-start .gp-card[data-i="2"] {
-    transform: translate(-52%, -10%) scale(0.682) rotate(9deg);
+    transform: translate(-50%, -2%) scale(0.682) rotate(9deg);
   }
 
   /* Стадия 2 — FAN. Карточки разъезжаются в веер и масштабируются вверх.
@@ -446,14 +445,15 @@
       return 1 - (1 + omega0 * t) * Math.exp(-omega0 * t);
     }
 
-    // Старт — уже компактный веер (стак-веером), не глухая стопка.
-    // Финал — раскрытый веер. Всего 2 шага, между ними один спринг.
+    // Старт — компактный фан-стак (карточки уже под углами, но плотно).
+    // Финал — раскрытый веер. Между ними один спринг: и контейнер растёт
+    // по высоте, и карточки разлетаются — всё в одной spring-кривой.
     var CARDS = [
-      { i: 0, from: { tx: -65, ty: -32, sc: 0.682, rot:  6     },
+      { i: 0, from: { tx: -55, ty: -14, sc: 0.682, rot:  6     },
               to:   { tx: -78, ty: -68, sc: 1,    rot: -7.21 } },
-      { i: 1, from: { tx: -35, ty: -26, sc: 0.682, rot:  0.5   },
+      { i: 1, from: { tx: -43, ty: -8,  sc: 0.682, rot:  0.5   },
               to:   { tx: -22, ty: -52, sc: 1,    rot:  15   } },
-      { i: 2, from: { tx: -52, ty: -10, sc: 0.682, rot:  9     },
+      { i: 2, from: { tx: -50, ty: -2,  sc: 0.682, rot:  9     },
               to:   { tx: -52, ty: -20, sc: 1,    rot: -16   } }
     ];
     var els = CARDS.map(function (c) {
@@ -470,8 +470,8 @@
     // Стек растёт по высоте: 220 → 440 (≈ x2). За счёт justify-content:flex-end
     // на родителе .gp__center заголовок физически выталкивается наверх по мере
     // увеличения высоты стека.
-    var STACK_H_FROM = 220;
-    var STACK_H_TO   = 440;
+    var STACK_H_FROM = 240;
+    var STACK_H_TO   = 380;
     stackEl.style.height = STACK_H_FROM + 'px';
 
     // 1) Зафиксируем старт инлайн-стилями, чтобы CSS-rule .__phase-start
@@ -503,8 +503,10 @@
         // Стек растёт по той же spring-кривой → толкает заголовок наверх.
         stackEl.style.height = (STACK_H_FROM + (STACK_H_TO - STACK_H_FROM) * p).toFixed(2) + 'px';
 
-        // Прозрачность — параллельная независимая дорожка, линейно за duration.
-        var op = (0.3 + 0.7 * (elapsed / SPRING.duration)).toFixed(3);
+        // Прозрачность — тот же spring-progress, что и у карточек/стека.
+        // Все четыре движения (transform, scale, rotate, opacity, height стека)
+        // едут по одному spring-кадру одновременно.
+        var op = Math.max(0, Math.min(1, 0.3 + 0.7 * p)).toFixed(3);
         CARDS.forEach(function (_, idx) { els[idx].style.opacity = op; });
 
         if (elapsed < SPRING.duration) requestAnimationFrame(frame);
