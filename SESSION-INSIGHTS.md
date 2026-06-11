@@ -90,17 +90,26 @@
 
 ## 5. Единый компонент «Назад»
 
-- Канон: `.nav-bar__back` = `button-inline __size-24` + иконка `back_24.svg`. Поведение и анимацию даёт `screen-transition.js` (`history.back()` по умолчанию, опц. `data-href`).
+- Канон: `.nav-bar__back` = `button-inline __size-24` + иконка-слот `.icon __size-24 __slot-back` (DS mask-иконка, перекрашивается через currentColor). Поведение и анимацию даёт `screen-transition.js` (`history.back()` по умолчанию, опц. `data-href`).
 - На странице ничего не прокидываем — достаточно класса `.nav-bar__back` в навбаре + `screen-transition.js` в `<head>`.
 - Используется одинаково в `messages.html`, `tribune.html`, `notifications.html`.
 
 ---
 
-## 6. Анимации скрытия (vvz-card)
+## 6. Скрытие строки карточек — компонент `dismissible`
 
-- Контейнер `[data-vvz]`, крестик карточки `[data-vvz-hide]`, «Скрыть» `[data-vvz-hide-all]` (логика в `components/vvz-card.js`).
-- Затухание `ease-in-out 500ms` (opacity + лёгкий scale). Удалили последнюю карточку → схлопываем весь контейнер.
-- **Плавное «подъезжание» нижних ячеек:** фиксируем `height` контейнера в px, затем в `requestAnimationFrame` анимируем `height/padding/margin → 0`. Просто `display:none`/`remove()` даёт скачок.
+Закрытие/схлопывание вынесено в **общий** компонент `components/dismissible.{css,js}`
+(используется и в VVZ-блоке сообщений, и в friend-card-блоке ленты — не дублируем логику):
+
+- `data-dismiss-row` — контейнер-строка; `data-dismiss-target` — карточка;
+  `data-dismiss` — закрыть ближайшую карточку; `data-dismiss="row"` — закрыть всю строку.
+- Закрыли последнюю карточку → строка тоже схлопывается.
+- Затухание `ease-in-out 500ms` (opacity + лёгкий scale).
+- **Плавное «подъезжание» нижних ячеек:** фиксируем `height` контейнера в px, затем в
+  `requestAnimationFrame` анимируем `height/padding/margin → 0`. Просто `display:none`/`remove()` даёт скачок.
+
+📌 Инсайт: одинаковое поведение в двух местах (лента + сообщения) → выносим в один
+behaviour-компонент с `data-*`-хуками, а не копируем скрипт по страницам.
 
 ---
 
