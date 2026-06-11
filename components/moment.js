@@ -129,7 +129,18 @@
           }
         }
         bdayHost.innerHTML =
-          '<div class="moment__bday-blur"></div>' +
+          // Progressive blur 0 → 80 px: стек из 6 слоёв с возрастающими
+          // backdrop-filter и масками-полосками. Верх слота — почти резко,
+          // низ — сильно размыто. Поверх лёгкий dark-tint для контраста.
+          '<div class="moment__bday-blur">' +
+            '<div class="moment__bday-blur-step __b-1"></div>' +
+            '<div class="moment__bday-blur-step __b-2"></div>' +
+            '<div class="moment__bday-blur-step __b-3"></div>' +
+            '<div class="moment__bday-blur-step __b-4"></div>' +
+            '<div class="moment__bday-blur-step __b-5"></div>' +
+            '<div class="moment__bday-blur-step __b-6"></div>' +
+            '<div class="moment__bday-blur-tint"></div>' +
+          '</div>' +
           '<div class="moment__bday-content">' +
             '<p class="moment__bday-kicker">' + (s.bday.kicker || 'Сегодня') + '</p>' +
             '<h2 class="moment__bday-heading">' + (s.bday.heading || 'День рождения') + '</h2>' +
