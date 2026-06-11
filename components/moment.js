@@ -118,6 +118,12 @@
         }
       }
       if (s.color) this.root.style.backgroundColor = s.color;
+      // s.duration — опциональный override длительности сегмента (CSS-переменная
+      // --moment-duration). Используется, например, в bdaySlide, чтобы после
+      // улёта шариков (~5.7s) оставалось ещё 2s «передышки» на тап «Поздравить».
+      if (s.duration != null) {
+        this.root.style.setProperty('--moment-duration', s.duration);
+      }
       var title = this.root.querySelector('.moment__header-title');
       if (title && s.title != null) title.textContent = s.title;
       var sub = this.root.querySelector('.moment__header-subtitle');
@@ -598,7 +604,10 @@
         kicker:  opts.kicker  || 'Сегодня',
         heading: opts.heading || 'День рождения',
         name:    opts.name    || ''
-      }
+      },
+      // Шары летят ~5.7s (5.4s + 0.30s стаггер); даём ещё ~2s «передышки»
+      // на тап «Поздравить». Можно переопределить через opts.duration.
+      duration: opts.duration || '8s'
     };
     if (opts.headerTitle    != null) slide.title    = opts.headerTitle;
     if (opts.headerSubtitle != null) slide.subtitle = opts.headerSubtitle;
