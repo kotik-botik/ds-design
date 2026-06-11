@@ -82,7 +82,7 @@
   }
   .ll-gift:active { transform: scale(0.97); }
 
-  /* Squircle-постер; внутри — заливка-градиент с текстом-«надписью». */
+  /* Squircle-постер: real-image открытка. Заполняет квадрат, object-fit: cover. */
   .ll-gift__poster {
     position: relative;
     width: 100%;
@@ -90,60 +90,14 @@
     border-radius: 20px;
     overflow: hidden;
     background: var(--dynamic-surface-contrast-low);
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    line-height: 1;
-    padding: 16px;
-    box-sizing: border-box;
+    display: block;
     user-select: none;
   }
-  .ll-gift__poster-text {
-    text-shadow: 0 2px 4px rgba(0,0,0,0.18);
-  }
-
-  /* Палитры постеров — стилизация под Figma */
-  .ll-gift.__p-thanks-yellow .ll-gift__poster {
-    background:
-      radial-gradient(circle at 50% 38%, #ffe07a 0%, #ffb938 55%, #d97e00 100%);
-    color: #c41f1f;
-    font-size: 36px;
-  }
-  .ll-gift.__p-birthday-pink .ll-gift__poster {
-    background:
-      linear-gradient(160deg, #ffd1e8 0%, #ff7fb4 45%, #c2185b 100%);
-    color: #fff;
-    font-size: 28px;
-    line-height: 0.95;
-  }
-  .ll-gift.__p-rival-green .ll-gift__poster {
-    background:
-      linear-gradient(160deg, #e8f3d6 0%, #b6d68a 50%, #5d7a3a 100%);
-    color: #2c5f15;
-    font-size: 26px;
-    line-height: 0.95;
-  }
-  .ll-gift.__p-dog-orange .ll-gift__poster {
-    background:
-      radial-gradient(circle at 60% 40%, #ffe0a0 0%, #f7a85b 60%, #c0651a 100%);
-    color: #c41f1f;
-    font-size: 22px;
-    line-height: 0.95;
-  }
-  .ll-gift.__p-friend-magenta .ll-gift__poster {
-    background:
-      linear-gradient(160deg, #ffd3ee 0%, #e857a9 55%, #6a1855 100%);
-    color: #fff;
-    font-size: 28px;
-    line-height: 0.95;
-  }
-  .ll-gift.__p-rose-red .ll-gift__poster {
-    background:
-      radial-gradient(circle at 50% 55%, #ffd76b 0%, #ff7a36 50%, #aa1f1f 100%);
-    color: #fff8c5;
-    font-size: 28px;
-    line-height: 0.95;
+  .ll-gift__poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>
 </head>
@@ -202,33 +156,33 @@
 
         <div class="ll-gc-grid">
 
-          <a class="ll-gift __p-thanks-yellow" href="send-gift.html?gift=thanks">
-            <span class="ll-gift__poster"><span class="ll-gift__poster-text">СПАСИБО!</span></span>
+          <a class="ll-gift" href="send-gift.html?gift=cake">
+            <span class="ll-gift__poster"><img src="https://cdn.fkimages.ru/posts/big/kartinka-s-dnem-rozhdeniya-odnoklassniku-s-nadpisyu-239.jpg" alt="" loading="lazy"></span>
             <span class="price-tag">0 ОК</span>
           </a>
 
-          <a class="ll-gift __p-birthday-pink" href="send-gift.html?gift=birthday">
-            <span class="ll-gift__poster"><span class="ll-gift__poster-text">С ДНЁМ<br>РОЖДЕНИЯ</span></span>
+          <a class="ll-gift" href="send-gift.html?gift=bouquet">
+            <span class="ll-gift__poster"><img src="https://cool.klev.club/uploads/posts/2025-05/2630/na_den_rozhdeniya_odnoklassniku_15_9e514099.jpg" alt="" loading="lazy"></span>
             <span class="price-tag">0 ОК</span>
           </a>
 
-          <a class="ll-gift __p-rival-green" href="send-gift.html?gift=rival">
-            <span class="ll-gift__poster"><span class="ll-gift__poster-text">Любимая<br>соперниц<br>не имеет</span></span>
+          <a class="ll-gift" href="send-gift.html?gift=classic">
+            <span class="ll-gift__poster"><img src="https://cdn.fkimages.ru/posts/big/kartinka-s-dnem-rozhdeniya-odnoklassnik-1841.jpg" alt="" loading="lazy"></span>
             <span class="price-tag">0 ОК</span>
           </a>
 
-          <a class="ll-gift __p-dog-orange" href="send-gift.html?gift=dog">
-            <span class="ll-gift__poster"><span class="ll-gift__poster-text">ОТ ВСЕЙ<br>ДУШИ!</span></span>
+          <a class="ll-gift" href="send-gift.html?gift=heart">
+            <span class="ll-gift__poster"><img src="https://play-lh.googleusercontent.com/DIUjj_0djlD0xfteoleEnmD6CkmpIqMoHMwuH3AvhL85duDITmjEr9w_ib_VAC3ejQc=w240-h480-rw" alt="" loading="lazy"></span>
             <span class="price-tag">0 ОК</span>
           </a>
 
-          <a class="ll-gift __p-friend-magenta" href="send-gift.html?gift=friendship">
-            <span class="ll-gift__poster"><span class="ll-gift__poster-text">Спасибо<br>за дружбу</span></span>
+          <a class="ll-gift" href="send-gift.html?gift=social">
+            <span class="ll-gift__poster"><img src="https://123ot.ru/img/00003/skachaty-besplatno-whatsapp-odnoklassniki-instagram-774945.jpg" alt="" loading="lazy"></span>
             <span class="price-tag">2 ОК</span>
           </a>
 
-          <a class="ll-gift __p-rose-red" href="send-gift.html?gift=rose">
-            <span class="ll-gift__poster"><span class="ll-gift__poster-text">Спасибо,<br>родная!</span></span>
+          <a class="ll-gift" href="send-gift.html?gift=flowers">
+            <span class="ll-gift__poster"><img src="https://kartinki-life.ru/articles/2020/02/07/kartinki-i-otkrytki-s-dnjom-rozhdeniya-22-7.jpg" alt="" loading="lazy"></span>
             <span class="price-tag">5 ОК</span>
           </a>
 

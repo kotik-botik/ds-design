@@ -37,34 +37,24 @@
     display: flex; flex-direction: column; gap: var(--space-4);
   }
 
-  /* Preview подарка — squircle по центру + price-tag «прикреплён» снизу-справа */
+  /* Preview подарка — squircle + price-tag по центру под ним. */
   .ll-sg-preview {
     align-self: center;
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--space-1);
+  }
+  .ll-sg-preview__poster {
     position: relative;
     width: 140px; height: 140px;
     border-radius: 24px;
-    overflow: visible;          /* tag выходит за squircle */
-  }
-  .ll-sg-preview__poster {
-    position: absolute; inset: 0;
-    border-radius: 24px;
     overflow: hidden;
-    background:
-      linear-gradient(160deg, #ffd1e8 0%, #ff7fb4 45%, #c2185b 100%);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-    font-size: 22px; line-height: 0.95;
-    font-weight: 800;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.18);
-    padding: 12px;
-    box-sizing: border-box;
+    background: var(--dynamic-surface-contrast-low);
     user-select: none;
   }
-  .ll-sg-preview .price-tag {
-    position: absolute;
-    bottom: -12px;
-    right: 8px;
+  .ll-sg-preview__poster img {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover;
   }
 
   /* Поле «Сообщение к открытке» — линейное (одна линия снизу) поле + счётчик */
@@ -104,12 +94,22 @@
     display: inline-flex; align-items: center; gap: var(--space-1);
   }
 
-  /* Селектор получателей — uni-cell на contrast-low с иконкой подарка слева
-     и стрелкой справа. Высота 56. */
-  .ll-sg-recipient {
+  /* Объединённый «баннер» отправки: селектор получателей + CTA внутри одной
+     светло-кремовой плашки (contrast-low). */
+  .ll-sg-give {
     background-color: var(--dynamic-surface-contrast-low);
     border-radius: 20px;
-    padding: var(--space-4);
+    padding: var(--space-2);
+    display: flex; flex-direction: column; gap: var(--space-2);
+  }
+  /* Ряд «Всем друзьям» — иконка + лейбл + chevron-right. Прозрачный фон,
+     потому что подкладку даёт .ll-sg-give. */
+  .ll-sg-recipient {
+    background: transparent;
+    border: 0;
+    width: 100%;
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
     display: flex; align-items: center; gap: var(--space-3);
     cursor: pointer;
     transition: var(--ds-transition-transform);
@@ -139,29 +139,19 @@
     color: var(--dynamic-text-and-icons-base-secondary);
   }
 
-  /* Строка-друг — uni-cell, кнопка справа */
-  .ll-sg-friend .uni-cell { align-items: center; }
+  /* Строка-друг — uni-cell. У DS .uni-cell нет дефолтного gap'а (его задают
+     специализированные подклассы вроде message-cell). Здесь сами кладём
+     gap 12 и центрируем по вертикали. */
+  .ll-sg-friend .uni-cell {
+    align-items: center;
+    gap: var(--space-3);
+  }
   .ll-sg-friend__name { color: var(--dynamic-text-and-icons-base-primary); }
   .ll-sg-friend__sent {
     margin-left: auto;
     color: var(--dynamic-text-and-icons-base-secondary);
   }
 
-  /* Тост: чёрная плашка снизу */
-  .ll-sg-toast {
-    position: fixed;
-    left: 50%;
-    bottom: 24px;
-    transform: translateX(-50%);
-    z-index: 80;
-    padding: 12px 20px;
-    border-radius: 24px;
-    background-color: var(--static-surface-base-inverse-primary, #1a1a1c);
-    color: var(--static-text-and-icons-base-inverse-primary, #fff);
-    font-family: var(--font-family);
-    font-size: 15px; line-height: 20px;
-    box-shadow: 0 8px 20px -6px rgba(0,0,0,0.32);
-  }
 </style>
 </head>
 <body>
@@ -197,9 +187,9 @@
       <!-- ВЕРХНИЙ ИСЛАНД: preview + message + privacy + recipient + CTA -->
       <section class="ll-sg-card">
 
-        <!-- Preview открытки -->
+        <!-- Preview открытки. Картинку и цену подставляет JS по ?gift=… -->
         <div class="ll-sg-preview">
-          <div class="ll-sg-preview__poster">Ещё<br>в путь не<br>бо!</div>
+          <div class="ll-sg-preview__poster"><img id="sgPreviewImg" src="https://cdn.fkimages.ru/posts/big/kartinka-s-dnem-rozhdeniya-odnoklassniku-s-nadpisyu-239.jpg" alt=""></div>
           <span class="price-tag" id="sgPrice">2 ОК</span>
         </div>
 
@@ -221,18 +211,19 @@
           <span class="ds-body-l ll-sg-row__value">Публичный</span>
         </div>
 
-        <!-- Селектор получателей -->
-        <button class="ll-sg-recipient" type="button" aria-label="Выбрать получателей: Всем друзьям">
-          <img class="ll-icon ll-sg-recipient__icon" src="assets/icons/gift_24.svg" width="24" height="24" alt="">
-          <span class="ds-body-l ll-sg-recipient__label">Всем друзьям</span>
-          <img class="ll-icon ll-sg-recipient__chevron" src="assets/icons/chevron_down_24.svg" width="24" height="24" alt="">
-        </button>
-
-        <!-- CTA «Подарить за N ОК» -->
-        <div class="button-wrapper __size-56 __full-width">
-          <button class="button-container __style-primary" id="sgGiveBtn" style="width:100%;">
-            <span class="button-content">Подарить за 2 ОК</span>
+        <!-- Селектор получателей + CTA — в одном кремовом баннере -->
+        <div class="ll-sg-give">
+          <button class="ll-sg-recipient" type="button" aria-label="Выбрать получателей: Всем друзьям">
+            <img class="ll-icon ll-sg-recipient__icon" src="assets/icons/gift_24.svg" width="24" height="24" alt="">
+            <span class="ds-body-l ll-sg-recipient__label">Всем друзьям</span>
+            <img class="ll-icon ll-sg-recipient__chevron" src="assets/icons/chevron_down_24.svg" width="24" height="24" alt="">
           </button>
+
+          <div class="button-wrapper __size-36 __full-width">
+            <button class="button-container __style-primary" id="sgGiveBtn" style="width:100%;">
+              <span class="button-content">Подарить за 2 ОК</span>
+            </button>
+          </div>
         </div>
 
       </section>
@@ -305,13 +296,31 @@
 
     </div>
 
-    <!-- ТОСТ — появляется на одиночный «Отправить» из списка -->
-    <div class="ll-sg-toast" id="sgToast" hidden>Открытка отправлена</div>
-
   </div>
 
   <script src="components/back-button.js"></script>
   <script>
+    // Подставляем картинку + цену preview по ?gift= из gifts-catalog.
+    (function () {
+      var GIFTS = {
+        cake:     { src: 'https://cdn.fkimages.ru/posts/big/kartinka-s-dnem-rozhdeniya-odnoklassniku-s-nadpisyu-239.jpg', price: '0 ОК' },
+        bouquet:  { src: 'https://cool.klev.club/uploads/posts/2025-05/2630/na_den_rozhdeniya_odnoklassniku_15_9e514099.jpg', price: '0 ОК' },
+        classic:  { src: 'https://cdn.fkimages.ru/posts/big/kartinka-s-dnem-rozhdeniya-odnoklassnik-1841.jpg', price: '0 ОК' },
+        heart:    { src: 'https://play-lh.googleusercontent.com/DIUjj_0djlD0xfteoleEnmD6CkmpIqMoHMwuH3AvhL85duDITmjEr9w_ib_VAC3ejQc=w240-h480-rw', price: '0 ОК' },
+        social:   { src: 'https://123ot.ru/img/00003/skachaty-besplatno-whatsapp-odnoklassniki-instagram-774945.jpg', price: '2 ОК' },
+        flowers:  { src: 'https://kartinki-life.ru/articles/2020/02/07/kartinki-i-otkrytki-s-dnjom-rozhdeniya-22-7.jpg', price: '5 ОК' }
+      };
+      var id = new URLSearchParams(location.search).get('gift');
+      var g = GIFTS[id];
+      if (!g) return;
+      var img = document.getElementById('sgPreviewImg');
+      var price = document.getElementById('sgPrice');
+      var cta = document.getElementById('sgGiveBtn');
+      if (img) img.src = g.src;
+      if (price) price.textContent = g.price;
+      if (cta) cta.querySelector('.button-content').textContent = 'Подарить за ' + g.price;
+    })();
+
     // Счётчик символов «Сообщения к открытке».
     (function () {
       var ta = document.getElementById('sgMessage');
@@ -322,35 +331,16 @@
       });
     })();
 
-    // Тост «Открытка отправлена» — на любой Send-кнопке (CTA / per-friend).
+    // Per-friend «Отправить» → заменяем кнопку статусом «Отправлено».
     (function () {
-      var toast = document.getElementById('sgToast');
-      if (!toast) return;
-      var hideTimer = null;
-      function show(text) {
-        toast.textContent = text;
-        toast.hidden = false;
-        if (hideTimer) clearTimeout(hideTimer);
-        hideTimer = setTimeout(function () { toast.hidden = true; }, 2200);
-      }
-
-      var giveBtn = document.getElementById('sgGiveBtn');
-      if (giveBtn) {
-        giveBtn.addEventListener('click', function () { show('Открытка отправлена всем друзьям'); });
-      }
-
       document.querySelectorAll('[data-give]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          var name = btn.closest('.uni-cell').querySelector('.ll-sg-friend__name').textContent.trim();
-          // Заменяем кнопку статусом «Отправлено» — как в макете.
           var wrap = btn.closest('.button-wrapper');
-          if (wrap) {
-            var sent = document.createElement('span');
-            sent.className = 'ds-body-m ll-sg-friend__sent';
-            sent.textContent = 'Отправлено';
-            wrap.replaceWith(sent);
-          }
-          show('Открытка отправлена: ' + name);
+          if (!wrap) return;
+          var sent = document.createElement('span');
+          sent.className = 'ds-body-m ll-sg-friend__sent';
+          sent.textContent = 'Отправлено';
+          wrap.replaceWith(sent);
         });
       });
     })();
