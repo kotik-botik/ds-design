@@ -25,30 +25,46 @@
   }
   .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
 
-  /* Контент страницы — флекс-колонка между навбаром и нижним CTA */
+  /* Контент страницы — позиционируем как relative-контейнер,
+     чтобы и заголовок, и стек могли двигаться через transform. */
   .gp {
+    position: relative;
     flex: 1 1 auto;
     display: flex; flex-direction: column;
     min-height: 0;
   }
 
-  /* Заголовок страницы — крупный, два ряда, по левому краю */
+  /* Заголовок — по центру по горизонтали. На старте стоит чуть выше центра
+     экрана; в фазе fan карточки «выталкивают» его наверх. */
   .gp__title {
-    margin: 24px 24px 0;
+    position: absolute;
+    left: 0; right: 0;
+    margin: 0 24px;
+    text-align: center;
     font-size: 28px; line-height: 32px;
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--dynamic-text-and-icons-base-primary);
-    transition: opacity 280ms cubic-bezier(.2,.8,.2,1),
-                transform 280ms cubic-bezier(.2,.8,.2,1);
+    z-index: 4;
+    /* Старт: чуть выше центра контента (минус половина собственной высоты). */
+    top: 38%;
+    transform: translateY(-50%);
+    transition:
+      top 620ms cubic-bezier(.2,.8,.2,1),
+      transform 620ms cubic-bezier(.2,.8,.2,1),
+      opacity 280ms ease-out;
+  }
+  /* Веер: заголовок уезжает в верхнюю зону экрана. */
+  .gp.__phase-fan .gp__title {
+    top: 24px;
+    transform: translateY(0);
   }
 
-  /* Стек карточек — занимает всё доступное пространство между заголовком и CTA */
+  /* Стек карточек — флекс-растяжка между навбаром и нижним CTA */
   .gp__stack {
     position: relative;
     flex: 1 1 auto;
     min-height: 320px;
-    margin: 8px 0 0;
   }
 
   /* Все карточки лежат в центре стек-контейнера; смещения дают transform-ы */
