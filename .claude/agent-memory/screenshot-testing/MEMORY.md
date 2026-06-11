@@ -128,3 +128,10 @@ screen-transition.js теперь подключён синхронным `<scri
 ## Отдача пользователю
 - `SendUserFile` в subagent-окружении может быть НЕ доступен (ToolSearch может не находить). Тогда: показывай скриншоты через `Read` на PNG из `/tmp` — кадр попадает в транскрипт, родительский агент его видит. Пути указывай абсолютными в финальном тексте.
 - Если `SendUserFile` всё-таки доступен — лучше одним вызовом со списком файлов и общей подписью.
+- Подтверждено 2026-06-11 ещё раз: `ToolSearch select:SendUserFile` вернул «No matching». Сразу идти через `Read` на PNG.
+
+## lenta-q3.html — memory-карточки (наблюдено 2026-06-11)
+- Скроллер фида = `.phone-frame__feed`, не window. Скриптом: `feed.scrollTop += (target.getBoundingClientRect().top - feed.getBoundingClientRect().top) - 60`.
+- Карточка «7 лет назад в этот день»: article #4 в фиде (idx 3 из 14), верстается на ~1393px от верха feed-контента. Все DS-токены попадают: title fontSize 27px / 600, eye-icon 16×16, share-btn primary orange (255,119,0), more-btn secondary 52×44, like-аватары `__size-36` рендерятся 40×40 в стеке (вероятно за счёт border-обводки в avatars-view — это норма для overlap-стека).
+- Карточка «Вас отметили на фото 2 года назад»: article #14 (idx 13). Avatar `__size-72` сверху без uni-cell (имени/времени нет — подтверждено `card.querySelector('.uni-cell')===null`). Media full-bleed: `width:390px`, `left:0`, `right:390` — точно касается боковых краёв island'а (cardLeft/cardRight тоже 0/390). Container `.text-feed` имеет `overflow:hidden` + `borderRadius:20px` + `padding:0` по горизонтали — поэтому full-bleed внутри скруглённого острова работает. Tooltip-wrapper `__view-primary __side-bottom __placement-bottom-start`, bg `rgb(26,26,28)` (тёмный), white text, хвостик 12×6 над углом — рендерится корректно. Share-btn один, width 358 (full-width в padding-16), `__pinned-end`/more-btn отсутствует (buttonCount=1).
+- Удалённые ассеты (avatar img от pravatar, unsplash, okcdn) в локальном Chromium НЕ грузятся (показываются placeholder-иконкой), но это не влияет на layout-чек.
