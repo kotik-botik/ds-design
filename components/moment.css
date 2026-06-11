@@ -216,12 +216,12 @@
 }
 .moment__body::-webkit-scrollbar { display: none; }
 
+/* Типографика — DS-класс .ds-title-xl, навешивается в moment.js рядом
+   с .moment__body-title. Здесь только специфика: цвет, выравнивание,
+   отступ под сетку. */
 .moment__body-title {
-  font-family: var(--font-family);
-  font-size: 27px;
-  line-height: 34px;
-  font-weight: 600;
-  letter-spacing: 0.24px;
+  display: block;
+  width: 100%;
   text-align: center;
   color: var(--static-text-and-icons-base-inverse-primary);
   margin: 0 0 var(--space-2);

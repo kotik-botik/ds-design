@@ -409,7 +409,7 @@
     var renderCard = (window.VvzCard && window.VvzCard.render) || function () { return ''; };
     var cards = people.map(renderCard).join('');
     var body = [
-      '<h2 class="moment__body-title">' + (opts.title || '') + '</h2>',
+      '<h2 class="moment__body-title ds-title-xl">' + (opts.title || '') + '</h2>',
       '<div class="moment__body-grid">' + cards + '</div>'
     ].join('');
     var slide = { color: opts.color || '#2E2F33', body: body };
