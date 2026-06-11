@@ -267,6 +267,15 @@
           <img src="assets/icons/vvz_stories.png" alt="">
         </div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
+
+        <!-- Сториз годовщины дружбы — пакет из 2 слайдов, в шапке стек из
+             двух аватарок (двойная авА через .stories-row__couple). -->
+        <div class="avatar __size-56 __ring-active stories-row__couple"
+             data-stories="2" data-name="Анна и Кристина" data-friendship
+             aria-label="Анна и Кристина">
+          <span class="stories-row__face" style="background-image: url('https://i.pravatar.cc/96?img=47');"></span>
+          <span class="stories-row__face" style="background-image: url('https://i.pravatar.cc/96?img=49');"></span>
+        </div>
         <!-- Просмотренные (серое кольцо) -->
         <div class="avatar __size-56 __type-image __ring-viewed" data-stories="4" data-name="Сергей"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
         <div class="avatar __size-56 __type-image __ring-viewed" data-stories="3" data-name="Евгения"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
@@ -934,6 +943,8 @@
         { name: 'Мария Лебедева',   sub: '29 лет, Казань',         img: 'https://i.pravatar.cc/192?img=45' }
       ];
 
+      var FRIENDSHIP_AVATARS = ['https://i.pravatar.cc/192?img=47', 'https://i.pravatar.cc/192?img=49'];
+
       MomentViewer.bindRow(row, viewer, {
         slides: function (ava) {
           // ВВЗ-сториз — собирается из готового хелпера, иначе null → fallback
@@ -960,6 +971,23 @@
               headerSubtitle: '3 часа назад',
               cta:            'Поздравить'
             })];
+          }
+          // Годовщина дружбы — пакет из 2 слайдов
+          if (ava.hasAttribute('data-friendship')) {
+            return [
+              MomentViewer.friendshipSlide({
+                title:   '7 лет дружбы',
+                sub:     'С 1 июня 2023 года',
+                avatars: FRIENDSHIP_AVATARS,
+                cta:     { label: 'Отправить другу' }
+              }),
+              MomentViewer.friendshipSlide({
+                title:   '478 подарков',
+                sub:     'С 1 июня 2023 года',
+                avatars: FRIENDSHIP_AVATARS,
+                cta:     { label: 'Отправить видео' }
+              })
+            ];
           }
           return null;
         }

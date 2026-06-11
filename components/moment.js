@@ -367,19 +367,51 @@
       var titleEl = viewerEl.querySelector('.moment__header-title');
       if (titleEl) titleEl.textContent = ava.getAttribute('data-name') || '';
 
-      // Аватар в шапке viewer'а — копия аватарки из стака сториз.
-      // Копируем тип (__type-image / __type-placeholder / __type-emoji / …)
-      // и содержимое (img / emoji-символ), сохраняя свой __size-36.
-      var headerAva = viewerEl.querySelector('.moment__header > .avatar');
-      if (headerAva) {
-        Array.prototype.slice.call(headerAva.classList).forEach(function (c) {
-          if (/^__type-/.test(c)) headerAva.classList.remove(c);
+      // Аватар в шапке viewer'а — копия из источника. Поддерживаем два случая:
+      //  1) источник .avatar — копируем classы __type-* и innerHTML в .avatar в шапке
+      //  2) источник содержит .avatars-view (стек из 2+ ав) — заменяем .avatar в
+      //     шапке клоном .avatars-view с принудительным __size-24
+      var headerSlot = viewerEl.querySelector('.moment__header > .avatar, .moment__header > .avatars-view');
+      if (!headerSlot) return;
+
+      var sourceView = ava.querySelector ? ava.querySelector('.avatars-view') : null;
+      if (sourceView) {
+        var clone = sourceView.cloneNode(true);
+        clone.classList.add('__size-24'); // в шапке avatars-view меньше
+        Array.prototype.slice.call(clone.classList).forEach(function (c) {
+          if (/^__size-(?!24$)/.test(c)) clone.classList.remove(c);
         });
-        Array.prototype.slice.call(ava.classList).forEach(function (c) {
-          if (/^__type-/.test(c)) headerAva.classList.add(c);
+        // Уменьшим аватарки внутри стека до __size-24
+        Array.prototype.slice.call(clone.querySelectorAll('.avatar')).forEach(function (a) {
+          Array.prototype.slice.call(a.classList).forEach(function (c) {
+            if (/^__size-/.test(c)) a.classList.remove(c);
+          });
+          a.classList.add('__size-24');
         });
-        headerAva.innerHTML = ava.innerHTML;
+        headerSlot.replaceWith(clone);
+        return;
       }
+
+      // Одна аватарка — старая логика
+      if (!headerSlot.classList.contains('avatar')) {
+        // в шапке сейчас .avatars-view, нужно вернуть .avatar
+        var fresh = document.createElement('div');
+        fresh.className = 'avatar __size-36 __type-image';
+        fresh.innerHTML = '<img src="" alt="">';
+        headerSlot.replaceWith(fresh);
+        headerSlot = fresh;
+      }
+      // Чистим все классы кроме базового avatar и размера __size-36, добавляем
+      // все классы источника кроме его __size-* и __ring-* (свой размер
+      // сохраняем, кольцо не нужно).
+      Array.prototype.slice.call(headerSlot.classList).forEach(function (c) {
+        if (c !== 'avatar' && c !== '__size-36') headerSlot.classList.remove(c);
+      });
+      Array.prototype.slice.call(ava.classList).forEach(function (c) {
+        if (c === 'avatar' || /^__size-/.test(c) || /^__ring-/.test(c)) return;
+        headerSlot.classList.add(c);
+      });
+      headerSlot.innerHTML = ava.innerHTML;
     }
 
     function markViewed(ava) {
@@ -541,13 +573,40 @@
     return slide;
   }
 
+  // ============================================================
+  // FRIENDSHIP-SLIDE — фабрика слайда «годовщина дружбы».
+  //   MomentViewer.friendshipSlide({
+  //     title:   '7 лет дружбы',
+  //     sub:     'С 1 июня 2023 года',
+  //     avatars: ['url1', 'url2'],
+  //     cta:     { label: 'Отправить другу' }
+  //   });
+  // ============================================================
+  function friendshipSlide(opts) {
+    opts = opts || {};
+    var avas = (opts.avatars || []).map(function (src) {
+      return '<div class="avatar __size-96 __type-image"><img src="' + src + '" alt=""></div>';
+    }).join('');
+    var body = [
+      '<div class="friendship-story">',
+        '<div class="friendship-story__avatars">' + avas + '</div>',
+        '<h2 class="friendship-story__title">' + (opts.title || '') + '</h2>',
+        '<p class="friendship-story__sub">' + (opts.sub || '') + '</p>',
+      '</div>'
+    ].join('');
+    var slide = { body: body };
+    if (opts.cta) slide.cta = opts.cta;
+    return slide;
+  }
+
   // Экспорт
   window.MomentViewer = {
-    init:      function (root, options) { return new MomentViewer(root, options); },
-    bindRow:   bindRow,
-    create:    createViewer,
-    vvzSlide:  vvzSlide,
-    bdaySlide: bdaySlide,
-    palette:   DEFAULT_PALETTE
+    init:            function (root, options) { return new MomentViewer(root, options); },
+    bindRow:         bindRow,
+    create:          createViewer,
+    vvzSlide:        vvzSlide,
+    bdaySlide:       bdaySlide,
+    friendshipSlide: friendshipSlide,
+    palette:         DEFAULT_PALETTE
   };
 })();
