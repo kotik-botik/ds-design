@@ -116,6 +116,23 @@ screen-transition.js теперь подключён синхронным `<scri
 - Лог переживает навигацию только через `sessionStorage` (объект window.__vtlog обнуляется на новой странице).
 - Направление визуально доказывать НЕ скриншотом, а `getAnimations().effect.pseudoElement` + `.animationName` + `getKeyframes()` на входящей странице сразу после reveal (rAF×4). Имя кейфрейма = бесспорное доказательство ветки.
 
+### Progressive blur 0→80px в bday-шаблоне (наблюдён 2026-06-11, commit d71098e — НОВАЯ схема)
+- Структура: `.moment__bday-blur` → 6 × `.moment__bday-blur-step.__b-1..__b-6` + `.moment__bday-blur-tint` сверху.
+- НОВАЯ маска (commit d71098e, заменила полосы): `linear-gradient(transparent var(--bday-blur-p), black 100%)`. Только fade-in, без fade-out. У самого низа активны ВСЕ 6 слоёв, итоговый блюр доминируется самым большим (80px). Сверху активен только L1.
+- Подтверждённые computed values (через `getComputedStyle().backdropFilter`): __b-1=blur(2px) p=0%, __b-2=blur(5px) p=16%, __b-3=blur(12px) p=33%, __b-4=blur(24px) p=50%, __b-5=blur(44px) p=66%, __b-6=blur(80px) p=83%.
+- Визуально (cropped bottom-half на цветном SVG с горизонтальной сеткой и подписями y=0..1600): прогрессия плавная — линии y=0..y=400 чётко читаются (верх), к y=700 уже еле, у y=1100-1300 (где сидит «День рождения / Поздравить») фон полностью ватный, ROW-метки неузнаваемы. Никаких горизонтальных полос/ступенек на стыках слоёв — переход монотонный.
+- Старая схема (commit 0d20976, ПОЛОСЫ `from/to`): радиусы 2/6/14/28/50/80, диапазоны [0-20]/[16-36]/[32-52]/[48-68]/[64-84]/[80-100], тоже без видимых ступенек, но к нижней кромке маска каждого слоя возвращалась к 100% black с резкой границей — d71098e это убрал.
+- Тест-рецепт для подобных «прогрессивных» эффектов: подменяй background SVG'ом с явно различимыми горизонтальными ориентирами (линии каждые 100 px, текст-метки) — на скриншоте сразу видно, в какой зоне фон уже не читается. Без таких ориентиров крутость блюра на градиенте не оценить.
+
+### MomentViewer bdaySlide — ПОЧИНЕНО (наблюдён 2026-06-11, commit 0922fb1)
+- Раньше: `.moment__media` отсутствовал в шаблоне → фото silently dropped, карточка была чёрной; CTA хардкодился `secondary-on-color` (стеклянный) для всех слайдов.
+- Фикс: (а) в `createViewer()` в HTML-шаблон добавлены `<img class="moment__media">` и `<div class="moment__scrim">`; (б) в `go()` CTA-style теперь читается из `s.cta.style` (`opts.style || 'secondary-on-color'` как дефолт); (в) `bdaySlide()` передаёт `style: 'primary'`.
+- Подтверждено в браузере: media есть (display:block, 390×844, object-fit:cover, src выставлен), scrim есть, CTA wrapper = `__style-primary`, computed bg = `rgb(255, 119, 0)` (DS-orange), text white, лейбл «Поздравить». Header «День рождения Лизы / 3 часа назад» рендерится.
+- Закрытие через × ТЕПЕРЬ маркирует viewed — после клика `[aria-label="Закрыть"]` аватарка Лизы получает `__ring-viewed` (раньше оставалась `__ring-active`, маркилось только Escape). data-bday и `.stories-row__bday-badge` (🎂) на аватарке сохраняются после закрытия — это just persistent data атрибуты, не сбрасываются.
+- ВВЗ-регрессия: НЕ затронуто. ВВЗ-сториз по-прежнему открывается с тёмным фоном #2E2F33, body-grid из 4 карточек, CTA «Показать всех» = `__style-secondary-on-color` (rgba(255,255,255,0.16)). media display:none когда src не задан (ветка `else if (s.color)` в go() при `s.src` falsy + s.color заданном корректно скрывает <img>).
+- Селектор bday-аватарки в стаке: `.avatar[data-bday]` (атрибут без значения). data-name="Лиза", data-stories="1". Ring — псевдоэлемент `[data-name="Лиза"]::before` с conic-gradient (8 hues), анимация `stories-bday-ring 1.6s cubic-bezier(.22,.61,.36,1)`.
+- В test container CDN `i.okcdn.ru` блокируется (ERR_CERT_AUTHORITY_INVALID). Чтобы фото-фон в скриншоте был видимым: `page.route('https://i.okcdn.ru/**', r => r.fulfill({contentType:'image/svg+xml', body:'<svg...>...</svg>'}))` — подменяет на цветной SVG, по которому видно, что media действительно занимает всё полотно.
+
 ## Сэмплинг анимаций
 - Для покадровых данных: запусти `requestAnimationFrame`-цикл **внутри страницы** через `page.evaluate(async () => new Promise(resolve => { ... }))` и собирай computed styles в массив. Возврат массива на хост даст ~16 ms точность.
 - `page.screenshot` блокирующий, ~50 ms на кадр — для покадровой анимации использовать `Page.startScreencast` (CDP-сессия): `const cdp = await page.context().newCDPSession(page); cdp.send('Page.startScreencast', ...);`. Получишь по кадру на каждый paint без подтормаживания.

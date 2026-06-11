@@ -278,6 +278,10 @@
   padding: 0 var(--space-3);
   min-height: 38px;
 }
+/* Аватарка в шапке копируется из стака целиком (applyAuthor → innerHTML).
+   Возможные DS-аддоны (🎂, «+» и т.п.) в маленькой шапочной аватарке
+   выглядят инородно — гасим их там. */
+.moment__header .avatar__addon { display: none; }
 .moment__header-text {
   flex: 1 1 0;
   min-width: 0;
@@ -356,6 +360,122 @@
 }
 .moment__cta .button-container {
   width: 100%;
+}
+
+/* ============================================================
+   BDAY — именинный шаблон сториз.
+   Включается через .moment.__view-bday. Внутри слот .moment__bday
+   занимает нижнюю половину карточки и состоит из:
+     • blur-слоя (backdrop-blur, маска снизу-вверх — плавный fade-in
+       блюра, чтобы верхняя часть фото оставалась резкой);
+     • контентного блока с тремя строками текста (kicker / heading
+       / name), отцентрированными по горизонтали.
+   Header (avatar + title + subtitle) остаётся видимым.
+   ============================================================ */
+.moment__bday {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+/* Progressive blur 0 → 80px — стек из 6 слоёв backdrop-filter с
+   возрастающими радиусами. У каждого слоя маска `linear-gradient(
+   transparent var(--p), black 100%)` — слой невидим выше своей точки
+   --p и плавно «включается» вниз. Слои не сбрасываются у нижней
+   кромки → у самого низа активны все 6, и итоговый размыв доминируется
+   самым большим (80px). Сверху работает только L1 (2px) — почти резко.
+   Никаких видимых полос — переход непрерывный за счёт перекрытий. */
+.moment__bday-blur {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.moment__bday-blur-step {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) var(--bday-blur-p, 0%),
+    rgba(0, 0, 0, 1) 100%);
+          mask-image: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) var(--bday-blur-p, 0%),
+    rgba(0, 0, 0, 1) 100%);
+}
+.moment__bday-blur-step.__b-1 {
+  --bday-blur-p: 0%;
+  -webkit-backdrop-filter: blur(2px);  backdrop-filter: blur(2px);
+}
+.moment__bday-blur-step.__b-2 {
+  --bday-blur-p: 16%;
+  -webkit-backdrop-filter: blur(5px);  backdrop-filter: blur(5px);
+}
+.moment__bday-blur-step.__b-3 {
+  --bday-blur-p: 33%;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.moment__bday-blur-step.__b-4 {
+  --bday-blur-p: 50%;
+  -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+}
+.moment__bday-blur-step.__b-5 {
+  --bday-blur-p: 66%;
+  -webkit-backdrop-filter: blur(44px); backdrop-filter: blur(44px);
+}
+.moment__bday-blur-step.__b-6 {
+  --bday-blur-p: 83%;
+  -webkit-backdrop-filter: blur(80px); backdrop-filter: blur(80px);
+}
+/* Лёгкое затемнение поверх блюра — добавляет контраст белому тексту,
+   повторяет фигму (bg-black/20 на блюр-слое). */
+.moment__bday-blur-tint {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-mask-image: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 30%);
+          mask-image: linear-gradient(to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 30%);
+}
+.moment__bday-content {
+  position: relative;
+  z-index: 1;
+  /* Над CTA-кнопкой ещё 44 (bottom CTA) + 44 (высота CTA) + 16 (gap). */
+  padding: 0 var(--space-3) calc(44px + 44px + var(--space-4));
+  text-align: center;
+  color: var(--static-text-and-icons-base-inverse-primary);
+}
+.moment__bday-kicker {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-family);
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: 0.24px;
+  color: rgba(255, 255, 255, 0.64);
+}
+.moment__bday-heading {
+  margin: 0 0 var(--space-1-5);
+  /* OK Sans Display не подключён глобально — даём фолбэк на общий
+     системный шрифт. Размер/жирность точно как в Figma. */
+  font-family: 'OK Sans Display', var(--font-family);
+  font-size: 48px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+.moment__bday-name {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: 0.24px;
 }
 
 /* ============================================================

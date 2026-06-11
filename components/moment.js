@@ -125,6 +125,46 @@
       var avaImg = this.root.querySelector('.moment__header .avatar img');
       if (avaImg && s.avatar) avaImg.src = s.avatar;
 
+      // BDAY — именинный шаблон: фото-фон + блюр снизу + три строки текста.
+      // Слайд с `s.bday = { kicker, heading, name }` включает .__view-bday
+      // и рендерит блок .moment__bday. Header остаётся видимым.
+      var bdayHost = this.root.querySelector('.moment__bday');
+      if (s.bday) {
+        if (!bdayHost) {
+          bdayHost = document.createElement('div');
+          bdayHost.className = 'moment__bday';
+          // Кладём перед .moment__cta, чтобы CTA остался поверх.
+          var cta = this.root.querySelector('.moment__cta');
+          if (cta) {
+            cta.parentNode.insertBefore(bdayHost, cta);
+          } else {
+            this.root.appendChild(bdayHost);
+          }
+        }
+        bdayHost.innerHTML =
+          // Progressive blur 0 → 80 px: стек из 6 слоёв с возрастающими
+          // backdrop-filter и масками-полосками. Верх слота — почти резко,
+          // низ — сильно размыто. Поверх лёгкий dark-tint для контраста.
+          '<div class="moment__bday-blur">' +
+            '<div class="moment__bday-blur-step __b-1"></div>' +
+            '<div class="moment__bday-blur-step __b-2"></div>' +
+            '<div class="moment__bday-blur-step __b-3"></div>' +
+            '<div class="moment__bday-blur-step __b-4"></div>' +
+            '<div class="moment__bday-blur-step __b-5"></div>' +
+            '<div class="moment__bday-blur-step __b-6"></div>' +
+            '<div class="moment__bday-blur-tint"></div>' +
+          '</div>' +
+          '<div class="moment__bday-content">' +
+            '<p class="moment__bday-kicker">' + (s.bday.kicker || 'Сегодня') + '</p>' +
+            '<h2 class="moment__bday-heading">' + (s.bday.heading || 'День рождения') + '</h2>' +
+            '<p class="moment__bday-name">' + (s.bday.name || '') + '</p>' +
+          '</div>';
+        this.root.classList.add('__view-bday');
+      } else if (bdayHost) {
+        bdayHost.remove();
+        this.root.classList.remove('__view-bday');
+      }
+
       // BODY — произвольный контент поверх media (ВВЗ-сториз, например).
       // slide.body — HTML-строка или DOM-узел. Если задан, заменяем содержимое
       // .moment__body и показываем слот; иначе слот скрыт.
@@ -155,9 +195,13 @@
       if (cta) {
         if (s.cta && s.cta.label) {
           cta.style.display = '';
+          // По умолчанию CTA-кнопка во ВВЗ-стиле «secondary-on-color»
+          // (стеклянная). Для именинной сториз и любых других кейсов можно
+          // передать s.cta.style = 'primary' (или другой DS-стиль).
+          var ctaStyle = s.cta.style || 'secondary-on-color';
           cta.innerHTML =
-            '<div class="button-wrapper __size-44 __style-secondary-on-color">' +
-              '<button class="button-container __style-secondary-on-color" type="button">' +
+            '<div class="button-wrapper __size-44 __style-' + ctaStyle + '">' +
+              '<button class="button-container __style-' + ctaStyle + '" type="button">' +
                 '<span class="button-content"></span>' +
               '</button>' +
             '</div>';
@@ -401,6 +445,8 @@
     el.hidden = true;
     el.style.cssText = '--moment-duration: ' + duration + '; z-index: 1000;';
     el.innerHTML = [
+      '<img class="moment__media" alt="" style="display:none;">',
+      '<div class="moment__scrim"></div>',
       '<div class="moment__statusbar">',
         '<span class="moment__statusbar-time">9:41</span>',
       '</div>',
@@ -467,12 +513,41 @@
     return slide;
   }
 
+  // ============================================================
+  // BDAY-SLIDE — фабрика slide-объекта именинного шаблона.
+  //   MomentViewer.bdaySlide({
+  //     name:     'Лизы Михайловой',   // склонение в род. падеже под "День рождения …"
+  //     photo:    'https://…',         // полноэкранный фон (фото именинника)
+  //     kicker:   'Сегодня',           // мелкий приглушённый текст сверху  (опц.)
+  //     heading:  'День рождения',     // большой заголовок                  (опц.)
+  //     cta:      'Поздравить',        // лейбл CTA-кнопки                   (опц.)
+  //     headerTitle:    'День рождения Лизы',  // переопределение title в header'е
+  //     headerSubtitle: '3 часа назад',        // и subtitle (опц.)
+  //   });
+  // ============================================================
+  function bdaySlide(opts) {
+    opts = opts || {};
+    var slide = {
+      src: opts.photo,
+      bday: {
+        kicker:  opts.kicker  || 'Сегодня',
+        heading: opts.heading || 'День рождения',
+        name:    opts.name    || ''
+      }
+    };
+    if (opts.headerTitle    != null) slide.title    = opts.headerTitle;
+    if (opts.headerSubtitle != null) slide.subtitle = opts.headerSubtitle;
+    if (opts.cta) slide.cta = { label: opts.cta, style: 'primary' };
+    return slide;
+  }
+
   // Экспорт
   window.MomentViewer = {
-    init:     function (root, options) { return new MomentViewer(root, options); },
-    bindRow:  bindRow,
-    create:   createViewer,
-    vvzSlide: vvzSlide,
-    palette:  DEFAULT_PALETTE
+    init:      function (root, options) { return new MomentViewer(root, options); },
+    bindRow:   bindRow,
+    create:    createViewer,
+    vvzSlide:  vvzSlide,
+    bdaySlide: bdaySlide,
+    palette:   DEFAULT_PALETTE
   };
 })();
