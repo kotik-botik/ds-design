@@ -120,10 +120,15 @@
 }
 
 .vvz-card__btn {
-  margin-top: auto; /* прижимает кнопку к низу — выравнивает высоту карточек */
-  padding-top: 12px;
+  margin-top: 12px;
   display: block;
   width: 100%;
+}
+/* Без аватарсвью — кнопка прибивается к низу карточки. Так в grid-стэке
+   карточки с mutuals и без выравнены по нижнему краю кнопки. */
+.vvz-card:not(.__has-mutuals) .vvz-card__btn {
+  margin-top: auto;
+  padding-top: 12px;
 }
 
 /* ============================================================
