@@ -109,27 +109,24 @@
   text-overflow: ellipsis;
 }
 
-/* Общие друзья — стек аватарок + текст. По умолчанию скрыт; включается через
-   .__has-mutuals на корне карточки (в мессаджах не используется, в сториз — да). */
+/* Общие друзья — стек аватарок. Блок рендерится ВСЕГДА (даже когда mutuals
+   нет — пустой плейсхолдер), чтобы зарезервировать высоту и выровнять
+   кнопки между карточками с mutuals и без. Видимость управляется через
+   .__has-mutuals. */
 .vvz-card__mutuals {
-  display: none;
+  display: flex;
   margin-top: 8px;
+  min-height: 32px;
+  visibility: hidden;
 }
 .vvz-card.__has-mutuals .vvz-card__mutuals {
-  display: flex;
+  visibility: visible;
 }
 
 .vvz-card__btn {
   margin-top: 12px;
   display: block;
   width: 100%;
-}
-/* Без аватарсвью — компенсируем высоту блока mutuals (avatars-view 32px +
-   margin-top 8px = 40px) дополнительным margin-top. Так кнопка в карточках
-   с mutuals и без оказывается на одной горизонтали без растягивания
-   карточки grid-stretch'ем. */
-.vvz-card:not(.__has-mutuals) .vvz-card__btn {
-  margin-top: calc(12px + 40px); /* gap 12 + высота mutuals 40 */
 }
 
 /* ============================================================
