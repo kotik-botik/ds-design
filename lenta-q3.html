@@ -1002,20 +1002,35 @@
       var viewer = document.getElementById('ll-moment');
       if (!row || !viewer) return;
 
-      // Данные для ВВЗ-сториз — 4 человека с общими друзьями
+      // Данные для ВВЗ-сториз — 4 человека. У части указаны общие друзья,
+      // у части нет. Карточки без mutuals растягиваются по высоте до тех,
+      // у которых mutuals есть — выравнивание идёт через grid stretch +
+      // margin-top: auto у кнопки внутри vvz-card__content.
       var VVZ_PEOPLE = [
         { name: 'Карина Затонская', sub: '28 лет, Рига, Латвия',  img: 'https://i.pravatar.cc/192?img=47', mutuals: 18, m: [44, 12, 5] },
-        { name: 'Илья Воронов',     sub: '31 год, Москва',         img: 'https://i.pravatar.cc/192?img=33', mutuals: 7,  m: [9, 23, 49] },
+        { name: 'Илья Воронов',     sub: '31 год, Москва',         img: 'https://i.pravatar.cc/192?img=33' },
         { name: 'Анна Соколова',    sub: '25 лет, Санкт-Петербург',img: 'https://i.pravatar.cc/192?img=44', mutuals: 12, m: [12, 5, 23] },
-        { name: 'Мария Лебедева',   sub: '29 лет, Казань',         img: 'https://i.pravatar.cc/192?img=45', mutuals: 3,  m: [49, 33, 47] }
+        { name: 'Мария Лебедева',   sub: '29 лет, Казань',         img: 'https://i.pravatar.cc/192?img=45' }
       ];
 
       function vvzCardHtml(p) {
-        var mutAvas = p.m.map(function (id) {
-          return '<div class="avatar __size-32 __type-image"><img src="https://i.pravatar.cc/64?img=' + id + '" alt=""></div>';
-        }).join('');
+        var hasMutuals = p.mutuals && p.m;
+        var mutualsBlock = '';
+        if (hasMutuals) {
+          var mutAvas = p.m.map(function (id) {
+            return '<div class="avatar __size-32 __type-image"><img src="https://i.pravatar.cc/64?img=' + id + '" alt=""></div>';
+          }).join('');
+          mutualsBlock = [
+            '<div class="vvz-card__mutuals">',
+              '<div class="avatars-view __size-32 __layout-vertical">',
+                '<div class="avatars-view__stack">' + mutAvas + '</div>',
+                '<span class="avatars-view__text">' + p.mutuals + ' общих друзей</span>',
+              '</div>',
+            '</div>'
+          ].join('');
+        }
         return [
-          '<div class="vvz-card __has-mutuals" data-vvz-card>',
+          '<div class="vvz-card' + (hasMutuals ? ' __has-mutuals' : '') + '" data-vvz-card>',
             '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',
               '<button class="button-inline __size-16" aria-label="Скрыть" data-vvz-dismiss>',
                 '<span class="button-inline__content">',
@@ -1027,12 +1042,7 @@
             '<div class="vvz-card__content">',
               '<div class="vvz-card__title ds-title-s">' + p.name + '</div>',
               '<div class="vvz-card__subtitle ds-caption-m">' + p.sub + '</div>',
-              '<div class="vvz-card__mutuals">',
-                '<div class="avatars-view __size-32 __layout-vertical">',
-                  '<div class="avatars-view__stack">' + mutAvas + '</div>',
-                  '<span class="avatars-view__text">' + p.mutuals + ' общих друзей</span>',
-                '</div>',
-              '</div>',
+              mutualsBlock,
               '<div class="vvz-card__btn button-wrapper __size-36 __style-primary __full-width">',
                 '<button class="button-container __style-primary" type="button" style="width:100%;">',
                   '<span class="button-content">Дружить</span>',
