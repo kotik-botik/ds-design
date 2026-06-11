@@ -1022,9 +1022,8 @@
           }).join('');
           mutualsBlock = [
             '<div class="vvz-card__mutuals">',
-              '<div class="avatars-view __size-32 __layout-vertical">',
+              '<div class="avatars-view __size-32">',
                 '<div class="avatars-view__stack">' + mutAvas + '</div>',
-                '<span class="avatars-view__text">' + p.mutuals + ' общих друзей</span>',
               '</div>',
             '</div>'
           ].join('');
@@ -1041,7 +1040,7 @@
             '<div class="vvz-card__media"><img src="' + p.img + '" alt=""></div>',
             '<div class="vvz-card__content">',
               '<div class="vvz-card__title ds-title-s">' + p.name + '</div>',
-              '<div class="vvz-card__subtitle ds-caption-m">' + p.sub + '</div>',
+              '<div class="vvz-card__subtitle ds-caption-m">' + (hasMutuals ? p.mutuals + ' общих друзей' : p.sub) + '</div>',
               mutualsBlock,
               '<div class="vvz-card__btn button-wrapper __size-36 __style-primary __full-width">',
                 '<button class="button-container __style-primary" type="button" style="width:100%;">',
