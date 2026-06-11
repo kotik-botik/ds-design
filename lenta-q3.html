@@ -287,6 +287,13 @@
              data-stories="3" data-name="Лиза"
              data-cta-label="Поздравить"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1IFpes1IoSvMCGuKiIW523YshCUzB85KW8GRKDM7ulkBIf2P1Tk38sfnQqwPjat2SQslXKRfqqge3TMInqv0cEztqcV_mlwoBP38YdVHS8AAAAp&dpr=2" alt=""></div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="5" data-name="Алексей"><img src="https://i.pravatar.cc/112?img=12" alt=""></div>
+
+        <!-- ВВЗ-сториз: одна палочка, заголовок и список карточек ВВЗ.
+             data-vvz отличает её от обычных сториз в JS-связке.
+             TODO: PNG-заливка для аватарки — пока placeholder. -->
+        <div class="avatar __size-56 __type-placeholder __ring-active"
+             data-stories="1" data-name="Возможно вы знаете" data-vvz
+             aria-label="Возможно вы знаете"></div>
         <div class="avatar __size-56 __type-image __ring-active"
              data-stories="2" data-name="Дима"
              data-cta-label="Подписаться"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
@@ -851,6 +858,10 @@
         <button class="moment__nav-zone __side-next" aria-label="Дальше"></button>
       </div>
 
+      <!-- Body-слот. Заполняется из slide.body в MomentViewer (см. moment.js).
+           По умолчанию скрыт — обычные сториз показывают только media+color. -->
+      <div class="moment__body" style="display: none;"></div>
+
       <!-- CTA-слот. Заполняется из slide.cta в MomentViewer (см. moment.js).
            Если у текущей сториз нет cta — слот скрыт через display: none. -->
       <div class="moment__cta" style="display: none;"></div>
@@ -996,8 +1007,66 @@
       var viewer = document.getElementById('ll-moment');
       if (!row || !viewer) return;
 
+      // Данные для ВВЗ-сториз — 4 человека с общими друзьями
+      var VVZ_PEOPLE = [
+        { name: 'Карина Затонская', sub: '28 лет, Рига, Латвия',  img: 'https://i.pravatar.cc/192?img=47', mutuals: 18, m: [44, 12, 5] },
+        { name: 'Илья Воронов',     sub: '31 год, Москва',         img: 'https://i.pravatar.cc/192?img=33', mutuals: 7,  m: [9, 23, 49] },
+        { name: 'Анна Соколова',    sub: '25 лет, Санкт-Петербург',img: 'https://i.pravatar.cc/192?img=44', mutuals: 12, m: [12, 5, 23] },
+        { name: 'Мария Лебедева',   sub: '29 лет, Казань',         img: 'https://i.pravatar.cc/192?img=45', mutuals: 3,  m: [49, 33, 47] }
+      ];
+
+      function vvzCardHtml(p) {
+        var mutAvas = p.m.map(function (id) {
+          return '<div class="avatar __size-32 __type-image"><img src="https://i.pravatar.cc/64?img=' + id + '" alt=""></div>';
+        }).join('');
+        return [
+          '<div class="vvz-card __full-width __has-mutuals" data-vvz-card>',
+            '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',
+              '<button class="button-inline __size-16" aria-label="Скрыть" data-vvz-dismiss>',
+                '<span class="button-inline__content">',
+                  '<span class="button-inline__icon icon __size-16 __slot-close"></span>',
+                '</span>',
+              '</button>',
+            '</span>',
+            '<div class="vvz-card__media"><img src="' + p.img + '" alt=""></div>',
+            '<div class="vvz-card__content">',
+              '<div class="vvz-card__title ds-title-s">' + p.name + '</div>',
+              '<div class="vvz-card__subtitle ds-caption-m">' + p.sub + '</div>',
+              '<div class="vvz-card__mutuals">',
+                '<div class="avatars-view __size-32 __layout-vertical">',
+                  '<div class="avatars-view__stack">' + mutAvas + '</div>',
+                  '<span class="avatars-view__text">' + p.mutuals + ' общих друзей</span>',
+                '</div>',
+              '</div>',
+              '<div class="vvz-card__btn button-wrapper __size-36 __style-primary __full-width">',
+                '<button class="button-container __style-primary" type="button" style="width:100%;">',
+                  '<span class="button-content">Дружить</span>',
+                '</button>',
+              '</div>',
+            '</div>',
+          '</div>'
+        ].join('');
+      }
+
+      function vvzBodyHtml() {
+        var cards = VVZ_PEOPLE.map(vvzCardHtml).join('');
+        return [
+          '<h2 class="moment__body-title">Возможно вы знаете</h2>',
+          '<div class="moment__body-stack">' + cards + '</div>'
+        ].join('');
+      }
+
       window.MomentViewer.bindRow(row, viewer, {
         slides: function (ava) {
+          // ВВЗ-сториз — одна палочка, body вместо media, CTA «Показать всех»
+          if (ava.hasAttribute('data-vvz')) {
+            return [{
+              color: '#2E2F33', // тёмный фон под body (PNG появится позже)
+              body: vvzBodyHtml(),
+              cta: { label: 'Показать всех' }
+            }];
+          }
+          // Обычная сториз — цветной фон + опц. CTA из data-cta-label
           var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
           var ctaLabel = ava.getAttribute('data-cta-label');
           var list = [];
@@ -1008,6 +1077,16 @@
           }
           return list;
         }
+      });
+
+      // Тап на ✕ в карточке ВВЗ → состояние «Рекомендация скрыта».
+      // Делегируем на viewer, потому что карточки рендерятся уже после init'а.
+      viewer.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-vvz-dismiss]');
+        if (!btn) return;
+        e.stopPropagation();
+        var card = btn.closest('[data-vvz-card]');
+        if (card) card.classList.add('__state-hidden');
       });
     })();
   </script>

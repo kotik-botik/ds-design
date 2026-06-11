@@ -197,8 +197,48 @@
 }
 
 /* ============================================================
-   HEADER — avatar + текст + правые иконки
+   BODY — опциональный слот произвольного контента под header'ом.
+   Используется, например, в ВВЗ-сториз: заголовок «Возможно вы знаете»
+   + список vvz-card. Не относится к layout картинки media — body
+   рисуется поверх неё (как и header).
    ============================================================ */
+.moment__body {
+  position: absolute;
+  top: 116px; /* ниже status-bar (52) + progress (26) + header (38) */
+  left: 0;
+  right: 0;
+  bottom: 80px;  /* выше CTA/handle */
+  z-index: 2;
+  padding: var(--space-3) var(--space-4);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.moment__body::-webkit-scrollbar { display: none; }
+
+/* В режиме __view-body (есть произвольный контент в .moment__body) скрываем
+   автора в шапке — остаются только прогресс-бар и actions (более/закрыть). */
+.moment.__view-body .moment__header > .avatar,
+.moment.__view-body .moment__header-text {
+  display: none;
+}
+
+.moment__body-title {
+  font-family: var(--font-family);
+  font-size: 21px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--static-text-and-icons-base-inverse-primary);
+  margin: 0 0 var(--space-4);
+}
+
+.moment__body-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+
 .moment__header {
   display: flex;
   align-items: center;
