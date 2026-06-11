@@ -314,12 +314,14 @@
   bottom: 44px;
   left: 0;
   right: 0;
-  padding: 0 var(--space-4);
   display: flex;
   z-index: 4;
 }
 .moment__cta .button-wrapper {
   flex: 1 1 0;
+}
+.moment__cta .button-container {
+  width: 100%;
 }
 
 /* ============================================================
