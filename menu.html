@@ -22,6 +22,7 @@
 
   /* Профиль-строка: имя + «Перейти в профиль» слева, аватар справа.
      Базируется на uni-cell, лишь меняем отступы и порядок слотов. */
+  .ll-profile { display: block; text-decoration: none; color: inherit; }
   .ll-profile .uni-cell { align-items: center; gap: var(--space-3); }
   .ll-profile-title    { color: var(--dynamic-text-and-icons-base-primary); }
   .ll-profile-subtitle { color: var(--dynamic-text-and-icons-base-secondary); margin-top: 2px; }
@@ -109,7 +110,7 @@
       </div>
 
       <!-- ПРОФИЛЬ-СТРОКА -->
-      <div class="uni-cell-wrapper ll-profile">
+      <a class="uni-cell-wrapper ll-profile" href="profile.html">
         <div class="uni-cell-container __state-enabled">
           <div class="uni-cell">
             <div class="uni-cell-additional-content">
@@ -119,7 +120,7 @@
             <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/120?img=49" alt=""></div>
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- БЫСТРЫЕ ДЕЙСТВИЯ — 4×2 -->
       <div class="ll-quick">
