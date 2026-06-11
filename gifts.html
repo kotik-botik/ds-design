@@ -64,7 +64,8 @@
     top: 249px;
     transition: opacity 280ms ease-out;
   }
-  .gp.__state-2 .gp__title { top: 130px; }
+  .gp.__state-2 .gp__title,
+  .gp.__state-3 .gp__title { top: 130px; }
 
   /* Карточка-подарок — left/top/width/height/transform тянутся JS-спрингом.
      Базовая позиция (left: 50%) задаёт точку отсчёта по центру viewport;
@@ -78,6 +79,7 @@
     border: 0.744px solid rgba(0,0,0,0.1);
     box-shadow: 0 22.332px 22.332px rgba(0,0,0,0.07);
     transform-origin: 50% 50%;
+    cursor: pointer;
   }
 
   /* z-index: Gift 1 — самая ближняя, Gift 3 — самая дальняя */
@@ -245,19 +247,33 @@
       return 1 - (1 + omega0 * t) * Math.exp(-omega0 * t);
     }
 
-    // Стейт 1 → стейт 2 для каждой карточки и заголовка.
-    var CARDS = [
-      { i: 3, from: { l: 110.23, t: 434.90, w: 150.737, h: 183.298, r: -6.46  },
-              to:   { l: 42.36,  t: 246.98, w: 223.319, h: 260.539, r: -7.21  } },
-      { i: 2, from: { l: 110.13, t: 448.69, w: 150.737, h: 183.298, r:  0.5   },
-              to:   { l: 126.21, t: 349.48, w: 223.319, h: 260.539, r: 15     } },
-      { i: 1, from: { l: 104.47, t: 466.47, w: 150.737, h: 183.298, r:  9.78  },
-              to:   { l: 23.46,  t: 429.91, w: 223.319, h: 260.539, r: -16.48 } }
+    // Три стейта, каждый описывает где лежат карточки (по data-i) и top
+    // заголовка. Координаты — из Figma get_design_context.
+    //   0 — стейт 1 (закрытый стак)
+    //   1 — стейт 2 (раскрытый веер)
+    //   2 — стейт 3 (карточки в ряд, как в свайп-карусели)
+    var STATES = [
+      { title: 249, cards: {
+          3: { l: 110.23, t: 434.90, w: 150.737, h: 183.298, r: -6.46  },
+          2: { l: 110.13, t: 448.69, w: 150.737, h: 183.298, r:  0.5   },
+          1: { l: 104.47, t: 466.47, w: 150.737, h: 183.298, r:  9.78  }
+      }},
+      { title: 130, cards: {
+          3: { l: 42.36,  t: 246.98, w: 223.319, h: 260.539, r: -7.21  },
+          2: { l: 126.21, t: 349.48, w: 223.319, h: 260.539, r:  15    },
+          1: { l: 23.46,  t: 429.91, w: 223.319, h: 260.539, r: -16.48 }
+      }},
+      { title: 130, cards: {
+          3: { l: 125, t: 266, w: 300, h: 350, r: 0 },
+          2: { l: 435, t: 266, w: 300, h: 350, r: 0 },
+          1: { l: 745, t: 266, w: 300, h: 350, r: 0 }
+      }}
     ];
-    var TITLE = { from: 249, to: 130 };
 
-    var els = CARDS.map(function (c) {
-      return root.querySelector('.gp-card[data-i="' + c.i + '"]');
+    var IDX = [3, 2, 1];
+    var els = {};
+    IDX.forEach(function (i) {
+      els[i] = root.querySelector('.gp-card[data-i="' + i + '"]');
     });
     var titleEl = root.querySelector('.gp__title');
 
@@ -271,38 +287,80 @@
         'translateX(' + (s.l - 180).toFixed(3) + 'px) rotate(' + s.r.toFixed(3) + 'deg)';
     }
 
-    // Стартовое состояние выставляем инлайн-стилем — это совпадает с CSS,
-    // но защищает от конфликта с .__state-2-правилом во время анимации.
-    CARDS.forEach(function (c, idx) { applyCard(els[idx], c.from); });
-    titleEl.style.top = TITLE.from + 'px';
+    // Начинаем в стейте 0 (state 1) — выставляем inline-стилем сразу.
+    var current = 0;
+    var animating = false;
 
-    setTimeout(function () {
-      // Перекидываем класс — карточки и так уже на старте через inline,
-      // .__state-2 пригодится для финального оседания и для accept-all.
-      root.classList.add('__state-2');
+    function applyState(idx) {
+      var s = STATES[idx];
+      IDX.forEach(function (i) { applyCard(els[i], s.cards[i]); });
+      titleEl.style.top = s.title + 'px';
+    }
+    applyState(0);
 
-      var t0 = performance.now();
-      function frame(now) {
-        var elapsed = Math.min(SPRING.duration, now - t0);
-        var p = springProgress(elapsed);
-        CARDS.forEach(function (c, idx) {
-          applyCard(els[idx], {
-            l: c.from.l + (c.to.l - c.from.l) * p,
-            t: c.from.t + (c.to.t - c.from.t) * p,
-            w: c.from.w + (c.to.w - c.from.w) * p,
-            h: c.from.h + (c.to.h - c.from.h) * p,
-            r: c.from.r + (c.to.r - c.from.r) * p
+    function transitionTo(toIdx, opts) {
+      opts = opts || { mode: 'spring' };
+      if (animating || toIdx === current) return;
+      animating = true;
+      var from = STATES[current];
+      var to   = STATES[toIdx];
+      root.classList.remove('__state-1', '__state-2', '__state-3');
+      root.classList.add('__state-' + (toIdx + 1));
+
+      if (opts.mode === 'spring') {
+        // JS-rAF спринг по всем 5 величинам карточек + top заголовка.
+        var t0 = performance.now();
+        (function frame(now) {
+          var elapsed = Math.min(SPRING.duration, now - t0);
+          var p = springProgress(elapsed);
+          IDX.forEach(function (i) {
+            var fc = from.cards[i], tc = to.cards[i];
+            applyCard(els[i], {
+              l: fc.l + (tc.l - fc.l) * p,
+              t: fc.t + (tc.t - fc.t) * p,
+              w: fc.w + (tc.w - fc.w) * p,
+              h: fc.h + (tc.h - fc.h) * p,
+              r: fc.r + (tc.r - fc.r) * p
+            });
           });
-        });
-        titleEl.style.top = (TITLE.from + (TITLE.to - TITLE.from) * p).toFixed(3) + 'px';
-        if (elapsed < SPRING.duration) requestAnimationFrame(frame);
-        else {
-          // Финальное точное состояние — оставляем inline с точными to-значениями.
-          CARDS.forEach(function (c, idx) { applyCard(els[idx], c.to); });
-          titleEl.style.top = TITLE.to + 'px';
-        }
+          titleEl.style.top =
+            (from.title + (to.title - from.title) * p).toFixed(3) + 'px';
+          if (elapsed < SPRING.duration) requestAnimationFrame(frame);
+          else {
+            applyState(toIdx);
+            current = toIdx;
+            animating = false;
+          }
+        })(performance.now());
+      } else {
+        // CSS-transition: один шаг с указанным duration/easing.
+        var dur = opts.duration || 300;
+        var ease = opts.easing || 'ease-out';
+        var props = ['top', 'width', 'height', 'transform'];
+        var trans = props.map(function (p) { return p + ' ' + dur + 'ms ' + ease; }).join(', ');
+        IDX.forEach(function (i) { els[i].style.transition = trans; });
+        titleEl.style.transition = 'top ' + dur + 'ms ' + ease;
+        // Применяем целевые значения уже в следующем кадре, чтобы браузер
+        // успел зафиксировать transition-стиль до изменения свойств.
+        requestAnimationFrame(function () { applyState(toIdx); });
+        setTimeout(function () {
+          IDX.forEach(function (i) { els[i].style.transition = ''; });
+          titleEl.style.transition = '';
+          current = toIdx;
+          animating = false;
+        }, dur + 30);
       }
-      requestAnimationFrame(frame);
+    }
+
+    // Сценарий проигрывается сам:
+    //   t = 500мс              → стейт 1 → 2 (расхлоп веером, спринг 2000мс)
+    //   t = 500+2000+800 = 3300мс → стейт 2 → 3 (в ряд, ease-out 300мс)
+    var PAUSE_BETWEEN = 800;
+    setTimeout(function () {
+      transitionTo(1, { mode: 'spring' });
+      setTimeout(function () {
+        transitionTo(2, { mode: 'css', duration: 300, easing: 'ease-out' });
+      }, SPRING.duration + PAUSE_BETWEEN);
     }, SPRING.delay);
   })();
 </script>
