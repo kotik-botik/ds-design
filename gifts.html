@@ -152,10 +152,7 @@
           <span class="gift-card__name ds-body-m">Виктория Петрова</span>
         </div>
         <div class="gift-card__img">
-          <div class="gift-card__poster">
-            <div class="gift-card__poster-emoji">💐</div>
-            <div class="gift-card__poster-text">Спасибо<br>за дружбу</div>
-          </div>
+          <img class="gift-card__photo" src="https://gifotkrytki.ru/_ph/2/2/933237960.gif" alt="" loading="lazy">
         </div>
       </div>
       <div class="gift-card__accept">
@@ -166,6 +163,10 @@
       <button class="gift-card__trash" aria-label="Удалить">
         <img src="assets/icons/trash_16_20.svg" alt="">
       </button>
+      <div class="gift-card__accept-overlay" aria-hidden="true"></div>
+      <div class="gift-card__accept-check" aria-hidden="true">
+        <img src="assets/icons/галочка.svg" alt="" width="115" height="98">
+      </div>
     </article>
 
     <article class="gift-card" data-i="2">
@@ -175,10 +176,7 @@
           <span class="gift-card__name ds-body-m">Мария Иванова</span>
         </div>
         <div class="gift-card__img">
-          <div class="gift-card__poster">
-            <div class="gift-card__poster-emoji">🌷</div>
-            <div class="gift-card__poster-text">Любимой</div>
-          </div>
+          <img class="gift-card__photo" src="https://i.pinimg.com/originals/66/e6/94/66e694e55cbeb513cb966a8fe3eace42.gif" alt="" loading="lazy">
         </div>
       </div>
       <div class="gift-card__accept">
@@ -189,6 +187,10 @@
       <button class="gift-card__trash" aria-label="Удалить">
         <img src="assets/icons/trash_16_20.svg" alt="">
       </button>
+      <div class="gift-card__accept-overlay" aria-hidden="true"></div>
+      <div class="gift-card__accept-check" aria-hidden="true">
+        <img src="assets/icons/галочка.svg" alt="" width="115" height="98">
+      </div>
     </article>
 
     <article class="gift-card" data-i="1">
@@ -198,10 +200,7 @@
           <span class="gift-card__name ds-body-m">Дмитрий Кузнецов</span>
         </div>
         <div class="gift-card__img">
-          <div class="gift-card__poster">
-            <div class="gift-card__poster-emoji">🐱</div>
-            <div class="gift-card__poster-text">Шашлычков<br>очень хочется!</div>
-          </div>
+          <img class="gift-card__photo" src="https://i.pinimg.com/originals/6a/ce/be/6acebe49b3f9ded9c96e66c095d0a4c0.gif" alt="" loading="lazy">
         </div>
       </div>
       <div class="gift-card__accept">
@@ -212,6 +211,10 @@
       <button class="gift-card__trash" aria-label="Удалить">
         <img src="assets/icons/trash_16_20.svg" alt="">
       </button>
+      <div class="gift-card__accept-overlay" aria-hidden="true"></div>
+      <div class="gift-card__accept-check" aria-hidden="true">
+        <img src="assets/icons/галочка.svg" alt="" width="115" height="98">
+      </div>
     </article>
   </main>
 
@@ -272,29 +275,29 @@
     //   ty = cy - 175
     //   scale = unrotated_w / 300
     var STATES = [
-      // Стейт 1 — закрытый стак.
+      // Стейт 1 — закрытый стак. opacity 0.3 (карточки приглушены).
       { title: 249, cards: {
-          3: { cx: 185.600, cy: 526.545, s: 0.50246, r: -6.46  },
-          2: { cx: 185.503, cy: 540.341, s: 0.50246, r:  0.50  },
-          1: { cx: 179.842, cy: 558.120, s: 0.50246, r:  9.78  }
+          3: { cx: 185.600, cy: 526.545, s: 0.50246, r: -6.46,  o: 0.3 },
+          2: { cx: 185.503, cy: 540.341, s: 0.50246, r:  0.50,  o: 0.3 },
+          1: { cx: 179.842, cy: 558.120, s: 0.50246, r:  9.78,  o: 0.3 }
       }},
       // Стейт 2 — раскрытый веер.
       { title: 130, cards: {
-          3: { cx: 154.014, cy: 377.251, s: 0.74440, r: -7.21  },
-          2: { cx: 237.871, cy: 479.750, s: 0.74440, r:  15    },
-          1: { cx: 135.122, cy: 560.177, s: 0.74440, r: -16.48 }
+          3: { cx: 154.014, cy: 377.251, s: 0.74440, r: -7.21,  o: 1 },
+          2: { cx: 237.871, cy: 479.750, s: 0.74440, r:  15,    o: 1 },
+          1: { cx: 135.122, cy: 560.177, s: 0.74440, r: -16.48, o: 1 }
       }},
       // Стейт 3 — в ряд, шаг 312 (300 + gap 12), первая на x=125.
       { title: 130, cards: {
-          3: { cx: 275, cy: 441, s: 1, r: 0 },
-          2: { cx: 587, cy: 441, s: 1, r: 0 },
-          1: { cx: 899, cy: 441, s: 1, r: 0 }
+          3: { cx: 275, cy: 441, s: 1, r: 0, o: 1 },
+          2: { cx: 587, cy: 441, s: 1, r: 0, o: 1 },
+          1: { cx: 899, cy: 441, s: 1, r: 0, o: 1 }
       }},
       // Стейт 4 — сдвинут влево, первая ровно по центру (cx=180).
       { title: 130, cards: {
-          3: { cx: 180, cy: 441, s: 1, r: 0 },
-          2: { cx: 492, cy: 441, s: 1, r: 0 },
-          1: { cx: 804, cy: 441, s: 1, r: 0 }
+          3: { cx: 180, cy: 441, s: 1, r: 0, o: 1 },
+          2: { cx: 492, cy: 441, s: 1, r: 0, o: 1 },
+          1: { cx: 804, cy: 441, s: 1, r: 0, o: 1 }
       }}
     ];
     // data-i отражает порядок «спереди-назад» в стопочно-веерных стейтах
@@ -322,6 +325,7 @@
         'scale(' + s.s.toFixed(5) + ') ' +
         'rotate(' + s.r.toFixed(3) + 'deg)';
       el.style.setProperty('--gift-card-scale', s.s.toFixed(5));
+      if (s.o !== undefined) el.style.opacity = s.o.toFixed(3);
     }
 
     var current = 0;
@@ -389,11 +393,14 @@
         var p = progress(elapsed);
         IDX.forEach(function (i) {
           var fc = from.cards[i], tc = to.cards[i];
+          var fo = fc.o !== undefined ? fc.o : 1;
+          var to_ = tc.o !== undefined ? tc.o : 1;
           applyCard(els[i], {
             cx: fc.cx + (tc.cx - fc.cx) * p,
             cy: fc.cy + (tc.cy - fc.cy) * p,
             s:  fc.s  + (tc.s  - fc.s)  * p,
-            r:  fc.r  + (tc.r  - fc.r)  * p
+            r:  fc.r  + (tc.r  - fc.r)  * p,
+            o:  fo    + (to_   - fo)    * p
           }, 0);
         });
         titleEl.style.top =
@@ -415,7 +422,14 @@
       // для геометрии ряда (изменение gap/количества карт сразу отразится).
       var rowState = STATES[3].cards;
       var STEP = rowState[2].cx - rowState[3].cx;   // шаг между соседними карточками
-      var minSnap = -(IDX.length - 1);              // n карт → 0..-(n-1)
+      // liveCards — массив data-i карт, оставшихся в ряду (слева направо).
+      // По мере acceptCard/dismissCard уменьшается, rowState[i].cx и minSnap
+      // пересчитываются. firstCx — left-most cx (state 4 position 0).
+      var firstCx = rowState[3].cx;
+      // IDX = [3, 2, 1] и так в порядке left → right (см. data-i convention).
+      var liveCards = IDX.slice();                   // [3, 2, 1]
+      var minSnap = -(liveCards.length - 1);         // n карт → 0..-(n-1)
+      var processing = {};                           // защита от double-tap accept/trash
 
       var startX = 0, startY = 0;
       var dragging = false;
@@ -539,6 +553,82 @@
         }
         snapRaf = requestAnimationFrame(frame);
       }
+
+      // ── ACCEPT / DISMISS ────────────────────────────────────
+      // Тап «Принять» → залить оранжевым + галочка → улёт вверх → ряд сдвигается.
+      // Тап трэш  → улёт вниз (без заливки) → ряд сдвигается.
+      function processCard(i, kind) {
+        if (processing[i]) return;
+        processing[i] = true;
+        var el = els[i];
+        var FILL_DUR = 700;      // accept: длительность заливки + чекмарк
+        var FLY_DUR  = 600;      // длительность улёта за viewport
+        var SHIFT_DUR = 350;     // длительность сдвига оставшихся карт
+
+        function flyOut() {
+          var dir = (kind === 'accept') ? -1 : 1;
+          el.classList.add(dir < 0 ? '__flying-up' : '__flying-down');
+          var cs = rowState[i];
+          var tx = (cs.cx - 330) + panOffset;
+          var ty = (cs.cy - 175) + dir * 800;
+          var rot = dir < 0 ? 22 : -22;
+          requestAnimationFrame(function () {
+            el.style.transform =
+              'translate(' + tx.toFixed(2) + 'px, ' + ty.toFixed(2) + 'px) ' +
+              'scale(1) rotate(' + rot + 'deg)';
+          });
+          setTimeout(removeFromRow, FLY_DUR);
+        }
+        function removeFromRow() {
+          el.style.display = 'none';
+          var idx = liveCards.indexOf(i);
+          if (idx >= 0) liveCards.splice(idx, 1);
+          // Сжимаем ряд: новые cx по индексу в liveCards.
+          for (var k = 0; k < liveCards.length; k++) {
+            rowState[liveCards[k]].cx = firstCx + k * STEP;
+          }
+          minSnap = -(liveCards.length - 1);
+          if (snapped < minSnap) snapped = minSnap;
+          // Анимируем оставшиеся к новым позициям + догоняем snap при необходимости.
+          liveCards.forEach(function (j) {
+            els[j].style.transition = 'transform ' + SHIFT_DUR + 'ms ease-out';
+          });
+          var newPan = snapped * STEP;
+          requestAnimationFrame(function () {
+            panOffset = newPan;
+            liveCards.forEach(function (j) {
+              applyCard(els[j], rowState[j], newPan);
+            });
+            setActiveAll(Math.abs(newPan) >= 1);
+          });
+          setTimeout(function () {
+            liveCards.forEach(function (j) {
+              els[j].style.transition = '';
+            });
+          }, SHIFT_DUR + 30);
+        }
+
+        if (kind === 'accept') {
+          el.classList.add('__accepting');
+          setTimeout(flyOut, FILL_DUR);
+        } else {
+          flyOut();
+        }
+      }
+
+      IDX.forEach(function (i) {
+        var el = els[i];
+        var accBtn = el.querySelector('.gift-card__accept .button-container');
+        var trashBtn = el.querySelector('.gift-card__trash');
+        if (accBtn) accBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          processCard(i, 'accept');
+        });
+        if (trashBtn) trashBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          processCard(i, 'dismiss');
+        });
+      });
 
       scene.addEventListener('pointerdown', onDown);
       scene.addEventListener('pointermove', onMove);

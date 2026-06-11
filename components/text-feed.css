@@ -356,3 +356,49 @@
 /* Внешние боковые границы у крайних ячеек не нужны (внешний бордер карточки). */
 .text-feed__media.__row .text-feed__media-cell:first-child { border-left: 0; }
 .text-feed__media.__row .text-feed__media-cell:last-child  { border-right: 0; }
+
+/* — mosaic — 1 крупная + 3 миниатюры. Используется для альбомов, годовщин,
+   сборников фото за период и т.п. Высоты hero / thumb меняются через
+   --text-feed-mosaic-hero-h / --text-feed-mosaic-thumb-h. */
+.text-feed__media.__mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+}
+.text-feed__media.__mosaic .text-feed__media-cell:first-child {
+  grid-column: 1 / -1;
+  height: var(--text-feed-mosaic-hero-h, 200px);
+}
+.text-feed__media.__mosaic .text-feed__media-cell:not(:first-child) {
+  height: var(--text-feed-mosaic-thumb-h, 122px);
+}
+
+/* — overlay «Ещё N» поверх последней ячейки галереи.
+   Кладётся внутрь .text-feed__media-cell, по аналогии с любым counter'ом. */
+.text-feed__media-cell-more {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--static-surface-special-layer-quaternary, rgba(0, 0, 0, 0.36));
+  color: var(--static-stroke-base-inverse-primary, #fff);
+}
+
+/* ============================================================
+   AVATARS — альтернатива uni-cell для шапки, когда субъект не один.
+   Используется в memory-карточках: годовщина брака (пара), годовщина
+   дружбы (трио и т.п.). Аватары наслаиваются справа налево.
+   ============================================================
+   <div class="text-feed__avatars">
+     <div class="avatar __size-72 __type-image"><img …></div>
+     <div class="avatar __size-72 __type-image"><img …></div>
+   </div>
+*/
+.text-feed__avatars {
+  display: flex;
+  align-items: center;
+}
+.text-feed__avatars > * + * {
+  margin-left: var(--text-feed-avatars-overlap, -12px);
+}

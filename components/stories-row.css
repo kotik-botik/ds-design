@@ -168,3 +168,33 @@
   bottom: -6px;
   right: -9px;
 }
+
+/* ============================================================
+   COUPLE — двойная аватарка (для сториз пары, например «годовщина дружбы»).
+   Внутри .avatar (любого размера) лежат две .stories-row__face — круги по
+   64% от размера контейнера, в верхнем-левом и нижнем-правом углах с
+   небольшим overlap. Работает и в карусели (56px), и в шапке viewer'а
+   (36/24px) — размеры считаются от родителя через %.
+   ============================================================ */
+.avatar.stories-row__couple {
+  background-color: transparent;
+  overflow: visible;
+}
+.stories-row__face {
+  position: absolute;
+  width: 64%;
+  height: 64%;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid var(--dynamic-surface-base-secondary, #fff);
+  box-sizing: border-box;
+}
+.stories-row__face:first-of-type {
+  top: 0;
+  left: 0;
+}
+.stories-row__face:last-of-type {
+  bottom: 0;
+  right: 0;
+}

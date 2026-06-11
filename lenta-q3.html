@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="index.css">
 <link rel="stylesheet" href="components/system-notifications.css">
+<link rel="stylesheet" href="components/tooltip.css">
 <!-- В head синхронно: listener pagereveal должен зарегистрироваться до события -->
 <script src="components/screen-transition.js"></script>
 <style>
@@ -205,6 +206,102 @@
   .ll-promo__art { position: relative; flex: 0 0 auto; width: 100px; height: 72px; }
   .ll-promo__art img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
+  /* «N лет назад в этот день» — карточка-воспоминание.
+     Над заголовком ds-title-xl — caption ds-body-m с иконкой closed-eye
+     («Видите только вы»). Ниже — reshare-card с автором «Вы» и фото,
+     «Понравилось N людям» (avatars-view) и actions: широкая Primary
+     «Поделиться» + квадратная Secondary «···». Боковые паддинги детям
+     раздаёт сам text-feed (`.text-feed > :not(.text-feed__media)`). */
+  .ll-otd__caption {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--dynamic-text-and-icons-base-secondary);
+  }
+  .ll-otd__caption .ll-icon { flex-shrink: 0; }
+  .ll-otd__likes {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .ll-otd__likes-text { color: var(--dynamic-text-and-icons-base-secondary); }
+
+  /* «Вас отметили на фото N лет назад» — карточка-воспоминание.
+     Сверху аватар 72 (без имени), ниже ds-title-xl, ниже full-bleed фото
+     с tooltip-овером, который указывает на отмеченного. Внизу — primary
+     «Поделиться» на всю ширину (через .button-wrapper.__full-width).
+     Media получает .text-feed__media — чтобы выйти из паддинга text-feed. */
+  .ll-tagged__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 375/282;
+    overflow: hidden;
+  }
+  .ll-tagged__media > img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  /* «Годовщина дружбы» — постер-баннер. Полностью кастомная композиция
+     («ОК подготовила видеоролик о вас»): оранжевый градиент, два аватара,
+     декор-эмодзи 🎈/🎁, крупный счётчик подарков и подпись с датой.
+     Не паттерн — оставляем локально. */
+  .ll-anniv-poster {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 343/492;
+    border-radius: 19px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 80% at 30% 30%, #ffb56b 0%, transparent 60%),
+      linear-gradient(160deg, #ff7700 0%, #d76200 100%);
+    color: #fff;
+  }
+  .ll-anniv-poster__avatars {
+    position: absolute;
+    top: 26px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+  }
+  .ll-anniv-poster__avatars > * + * { margin-left: -16px; }
+  .ll-anniv-poster__balloon {
+    position: absolute;
+    top: 32px; left: 16px;
+    width: 48px; height: 48px;
+    transform: rotate(-12deg);
+    pointer-events: none;
+  }
+  .ll-anniv-poster__gift {
+    position: absolute;
+    bottom: 116px; right: 24px;
+    width: 96px; height: 96px;
+    pointer-events: none;
+  }
+  /* Тёмный градиент снизу — чтобы текст читался поверх любой подложки */
+  .ll-anniv-poster::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 160px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none;
+  }
+  .ll-anniv-poster__count {
+    position: absolute;
+    left: 0; right: 0; bottom: 56px;
+    text-align: center;
+    font-family: "OK Sans Display", var(--font-family);
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 36px;
+    z-index: 1;
+  }
+  .ll-anniv-poster__since {
+    position: absolute;
+    left: 0; right: 0; bottom: 28px;
+    text-align: center;
+    z-index: 1;
+  }
+
 
 </style>
 </head>
@@ -267,6 +364,15 @@
           <img src="assets/icons/vvz_stories.png" alt="">
         </div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
+
+        <!-- Сториз годовщины дружбы — пакет из 2 слайдов, в шапке стек из
+             двух аватарок (двойная авА через .stories-row__couple). -->
+        <div class="avatar __size-56 __ring-active stories-row__couple"
+             data-stories="2" data-name="Анна и Кристина" data-friendship
+             aria-label="Анна и Кристина">
+          <span class="stories-row__face" style="background-image: url('https://i.pravatar.cc/96?img=47');"></span>
+          <span class="stories-row__face" style="background-image: url('https://i.pravatar.cc/96?img=49');"></span>
+        </div>
         <!-- Просмотренные (серое кольцо) -->
         <div class="avatar __size-56 __type-image __ring-viewed" data-stories="4" data-name="Сергей"><img src="https://i.pravatar.cc/112?img=9"  alt=""></div>
         <div class="avatar __size-56 __type-image __ring-viewed" data-stories="3" data-name="Евгения"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
@@ -374,7 +480,7 @@
                 <div class="friend-card__title ds-title-s">Алёна Ящук</div>
                 <div class="friend-card__subtitle ds-caption-m">20 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -389,7 +495,7 @@
                 <div class="friend-card__title ds-title-s">Анна Смирнова</div>
                 <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -404,7 +510,7 @@
                 <div class="friend-card__title ds-title-s">Александр Фёдоров</div>
                 <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -419,7 +525,7 @@
                 <div class="friend-card__title ds-title-s">Мария Иванова</div>
                 <div class="friend-card__subtitle ds-caption-m">10 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -434,13 +540,59 @@
                 <div class="friend-card__title ds-title-s">Олег Зайцев</div>
                 <div class="friend-card__subtitle ds-caption-m">8 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
 
           </div>
         </section>
+
+        <!-- На этот день — карточка-воспоминание (только вы видите) -------- -->
+        <article class="text-feed island">
+          <div class="ll-otd__caption ds-body-m">
+            <img class="ll-icon" src="assets/icons/view_off_16_20.svg" width="16" height="16" alt="">
+            <span>Видите только вы</span>
+          </div>
+          <div class="ds-title-xl">7 лет назад в этот день</div>
+
+          <div class="text-feed__reshare-card">
+            <div class="text-feed__reshare-card-author">
+              <div class="avatar __size-24 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KlPJb2p-6eK2lnJ5zICRbTaNaonSN6tKv9jm9OP4liccV1Jgpm_D-XHaUnT4NuMNnP3vDReRbjjmJ7dZqat-wXAZKU9tVWLrcf8vhMiW0AAAAp&dpr=2" alt=""></div>
+              <div class="ds-body-m text-feed__reshare-card-author-name">Вы</div>
+            </div>
+
+            <p class="ds-body-m text-feed__body">Посадили розы на даче вместе с Ольгой. Тогда казалось, что не приживутся, а они до сих пор цветут</p>
+
+            <div class="text-feed__reshare-card-media" style="aspect-ratio: 328/240; overflow:hidden">
+              <img src="https://vki9.okcdn.ru/i?r=CFNAm_VFBkioSGBqh1LGodVgplOpC8fqxcQLrolhsyEXnbLgzgzwRCzZsAn44lhvpacHaRoJCBt5Q3QMq2Via9Bvms5Iiw285phbAxIAQP6-KAExAAAAKQ&dpr=2&fn=h_768" alt="" style="width:100%; height:100%; object-fit:cover; display:block">
+            </div>
+          </div>
+
+          <div class="ll-otd__likes">
+            <div class="avatars-view __size-36">
+              <div class="avatars-view__stack">
+                <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=32" alt=""></div>
+                <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=47" alt=""></div>
+                <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=23" alt=""></div>
+              </div>
+            </div>
+            <span class="ds-body-m ll-otd__likes-text">Понравилось 4 людям</span>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 __full-width">
+              <button class="button-container __style-primary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-44 __pinned-end">
+              <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt="">
+              </span></button>
+            </div>
+          </div>
+        </article>
 
         <!-- 4. Групповой пост Super.ru с подпиской, галереей и комментом -- -->
         <article class="text-feed island">
@@ -515,6 +667,45 @@
             <div class="button-wrapper __size-36"><button class="button-container __style-secondary"><span class="button-content"><img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;4</span></button></div>
             <label class="button-wrapper __size-36 button-klass" style="--button-klass-count: 22;"><input type="checkbox" hidden><span class="button-container __style-secondary"><span class="button-content"><img class="ll-icon button-klass__icon-outline" src="assets/icons/klass_16_20.svg" width="20" height="20" alt=""><img class="ll-icon button-klass__icon-filled" src="assets/icons/klass_filled_16_20.svg" width="20" height="20" alt="">&nbsp;<span class="button-klass__count"></span></span></span></label>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- В браке с N — memory-карточка (пара аватаров + mosaic + CTA) ---- -->
+        <article class="text-feed island">
+          <div class="text-feed__avatars">
+            <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+            <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=33" alt=""></div>
+          </div>
+          <div class="ds-title-xl">В браке с Сергеем уже 7 лет 💜</div>
+          <div class="ds-body-m">Примите поздравления от команды ОК. Вместе с 28 мая 2024</div>
+
+          <div>
+            <span class="button-inline-wrapper __size-20 __view-primary">
+              <button class="button-inline __size-20">
+                <span class="button-inline__content">
+                  <img class="button-inline__icon ll-icon" src="assets/icons/edit_16_20.svg" width="16" height="16" alt="">
+                  Указать дату годовщины и годы брака
+                </span>
+              </button>
+            </span>
+          </div>
+
+          <div class="text-feed__media __mosaic">
+            <div class="text-feed__media-cell"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=750&q=80" alt=""></div>
+            <div class="text-feed__media-cell"><img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&q=80" alt=""></div>
+            <div class="text-feed__media-cell"><img src="https://images.unsplash.com/photo-1502635385003-ee1e6a1a742d?w=400&q=80" alt=""></div>
+            <div class="text-feed__media-cell">
+              <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=400&q=80" alt="">
+              <div class="text-feed__media-cell-more ds-body-l">Ещё 5</div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 __full-width">
+              <button class="button-container __style-secondary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
+              </span></button>
+            </div>
           </div>
         </article>
 
@@ -699,6 +890,33 @@
           </div>
         </article>
 
+        <!-- Годовщина дружбы — memory-карточка с кастомным постером -------- -->
+        <article class="text-feed island">
+          <div class="ds-title-xl">Анна, поздравляем с годовщиной дружбы</div>
+          <div class="ds-body-m">Мы подготовили видеоролик о вас</div>
+
+          <div>
+            <div class="ll-anniv-poster">
+              <img class="ll-anniv-poster__balloon" src="assets/icons/balloons_24.svg" alt="" aria-hidden="true">
+              <div class="ll-anniv-poster__avatars">
+                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+              </div>
+              <img class="ll-anniv-poster__gift" src="assets/icons/gift_24.svg" alt="" aria-hidden="true">
+              <div class="ll-anniv-poster__count">478 подарков</div>
+              <div class="ll-anniv-poster__since ds-body-m">С 1 июня 2023 года</div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 __full-width">
+              <button class="button-container __style-primary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/gift_16_20.svg" width="20" height="20" alt="">&nbsp;Отправить другу
+              </span></button>
+            </div>
+          </div>
+        </article>
+
         <!-- 11. Получила подарок — single -------------------------------- -->
         <article class="text-feed island">
           <div class="uni-cell-wrapper"><div class="uni-cell-container"><div class="uni-cell">
@@ -754,10 +972,33 @@
           </div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36 ll-ai-gift-btn" style="flex:1 1 0">
-              <button class="button-container __style-secondary" style="width:100%"><span class="button-content">✨&nbsp;Создать ИИ подарок</span></button>
+            <div class="button-wrapper __size-36 __full-width ll-ai-gift-btn">
+              <button class="button-container __style-secondary"><span class="button-content">✨&nbsp;Создать ИИ подарок</span></button>
             </div>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- Вас отметили на фото — memory-карточка (full-bleed media + tooltip) -->
+        <article class="text-feed island">
+          <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+          <div class="ds-title-xl">Вас отметили на фото 2 года назад</div>
+
+          <div class="text-feed__media ll-tagged__media">
+            <img src="https://images.unsplash.com/photo-1543007631-283050bb3e8c?w=750&q=80" alt="">
+            <div class="tooltip-wrapper __view-primary __side-bottom __alignment-start __placement-bottom-start"
+                 style="top: 28px; left: 56px">
+              <div class="tooltip ds-title-m">Анастасия Кащеева</div>
+              <div class="tooltip-tail"></div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 __full-width">
+              <button class="button-container __style-primary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
+              </span></button>
+            </div>
           </div>
         </article>
 
@@ -934,6 +1175,8 @@
         { name: 'Мария Лебедева',   sub: '29 лет, Казань',         img: 'https://i.pravatar.cc/192?img=45' }
       ];
 
+      var FRIENDSHIP_AVATARS = ['https://i.pravatar.cc/192?img=47', 'https://i.pravatar.cc/192?img=49'];
+
       MomentViewer.bindRow(row, viewer, {
         slides: function (ava) {
           // ВВЗ-сториз — собирается из готового хелпера, иначе null → fallback
@@ -963,6 +1206,23 @@
               headerSubtitle: '3 часа назад',
               cta:            'Поздравить'
             })];
+          }
+          // Годовщина дружбы — пакет из 2 слайдов
+          if (ava.hasAttribute('data-friendship')) {
+            return [
+              MomentViewer.friendshipSlide({
+                title:   '7 лет дружбы',
+                sub:     'С 1 июня 2023 года',
+                avatars: FRIENDSHIP_AVATARS,
+                cta:     { label: 'Отправить другу' }
+              }),
+              MomentViewer.friendshipSlide({
+                title:   '478 подарков',
+                sub:     'С 1 июня 2023 года',
+                avatars: FRIENDSHIP_AVATARS,
+                cta:     { label: 'Отправить видео' }
+              })
+            ];
           }
           return null;
         }

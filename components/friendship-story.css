@@ -1,0 +1,70 @@
+/**
+ * OK Design System (proto) — FriendshipStory
+ *
+ * Сториз «годовщина дружбы / N подарков» — контент-слайд внутри viewer'а
+ * (см. components/moment.css → .moment__body). Состоит из:
+ *  - тёплого gradient-фона
+ *  - двух круглых аватарок 96px с overlap
+ *  - крупного заголовка (число / событие)
+ *  - подзаголовка (дата начала дружбы)
+ *
+ * Не привязан к moment — может использоваться в любом slot.
+ *
+ *   <div class="friendship-story">
+ *     <div class="friendship-story__avatars">
+ *       <div class="avatar __size-96 __type-image"><img src="…"></div>
+ *       <div class="avatar __size-96 __type-image"><img src="…"></div>
+ *     </div>
+ *     <h2 class="friendship-story__title">7 лет дружбы</h2>
+ *     <p class="friendship-story__sub">С 1 июня 2023 года</p>
+ *   </div>
+ */
+
+.friendship-story {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, #FF6A00 0%, #FF2D8A 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Стек из 2 аватарок 96px с диагональным overlap (по Figma). */
+.friendship-story__avatars {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: var(--space-12);
+  padding-left: var(--space-12); /* визуально центрируем диагональ */
+}
+.friendship-story__avatars .avatar {
+  border: 4px solid var(--static-text-and-icons-base-inverse-primary, white);
+  box-sizing: content-box;
+}
+.friendship-story__avatars .avatar + .avatar {
+  margin-left: -32px;
+  margin-top: 48px;
+}
+
+.friendship-story__title {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: 36px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--static-text-and-icons-base-inverse-primary, white);
+}
+
+.friendship-story__sub {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--static-text-and-icons-base-inverse-primary, white);
+  opacity: 0.84;
+}

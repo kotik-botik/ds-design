@@ -31,6 +31,10 @@
 
 .button-wrapper.__full-width {
   flex: 1 0 0;
+  display: flex;
+}
+.button-wrapper.__full-width > .button-container {
+  width: 100%;
 }
 
 /* Press animation on wrapper */
