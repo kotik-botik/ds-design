@@ -122,6 +122,7 @@ screen-transition.js теперь подключён синхронным `<scri
 - Переход forward = cross-document View Transitions API ФАЕРИТСЯ (`e.viewTransition` truthy на pagereveal входящего дока) → 300ms push-left. Tabbar = forward всегда (нет sessionStorage[BACK_KEY], navType≠traverse), поэтому back-ветка не задействована — это к лучшему (см. баг back-направления выше, к таббару не относится).
 - Рецепт детекта VT: `addInitScript(() => window.addEventListener('pagereveal', e => window.__vt = !!e.viewTransition))`, после waitForURL читать `page.evaluate(()=>window.__vt)`. Default chromium.launch() (без флага) уже даёт VT на localhost.
 - Тап через `.locator(sel).click({force:true})` + `page.waitForURL('**/<file>')`. 5 forward-нав + 1 active-noop отработали с первого прогона, селекторы стабильны.
+- RE-VERIFIED 2026-06-11 (6/6 PASS): s1 lenta→messages, s2 lenta→tribune, s3 messages→lenta, s4 tribune→messages, s5 notif→lenta — все navigated с `e.viewTransition` truthy (vt=true, cross-doc VT играет на каждом forward). s6 messages active message-tab (`__state-on`=true подтверждён в DOM) → framenavigated=false, url не изменился за 1.5s → no-op подтверждён. Драйвер: /tmp/tabbar.js.
 
 ## Сэмплинг анимаций
 - Для покадровых данных: запусти `requestAnimationFrame`-цикл **внутри страницы** через `page.evaluate(async () => new Promise(resolve => { ... }))` и собирай computed styles в массив. Возврат массива на хост даст ~16 ms точность.
