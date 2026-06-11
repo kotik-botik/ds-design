@@ -56,35 +56,30 @@
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
-  /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
-  .ll-fr-pymk { padding-top: var(--space-4); padding-bottom: var(--space-3); }
-  .ll-fr-pymk__head {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: var(--space-2); padding: 0 var(--space-4) var(--space-3);
+  /* «Возможно, вы знакомы» — берём ровно тот же паттерн, что в lenta-q3.html
+     (секция .ll-pymk + .ll-pymk__title ds-title-l + горизонтальный ряд friend-card). */
+  .ll-pymk { padding-top: var(--space-3); }
+  .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); }
+  .ll-pymk__row {
+    display: flex;
+    gap: var(--space-2);
+    padding: 0 var(--space-4);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .ll-fr-pymk__more {
-    border: 0; background: transparent; padding: 0;
-    color: var(--static-text-and-icons-special-primary);
-    font-family: var(--font-family);
-    font-size: 15px; line-height: 20px; font-weight: 600;
-    cursor: pointer;
-  }
-  .ll-fr-pymk__row {
-    display: flex; gap: var(--space-2); padding: 0 var(--space-4);
-    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  }
-  .ll-fr-pymk__row::-webkit-scrollbar { display: none; }
+  .ll-pymk__row::-webkit-scrollbar { display: none; }
 
-  /* Заголовки секций «Важные друзья» / «Все друзья» */
+  /* Заголовки секций «Важные друзья» / «Все друзья» — копируют .ll-pymk__title */
   .ll-fr-section { padding-top: var(--space-3); }
-  .ll-fr-section__head { padding: 0 var(--space-4) var(--space-2); }
+  .ll-fr-section__title { padding: 0 var(--space-4) var(--space-3); }
 
-  /* Правый слот в uni-cell — две круглые кнопки action */
-  .ll-fr-cell__actions {
-    display: flex; align-items: center; gap: var(--space-1);
-    margin-left: auto;
+  /* Правый слот uni-cell — кластер из двух круглых кнопок (компактный, не flex:1).
+     Используем DS-узел .uni-cell-middle-right-content + override на ширину. */
+  .uni-cell .uni-cell-middle-right-content.__compact {
+    flex: 0 0 auto;
+    gap: var(--space-1);
   }
-  .ll-fr-cell__actions .button-inline__icon { width: 24px; height: 24px; }
 </style>
 </head>
 <body>
@@ -156,61 +151,23 @@
         </button>
       </div>
 
-      <!-- Возможно, вы знакомы — стек friend-card (dismissible row) -->
-      <section class="ll-fr-pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
-        <div class="ll-fr-pymk__head">
-          <header class="header __size-m"><div class="header__title">Возможно, вы знакомы</div></header>
-          <button class="ll-fr-pymk__more" type="button">Ещё</button>
-        </div>
-        <div class="ll-fr-pymk__row">
-
-          <div class="friend-card" data-dismiss-target>
-            <div class="friend-card__media">
-              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=68')"></div>
-              <img src="https://i.pravatar.cc/240?img=68" alt="">
-              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
-                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
-              </span>
-            </div>
-            <div class="friend-card__content">
-              <div class="friend-card__title ds-title-s">Ажар Сарбасова</div>
-              <div class="friend-card__subtitle ds-caption-m">3 общих друга</div>
-              <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="friend-card" data-dismiss-target>
-            <div class="friend-card__media">
-              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=12')"></div>
-              <img src="https://i.pravatar.cc/240?img=12" alt="">
-              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
-                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
-              </span>
-            </div>
-            <div class="friend-card__content">
-              <div class="friend-card__title ds-title-s">Александр Кириллов</div>
-              <div class="friend-card__subtitle ds-caption-m">3 общих друга</div>
-              <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
-              </div>
-            </div>
-          </div>
+      <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible).
+           Блок взят 1:1 из lenta-q3.html. -->
+      <section class="ll-pymk island" data-dismiss-row aria-label="Возможно, вы знакомы">
+        <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
+        <div class="ll-pymk__row">
 
           <div class="friend-card" data-dismiss-target>
             <div class="friend-card__media">
               <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=47')"></div>
               <img src="https://i.pravatar.cc/240?img=47" alt="">
-              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
-                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
-              </span>
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
             </div>
             <div class="friend-card__content">
               <div class="friend-card__title ds-title-s">Алёна Ящук</div>
               <div class="friend-card__subtitle ds-caption-m">20 общих друзей</div>
               <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
               </div>
             </div>
           </div>
@@ -219,15 +176,43 @@
             <div class="friend-card__media">
               <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=44')"></div>
               <img src="https://i.pravatar.cc/240?img=44" alt="">
-              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
-                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
-              </span>
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
             </div>
             <div class="friend-card__content">
               <div class="friend-card__title ds-title-s">Анна Смирнова</div>
               <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
               <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="friend-card" data-dismiss-target>
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=52')"></div>
+              <img src="https://i.pravatar.cc/240?img=52" alt="">
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Александр Фёдоров</div>
+              <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="friend-card" data-dismiss-target>
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=45')"></div>
+              <img src="https://i.pravatar.cc/240?img=45" alt="">
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Мария Иванова</div>
+              <div class="friend-card__subtitle ds-caption-m">10 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
               </div>
             </div>
           </div>
@@ -236,15 +221,13 @@
             <div class="friend-card__media">
               <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=33')"></div>
               <img src="https://i.pravatar.cc/240?img=33" alt="">
-              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
-                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
-              </span>
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
             </div>
             <div class="friend-card__content">
               <div class="friend-card__title ds-title-s">Олег Зайцев</div>
               <div class="friend-card__subtitle ds-caption-m">8 общих друзей</div>
               <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
               </div>
             </div>
           </div>
@@ -254,9 +237,7 @@
 
       <!-- Важные друзья -->
       <section class="ll-fr-section">
-        <div class="ll-fr-section__head">
-          <header class="header __size-m"><div class="header__title">Важные друзья</div></header>
-        </div>
+        <div class="ll-fr-section__title ds-title-s">Важные друзья</div>
 
         <div class="uni-cell-wrapper">
           <div class="uni-cell-container __state-enabled">
@@ -266,7 +247,7 @@
                 <div class="ds-title-s">Лена Катина</div>
                 <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">4 минуты назад</div>
               </div>
-              <div class="ll-fr-cell__actions">
+              <div class="uni-cell-middle-right-content __compact">
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
               </div>
@@ -282,7 +263,7 @@
                 <div class="ds-title-s">Мария Иванова</div>
                 <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">сегодня в 11:30</div>
               </div>
-              <div class="ll-fr-cell__actions">
+              <div class="uni-cell-middle-right-content __compact">
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
               </div>
@@ -293,9 +274,7 @@
 
       <!-- Все друзья -->
       <section class="ll-fr-section">
-        <div class="ll-fr-section__head">
-          <header class="header __size-m"><div class="header__title">Все друзья</div></header>
-        </div>
+        <div class="ll-fr-section__title ds-title-s">Все друзья</div>
 
         <div class="uni-cell-wrapper">
           <div class="uni-cell-container __state-enabled">
@@ -305,7 +284,7 @@
                 <div class="ds-title-s">Виктория Соколова</div>
                 <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн вчера</div>
               </div>
-              <div class="ll-fr-cell__actions">
+              <div class="uni-cell-middle-right-content __compact">
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
               </div>
@@ -321,7 +300,7 @@
                 <div class="ds-title-s">Дмитрий Соколов</div>
                 <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн 2 дня назад</div>
               </div>
-              <div class="ll-fr-cell__actions">
+              <div class="uni-cell-middle-right-content __compact">
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
               </div>
@@ -337,7 +316,7 @@
                 <div class="ds-title-s">Александр Фёдоров</div>
                 <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн на этой неделе</div>
               </div>
-              <div class="ll-fr-cell__actions">
+              <div class="uni-cell-middle-right-content __compact">
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
               </div>
@@ -353,7 +332,7 @@
                 <div class="ds-title-s">Светлана Орлова</div>
                 <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">была онлайн неделю назад</div>
               </div>
-              <div class="ll-fr-cell__actions">
+              <div class="uni-cell-middle-right-content __compact">
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
                 <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
               </div>
