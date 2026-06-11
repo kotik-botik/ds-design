@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="index.css">
 <link rel="stylesheet" href="components/system-notifications.css">
+<link rel="stylesheet" href="components/tooltip.css">
 <!-- В head синхронно: listener pagereveal должен зарегистрироваться до события -->
 <script src="components/screen-transition.js"></script>
 <style>
@@ -204,6 +205,46 @@
      <div class="ll-promo__art"><img src="…"></div> */
   .ll-promo__art { position: relative; flex: 0 0 auto; width: 100px; height: 72px; }
   .ll-promo__art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  /* «N лет назад в этот день» — карточка-воспоминание.
+     Над заголовком ds-title-xl — caption ds-body-m с иконкой closed-eye
+     («Видите только вы»). Ниже — reshare-card с автором «Вы» и фото,
+     «Понравилось N людям» (avatars-view) и actions: широкая Primary
+     «Поделиться» + квадратная Secondary «···». Боковые паддинги детям
+     раздаёт сам text-feed (`.text-feed > :not(.text-feed__media)`). */
+  .ll-otd__caption {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--dynamic-text-and-icons-base-secondary);
+  }
+  .ll-otd__caption .ll-icon { flex-shrink: 0; }
+  .ll-otd__likes {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .ll-otd__likes-text { color: var(--dynamic-text-and-icons-base-secondary); }
+  /* Primary-кнопка тянется на оставшуюся ширину, secondary — фикс 44 */
+  .ll-otd__share { flex: 1 1 0; }
+  .ll-otd__share .button-container { width: 100%; }
+
+  /* «Вас отметили на фото N лет назад» — карточка-воспоминание.
+     Сверху аватар 72 (без имени), ниже ds-title-xl, ниже full-bleed фото
+     с tooltip-овером, который указывает на отмеченного. Внизу — primary
+     «Поделиться» на всю ширину. Media получает .text-feed__media,
+     чтобы выйти из общего паддинга text-feed (full-bleed). */
+  .ll-tagged__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 375/282;
+    overflow: hidden;
+  }
+  .ll-tagged__media > img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .ll-tagged__share { flex: 1 1 0; }
+  .ll-tagged__share .button-container { width: 100%; }
 
 
 </style>
@@ -436,6 +477,52 @@
 
           </div>
         </section>
+
+        <!-- На этот день — карточка-воспоминание (только вы видите) -------- -->
+        <article class="text-feed island">
+          <div class="ll-otd__caption ds-body-m">
+            <img class="ll-icon" src="assets/icons/view_off_16_20.svg" width="16" height="16" alt="">
+            <span>Видите только вы</span>
+          </div>
+          <div class="ds-title-xl">7 лет назад в этот день</div>
+
+          <div class="text-feed__reshare-card">
+            <div class="text-feed__reshare-card-author">
+              <div class="avatar __size-24 __type-image"><img src="https://i.okcdn.ru/i?r=CFtAm_VFBkioSGBqh1KlPJb2p-6eK2lnJ5zICRbTaNaonSN6tKv9jm9OP4liccV1Jgpm_D-XHaUnT4NuMNnP3vDReRbjjmJ7dZqat-wXAZKU9tVWLrcf8vhMiW0AAAAp&dpr=2" alt=""></div>
+              <div class="ds-body-m text-feed__reshare-card-author-name">Вы</div>
+            </div>
+
+            <p class="ds-body-m text-feed__body">Посадили розы на даче вместе с Ольгой. Тогда казалось, что не приживутся, а они до сих пор цветут</p>
+
+            <div class="text-feed__reshare-card-media" style="aspect-ratio: 328/240; overflow:hidden">
+              <img src="https://vki9.okcdn.ru/i?r=CFNAm_VFBkioSGBqh1LGodVgplOpC8fqxcQLrolhsyEXnbLgzgzwRCzZsAn44lhvpacHaRoJCBt5Q3QMq2Via9Bvms5Iiw285phbAxIAQP6-KAExAAAAKQ&dpr=2&fn=h_768" alt="" style="width:100%; height:100%; object-fit:cover; display:block">
+            </div>
+          </div>
+
+          <div class="ll-otd__likes">
+            <div class="avatars-view __size-36">
+              <div class="avatars-view__stack">
+                <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=32" alt=""></div>
+                <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=47" alt=""></div>
+                <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/96?img=23" alt=""></div>
+              </div>
+            </div>
+            <span class="ds-body-m ll-otd__likes-text">Понравилось 4 людям</span>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 ll-otd__share">
+              <button class="button-container __style-primary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
+              </span></button>
+            </div>
+            <div class="button-wrapper __size-44 __pinned-end">
+              <button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt="">
+              </span></button>
+            </div>
+          </div>
+        </article>
 
         <!-- 4. Групповой пост Super.ru с подпиской, галереей и комментом -- -->
         <article class="text-feed island">
@@ -753,6 +840,29 @@
               <button class="button-container __style-secondary" style="width:100%"><span class="button-content">✨&nbsp;Создать ИИ подарок</span></button>
             </div>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
+          </div>
+        </article>
+
+        <!-- Вас отметили на фото — memory-карточка (full-bleed media + tooltip) -->
+        <article class="text-feed island">
+          <div class="avatar __size-72 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+          <div class="ds-title-xl">Вас отметили на фото 2 года назад</div>
+
+          <div class="text-feed__media ll-tagged__media">
+            <img src="https://images.unsplash.com/photo-1543007631-283050bb3e8c?w=750&q=80" alt="">
+            <div class="tooltip-wrapper __view-primary __side-bottom __alignment-start __placement-bottom-start"
+                 style="top: 28px; left: 56px">
+              <div class="tooltip ds-title-m">Анастасия Кащеева</div>
+              <div class="tooltip-tail"></div>
+            </div>
+          </div>
+
+          <div class="actions-bar">
+            <div class="button-wrapper __size-44 ll-tagged__share">
+              <button class="button-container __style-primary"><span class="button-content">
+                <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
+              </span></button>
+            </div>
           </div>
         </article>
 
