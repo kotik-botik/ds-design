@@ -504,8 +504,11 @@
      за нижним краем .moment (overflow: hidden скроет). */
   transform: translateY(200%) rotate(var(--bday-bln-r, 0deg));
   /* Пролёт снизу → вверх → за верхнюю границу карточки. После анимации
-     шар лежит за пределами viewport (opacity:0 + translateY(-260%)). */
-  animation: bday-balloon-rise 1.8s cubic-bezier(0.22, 1, 0.36, 1)
+     шар лежит за пределами viewport (opacity:0 + translateY(-260%)).
+     Easing ease-in-out (sigmoid) — равномерный набор скорости без
+     «вжух»-эффекта; длительность 5.4 s (×3 от исходных 1.8 s), чтобы
+     шары успели насладиться. */
+  animation: bday-balloon-rise 5.4s cubic-bezier(0.45, 0, 0.55, 1)
              var(--bday-bln-d, 0s) both;
 }
 .moment__bday-balloon img {
