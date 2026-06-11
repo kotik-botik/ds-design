@@ -79,9 +79,12 @@
   z-index: 1;
 }
 
-/* Контент — по центру */
+/* Контент — по центру. flex: 1 + margin-top:auto на .vvz-card__btn даёт
+   выравнивание кнопок по низу карточки, когда в сетке (grid stretch) одни
+   карточки с mutuals, другие — без. */
 .vvz-card__content {
   width: 100%;
+  flex: 1 1 auto;
   box-sizing: border-box;
   padding: 8px 12px 12px;
   display: flex;
@@ -117,7 +120,8 @@
 }
 
 .vvz-card__btn {
-  margin-top: 12px;
+  margin-top: auto; /* прижимает кнопку к низу — выравнивает высоту карточек */
+  padding-top: 12px;
   display: block;
   width: 100%;
 }
