@@ -57,8 +57,10 @@
   }
 
   /* «Возможно, вы знакомы» — берём ровно тот же паттерн, что в lenta-q3.html
-     (секция .ll-pymk + .ll-pymk__title ds-title-l + горизонтальный ряд friend-card). */
-  .ll-pymk { padding-top: var(--space-3); }
+     (секция .ll-pymk + .ll-pymk__title ds-title-l + горизонтальный ряд friend-card).
+     .island не подходит здесь: его bg = page bg (secondary), а overflow:hidden
+     клипает горизонтальный скролл `.ll-pymk__row` — карточки исчезают. */
+  .ll-pymk { padding-top: var(--space-3); padding-bottom: var(--space-3); }
   .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); }
   .ll-pymk__row {
     display: flex;
@@ -70,16 +72,17 @@
   }
   .ll-pymk__row::-webkit-scrollbar { display: none; }
 
-  /* Заголовки секций «Важные друзья» / «Все друзья» — копируют .ll-pymk__title */
+  /* Секции «Важные / Все друзья» — заголовок (как .ll-pymk__title) + список .user-cell.
+     Между ячейками вертикальный gap, тот же что в guests.html (--space-4). */
   .ll-fr-section { padding-top: var(--space-3); }
   .ll-fr-section__title { padding: 0 var(--space-4) var(--space-3); }
-
-  /* Правый слот uni-cell — кластер из двух круглых кнопок (компактный, не flex:1).
-     Используем DS-узел .uni-cell-middle-right-content + override на ширину. */
-  .uni-cell .uni-cell-middle-right-content.__compact {
-    flex: 0 0 auto;
-    gap: var(--space-1);
+  .ll-fr-section__list {
+    display: flex; flex-direction: column;
+    gap: var(--space-4);
+    padding: 0 var(--space-4);
   }
+  /* Override DS gap правого слота .user-cell: 6px вместо 16px (как просили) */
+  .ll-fr-section .user-cell__actions { gap: var(--space-1-5); }
 </style>
 </head>
 <body>
@@ -152,8 +155,8 @@
       </div>
 
       <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible).
-           Блок взят 1:1 из lenta-q3.html. -->
-      <section class="ll-pymk island" data-dismiss-row aria-label="Возможно, вы знакомы">
+           Блок взят из lenta-q3.html; .island не подключаем, см. комментарий в стилях. -->
+      <section class="ll-pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
         <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
         <div class="ll-pymk__row">
 
@@ -237,107 +240,92 @@
 
       <!-- Важные друзья -->
       <section class="ll-fr-section">
-        <div class="ll-fr-section__title ds-title-s">Важные друзья</div>
+        <div class="ll-fr-section__title ds-title-l">Важные друзья</div>
+        <div class="ll-fr-section__list">
 
-        <div class="uni-cell-wrapper">
-          <div class="uni-cell-container __state-enabled">
-            <div class="uni-cell">
-              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
-              <div class="uni-cell-additional-content">
-                <div class="ds-title-s">Лена Катина</div>
-                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">4 минуты назад</div>
-              </div>
-              <div class="uni-cell-middle-right-content __compact">
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
-              </div>
+          <div class="user-cell">
+            <div class="avatar __size-56 __type-image __has-addon">
+              <img src="https://i.pravatar.cc/112?img=49" alt="">
+              <span class="avatar__addon __pos-bl"><span class="user-cell__online-dot"></span></span>
+            </div>
+            <div class="user-cell__body">
+              <div class="ds-title-s user-cell__title">Лена Катина</div>
+              <div class="ds-caption-m user-cell__time">4 минуты назад</div>
+            </div>
+            <div class="user-cell__actions">
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
             </div>
           </div>
-        </div>
 
-        <div class="uni-cell-wrapper">
-          <div class="uni-cell-container __state-enabled">
-            <div class="uni-cell">
-              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=32" alt=""></div>
-              <div class="uni-cell-additional-content">
-                <div class="ds-title-s">Мария Иванова</div>
-                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">сегодня в 11:30</div>
-              </div>
-              <div class="uni-cell-middle-right-content __compact">
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
-              </div>
+          <div class="user-cell">
+            <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=32" alt=""></div>
+            <div class="user-cell__body">
+              <div class="ds-title-s user-cell__title">Мария Иванова</div>
+              <div class="ds-caption-m user-cell__time">сегодня в 11:30</div>
+            </div>
+            <div class="user-cell__actions">
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
             </div>
           </div>
+
         </div>
       </section>
 
       <!-- Все друзья -->
       <section class="ll-fr-section">
-        <div class="ll-fr-section__title ds-title-s">Все друзья</div>
+        <div class="ll-fr-section__title ds-title-l">Все друзья</div>
+        <div class="ll-fr-section__list">
 
-        <div class="uni-cell-wrapper">
-          <div class="uni-cell-container __state-enabled">
-            <div class="uni-cell">
-              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
-              <div class="uni-cell-additional-content">
-                <div class="ds-title-s">Виктория Соколова</div>
-                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн вчера</div>
-              </div>
-              <div class="uni-cell-middle-right-content __compact">
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
-              </div>
+          <div class="user-cell">
+            <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
+            <div class="user-cell__body">
+              <div class="ds-title-s user-cell__title">Виктория Соколова</div>
+              <div class="ds-caption-m user-cell__time">был онлайн вчера</div>
+            </div>
+            <div class="user-cell__actions">
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
             </div>
           </div>
-        </div>
 
-        <div class="uni-cell-wrapper">
-          <div class="uni-cell-container __state-enabled">
-            <div class="uni-cell">
-              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=5" alt=""></div>
-              <div class="uni-cell-additional-content">
-                <div class="ds-title-s">Дмитрий Соколов</div>
-                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн 2 дня назад</div>
-              </div>
-              <div class="uni-cell-middle-right-content __compact">
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
-              </div>
+          <div class="user-cell">
+            <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=5" alt=""></div>
+            <div class="user-cell__body">
+              <div class="ds-title-s user-cell__title">Дмитрий Соколов</div>
+              <div class="ds-caption-m user-cell__time">был онлайн 2 дня назад</div>
+            </div>
+            <div class="user-cell__actions">
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
             </div>
           </div>
-        </div>
 
-        <div class="uni-cell-wrapper">
-          <div class="uni-cell-container __state-enabled">
-            <div class="uni-cell">
-              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=15" alt=""></div>
-              <div class="uni-cell-additional-content">
-                <div class="ds-title-s">Александр Фёдоров</div>
-                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн на этой неделе</div>
-              </div>
-              <div class="uni-cell-middle-right-content __compact">
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
-              </div>
+          <div class="user-cell">
+            <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=15" alt=""></div>
+            <div class="user-cell__body">
+              <div class="ds-title-s user-cell__title">Александр Фёдоров</div>
+              <div class="ds-caption-m user-cell__time">был онлайн на этой неделе</div>
+            </div>
+            <div class="user-cell__actions">
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
             </div>
           </div>
-        </div>
 
-        <div class="uni-cell-wrapper">
-          <div class="uni-cell-container __state-enabled">
-            <div class="uni-cell">
-              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=31" alt=""></div>
-              <div class="uni-cell-additional-content">
-                <div class="ds-title-s">Светлана Орлова</div>
-                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">была онлайн неделю назад</div>
-              </div>
-              <div class="uni-cell-middle-right-content __compact">
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
-                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
-              </div>
+          <div class="user-cell">
+            <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=31" alt=""></div>
+            <div class="user-cell__body">
+              <div class="ds-title-s user-cell__title">Светлана Орлова</div>
+              <div class="ds-caption-m user-cell__time">была онлайн неделю назад</div>
+            </div>
+            <div class="user-cell__actions">
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+              <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
             </div>
           </div>
+
         </div>
 
         <div style="height: 96px"></div>
