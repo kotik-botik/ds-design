@@ -56,7 +56,9 @@
      верхний отступ контента в карточке = 12 хедера + 12 от карточки). */
   .ll-gc-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* minmax(0,1fr) — иначе огромный font-size:36px в постере задаёт
+       min-content колонки и грид уезжает за viewport на 360px. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--space-3);                          /* 12px */
     padding: 0 var(--space-4) 36px;
   }
@@ -68,6 +70,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-1);                          /* 4px между картинкой и тегом */
+    min-width: 0;                                 /* не давать постеру растягивать колонку */
     background: none;
     border: 0;
     padding: 0;

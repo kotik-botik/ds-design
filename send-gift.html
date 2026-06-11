@@ -343,7 +343,6 @@
         btn.addEventListener('click', function () {
           var name = btn.closest('.uni-cell').querySelector('.ll-sg-friend__name').textContent.trim();
           // Заменяем кнопку статусом «Отправлено» — как в макете.
-          var cell = btn.closest('.uni-cell-additional-content').parentNode;
           var wrap = btn.closest('.button-wrapper');
           if (wrap) {
             var sent = document.createElement('span');
