@@ -181,3 +181,14 @@ screen-transition.js теперь подключён синхронным `<scri
 - Карточка «В браке с Сергеем уже 7 лет 💜»: верстается корректно. Avatars `__size-72`: 1-й ml=0, 2-й ml=**-12px** (overlap слева, как в спеке). Title 27px/600. Subtitle `ds-body-m` единственный. Inline-link «Указать дату годовщины и годы брака» color `rgb(215, 98, 0)` (#D76200), иконка edit_16_20.svg 16×16 слева. Mosaic: верхнее фото 388×198, ряд из 3 миниатюр 125×120 каждая. На последней оверлей «Ещё 5» — белый текст rgb(255,255,255), фон родителя rgba(131,102,86,0.12). Share-btn `__style-secondary`, width 358, без «···» (`hasEllipsis:false`).
 - Карточка «Анна, поздравляем с годовщиной дружбы»: оранжевый постер `.ll-anniv-poster` 358×514 (aspect 0.697, спека ~343/492=0.697 совпадает), borderRadius **19px**, bg = radial-gradient (255,181,107)→transparent + linear-gradient 160deg (255,119,0)→(215,98,0). Avatars 96×96 пара внутри постера сверху. balloons_24.svg 66×66 с transform matrix rotate (-12° по cos/sin) в верхнем-левом, gift_24.svg 96×96 в нижнем-правом. «478 подарков» 34px/700 white. «С 1 июня 2023 года» 15px white. Primary-кнопка «Отправить другу» `__style-primary` bg rgb(255,119,0), width 358, с иконкой.
 - ВАЖНО про порт http-сервера: основной dev-port — **8000** (как в задаче), не 8765. Перед стартом curl 127.0.0.1:8000.
+
+## menu.html — новый экран (наблюдено 2026-06-11)
+- Использует тот же fullscreen-shell, что и messages/lenta-q3: `.phone-frame.__fullscreen` (390×844, overflow:hidden), скроллер `.phone-frame__feed` (top:0..844). На свежей загрузке feed.scrollHeight==clientHeight==844 → контент помещается без скролла, прокрутка вниз ничего не двигает. Если контент позже разрастётся — тогда скролл активируется.
+- `.ll-tabbar`: position:fixed, top=771, bottom=844, h=73 — стандартное место. На menu.html таббар присутствует и НЕ уезжает при попытке скролла.
+- Таббар на messages.html / menu.html содержит 5 кнопок, каждая 78×48, y=772:
+  1. `.tabbar-icon.__slot-feed` x=0
+  2. `.tabbar-icon.__slot-book` x=78
+  3. `.tabbar-icon.__slot-message` x=156 (с `__state-on` на messages)
+  4. `.tabbar-icon.__slot-clip` x=234
+  5. `.tabbar-icon.__slot-menu` x=312 (≡)
+- Селектор иконки меню: `.ll-tabbar .__slot-menu` (или `.tabbar-icon.__slot-menu`). Тап ведёт на `menu.html` (подтверждено finalUrl). На самом menu.html `__slot-menu` должен бы получить `__state-on` — проверять отдельно.
