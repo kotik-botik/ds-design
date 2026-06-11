@@ -479,6 +479,78 @@
 }
 
 /* ============================================================
+   BDAY-BALLOONS — 3 PNG-шарика, вылетающие снизу карточки при
+   открытии сториз. Слой охватывает всю карточку (sibling
+   .moment__bday) и лежит между блюром-с-текстом и хедером /
+   CTA. Анимация перезапускается при каждом открытии сториз
+   (см. moment.js — innerHTML пересоздаётся в go()).
+   Позиции/повороты сняты с макета (фрейм 360×644):
+     • poodle (зелёный) — слева, частично за кромкой;
+     • ok (оранжевый ОК) — центр-верх;
+     • round (оранжевый круглый) — справа, чуть ниже.
+   Размеры в % от ширины карточки сохраняют макетные пропорции.
+   ============================================================ */
+.moment__bday-balloons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.moment__bday-balloon {
+  position: absolute;
+  pointer-events: none;
+  /* Стартовая поза до старта анимации (для не-Safari браузеров, где
+     animation: ... both ещё не применился). 200% — гарантированно
+     за нижним краем .moment (overflow: hidden скроет). */
+  transform: translateY(200%) rotate(var(--bday-bln-r, 0deg));
+  animation: bday-balloon-rise 1.1s cubic-bezier(0.22, 1, 0.36, 1)
+             var(--bday-bln-d, 0s) both;
+}
+.moment__bday-balloon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Лёгкая тень, чтобы шары не «приклеивались» к блюру. */
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.25));
+}
+.moment__bday-balloon.__b-poodle {
+  --bday-bln-r: -12.74deg;
+  --bday-bln-d: 0.05s;
+  left: -27%;
+  top: 47%;
+  width: 70%;
+  aspect-ratio: 1;
+}
+.moment__bday-balloon.__b-ok {
+  --bday-bln-r: 0deg;
+  --bday-bln-d: 0.18s;
+  left: 12%;
+  top: 27%;
+  width: 68%;
+  aspect-ratio: 1;
+}
+.moment__bday-balloon.__b-round {
+  --bday-bln-r: 10.68deg;
+  --bday-bln-d: 0.30s;
+  left: 37%;
+  top: 36%;
+  width: 77%;
+  aspect-ratio: 1;
+}
+
+@keyframes bday-balloon-rise {
+  from {
+    transform: translateY(200%) rotate(var(--bday-bln-r, 0deg));
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) rotate(var(--bday-bln-r, 0deg));
+    opacity: 1;
+  }
+}
+
+/* ============================================================
    HOME INDICATOR — белая «пилюля» 108×4 внизу
    ============================================================ */
 .moment__handle {
