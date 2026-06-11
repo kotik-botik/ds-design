@@ -253,8 +253,8 @@
   color: var(--dynamic-text-and-icons-base-primary);
 }
 
-/* Текстовый стиль «poem» — для стихов. Source Serif Pro, 24/28, 0.24 трекинг,
-   переносы по строкам через <br>. Применяется на body или на отдельный пост.
+/* Текстовый стиль «poem» — для стихов. Source Serif Pro, 24/28, 0.24 трекинг.
+   По спеке — клэмп 4 строки с многоточием. Переносы между строфами через <br>.
      <p class="text-feed__body __poem">…<br>…</p>
    ВАЖНО: на странице должен быть подключён шрифт Source Serif Pro
    (Google Fonts: family=Source+Serif+Pro:wght@400). */
@@ -265,11 +265,15 @@
   line-height: 28px;
   letter-spacing: 0.24px;
   font-weight: 400;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Текстовый стиль «news» — для крупных текстовых постов-новостей.
-   Roboto Regular, 24/28, 0.24 трекинг — тот же ритм, что у poem, но
-   системным шрифтом (без сериф).
+   Roboto Regular, 24/28, 0.24 трекинг. Клэмп 4 строки с многоточием.
      <p class="text-feed__body __news">…</p>
    Шрифт Roboto уже подключён в проекте через fonts.css. */
 .text-feed__body.__news,
@@ -279,6 +283,11 @@
   line-height: 28px;
   letter-spacing: 0.24px;
   font-weight: 400;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .text-feed__body-full { display: none; }
