@@ -225,15 +225,12 @@
     gap: var(--space-3);
   }
   .ll-otd__likes-text { color: var(--dynamic-text-and-icons-base-secondary); }
-  /* Primary-кнопка тянется на оставшуюся ширину, secondary — фикс 44 */
-  .ll-otd__share { flex: 1 1 0; }
-  .ll-otd__share .button-container { width: 100%; }
 
   /* «Вас отметили на фото N лет назад» — карточка-воспоминание.
      Сверху аватар 72 (без имени), ниже ds-title-xl, ниже full-bleed фото
      с tooltip-овером, который указывает на отмеченного. Внизу — primary
-     «Поделиться» на всю ширину. Media получает .text-feed__media,
-     чтобы выйти из общего паддинга text-feed (full-bleed). */
+     «Поделиться» на всю ширину (через .button-wrapper.__full-width).
+     Media получает .text-feed__media — чтобы выйти из паддинга text-feed. */
   .ll-tagged__media {
     position: relative;
     width: 100%;
@@ -243,8 +240,6 @@
   .ll-tagged__media > img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  .ll-tagged__share { flex: 1 1 0; }
-  .ll-tagged__share .button-container { width: 100%; }
 
 
 </style>
@@ -410,7 +405,7 @@
                 <div class="friend-card__title ds-title-s">Алёна Ящук</div>
                 <div class="friend-card__subtitle ds-caption-m">20 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -425,7 +420,7 @@
                 <div class="friend-card__title ds-title-s">Анна Смирнова</div>
                 <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -440,7 +435,7 @@
                 <div class="friend-card__title ds-title-s">Александр Фёдоров</div>
                 <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -455,7 +450,7 @@
                 <div class="friend-card__title ds-title-s">Мария Иванова</div>
                 <div class="friend-card__subtitle ds-caption-m">10 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -470,7 +465,7 @@
                 <div class="friend-card__title ds-title-s">Олег Зайцев</div>
                 <div class="friend-card__subtitle ds-caption-m">8 общих друзей</div>
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                  <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+                  <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
               </div>
             </div>
@@ -511,7 +506,7 @@
           </div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-44 ll-otd__share">
+            <div class="button-wrapper __size-44 __full-width">
               <button class="button-container __style-primary"><span class="button-content">
                 <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
               </span></button>
@@ -836,8 +831,8 @@
           </div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-36 ll-ai-gift-btn" style="flex:1 1 0">
-              <button class="button-container __style-secondary" style="width:100%"><span class="button-content">✨&nbsp;Создать ИИ подарок</span></button>
+            <div class="button-wrapper __size-36 __full-width ll-ai-gift-btn">
+              <button class="button-container __style-secondary"><span class="button-content">✨&nbsp;Создать ИИ подарок</span></button>
             </div>
             <div class="button-wrapper __size-36 __pinned-end"><button class="button-container __style-secondary" aria-label="Ещё"><span class="button-content"><img class="ll-icon" src="assets/icons/more_16_20.svg" width="20" height="20" alt=""></span></button></div>
           </div>
@@ -858,7 +853,7 @@
           </div>
 
           <div class="actions-bar">
-            <div class="button-wrapper __size-44 ll-tagged__share">
+            <div class="button-wrapper __size-44 __full-width">
               <button class="button-container __style-primary"><span class="button-content">
                 <img class="ll-icon" src="assets/icons/reshare_16_20.svg" width="20" height="20" alt="">&nbsp;Поделиться
               </span></button>
