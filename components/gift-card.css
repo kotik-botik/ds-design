@@ -250,13 +250,12 @@
 /* ============================================================
    .__flying-up / .__flying-down — улёт после accept/trash.
    Карточку транслирует за пределы viewport (вверх или вниз)
-   + лёгкая ротация + плавный fade-out.
+   + лёгкая ротация. Opacity не трогаем — карточка улетает в полном виде.
    ============================================================ */
 .gift-card.__flying-up,
 .gift-card.__flying-down {
   pointer-events: none;
-  transition: transform 600ms cubic-bezier(.5, 0, .75, 0),
-              opacity 380ms ease-in 100ms;
+  transition: transform 600ms cubic-bezier(.5, 0, .75, 0);
 }
 /* Сами transform-значения JS подмешивает к существующему translate
    текущей позиции в ряду (см. acceptCard / dismissCard в gifts.html). */
