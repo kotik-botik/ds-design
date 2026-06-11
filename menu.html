@@ -199,7 +199,7 @@
           </div>
         </div>
 
-        <div class="uni-cell-wrapper ll-menu-item">
+        <div class="uni-cell-wrapper ll-menu-item" data-href="gifts-catalog.html" role="link" tabindex="0">
           <div class="uni-cell-container __state-enabled">
             <div class="uni-cell">
               <span class="ll-menu-icon"><img class="ll-icon" src="assets/icons/gift_24.svg" width="24" height="24" alt=""></span>
@@ -264,6 +264,13 @@
       if (!btn) return;
       e.preventDefault();
       location.href = btn.getAttribute('data-href');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var item = e.target.closest && e.target.closest('[data-href][tabindex]');
+      if (!item) return;
+      e.preventDefault();
+      location.href = item.getAttribute('data-href');
     });
   </script>
 </body>
