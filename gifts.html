@@ -34,30 +34,38 @@
     min-height: 0;
   }
 
-  /* Заголовок — по центру по горизонтали. Финальная позиция — top: 24px;
-     стартовый офсет ставит JS через inline translateY, и тот же спринг
-     карточек двигает его наверх (карточки «выталкивают» заголовок).
-     CSS-transition оставлен только на opacity — нужен для accept-all. */
+  /* Центральная колонка: title + stack живут в одном column-flex.
+     justify-content: flex-end → контент прижат к низу .gp__center;
+     стек анимирует свою height, заголовок физически выталкивается вверх. */
+  .gp__center {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 0;
+    position: relative;
+  }
+
+  /* Заголовок — обычный поток, по центру. Поднимается за счёт роста стека. */
   .gp__title {
-    position: absolute;
-    left: 0; right: 0;
     margin: 0 24px;
+    padding-bottom: 24px;
     text-align: center;
     font-size: 28px; line-height: 32px;
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--dynamic-text-and-icons-base-primary);
-    z-index: 4;
-    top: 24px;
-    transform: translateY(0);
     transition: opacity 280ms ease-out;
   }
 
-  /* Стек карточек — флекс-растяжка между навбаром и нижним CTA */
+  /* Стек карточек — позиционируем абсолютные карточки внутри.
+     height стартует с компакт-стека и анимируется JS-спрингом. */
   .gp__stack {
     position: relative;
-    flex: 1 1 auto;
-    min-height: 320px;
+    width: 100%;
+    height: 220px;
+    overflow: visible;
   }
 
   /* Все карточки лежат в центре стек-контейнера; смещения дают transform-ы */
@@ -84,20 +92,17 @@
   .gp.__phase-start .gp-card {
     opacity: 0.3;
   }
-  /* Стартовые повороты — из Figma (положительный градус = CCW в Figma).
-     В CSS наоборот: положительный = CW, поэтому все знаки инвертированы.
-     Масштаб 0.682 = 150/220 → визуальный размер 150×180. */
+  /* Старт — уже компактный веер (стак-веером): карточки заметно
+     разнесены по углам и tx/ty, но в меньшем масштабе (0.682 = 150/220).
+     Цифры повёрнуты под CSS-конвенцию (Figma положительный = CCW). */
   .gp.__phase-start .gp-card[data-i="0"] {
-    /* Figma -6° → CSS +6° */
-    transform: translate(-50%, 8%) scale(0.682) rotate(6deg);
+    transform: translate(-65%, -32%) scale(0.682) rotate(6deg);
   }
   .gp.__phase-start .gp-card[data-i="1"] {
-    /* Figma -0.5° → CSS +0.5° */
-    transform: translate(-44%, 4%) scale(0.682) rotate(0.5deg);
+    transform: translate(-35%, -26%) scale(0.682) rotate(0.5deg);
   }
   .gp.__phase-start .gp-card[data-i="2"] {
-    /* Figma -9° → CSS +9° */
-    transform: translate(-56%, 6%) scale(0.682) rotate(9deg);
+    transform: translate(-52%, -10%) scale(0.682) rotate(9deg);
   }
 
   /* Стадия 2 — FAN. Карточки разъезжаются в веер и масштабируются вверх.
@@ -314,9 +319,13 @@
 
   <!-- Тело экрана -->
   <main class="gp __phase-start" id="gp">
-    <h1 class="gp__title">Вам подарили<br>3 подарка!</h1>
+    <!-- Центральный флекс: title + stack растут в высоту синхронно;
+         стек анимирует свою высоту, и заголовок «выталкивается» наверх
+         просто за счёт колоночного флекса (justify-content: flex-end). -->
+    <div class="gp__center" id="gpCenter">
+      <h1 class="gp__title">Вам подарили<br>3 подарка!</h1>
 
-    <div class="gp__stack" id="gpStack">
+      <div class="gp__stack" id="gpStack">
       <article class="gp-card" data-i="0">
         <div class="gp-card__head">
           <span class="avatar"><img src="https://i.pravatar.cc/40?img=23" alt=""></span>
@@ -359,6 +368,8 @@
         </div>
       </article>
 
+      </div><!-- /.gp__stack -->
+
       <!-- Финальный экран — «Вы приняли все подарки» -->
       <div class="gp__final">
         <div class="gp__final-title">Вы приняли<br>все подарки</div>
@@ -369,7 +380,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </div><!-- /.gp__center -->
 
     <div class="gp__bottom">
       <div class="button-wrapper __size-56">
@@ -416,10 +427,12 @@
 
     // ────────────────────────────────────────────────────────────────
     // СПРИНГ: stiffness=96, damping=6, mass=1, длительность 2000 мс,
-    // задержка перед стартом 550 мс. ζ ≈ 0.306 → недодемпфированный,
+    // задержка перед стартом 500 мс. ζ ≈ 0.306 → недодемпфированный,
     // есть лёгкий перехлёст с осцилляцией.
+    // Две параллельные дорожки: opacity (линейно 0.3 → 1 за 2000мс)
+    // и position (спринг). Никаких промежуточных стадий.
     // ────────────────────────────────────────────────────────────────
-    var SPRING = { k: 96, c: 6, m: 1, duration: 2000, delay: 550 };
+    var SPRING = { k: 96, c: 6, m: 1, duration: 2000, delay: 500 };
     var omega0 = Math.sqrt(SPRING.k / SPRING.m);
     var zeta   = SPRING.c / (2 * Math.sqrt(SPRING.k * SPRING.m));
     var omegaD = omega0 * Math.sqrt(Math.max(0, 1 - zeta * zeta));
@@ -433,20 +446,20 @@
       return 1 - (1 + omega0 * t) * Math.exp(-omega0 * t);
     }
 
-    // Старт/финал каждого карточного transform-а. Должны 1-в-1 совпадать с
-    // .gp.__phase-start / .gp.__phase-fan правилами в CSS, иначе будет рывок.
+    // Старт — уже компактный веер (стак-веером), не глухая стопка.
+    // Финал — раскрытый веер. Всего 2 шага, между ними один спринг.
     var CARDS = [
-      { i: 0, from: { tx: -50, ty:  8, sc: 0.682, rot:  6     },
+      { i: 0, from: { tx: -65, ty: -32, sc: 0.682, rot:  6     },
               to:   { tx: -78, ty: -68, sc: 1,    rot: -7.21 } },
-      { i: 1, from: { tx: -44, ty:  4, sc: 0.682, rot:  0.5   },
+      { i: 1, from: { tx: -35, ty: -26, sc: 0.682, rot:  0.5   },
               to:   { tx: -22, ty: -52, sc: 1,    rot:  15   } },
-      { i: 2, from: { tx: -56, ty:  6, sc: 0.682, rot:  9     },
+      { i: 2, from: { tx: -52, ty: -10, sc: 0.682, rot:  9     },
               to:   { tx: -52, ty: -20, sc: 1,    rot: -16   } }
     ];
     var els = CARDS.map(function (c) {
       return root.querySelector('.gp-card[data-i="' + c.i + '"]');
     });
-    var titleEl = root.querySelector('.gp__title');
+    var stackEl = root.querySelector('.gp__stack');
     function apply(el, s) {
       el.style.transform =
         'translate(' + s.tx.toFixed(3) + '%, ' + s.ty.toFixed(3) + '%) ' +
@@ -454,17 +467,12 @@
         'rotate(' + s.rot.toFixed(3) + 'deg)';
     }
 
-    // Где заголовок должен стоять на старте (примерно на 38% высоты .gp,
-    // центрирован вертикально). Финальная позиция — top:24px (из CSS),
-    // поэтому стартовый offset = 38% - 24 - половина высоты заголовка.
-    function computeTitleStartOffset() {
-      return Math.max(
-        0,
-        root.getBoundingClientRect().height * 0.38 - 24 - titleEl.offsetHeight / 2
-      );
-    }
-    var titleStartOffset = computeTitleStartOffset();
-    titleEl.style.transform = 'translateY(' + titleStartOffset.toFixed(1) + 'px)';
+    // Стек растёт по высоте: 220 → 440 (≈ x2). За счёт justify-content:flex-end
+    // на родителе .gp__center заголовок физически выталкивается наверх по мере
+    // увеличения высоты стека.
+    var STACK_H_FROM = 220;
+    var STACK_H_TO   = 440;
+    stackEl.style.height = STACK_H_FROM + 'px';
 
     // 1) Зафиксируем старт инлайн-стилями, чтобы CSS-rule .__phase-start
     //    нам не мешал — спринг полностью ведёт transform/opacity сам.
@@ -473,13 +481,11 @@
       els[idx].style.opacity = '0.3';
     });
 
-    // 2) Подождём delay, потом запустим спринг. Карточки и заголовок
-    //    движутся синхронно — карточки «выталкивают» надпись наверх.
+    // 2) Подождём delay, потом запустим спринг. Карточки разлетаются веером
+    //    и параллельно стек растёт по высоте — заголовок поедет наверх сам.
     setTimeout(function () {
       root.classList.remove('__phase-start');
       root.classList.add('__phase-fan');
-      // Перемерим офсет — на случай если за 550мс изменились размеры.
-      titleStartOffset = computeTitleStartOffset();
 
       var t0 = performance.now();
       function frame(now) {
@@ -494,27 +500,18 @@
           };
           apply(els[idx], s);
         });
-        // Прозрачность — линейная по времени, параллельно выталкиванию
-        // (а не привязана к spring-progress, который осциллирует).
-        var linT = elapsed / SPRING.duration;
-        var op = (0.3 + 0.7 * linT).toFixed(3);
+        // Стек растёт по той же spring-кривой → толкает заголовок наверх.
+        stackEl.style.height = (STACK_H_FROM + (STACK_H_TO - STACK_H_FROM) * p).toFixed(2) + 'px';
+
+        // Прозрачность — параллельная независимая дорожка, линейно за duration.
+        var op = (0.3 + 0.7 * (elapsed / SPRING.duration)).toFixed(3);
         CARDS.forEach(function (_, idx) { els[idx].style.opacity = op; });
-        // Заголовок тоже спрингим: от стартового офсета к 0.
-        titleEl.style.transform = 'translateY(' + (titleStartOffset * (1 - p)).toFixed(2) + 'px)';
 
         if (elapsed < SPRING.duration) requestAnimationFrame(frame);
         else {
-          // Зафиксируем точные целевые значения, потом снимем инлайн —
-          // CSS-правила .__phase-fan возьмут на себя transform.
+          // Финальное точное состояние.
           CARDS.forEach(function (c, idx) { apply(els[idx], c.to); els[idx].style.opacity = '1'; });
-          titleEl.style.transform = 'translateY(0)';
-          requestAnimationFrame(function () {
-            CARDS.forEach(function (c, idx) {
-              els[idx].style.transform = '';
-              els[idx].style.opacity = '';
-            });
-            titleEl.style.transform = '';
-          });
+          stackEl.style.height = STACK_H_TO + 'px';
         }
       }
       requestAnimationFrame(frame);
