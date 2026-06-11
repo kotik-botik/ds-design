@@ -51,6 +51,15 @@
 ### tabbar (`components/tabbar.css` + `components/tab-bar.js`)
 - Навигация вынесена в компонентный скрипт: карта `__slot-* → страница` + приоритет `data-href`; активная вкладка `__state-on` не реагирует.
 - Свайп вверх по `.tabbar__handle` (> 40px) → `start.html` (имитация home-indicator).
+- ⚠️ Любая новая страница с таббаром должна **подключить `tab-bar.js`** — иначе иконки «мёртвые» (наступили: в `notifications.html` забыли скрипт → переходы не работали). `preview.html` намеренно БЕЗ него (витрина, глобальный клик перехватывал бы демо-таббары).
+
+### Tab / TabsView (`components/tab.css` + `components/tab.js`)
+- Порт DS Tab+TabsView на чистый CSS. Структура: `tabs-view(__with-divider) → tabs-row(__scroll) → tab-wrapper(__view-base|primary|secondary|custom)` → `inner-wrapper > tab > content > (left-icon/label/counter-inline/right-icon)` + `.line`.
+- ⚠️ Класс `.tabs` уже занят секционным свитчером (`tabs.css`) → контейнер ряда назвали **`.tabs-row`**.
+- **«Разъезжание» линии — чистый CSS:** `.line { transform: scaleX(0) }` → `__selected .line { scaleX(1) }` с пружинным easing (`cubic-bezier(0.34,1.4,0.64,1)`). JS (`tab.js`) только переключает `__selected`/`aria-selected`. На первой отрисовке уже выбранный таб показывает линию мгновенно (CSS-переход не играет «с нуля» на старте) — это и есть `shouldShowLineImmediately` из React-оригинала.
+- Лейбл и каунтер — стиль **`ds-title-s`** (15/20, вес 600). Каунтер base — инлайн (`.counter-inline`, приглушённый).
+- ⚠️ **button-reset обязан включать `padding: 0`** — иначе у `<button>` остаётся нативная гор. отбивка (~6px). У base-таба `--tab-horizontal-padding: 0`, расстояние задаёт `gap` ряда.
+- `tab.js` авто-инициализирует все `.tabs-row`. Фильтрацию списка вешаем ОТДЕЛЬНЫМ скриптом по `data-filter`↔`data-cat` (оба слушателя на клике уживаются).
 
 ---
 
@@ -59,6 +68,9 @@
 - **friend-card** (`components/friend-card.css`) — карточка «Возможные друзья» в ленте: full-bleed квадратное фото + blur-подложка + крестик поверх фото.
 - **vvz-card** (`components/vvz-card.css`) — карточка «Возможно, вы знакомы» в сообщениях: круглый аватар по центру + «×» в углу + текст по центру.
 - **message-cell** (`components/message-cell.css`) — строка диалога на базе uni-cell.
+- **notification-cell** (`components/notification-cell.css`) — строка оповещения: аватар + `__body`(`__title`/`__time`/`__mutuals`/`__actions`). Плоская, без подложки.
+  - Внутренние вертикальные гэпы **по Figma** (`2260:98300`): заголовок→время **2px**, время→общие друзья **4px**, →кнопки **8px**, аватар↔контент **12px** (cell-view-gap). «between button cells» в макетах = `--dynamic-cell-view-vertical-default` (12px).
+  - 📌 Сначала держали стили ячейки инлайном в странице — вынесли в компонент при чистке архитектуры (`notifications.html`: в `<style>` осталось только страничное — `phone-frame`, паддинги табов/списка, таббар).
 
 📌 **Инсайт:** одинаковая по смыслу сущность (ВВЗ) может требовать ДВУХ разных компонентов, если лейаут в макетах отличается. Важно не делать их «одним общим» — держим раздельно (`friend-card` ≠ `vvz-card`).
 
