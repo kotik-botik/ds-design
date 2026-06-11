@@ -56,8 +56,9 @@
      верхний отступ контента в карточке = 12 хедера + 12 от карточки). */
   .ll-gc-grid {
     display: grid;
-    /* 1×N — каждая карточка во всю ширину контента острова. */
-    grid-template-columns: minmax(0, 1fr);
+    /* 2×N — две колонки. minmax(0,1fr) гасит min-content-расширение от
+       крупного font-size в постере. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--space-3);                          /* 12px */
     padding: 0 var(--space-4) 36px;
   }
