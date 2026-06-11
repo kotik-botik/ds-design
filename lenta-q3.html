@@ -1071,11 +1071,12 @@
 
     <!-- TABBAR (DS-компонент, прибит к низу) -------------------------- -->
     <div class="ll-tabbar">
-      <div class="tabbar __platform-ios">
+      <div class="tabbar __platform-android">
         <div class="tabbar__row">
           <button class="tabbar-icon __slot-feed __state-on" aria-label="Лента"></button>
           <button class="tabbar-icon __slot-book" aria-label="Книга"></button>
           <button class="tabbar-icon __slot-message" aria-label="Сообщения"></button>
+          <button class="tabbar-icon __slot-discussion" aria-label="Обсуждения"></button>
           <button class="tabbar-icon __slot-clip" aria-label="Клипы"></button>
           <button class="tabbar-icon __slot-menu" aria-label="Меню"></button>
         </div>
@@ -1214,13 +1215,16 @@
             var pair = FULL[name] || [name, ''];
             var firstGen = pair[0];
             var fullGen = (pair[0] + ' ' + pair[1]).trim();
-            return [MomentViewer.bdaySlide({
+            var slide = MomentViewer.bdaySlide({
               photo:          img ? img.src : '',
               name:           fullGen,
               headerTitle:    'День рождения ' + firstGen,
               headerSubtitle: '3 часа назад',
               cta:            'Поздравить'
-            })];
+            });
+            // CTA «Поздравить» уводит в каталог подарков.
+            slide.cta.onClick = function () { location.href = 'gifts-catalog.html'; };
+            return [slide];
           }
           // Годовщина дружбы — пакет из 2 слайдов
           if (ava.hasAttribute('data-friendship')) {
