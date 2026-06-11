@@ -32,7 +32,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px 0;
+    padding: 0 24px;
     min-height: 0;
   }
 
@@ -40,16 +40,17 @@
      (фото + центрированный текст + аватары + большая мягкая тень). */
   .vvz-card {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 50%;
-    width: 326px;
+    width: 328px;
     height: 464px;
-    margin-left: -163px;
+    margin-left: -164px;
+    margin-top: -232px;
     box-sizing: border-box;
     background: var(--dynamic-surface-base-quaternary, #fff);
     border-radius: 16px;
     box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.2);
-    padding: 14px 16px 16px;
+    padding: 16px 16px 24px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -64,8 +65,8 @@
 
   .vvz-card__photo {
     position: relative;
-    width: 100%;
-    aspect-ratio: 295 / 296;
+    width: 296px;
+    height: 296px;
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.08);
@@ -112,21 +113,21 @@
     text-align: center;
   }
 
-  /* «18 общих друзей» + три кружка-аватарки — DS .avatars-view __layout-vertical */
-  .vvz-card .avatars-view {
+  /* «18 общих друзей» + строка отдельных аватарок 28px, gap 8 */
+  .vvz-card__friends {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: 6px;
   }
-  .vvz-card .avatars-view__text {
+  .vvz-card__friends-label {
     color: var(--dynamic-text-and-icons-base-secondary);
-    font-size: 13px;
-    line-height: 16px;
   }
-  .vvz-card .avatars-view__stack > * {
-    border-color: var(--dynamic-surface-base-quaternary, #fff);
+  .vvz-card__friends-list {
+    display: flex;
+    gap: 8px;
   }
-
-  /* Цвет фона аватарного border'а = фон карточки */
-  .vvz-card .avatar { background: var(--dynamic-surface-contrast-low); }
+  .vvz-card .avatar { --avatar-size: 28px; }
 
   /* ============================================================
      Нижняя панель — два круглых button-circle (72px)
@@ -137,7 +138,24 @@
     gap: 40px;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px 16px;
+    padding: 24px 16px 40px;
+  }
+  /* Системный home-indicator (iOS-стиль): 4×108 пилюля по центру 24-px полосы. */
+  .vvz-handle {
+    flex-shrink: 0;
+    position: relative;
+    height: 24px;
+  }
+  .vvz-handle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    width: 108px;
+    height: 4px;
+    border-radius: 12px;
+    background: var(--dynamic-surface-base-inverse-primary, #2e2f33);
   }
   .vvz-action {
     display: flex;
@@ -240,6 +258,9 @@
           <span class="vvz-action__label ds-caption-m">Дружить</span>
         </div>
       </div>
+
+      <!-- Home indicator -->
+      <div class="vvz-handle" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -292,7 +313,7 @@
     setDepth(card, depth);
 
     var avatars = p.friends.map(function (id) {
-      return '<div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=' + id + '" alt=""></div>';
+      return '<div class="avatar __type-image"><img src="https://i.pravatar.cc/56?img=' + id + '" alt=""></div>';
     }).join('');
 
     card.innerHTML =
@@ -304,9 +325,9 @@
       '<div class="vvz-card__info">' +
         '<div class="vvz-card__name ds-display-m">' + p.name + '</div>' +
         '<div class="vvz-card__meta ds-caption-m">' + p.meta + '</div>' +
-        '<div class="avatars-view __size-36 __layout-vertical">' +
-          '<span class="avatars-view__text">' + p.mutual + ' общих друзей</span>' +
-          '<div class="avatars-view__stack">' + avatars + '</div>' +
+        '<div class="vvz-card__friends">' +
+          '<div class="vvz-card__friends-label ds-caption-m">' + p.mutual + ' общих друзей</div>' +
+          '<div class="vvz-card__friends-list">' + avatars + '</div>' +
         '</div>' +
       '</div>';
 
