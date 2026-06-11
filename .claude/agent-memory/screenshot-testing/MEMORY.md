@@ -18,6 +18,23 @@
 ### lenta-light.html
 - Sentinel-state + popstate-листенер: на загрузке пушит `{scr:'feed-back-trap'}` и любой Back редиректит в `start.html` через `window.location.replace`. **Не вызывай `page.goBack()` в тестах** — попадёт в петлю с replace-навигацией. Если надо вернуться на меню, лучше навигируй явно: `await page.goto('http://127.0.0.1:8765/start.html')` с `okstart_at_home=1` уже в sessionStorage.
 
+## App-shell / fullscreen layout (lenta-q3, messages, notifications, tribune, gifts)
+Эти 5 экранов используют `.phone-frame.__fullscreen` shell (components/app-shell.css, импорт в index.css, commit b82939e). Структура (проверено браузером, идентична по числам PRE/POST рефактора):
+- `.phone-frame.__fullscreen`: width:100%, height/min-height:100dvh, overflow:hidden. Фон НЕ задаётся в app-shell — берётся базовый `.phone-frame { background:base-primary }` (phone-frame.css) либо локальный override на странице (messages/notifications/tribune/gifts ставят `secondary`). На 390×844 frame = 0..844, fills viewport.
+- Скроллер — `.phone-frame__feed` (overflow-y:auto, min-height:0). НЕ body: `document.scrollingElement` не скроллится (bodyScrolls=false на всех). Скриптом скроллить именно feed: `feed.scrollTop = feed.scrollHeight`.
+- `.ll-tabbar`: position:**fixed**, bottom:0, z:50. На 390×844 → top=771, bottom=844, height=73. Остаётся top=771 до и после скролла (не уезжает). gifts таббара НЕ имеет.
+- `.ll-fab` (messages): position:fixed, z:60, bottom~760 → НАД таббаром (barTop=771). 
+- gifts: НЕ имеет feed-scroll и таббара. flex-column от базового `.phone-frame` (app-shell не задаёт display). Карточный веер + CTA «Принять все» внизу + крестик в шапке.
+- `.meshok-up` = `display:contents` обёртка (zero-height, top репортит как 0 — не путать со «sticky»). Sticky ВНУTRи неё **только** `.status-bar` (top:0, height 44). nav-bar и chips НЕ sticky — при скролле фида уезжают вверх. Это by design, не регрессия. «Header stays at top» = именно status-bar (top=0 до/после скролла на всех экранах). Для tribune «chips sticky under header» — chips живут внутри meshok-up, едут со status-bar только пока тот в потоке; при прокрутке фида сами chips уходят (ожидаемо).
+- Брокен-картинки (avatar/media glyphs) на feed-экранах — это отсутствующие remote-ассеты по HTTP, не связано с layout-рефактором (есть и в PRE).
+
+### Рецепт: верификация «PURE refactor → IDENTICAL»
+1. Рефактор мог УЖЕ закоммититься во время сессии (хук/автосейв). Проверяй `git log --oneline` — baseline тогда HEAD~1, а не working tree. `git stash` ничего не возьмёт, если уже committed.
+2. Baseline: `git checkout HEAD~1 -- <files>` (untracked новый компонент типа app-shell.css остаётся — это ок, страницы PRE его всё равно не импортируют). Снять метрики+скрины, потом `git checkout HEAD -- <files>` вернуть POST.
+3. Метрики через page.evaluate: getBoundingClientRect top/bottom/height + computed position/overflow для frame/feed/tabbar/fab/status-bar, до и после `feed.scrollTop=...`. Числа PRE и POST совпали байт-в-байт → доказательство сильнее скрина.
+4. Пиксель-диф PNG: загрузить обе base64 в `new Image()` внутри page, нарисовать на canvas, сравнить getImageData (порог на канал-сумму >12). 4/5 экранов дали 0 diff-пикселей. 
+5. **gifts даёт ~5–8% pixel-diff даже PRE-vs-POST И POST-vs-POST (сам с собой)** — карточный веер анимируется на загрузке, кадр недетерминирован. Не регрессия. Доказывать gifts метриками (frameH=winH=844, overflow:hidden), не скрином.
+
 ## Тайминги (наблюдённые)
 - Splash-анимация тапа: **~1100 ms total** (180 ms blur-trigger + 400 ms crossfade + хвост). Ждать переход в ленту: `await page.waitForURL('**/lenta-light.html', { timeout: 6000 })`.
 - Анлок-слайд локскрина: **0.5 s** (transform 0.5s cubic-bezier).
