@@ -85,11 +85,11 @@
             <span class="line"></span>
           </button>
           <button class="tab-wrapper __view-base" role="tab" aria-selected="false" data-filter="gifts">
-            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">Подарки</span><span class="counter-inline">12</span></span></span></span>
+            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">Подарки</span></span></span></span>
             <span class="line"></span>
           </button>
           <button class="tab-wrapper __view-base" role="tab" aria-selected="false" data-filter="groups">
-            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">Группы</span><span class="counter-inline">5</span></span></span></span>
+            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">Группы</span></span></span></span>
             <span class="line"></span>
           </button>
           <button class="tab-wrapper __view-base" role="tab" aria-selected="false" data-filter="games">
@@ -233,6 +233,34 @@
 
   <!-- переключение вкладок + анимация линии -->
   <script src="components/tab.js"></script>
+  <!-- каунтеры табов = реальное число ячеек в разделе (0 → каунтер не показываем) -->
+  <script>
+    (function () {
+      var row = document.getElementById('notifsTabs');
+      var list = document.getElementById('notifsList');
+      if (!row || !list) return;
+      var cells = list.querySelectorAll('.notification-cell');
+      Array.prototype.forEach.call(row.querySelectorAll('.tab-wrapper'), function (tab) {
+        var f = tab.getAttribute('data-filter');
+        var count = 0;
+        Array.prototype.forEach.call(cells, function (c) {
+          if (f === 'all' || c.getAttribute('data-cat') === f) count++;
+        });
+        var content = tab.querySelector('.content');
+        var counter = content && content.querySelector('.counter-inline');
+        if (count > 0) {
+          if (!counter) {
+            counter = document.createElement('span');
+            counter.className = 'counter-inline';
+            content.appendChild(counter);
+          }
+          counter.textContent = count;
+        } else if (counter) {
+          counter.remove();
+        }
+      });
+    })();
+  </script>
   <!-- фильтрация списка по выбранной вкладке -->
   <script>
     (function () {
