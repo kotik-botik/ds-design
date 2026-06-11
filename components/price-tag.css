@@ -1,0 +1,98 @@
+/**
+ * OK Design System — PriceTag (DS-620 / Figma: «lyuboi price ◇ price»)
+ *
+ * Прайс-«ярлычок» из каталога подарков: маленький оранжевый таг-шильд с
+ * заострённым/скруглённым левым краем (тонкий «уголок» как у бумажной
+ * этикетки) и круглой «дыркой» в нём, текст вида «10 ОК» прижат к правому
+ * скруглённому концу.
+ *
+ *   <span class="price-tag">10 ОК</span>
+ *
+ *   <!-- Светлый «выключенный»-вариант (если цена скрыта) — опц. -->
+ *   <span class="price-tag __state-disabled">— ОК</span>
+ *
+ * Размеры:
+ *   --price-tag-height          высота тега (default 24)
+ *   --price-tag-tip-width       ширина «уголка» слева (default 14)
+ *   --price-tag-bg              фон тега (default static-status-accent)
+ *
+ * Структура: сам элемент — flex-контейнер с фоном и скруглением справа.
+ * Пседоэлемент ::before — «уголок» (тонкий язычок) слева, через clip-path
+ * с квадратичной кривой (выпуклой наружу). ::after — «дырка» (тёмная
+ * точка) в центре уголка.
+ *
+ * Цвета фиксированные (static), потому что таг — UI-индикатор валюты, а не
+ * адаптивный компонент. Тема не меняет его внешний вид.
+ */
+
+.price-tag {
+  --price-tag-height: 24px;
+  --price-tag-tip-width: 14px;
+  --price-tag-bg: var(--static-surface-status-accent);
+  --price-tag-hole-color: rgba(0, 0, 0, 0.22);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--price-tag-height);
+  /* отступы внутри прямоугольного «тела» тега (правая часть). 4-6 как в Figma. */
+  padding: 4px 6px 4px 4px;
+  /* язычок «торчит» из левого края тела; сдвигаем сам бокс вправо, чтобы
+     overall ширина включала уголок и компоновщик считал реальный размер. */
+  margin-left: var(--price-tag-tip-width);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background-color: var(--price-tag-bg);
+  color: var(--static-text-and-icons-base-inverse-primary);
+  /* типографика — DS caption-m-accent (13/16, 600, lsp 0.24) */
+  font-family: var(--font-family);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.24px;
+  white-space: nowrap;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+/* «Уголок» слева — отдельный пседоблок, выходит за пределы тела через
+   right: 100%. clip-path даёт плавную выпуклую кривую (квадратичная Безье
+   с контрольной точкой за левым краем). */
+.price-tag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  width: var(--price-tag-tip-width);
+  background-color: var(--price-tag-bg);
+  /* Кривая: правая вертикаль 0→100, нижний скос к (40%, 75%), выпуклая
+     левая дуга к (40%, 25%) через ~ -10% (центр кривизны слева от элемента),
+     обратно к верхнему углу. Координаты в %, чтобы кривая масштабировалась
+     с высотой/шириной уголка. */
+  clip-path: path('M 14 0 L 14 24 L 5.5 17 C -1 13.5 -1 10.5 5.5 7 Z');
+}
+
+/* «Дырка» — маленькая тёмная точка в центре уголка. Сидит на правом
+   крае тела (left: 0 от тега), сдвинута влево на половину ширины уголка. */
+.price-tag::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(var(--price-tag-tip-width) * -0.55);
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background-color: var(--price-tag-hole-color);
+  pointer-events: none;
+}
+
+/* ============================================================
+   STATES
+   ============================================================ */
+.price-tag.__state-disabled {
+  --price-tag-bg: var(--dynamic-surface-contrast-mid);
+  color: var(--dynamic-text-and-icons-base-secondary);
+}

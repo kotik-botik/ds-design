@@ -233,6 +233,23 @@ screen-transition.js теперь подключён синхронным `<scri
 - Tile «Поиск по контактам» / «Импорт из ВКонтакте» / «Школьные друзья» / «Поделиться профилем»: 2×2 grid, каждая 162×56 (12/186 left, 160/228 top), иконка 24×24 + двустрочный текст. Лейаут чистый.
 - «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
 - iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
+### gifts-catalog.html (наблюдено 2026-06-11, viewport 360×820)
+- ПОЧИНЕНО: грид теперь `grid-template-columns: minmax(0, 1fr)` — **1 колонка** во всю ширину острова. Резолвится в `328px` (vw 360 − 2×16 side padding). Gap=12, padding `0 16px 36px`. Никакого horizontal overflow (`docScrollW===360`).
+- Карточка `.ll-gift` — flex column, `align-items:center`, `gap:4px`. Постер 1:1, занимает 100% ширины (328×328). Под ним — `.price-tag` 24px.
+- **price-tag визуально центрирован под карточкой**, НО его `getBoundingClientRect()` врёт: компонент `.price-tag` имеет `margin-left: 14px` (`--price-tag-tip-width`) — это компенсация под «язычок», который рендерится через `::before` с `right:100%` и торчит ВЛЕВО за пределы body. Реальный визуальный bbox = `[bodyLeft-14, bodyRight]`. На vw=360: cardCenter=180, bodyCenter=187 (+7), visualCenter=180 (с учётом язычка). Δ=0. Если кто-то увидит «тег смещён вправо на 7px» из tag.getBoundingClientRect — это ОЖИДАЕМО, не баг. Чтобы измерять true center — вычитай `--price-tag-tip-width` из left, или мерь по `::before` через CSSOM/range.
+- Хедер «Подарки» — в nav-bar (class `ds-title-l ll-sg-navtitle__title-like`). «День рождения!» — внутри `.ll-gc-section-head .header__title.ds-title-l` в острове. Не путать.
+- Тап `.ll-gift` → навигация на `send-gift.html?gift=<key>` (через `<a href="send-gift.html?gift=thanks">…`). Работает.
+
+#### Старая запись (2-колоночный вариант, устарела)
+- ~~На 360-wide грид `.ll-gc-grid` объявлен `grid-template-columns: 1fr 1fr`, но resolved = `"235px 206px"` — колонки выползали за правый край viewport~~. Фикс применён: `minmax(0, 1fr)` + одна колонка.
+
+### send-gift.html (наблюдено 2026-06-11) — БАГ в handler «Отправить» per-friend
+- В каждой friend-row кнопка `[data-give]` лежит ВНУТРИ `.button-wrapper`, **сразу под `.uni-cell`**, рядом с `.uni-cell-additional-content` (не внутри неё). См. DOM: `.uni-cell > .avatar | .uni-cell-additional-content | .button-wrapper > button[data-give]`.
+- Обработчик в `send-gift.html:346` делает `btn.closest('.uni-cell-additional-content').parentNode` → **возвращает null**, поэтому `.parentNode` бросает `TypeError: Cannot read properties of null (reading 'parentNode')`. Доказано: `page.on('pageerror')` ловит этот TypeError на каждом клике, кнопка НЕ заменяется на «Отправлено», тост `#sgToast` остаётся `hidden=true`. Визуально — только hover-подсветка строки (`.uni-cell-container.__state-enabled`).
+- Фикс — убрать неиспользуемую строку с `var cell = btn.closest('.uni-cell-additional-content').parentNode;` (переменная `cell` дальше не используется), или поправить на `btn.closest('.uni-cell')`.
+- Счётчик `#sgCount` показывает только число, плейсхолдер «/200» статичный → итог в DOM «16/200» (после `fill('С Днём Рождения!')`). Селектор для теста: `#sgCount` (числовая часть), либо ищи текст `/^\d+\/200$/` на родителе.
+- meshok-up корректно: `.ds-title-m.ll-sg-navtitle__title` = «Отправка открытки», `.ds-caption-m.ll-sg-navtitle__subtitle` = «На счёте: 79 ОК».
+
 ## menu.html — новый экран (наблюдено 2026-06-11)
 - Использует тот же fullscreen-shell, что и messages/lenta-q3: `.phone-frame.__fullscreen` (390×844, overflow:hidden), скроллер `.phone-frame__feed` (top:0..844). На свежей загрузке feed.scrollHeight==clientHeight==844 → контент помещается без скролла, прокрутка вниз ничего не двигает. Если контент позже разрастётся — тогда скролл активируется.
 - `.ll-tabbar`: position:fixed, top=771, bottom=844, h=73 — стандартное место. На menu.html таббар присутствует и НЕ уезжает при попытке скролла.
