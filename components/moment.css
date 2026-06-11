@@ -229,13 +229,15 @@
   font-weight: 400;
   color: var(--static-text-and-icons-base-inverse-tertiary, rgba(255, 255, 255, 0.6));
 }
-.moment__header-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
-  flex-shrink: 0;
+
+/* Кнопки more / close в шапке — обычные .button-inline-wrapper.
+   Через z-index гарантируем, что они выше тап-зон prev/next. */
+.moment__header > .button-inline-wrapper {
   position: relative;
-  z-index: 4; /* выше .moment__nav (2) и .moment__topbar (3) */
+  z-index: 4;
+}
+.moment__header > .button-inline-wrapper + .button-inline-wrapper {
+  margin-left: var(--space-4);
 }
 
 /* ============================================================
