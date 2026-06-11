@@ -43,10 +43,10 @@
 - Добавлен общий press-бамп: `:active/.__clicked → scale(0.95)` (timing как у кнопок).
 
 ### meshok-up (`components/meshok-up.css`)
-- Sticky-шапка: `status-bar + nav-bar + tabs`, скругление снизу 20px.
-- Дефолтный фон у `.meshok-up`/`.status-bar`/`.nav-bar` — `--dynamic-surface-base-secondary` (белый).
-- Прозрачную шапку нельзя сделать только на контейнере: дети (`status-bar`/`nav-bar`) красят свой фон и перекрывают → прозрачность ставим и им.
-- Чтобы цвет фона нельзя было переопределить на странице — фиксируем `!important` (DS-варианты вроде `nav-bar.__type-publish` тоже с `!important`, чтобы не проигрывать базе).
+- Шапка: `status-bar + nav-bar + tabs`. Сам `.meshok-up` — `display: contents` (свой box убран), чтобы дети попали в поток scroll-контейнера страницы.
+- **Sticky только у `.status-bar`** (`position:sticky; top:0`) — он всегда виден; `nav-bar` и `tabs` уезжают вверх со скроллом. Высота статус-бара опубликована на `:root` как `--status-bar-height` (44px), чтобы оверлеи (heads-up уведомления и пр.) отстраивались от неё.
+- Фон `.status-bar`/`.nav-bar` — `--dynamic-surface-base-secondary`, **зафиксирован `!important`** (на странице переопределять нельзя). DS-вариант `nav-bar.__type-publish` — `transparent !important`, чтобы не проигрывать базе.
+- 📌 Инсайт: прозрачность шапки нельзя ставить только на контейнер — дети красят свой фон; и если цвет должен быть «железным», фиксируй `!important`, а исключения делай тоже `!important`-вариантами (а не ad-hoc на странице).
 
 ### tabbar (`components/tabbar.css` + `components/tab-bar.js`)
 - Навигация вынесена в компонентный скрипт: карта `__slot-* → страница` + приоритет `data-href`; активная вкладка `__state-on` не реагирует.
