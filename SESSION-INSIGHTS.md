@@ -160,3 +160,82 @@ behaviour-компонент с `data-*`-хуками, а не копируем 
 - `lenta-q3.html` — основная лента (бывший `lenta-light.html`).
 - `messages.html` — сообщения. `notifications.html` — уведомления. `tribune.html` — трибуна.
 - `lenta.html` — десктоп-превью собранной ленты. `preview.html` — витрина примитивов/молекул.
+
+---
+
+## 11. Sticky-меш и почему `display: contents` (углублённо)
+
+Базовая раскладка: `.phone-frame__feed` — скролл-контейнер с `overflow-y: auto`, внутри `.meshok-up` (status-bar + nav-bar [+ tabs]). Хочется, чтобы при скролле прилеплялся **только status-bar**, а nav-bar/tabs уезжали вверх вместе с лентой.
+
+📌 Если повесить `position: sticky; top: 0` напрямую на `.status-bar` **внутри обычного `.meshok-up` (block/flex)** — sticky отпускает status-bar, как только meshok-up уезжает выше топа. Причина: containing block для sticky — это родитель, и sticky **не может выходить за его bounds**. meshok-up короткий (~100px), скролл больше — status-bar едет вместе с ним.
+
+✅ Решение — **`.meshok-up { display: contents }`**: убираем собственный box обёртки, дети попадают напрямую в поток `.phone-frame__feed`. Containing block для status-bar становится сам скролл-контейнер → sticky пинов на весь скролл.
+
+Грабли при display:contents:
+- Дети теперь прямые **flex-child** `.phone-frame__feed` (`display: flex; flex-direction: column`). По дефолту `flex-shrink: 1` → status-bar/nav-bar **сжимаются** (status-bar c заявленных 44 до ~31px). Лечится: `flex-shrink: 0` на обоих.
+- Любая стилистика на самом `.meshok-up` (фон, border-radius) перестаёт применяться — box-а нет. Цвета держим **на детях** (status-bar/nav-bar background-color, см. секцию 1.meshok-up — фиксируется `!important`).
+
+---
+
+## 12. Перекрытие status-bar системными нотификациями (perception 31px)
+
+История: дизайнер видела «статус-бар 31, а не 44». В DevTools `.status-bar { height: 44px }` стоял корректно. Реальная высота — 44px. **Видимая** — ~31px. Разница 13px — это перекрытие сверху другим элементом.
+
+Виновник: `components/system-notifications.css` → `.notifs { position: fixed; top: 36px }`. Heads-up плашка стартовала на y=36 → накрывала нижние 8px status-bar'а. Дизайнер мерила «свободную» зону статус-бара до края накрытия → получала 31.
+
+✅ Корневой фикс — **завязать оверлей на высоту шапки**, а не на магическое число:
+```css
+:root { --status-bar-height: 44px; }                 /* в meshok-up.css */
+.status-bar { height: var(--status-bar-height); }
+.notifs.__mode-heads-up {
+  top: calc(var(--status-bar-height) + var(--space-1));  /* 44 + 4 */
+}
+```
+Сменится высота шапки — оверлей подхватит сам. Lock-screen в `start.html` сидит на своих оверрайдах (`.device .notifs { top: 254px }`, `.device.headsup-notifs .notifs { top: 36px }`) и через специфичность переигрывает дефолт — ничего не ломается.
+
+📌 Инсайт: когда два компонента физически делят координаты на экране (sticky-шапка + fixed-оверлей), **источник правды о размерах должен быть один** (CSS-переменная на `:root`). Магические числа в разных файлах гарантированно расходятся при правках.
+
+---
+
+## 13. iOS home-indicator пилюля и swipe-to-dismiss
+
+`.tabbar__handle` в DS изначально был пустым 24px блоком — никакого визуального индикатора. Добавили на стороне платформы:
+
+```css
+.tabbar.__platform-ios .tabbar__handle::after {
+  content: '';
+  position: absolute;
+  left: 50%; bottom: 8px;
+  transform: translateX(-50%);
+  width: 134px; height: 5px;
+  border-radius: 100px;
+  background: var(--dynamic-text-and-icons-base-primary);
+}
+```
+Размер 134×5 — iOS spec. Цвет — base-primary (тёмный на светлой теме). Скоупим на `.__platform-ios`, для Android пилюли нет.
+
+Свайп-вверх — в `tab-bar.js`: pointer-листенер на самом `.tabbar__handle`, threshold > 40px → `location.href = 'start.html'`. Жест работает на любой app-странице, потому что `tab-bar.js` подключён везде.
+
+📌 Инсайт: визуальный home-indicator и его жест — **один компонент**. Не клади жест на отдельный `home-gesture.js`, который потом нужно вспомнить везде подключить.
+
+---
+
+## 14. Force-push на main посреди сессии
+
+Ситуация: пока работали в feature-ветке, кто-то форс-пушнул main с откатом ряда наших коммитов (`meshok-up.css` вернул `!important` фоны, `tab-bar.js` вернул `lenta-light.html` и добавил `book: tribune.html`). PR на squash-мердж не пройдёт — «merge conflicts».
+
+✅ Алгоритм:
+1. `git fetch origin main` → видим `+ ... (forced update)`.
+2. `git merge origin/main` (не rebase — много коммитов, тяжело резолвить по одному).
+3. Резолвим конфликты руками; обычно один-два файла. Не паниковать на множестве `<<<<<<<` — `--stat` покажет, что conflicted только нужные.
+4. После коммита-мерджа в ветку — `mcp__github__merge_pull_request` уже отрабатывает.
+5. Проверить, что наши изменения переехали поверх ревёрнутого main, а не наоборот (например, `--status-bar-height` должен присутствовать).
+
+📌 Инсайт: при долгих сессиях `git fetch origin main` перед каждым новым коммитом — дёшево, экономит большой резолв в конце.
+
+---
+
+## 15. Окружение: MCP-серверы переподключаются
+
+`mcp__github__*` и `mcp__Figma__*` инструменты исчезают/появляются по ходу сессии (system-reminder уведомляет). Если ToolSearch говорит «нет такого» — подождать reconnect-нотификацию или один раз перепросить тулу через `select:<name>`. Не делать вывод «функционал недоступен» только из одного промаха ToolSearch.
+
