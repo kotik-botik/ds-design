@@ -133,24 +133,35 @@
 }
 
 /* ============================================================
-   STATE: HIDDEN — карточка-заглушка после dismiss (как в Figma).
-   Сохраняем аватар + имя автора, меняем сабтайтл на «Подобрали для вас»,
-   скрываем mutuals/кнопку/крестик. Фон карточки прозрачный, текст —
-   inverse (потому что заглушка лежит на тёмном фоне сториз).
-   Высота карточки сохраняется.
+   STATE: HIDDEN — V1 из Figma. Карточка-заглушка после тапа на ✕.
+   Высота сохраняется. Видны только:
+     - title «Рекомендация скрыта» (центрирован по карточке)
+     - кнопка «Отменить» style secondary-on-color
+   Фон прозрачный + полупрозрачный белый border (карточка лежит на
+   тёмном фоне сториз — белый текст читается).
+   Текст title и текст кнопки меняются JS, см. vvz-card.js.
    ============================================================ */
 .vvz-card.__state-hidden {
   background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   cursor: default;
 }
+.vvz-card.__state-hidden .vvz-card__media,
 .vvz-card.__state-hidden .vvz-card__close,
-.vvz-card.__state-hidden .vvz-card__mutuals,
-.vvz-card.__state-hidden .vvz-card__btn {
-  visibility: hidden;
+.vvz-card.__state-hidden .vvz-card__subtitle,
+.vvz-card.__state-hidden .vvz-card__mutuals {
+  display: none;
+}
+.vvz-card.__state-hidden .vvz-card__content {
+  flex: 1 1 auto;
+  justify-content: center;
 }
 .vvz-card.__state-hidden .vvz-card__title {
   color: var(--static-text-and-icons-base-inverse-primary);
 }
-.vvz-card.__state-hidden .vvz-card__subtitle {
-  color: var(--static-text-and-icons-base-inverse-secondary, rgba(255, 255, 255, 0.64));
+/* Кнопка визуально становится secondary-on-color без смены классов через JS:
+   переопределяем CSS-переменные DS-кнопки. */
+.vvz-card.__state-hidden .vvz-card__btn .button-container {
+  --button-color: var(--static-text-and-icons-base-inverse-primary);
+  --button-background-color: rgba(255, 255, 255, 0.16);
 }

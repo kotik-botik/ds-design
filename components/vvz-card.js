@@ -56,20 +56,45 @@
     ].join('');
   }
 
-  // Делегированный listener — один на весь документ. Работает с любыми
-  // карточками .vvz-card (включая динамически вставленные через innerHTML).
-  // При dismiss карточка переходит в состояние «Подобрали для вас» (по макету
-  // ВВЗ-сториз): аватар и имя остаются, сабтайтл подменяется, всё остальное
-  // скрывается через CSS .__state-hidden.
+  // Делегированные listener'ы — один раз на весь документ. Работают с любыми
+  // карточками .vvz-card (включая вставленные через innerHTML).
+  //
+  // dismiss (✕ → V1): запоминаем оригинальные тексты title и кнопки в
+  // data-original-*, ставим .__state-hidden, подменяем тексты на
+  // «Рекомендация скрыта» и «Отменить».
   document.addEventListener('click', function (e) {
-    var btn = e.target.closest && e.target.closest('[data-vvz-dismiss]');
+    var dismiss = e.target.closest && e.target.closest('[data-vvz-dismiss]');
+    if (!dismiss) return;
+    e.stopPropagation();
+    var card = dismiss.closest('[data-vvz-card]');
+    if (!card || card.classList.contains('__state-hidden')) return;
+
+    var title = card.querySelector('.vvz-card__title');
+    var btnContent = card.querySelector('.vvz-card__btn .button-content');
+    if (title) {
+      title.dataset.originalText = title.textContent;
+      title.textContent = 'Рекомендация скрыта';
+    }
+    if (btnContent) {
+      btnContent.dataset.originalText = btnContent.textContent;
+      btnContent.textContent = 'Отменить';
+    }
+    card.classList.add('__state-hidden');
+  });
+
+  // «Отменить» в state-hidden — снимаем класс и возвращаем оригинальные
+  // тексты. Слушаем клик по кнопке внутри карточки в hidden-состоянии.
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.vvz-card.__state-hidden .vvz-card__btn');
     if (!btn) return;
     e.stopPropagation();
     var card = btn.closest('[data-vvz-card]');
     if (!card) return;
-    card.classList.add('__state-hidden');
-    var sub = card.querySelector('.vvz-card__subtitle');
-    if (sub) sub.textContent = 'Подобрали для вас';
+    var title = card.querySelector('.vvz-card__title');
+    var btnContent = card.querySelector('.vvz-card__btn .button-content');
+    if (title && title.dataset.originalText) title.textContent = title.dataset.originalText;
+    if (btnContent && btnContent.dataset.originalText) btnContent.textContent = btnContent.dataset.originalText;
+    card.classList.remove('__state-hidden');
   });
 
   window.VvzCard = { render: render };
