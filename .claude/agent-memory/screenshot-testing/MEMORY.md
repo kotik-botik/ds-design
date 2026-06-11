@@ -45,6 +45,15 @@
 - Вытащен из start.html: вешает pointerdown/move/up на `.lockscreen`, на свайп вверх / короткий тап стреляет `lockscreen:unlock` на document. Хост слушает и сам делает `.device.classList.add('unlocked')`, pushState, и пр.
 - На свежей загрузке start.html инициализируется на DOMContentLoaded, успевает к первому юзер-инпуту. `el.__lockWired === true` после wiring (можно проверить в тесте).
 
+### gifts.html (verified 2026-06-11 — CTA «Принять все» видимость)
+- `.gp__bottom` = position:absolute; left:0; right:0; bottom:24px; z-index:5; display:flex; **высота 56px** (button-wrapper __size-56). bbox на 390×844: top=764, left=0, w=390, h=56 → bot=820 (handle 24px ниже). Всегда в viewport.
+- Виден во ВСЕХ 4 стейтах: state-1 (initial, карты opacity 0), state-4 (ряд), state-5 (после клика «Принять все», title=312px), и после поштучного accept (state остаётся `__state-4`, title через `showAllAccepted()` без перехода в state-5 — слегка несимметрично с «Принять все»-флоу, но btn видна одинаково).
+- Конфликтов z-index НЕТ: `.meshok-up` z=5 но `display:contents` (height 0), `.gp__handle` z=auto под кнопкой, `.gp-confetti` z=20 но `pointer-events:none` — визуально оверлеит, но клики проходят. `elementsFromPoint` в центре кнопки даёт `.button-content > #gpAcceptAll > .button-wrapper > .gp__bottom` — никаких перекрытий.
+- **СВАЙП-АКЦЕПТ ловушка**: accept-strip в `.gift-card__accept` появляется только когда у карты есть класс `__active` (выставляется через `setActiveAll(true)` в `attachSwipe()` при `|panOffset|>=1`). После snap-back panOffset→0 и `__active` снимается → strip скрыт. Кликнуть accept через `page.mouse.click(x,y)` НЕ выйдет, потому что после отпускания пальца strip уходит. Решение: **программный** `el.click()` через `page.evaluate` — listener `accBtn.addEventListener('click', ...)` срабатывает напрямую без pointer-флоу. Это надёжно процессит accept-цепочку FILL(700)+FLY(600)+SHIFT(350)ms.
+- Цикл анимации до state-4: SPRING.delay 500 + state1→2 spring 2000 + PAUSE 800 + 2→3 300 + 3→4 600 = **4200ms** от load до settled state-4. `page.waitForFunction(() => gp.classList.contains('__state-4'))` + ещё ~800ms на settle.
+- При acceptAll (клик `#gpAcceptAll`): spring 1→веер (600ms) → 1ms delay → bezier exit (500ms) → showAllAccepted. State становится `__state-5`. Title едет на top=312, но `.gp__bottom` НЕ двигается.
+- `.gp-confetti` z=20 покрывает весь экран НО `pointer-events:none` — клики по кнопке проходят сквозь конфетти OK.
+
 ### components/app-launch.js + app-launch.css (новое, 2026-06-11)
 - Вытащен из start.html. Тап по `.app[data-launch="<url>"]` стартует splash-анимацию и навигирует.
 - Атрибут переименован: было `data-href`, стало `data-launch`. Если ищешь иконку в DOM — селектор сейчас `.app[data-launch]`.
