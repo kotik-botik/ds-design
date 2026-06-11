@@ -128,31 +128,29 @@
   display: block;
   width: 100%;
 }
+.vvz-card__btn .button-container {
+  width: 100%;
+}
 
 /* ============================================================
-   STATE: HIDDEN — «Рекомендация скрыта»
-   Высота карточки сохраняется (height не меняется), контент заменяется
-   на текст-заглушку по центру. Включается из JS при тапе на ✕.
+   STATE: HIDDEN — карточка-заглушка после dismiss (как в Figma).
+   Сохраняем аватар + имя автора, меняем сабтайтл на «Подобрали для вас»,
+   скрываем mutuals/кнопку/крестик. Фон карточки прозрачный, текст —
+   inverse (потому что заглушка лежит на тёмном фоне сториз).
+   Высота карточки сохраняется.
    ============================================================ */
 .vvz-card.__state-hidden {
+  background-color: transparent;
   cursor: default;
 }
-.vvz-card.__state-hidden .vvz-card__media,
-.vvz-card.__state-hidden .vvz-card__content,
-.vvz-card.__state-hidden .vvz-card__close {
+.vvz-card.__state-hidden .vvz-card__close,
+.vvz-card.__state-hidden .vvz-card__mutuals,
+.vvz-card.__state-hidden .vvz-card__btn {
   visibility: hidden;
 }
-.vvz-card.__state-hidden::after {
-  content: 'Рекомендация скрыта';
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 16px;
-  font-family: var(--font-family);
-  font-size: 13px;
-  line-height: 16px;
-  color: var(--dynamic-text-and-icons-base-secondary);
+.vvz-card.__state-hidden .vvz-card__title {
+  color: var(--static-text-and-icons-base-inverse-primary);
+}
+.vvz-card.__state-hidden .vvz-card__subtitle {
+  color: var(--static-text-and-icons-base-inverse-secondary, rgba(255, 255, 255, 0.64));
 }
