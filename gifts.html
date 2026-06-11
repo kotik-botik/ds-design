@@ -16,14 +16,9 @@
     margin: 0; padding: 0; height: 100%;
     background: var(--dynamic-surface-base-secondary);
   }
-  .phone-frame {
-    width: 100%; max-width: none;
-    height: 100dvh; min-height: 100dvh;
-    overflow: hidden;
-    background: var(--dynamic-surface-base-secondary);
-    display: flex; flex-direction: column;
-  }
-  .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
+  /* fullscreen-оболочка + .ll-icon → components/app-shell.css (flex-column даёт
+     базовый .phone-frame). Здесь только фон страницы (secondary). */
+  .phone-frame { background: var(--dynamic-surface-base-secondary); }
 
   /* Контент страницы — позиционируем как relative-контейнер,
      чтобы и заголовок, и стек могли двигаться через transform. */
@@ -287,7 +282,7 @@
 </head>
 <body>
 
-<div class="phone-frame">
+<div class="phone-frame __fullscreen">
 
   <!-- STATUS + NAVBAR с крестиком справа -->
   <div class="meshok-up">
