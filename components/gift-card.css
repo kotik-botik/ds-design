@@ -49,6 +49,9 @@
   border: solid #e7e7e7;
   border-width: calc(1px / var(--gift-card-scale));
   border-radius: 36px;
+  /* В .__active высота растёт вниз (top:0 anchor), чтобы слот с картинкой
+     не сжимался под кнопку «Принять». См. правило .__active ниже. */
+  transition: height 240ms ease-out;
   padding: 20px;
   overflow: hidden;
   display: flex;
@@ -173,6 +176,12 @@
 /* ============================================================
    .__active — открываем trash и кнопку «Принять»
    ============================================================ */
+.gift-card.__active {
+  /* Карточка вырастает на высоту accept-блока (56px) + gap (20px).
+     За счёт `top: 0` (см. gifts.html) визуально она растёт ВНИЗ — слот
+     и картинка остаются в исходном положении, не сжимаются. */
+  height: 426px;
+}
 .gift-card.__active .gift-card__trash {
   opacity: 1;
   pointer-events: auto;
