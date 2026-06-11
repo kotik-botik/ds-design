@@ -123,8 +123,13 @@
   visibility: visible;
 }
 
+/* Кнопка прижата к низу карточки. margin-top:auto в flex column забирает
+   всё свободное пространство сверху — работает и в V2 (с mutuals), и в V3
+   (с плейсхолдером). В обычной горизонтальной раскладке (мессаджи) высота
+   карточки определяется контентом, auto = 0 — поведение прежнее. */
 .vvz-card__btn {
-  margin-top: 12px;
+  margin-top: auto;
+  padding-top: 12px;
   display: block;
   width: 100%;
 }
