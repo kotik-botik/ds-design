@@ -239,9 +239,21 @@
          vvz       — «Возможно, вы знакомы» + «Дружить»  (__style-primary)
          reconnect — «Давно не общались»   + «Написать»  (__style-primary-on-color)
        Карточки рендерятся в .ll-pymk__row из одного шаблона; dismiss — общий
-       components/dismissible.js (делегирован, работает с динамическими нодами). */
+       components/dismissible.js (делегирован, работает с динамическими нодами).
+
+       Вариация ЧЕРЕДУЕТСЯ: переключается на другую каждые 2 захода в сообщения
+       (счётчик заходов в localStorage). Заходы 1–2 → vvz, 3–4 → reconnect,
+       5–6 → vvz и т.д. Одновременно показываем только одну секцию. */
     (function () {
-      var KIND = 'reconnect';   // ← переключатель вариации: 'vvz' | 'reconnect'
+      // Счётчик заходов на экран сообщений (полная загрузка документа = заход).
+      var VISIT_KEY = 'pymkVisits';
+      var visits = 1;
+      try {
+        visits = (parseInt(localStorage.getItem(VISIT_KEY), 10) || 0) + 1;
+        localStorage.setItem(VISIT_KEY, String(visits));
+      } catch (_) {}
+      // Переключение каждые 2 захода: группы по 2 чередуют вариацию.
+      var KIND = (Math.floor((visits - 1) / 2) % 2 === 0) ? 'vvz' : 'reconnect';
 
       var VARIANTS = {
         vvz:       { title: 'Возможно, вы знакомы', label: 'Дружить',  btn: '__style-primary' },
