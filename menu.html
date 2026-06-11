@@ -137,7 +137,7 @@
           </span>
           <span class="ll-quick__label">События</span>
         </button>
-        <button class="ll-quick__item" type="button">
+        <button class="ll-quick__item" type="button" data-href="guests.html">
           <span class="ll-quick__tile">
             <img class="ll-icon" src="assets/icons/guests_24.svg" width="28" height="28" alt="">
             <span class="ll-badge">1</span>
@@ -255,5 +255,15 @@
   </div>
 
   <script src="components/tab-bar.js"></script>
+
+  <!-- Делегированный переход по data-href (quick-actions / menu items) -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest && e.target.closest('[data-href]');
+      if (!btn) return;
+      e.preventDefault();
+      location.href = btn.getAttribute('data-href');
+    });
+  </script>
 </body>
 </html>
