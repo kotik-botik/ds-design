@@ -116,7 +116,11 @@
 .vvz-card__mutuals {
   display: flex;
   margin-top: 8px;
-  min-height: 32px;
+  /* Высота с учётом 2px border вокруг каждой аватарки в стеке
+     (см. avatars-view.css → .avatars-view__stack > * { border: 2px … }).
+     32 + 2*2 = 36. Жёстко фиксируем — чтобы плейсхолдер занял ровно
+     столько же места, сколько заполненный блок. */
+  height: 36px;
   visibility: hidden;
 }
 .vvz-card.__has-mutuals .vvz-card__mutuals {
