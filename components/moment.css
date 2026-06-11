@@ -117,7 +117,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: var(--space-2-5) var(--space-6);
+  padding: 10px 12px;
   color: var(--static-text-and-icons-base-inverse-primary);
   z-index: 3;
   pointer-events: none;
@@ -226,7 +226,8 @@
   top: 116px; /* ниже status-bar (52) + progress (26) + header (38) */
   left: 0;
   right: 0;
-  bottom: 80px;  /* выше CTA/handle */
+  bottom: 88px;  /* выше CTA: 44 (cta.bottom) + 44 (cta height) = 88. Воздух
+                     до CTA задаётся padding-bottom (32). */
   z-index: 2;
   /* 16 сверху и по бокам, 32 снизу (по дизайну). */
   padding: var(--space-4) var(--space-4) var(--space-8);
@@ -238,7 +239,7 @@
      любой высоте экрана, без flex-grow проблем со scroll-контейнером. */
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  row-gap: var(--space-2);
+  row-gap: var(--space-4);
 }
 .moment__body::-webkit-scrollbar { display: none; }
 
