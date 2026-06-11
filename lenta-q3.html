@@ -303,10 +303,8 @@
     position: absolute;
     top: 26px; left: 50%;
     transform: translateX(-50%);
-    display: flex;
     z-index: 1;
   }
-  .ll-anniv-poster__avatars > * + * { margin-left: -16px; }
   /* Тёмный градиент снизу — чтобы текст читался поверх любой подложки */
   .ll-anniv-poster::after {
     content: '';
@@ -318,7 +316,7 @@
   }
   .ll-anniv-poster__count {
     position: absolute;
-    left: 0; right: 0; bottom: 56px;
+    left: 0; right: 0; bottom: 72px;
     text-align: center;
     font-family: "OK Sans Display", var(--font-family);
     font-weight: 700;
@@ -328,7 +326,7 @@
   }
   .ll-anniv-poster__since {
     position: absolute;
-    left: 0; right: 0; bottom: 28px;
+    left: 0; right: 0; bottom: 32px;
     text-align: center;
     z-index: 1;
   }
@@ -933,9 +931,11 @@
 
           <div>
             <div class="ll-anniv-poster">
-              <div class="ll-anniv-poster__avatars">
-                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
-                <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+              <div class="avatars-view __size-96 ll-anniv-poster__avatars">
+                <div class="avatars-view__stack">
+                  <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=49" alt=""></div>
+                  <div class="avatar __size-96 __type-image"><img src="https://i.pravatar.cc/192?img=23" alt=""></div>
+                </div>
               </div>
               <div class="ll-anniv-poster__count">478 подарков</div>
               <div class="ll-anniv-poster__since ds-body-m">С 1 июня 2023 года</div>
