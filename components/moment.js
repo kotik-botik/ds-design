@@ -112,6 +112,29 @@
       var avaImg = this.root.querySelector('.moment__header .avatar img');
       if (avaImg && s.avatar) avaImg.src = s.avatar;
 
+      // BODY — произвольный контент поверх media (ВВЗ-сториз, например).
+      // slide.body — HTML-строка или DOM-узел. Если задан, заменяем содержимое
+      // .moment__body и показываем слот; иначе слот скрыт.
+      // Также включаем .moment.__view-body — в этом режиме скрываются
+      // аватарка и текст автора в header'е (остаётся только прогресс + ✕).
+      var body = this.root.querySelector('.moment__body');
+      if (body) {
+        if (s.body) {
+          body.style.display = '';
+          if (typeof s.body === 'string') {
+            body.innerHTML = s.body;
+          } else {
+            body.innerHTML = '';
+            body.appendChild(s.body);
+          }
+          this.root.classList.add('__view-body');
+        } else {
+          body.style.display = 'none';
+          body.innerHTML = '';
+          this.root.classList.remove('__view-body');
+        }
+      }
+
       // CTA — кнопка снизу. Если slide.cta = {label, onClick} — рендерим,
       // иначе скрываем слот. Кликовый обработчик навешиваем напрямую
       // (один раз на сегмент).
