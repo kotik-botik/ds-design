@@ -172,11 +172,13 @@
         // Имена файлов с пробелами/кириллицей — URL-encoded, чтобы не
         // зависеть от поведения конкретного браузера.
         balloonsHost.innerHTML =
+          // шарик_1 2 — зелёный пудель, шарик_1 4 — оранжевый ОК-шар,
+          // шарик_1 8 — оранжевый круглый.
           '<div class="moment__bday-balloon __b-poodle">' +
-            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%204.png" alt="">' +
+            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%202.png" alt="">' +
           '</div>' +
           '<div class="moment__bday-balloon __b-ok">' +
-            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%202.png" alt="">' +
+            '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%204.png" alt="">' +
           '</div>' +
           '<div class="moment__bday-balloon __b-round">' +
             '<img src="assets/icons/%D1%88%D0%B0%D1%80%D0%B8%D0%BA_1%208.png" alt="">' +
