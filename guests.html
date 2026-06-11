@@ -15,15 +15,20 @@
   html, body { margin:0; padding:0; height:100%; background: var(--dynamic-surface-base-secondary); }
   .phone-frame { background: var(--dynamic-surface-base-secondary); }
 
-  /* Список секций экрана (баннер → Новые → Просмотренные → ВВЗ) */
+  /* Список секций экрана (баннер → Новые → Просмотренные → ВВЗ).
+     Горизонтальный паддинг 16 — единый для всех секций; PYMK тянется во всю
+     ширину через отрицательные margin'ы.
+     Снизу 96 — чтобы последние карточки не уходили под фиксированный таббар. */
   .ll-guests {
     display: flex; flex-direction: column;
     gap: var(--space-5);
-    padding: var(--space-4) 0 var(--space-8);
+    padding: var(--space-4) var(--space-4) 96px;
   }
-  .ll-guests > * { padding-left: var(--space-4); padding-right: var(--space-4); }
-  /* «Возможно вы знакомы» — горизонтальный ряд от края до края */
-  .ll-guests .ll-pymk { padding-left: 0; padding-right: 0; }
+  /* «Возможно вы знакомы» — full-bleed: компенсируем 16 родительского паддинга */
+  .ll-guests .ll-pymk {
+    margin-left: calc(var(--space-4) * -1);
+    margin-right: calc(var(--space-4) * -1);
+  }
 
   /* ── Баннер «Невидимка»: DS-токены, акцентный orange tint ─────── */
   .ll-nevidimka {
@@ -174,7 +179,7 @@
         <section class="ll-pymk" data-dismiss-row aria-label="Возможно вы знакомы">
           <div class="ll-pymk__header">
             <div class="ll-pymk__title ds-title-l">Возможно вы знакомы</div>
-            <span class="button-inline-wrapper __size-20 __view-primary"><button class="button-inline __size-20"><span class="button-inline__content">Ещё</span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24"><span class="button-inline__content">Ещё</span></button></span>
           </div>
 
           <div class="ll-pymk__row">
