@@ -34,8 +34,10 @@
     min-height: 0;
   }
 
-  /* Заголовок — по центру по горизонтали. На старте стоит чуть выше центра
-     экрана; в фазе fan карточки «выталкивают» его наверх. */
+  /* Заголовок — по центру по горизонтали. Финальная позиция — top: 24px;
+     стартовый офсет ставит JS через inline translateY, и тот же спринг
+     карточек двигает его наверх (карточки «выталкивают» заголовок).
+     CSS-transition оставлен только на opacity — нужен для accept-all. */
   .gp__title {
     position: absolute;
     left: 0; right: 0;
@@ -46,18 +48,9 @@
     letter-spacing: -0.01em;
     color: var(--dynamic-text-and-icons-base-primary);
     z-index: 4;
-    /* Старт: чуть выше центра контента (минус половина собственной высоты). */
-    top: 38%;
-    transform: translateY(-50%);
-    transition:
-      top 620ms cubic-bezier(.2,.8,.2,1),
-      transform 620ms cubic-bezier(.2,.8,.2,1),
-      opacity 280ms ease-out;
-  }
-  /* Веер: заголовок уезжает в верхнюю зону экрана. */
-  .gp.__phase-fan .gp__title {
     top: 24px;
     transform: translateY(0);
+    transition: opacity 280ms ease-out;
   }
 
   /* Стек карточек — флекс-растяжка между навбаром и нижним CTA */
@@ -453,12 +446,25 @@
     var els = CARDS.map(function (c) {
       return root.querySelector('.gp-card[data-i="' + c.i + '"]');
     });
+    var titleEl = root.querySelector('.gp__title');
     function apply(el, s) {
       el.style.transform =
         'translate(' + s.tx.toFixed(3) + '%, ' + s.ty.toFixed(3) + '%) ' +
         'scale(' + s.sc.toFixed(4) + ') ' +
         'rotate(' + s.rot.toFixed(3) + 'deg)';
     }
+
+    // Где заголовок должен стоять на старте (примерно на 38% высоты .gp,
+    // центрирован вертикально). Финальная позиция — top:24px (из CSS),
+    // поэтому стартовый offset = 38% - 24 - половина высоты заголовка.
+    function computeTitleStartOffset() {
+      return Math.max(
+        0,
+        root.getBoundingClientRect().height * 0.38 - 24 - titleEl.offsetHeight / 2
+      );
+    }
+    var titleStartOffset = computeTitleStartOffset();
+    titleEl.style.transform = 'translateY(' + titleStartOffset.toFixed(1) + 'px)';
 
     // 1) Зафиксируем старт инлайн-стилями, чтобы CSS-rule .__phase-start
     //    нам не мешал — спринг полностью ведёт transform/opacity сам.
@@ -467,11 +473,13 @@
       els[idx].style.opacity = '0.3';
     });
 
-    // 2) Подождём delay, потом запустим спринг и одновременно перекинем
-    //    класс на __phase-fan (заголовок поедет наверх через CSS-transition).
+    // 2) Подождём delay, потом запустим спринг. Карточки и заголовок
+    //    движутся синхронно — карточки «выталкивают» надпись наверх.
     setTimeout(function () {
       root.classList.remove('__phase-start');
       root.classList.add('__phase-fan');
+      // Перемерим офсет — на случай если за 550мс изменились размеры.
+      titleStartOffset = computeTitleStartOffset();
 
       var t0 = performance.now();
       function frame(now) {
@@ -485,20 +493,27 @@
             rot: c.from.rot + (c.to.rot - c.from.rot) * p
           };
           apply(els[idx], s);
-          // Прозрачность тянем линейно по progress (без осцилляций),
-          // ограничиваем единицей.
-          els[idx].style.opacity = String(Math.min(1, 0.3 + 0.7 * Math.min(1, p)));
         });
+        // Прозрачность — линейная по времени, параллельно выталкиванию
+        // (а не привязана к spring-progress, который осциллирует).
+        var linT = elapsed / SPRING.duration;
+        var op = (0.3 + 0.7 * linT).toFixed(3);
+        CARDS.forEach(function (_, idx) { els[idx].style.opacity = op; });
+        // Заголовок тоже спрингим: от стартового офсета к 0.
+        titleEl.style.transform = 'translateY(' + (titleStartOffset * (1 - p)).toFixed(2) + 'px)';
+
         if (elapsed < SPRING.duration) requestAnimationFrame(frame);
         else {
           // Зафиксируем точные целевые значения, потом снимем инлайн —
           // CSS-правила .__phase-fan возьмут на себя transform.
           CARDS.forEach(function (c, idx) { apply(els[idx], c.to); els[idx].style.opacity = '1'; });
+          titleEl.style.transform = 'translateY(0)';
           requestAnimationFrame(function () {
             CARDS.forEach(function (c, idx) {
               els[idx].style.transform = '';
               els[idx].style.opacity = '';
             });
+            titleEl.style.transform = '';
           });
         }
       }
