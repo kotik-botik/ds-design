@@ -237,22 +237,6 @@
   position: relative;
   z-index: 4; /* выше .moment__nav (2) и .moment__topbar (3) */
 }
-.moment__header-actions [role="button"] {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* увеличенная тап-зона: визуально 24×24, кликается 44×44 */
-  width: 44px;
-  height: 44px;
-  margin: -10px; /* компенсируем расширение, чтобы не двигать соседей */
-  -webkit-tap-highlight-color: transparent;
-  pointer-events: auto;
-}
-/* Восстанавливаем гэп между кнопками — после margin -10 они слипаются */
-.moment__header-actions [role="button"] + [role="button"] {
-  margin-left: var(--space-2);
-}
 
 /* ============================================================
    NAV — невидимые тап-зоны для prev/next.
