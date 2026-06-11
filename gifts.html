@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ru" class="__ui-theme_enabled __ui-theme_light __font-roboto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Подарки — прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="index.css">
+<!-- В head синхронно: listener pagereveal — определяет направление перехода -->
+<script src="components/screen-transition.js"></script>
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--dynamic-surface-base-secondary);
+  }
+  .phone-frame {
+    width: 100%; max-width: none;
+    height: 100dvh; min-height: 100dvh;
+    overflow: hidden;
+    background: var(--dynamic-surface-base-secondary);
+    display: flex; flex-direction: column;
+  }
+  .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
+
+  /* Контент страницы — флекс-колонка между навбаром и нижним CTA */
+  .gp {
+    flex: 1 1 auto;
+    display: flex; flex-direction: column;
+    min-height: 0;
+  }
+
+  /* Заголовок страницы — крупный, два ряда, по левому краю */
+  .gp__title {
+    margin: 24px 24px 0;
+    font-size: 28px; line-height: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--dynamic-text-and-icons-base-primary);
+    transition: opacity 280ms cubic-bezier(.2,.8,.2,1),
+                transform 280ms cubic-bezier(.2,.8,.2,1);
+  }
+
+  /* Стек карточек — занимает всё доступное пространство между заголовком и CTA */
+  .gp__stack {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 320px;
+    margin: 8px 0 0;
+  }
+
+  /* Все карточки лежат в центре стек-контейнера; смещения дают transform-ы */
+  .gp-card {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 64%;
+    max-width: 240px;
+    aspect-ratio: 240 / 290;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 12px 28px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.06);
+    will-change: transform, opacity;
+    transition:
+      transform 620ms cubic-bezier(.2,.8,.2,1),
+      opacity 320ms ease-out;
+  }
+
+  /* Стадия 1 — START. Три карточки скомпонованы в компактную стопку
+     чуть ниже центра, как на старте анимации в Figma. */
+  .gp.__phase-start .gp-card[data-i="0"] {
+    transform: translate(-50%, 8%) scale(0.55) rotate(-2deg);
+    opacity: 1;
+  }
+  .gp.__phase-start .gp-card[data-i="1"] {
+    transform: translate(-44%, 4%) scale(0.55) rotate(3deg);
+    opacity: 1;
+  }
+  .gp.__phase-start .gp-card[data-i="2"] {
+    transform: translate(-56%, 6%) scale(0.55) rotate(-4deg);
+    opacity: 1;
+  }
+
+  /* Стадия 2 — FAN. Карточки разъезжаются в веер и масштабируются вверх.
+     z-index сверху вниз: i=0 (Виктория, спасибо) сзади-слева,
+     i=1 (Мария, любимая) — справа в среднем плане,
+     i=2 (Дмитрий, котик) — впереди и крупнее. */
+  .gp-card[data-i="2"] { z-index: 3; }
+  .gp-card[data-i="1"] { z-index: 2; }
+  .gp-card[data-i="0"] { z-index: 1; }
+
+  .gp.__phase-fan .gp-card[data-i="0"] {
+    transform: translate(-95%, -68%) scale(0.78) rotate(-9deg);
+    transition-delay: 60ms;
+  }
+  .gp.__phase-fan .gp-card[data-i="1"] {
+    transform: translate(-12%, -48%) scale(0.84) rotate(8deg);
+    transition-delay: 120ms;
+  }
+  .gp.__phase-fan .gp-card[data-i="2"] {
+    transform: translate(-58%, -12%) scale(0.92) rotate(-4deg);
+    transition-delay: 180ms;
+  }
+
+  /* Стадия 3 — ACCEPTED. Карточки улетают вверх со стэгером. */
+  .gp.__phase-accepted .gp-card {
+    transition:
+      transform 620ms cubic-bezier(.5, 0, .75, 0),
+      opacity 380ms ease-in;
+  }
+  .gp.__phase-accepted .gp-card[data-i="2"] {
+    transform: translate(-58%, -300%) rotate(-22deg);
+    opacity: 0; transition-delay: 0ms;
+  }
+  .gp.__phase-accepted .gp-card[data-i="1"] {
+    transform: translate(-12%, -300%) rotate(18deg);
+    opacity: 0; transition-delay: 80ms;
+  }
+  .gp.__phase-accepted .gp-card[data-i="0"] {
+    transform: translate(-95%, -300%) rotate(-28deg);
+    opacity: 0; transition-delay: 160ms;
+  }
+  .gp.__phase-accepted .gp__title {
+    opacity: 0; transform: translateY(-6px);
+  }
+
+  /* Контент карточки */
+  .gp-card__head {
+    position: absolute; top: 10px; left: 10px; right: 36px;
+    display: flex; align-items: center; gap: 6px; z-index: 2;
+  }
+  .gp-card__head .avatar { width: 20px; height: 20px; border-radius: 50%; overflow: hidden; flex: 0 0 auto; background: #eee; }
+  .gp-card__head .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gp-card__head .name {
+    font-size: 11px; line-height: 14px; font-weight: 600;
+    color: rgba(0,0,0,.72);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .gp-card__trash {
+    position: absolute; top: 6px; right: 6px;
+    width: 28px; height: 28px; border: 0; padding: 0;
+    border-radius: 50%; background: rgba(255,255,255,.72);
+    backdrop-filter: blur(8px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; z-index: 3;
+  }
+  .gp-card__trash img { width: 16px; height: 16px; }
+  .gp-card__poster {
+    position: absolute; left: 0; right: 0; top: 36px; bottom: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 12px;
+    color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.18);
+  }
+  .gp-card[data-i="0"] .gp-card__poster {
+    background: linear-gradient(140deg, #ff6fa3 0%, #c2185b 100%);
+  }
+  .gp-card[data-i="1"] .gp-card__poster {
+    background: linear-gradient(140deg, #fff1d6 0%, #ffb7a3 60%, #ff8a65 100%);
+    color: #6a3b1c; text-shadow: 0 1px 0 rgba(255,255,255,.4);
+  }
+  .gp-card[data-i="2"] .gp-card__poster {
+    background: linear-gradient(140deg, #a07a55 0%, #5e4226 100%);
+  }
+  .gp-card__poster .emoji {
+    font-size: 56px; line-height: 1; margin-bottom: 6px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));
+  }
+  .gp-card__poster .text {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic; font-weight: 700;
+    font-size: 22px; line-height: 26px; letter-spacing: -0.01em;
+  }
+
+  /* Нижний CTA — оранжевая кнопка во всю ширину, отступ снизу под home-indicator */
+  .gp__bottom {
+    padding: 12px 16px 0;
+    transition: opacity 240ms ease-out;
+  }
+  .gp.__phase-accepted .gp__bottom {
+    opacity: 0; pointer-events: none;
+  }
+  .gp__cta {
+    width: 100%; height: 56px;
+    border: 0; border-radius: 18px;
+    background: var(--dynamic-stroke-status-accent, #D76200);
+    color: #fff;
+    font-size: 17px; font-weight: 600; letter-spacing: -0.01em;
+    cursor: pointer;
+    transition: transform 200ms cubic-bezier(.2,.8,.2,1);
+  }
+  .gp__cta:active { transform: scale(.97); }
+
+  /* Финальный экран — «Вы приняли все подарки» + конфетти */
+  .gp__final {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 360ms ease-out 420ms;
+  }
+  .gp.__phase-accepted .gp__final {
+    opacity: 1; pointer-events: auto;
+  }
+  .gp__final-title {
+    font-size: 28px; line-height: 32px; font-weight: 700;
+    text-align: center; letter-spacing: -0.01em;
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
+  .gp__done {
+    height: 56px; padding: 0 32px;
+    border: 0; border-radius: 18px;
+    background: var(--dynamic-stroke-status-accent, #D76200);
+    color: #fff;
+    font-size: 17px; font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Конфетти */
+  .gp-confetti {
+    position: relative; width: 240px; height: 120px;
+  }
+  .gp-confetti i {
+    position: absolute; top: 50%; left: 50%;
+    width: 10px; height: 10px; border-radius: 2px;
+    transform: translate(-50%, -50%) scale(0); opacity: 0;
+  }
+  .gp.__phase-accepted .gp-confetti i {
+    animation: gp-confetti-burst 1200ms cubic-bezier(.2,.7,.2,1) forwards;
+    animation-delay: calc(var(--d, 0ms) + 420ms);
+  }
+  @keyframes gp-confetti-burst {
+    0%   { transform: translate(-50%, -50%) scale(0) rotate(0); opacity: 0; }
+    20%  { opacity: 1; }
+    100% {
+      transform: translate(calc(-50% + var(--x, 0px)), calc(-50% + var(--y, 0px)))
+                 scale(1) rotate(var(--r, 360deg));
+      opacity: 0;
+    }
+  }
+
+  /* Home-indicator iOS */
+  .gp__handle {
+    height: 24px; position: relative;
+  }
+  .gp__handle::after {
+    content: '';
+    position: absolute; bottom: 8px; left: 50%;
+    width: 134px; height: 5px; border-radius: 3px;
+    background: var(--dynamic-text-and-icons-base-primary);
+    transform: translateX(-50%);
+    opacity: .9;
+  }
+
+  /* Уменьшаем анимации, если пользователь попросил */
+  @media (prefers-reduced-motion: reduce) {
+    .gp-card, .gp__title, .gp__bottom, .gp__final, .gp-confetti i {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+
+  <!-- STATUS + NAVBAR с крестиком справа -->
+  <div class="meshok-up">
+    <div class="status-bar">
+      <span class="status-bar__time">9:41</span>
+      <span class="status-bar__indicators">
+        <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+        <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+        <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+      </span>
+    </div>
+
+    <div class="nav-bar __type-feed">
+      <div class="nav-bar__leading"></div>
+      <div class="nav-bar__trailing">
+        <span class="button-inline-wrapper __size-24 __view-secondary">
+          <button class="button-inline __size-24 nav-bar__back" data-action="back" aria-label="Закрыть">
+            <span class="button-inline__content">
+              <span class="icon __size-24 __slot-close"></span>
+            </span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Тело экрана -->
+  <main class="gp __phase-start" id="gp">
+    <h1 class="gp__title">Вам подарили<br>3 подарка!</h1>
+
+    <div class="gp__stack" id="gpStack">
+      <article class="gp-card" data-i="0">
+        <div class="gp-card__head">
+          <span class="avatar"><img src="https://i.pravatar.cc/40?img=23" alt=""></span>
+          <span class="name">Виктория Петрова</span>
+        </div>
+        <button class="gp-card__trash" aria-label="Удалить">
+          <img src="assets/icons/trash_16_20.svg" alt="">
+        </button>
+        <div class="gp-card__poster">
+          <div class="emoji">💐</div>
+          <div class="text">Спасибо<br>за дружбу</div>
+        </div>
+      </article>
+
+      <article class="gp-card" data-i="1">
+        <div class="gp-card__head">
+          <span class="avatar"><img src="https://i.pravatar.cc/40?img=47" alt=""></span>
+          <span class="name">Мария Иванова</span>
+        </div>
+        <button class="gp-card__trash" aria-label="Удалить">
+          <img src="assets/icons/trash_16_20.svg" alt="">
+        </button>
+        <div class="gp-card__poster">
+          <div class="emoji">🌷</div>
+          <div class="text">Любимой</div>
+        </div>
+      </article>
+
+      <article class="gp-card" data-i="2">
+        <div class="gp-card__head">
+          <span class="avatar"><img src="https://i.pravatar.cc/40?img=12" alt=""></span>
+          <span class="name">Дмитрий Кузнецов</span>
+        </div>
+        <button class="gp-card__trash" aria-label="Удалить">
+          <img src="assets/icons/trash_16_20.svg" alt="">
+        </button>
+        <div class="gp-card__poster">
+          <div class="emoji">🐱</div>
+          <div class="text">Котиков<br>очень хочется!</div>
+        </div>
+      </article>
+
+      <!-- Финальный экран — «Вы приняли все подарки» -->
+      <div class="gp__final">
+        <div class="gp__final-title">Вы приняли<br>все подарки</div>
+        <div class="gp-confetti" id="gpConfetti"></div>
+        <button class="gp__done" data-action="back">Готово</button>
+      </div>
+    </div>
+
+    <div class="gp__bottom">
+      <button class="gp__cta" id="gpAcceptAll">Принять все</button>
+    </div>
+
+    <div class="gp__handle"></div>
+  </main>
+
+</div>
+
+<!-- DS back-кнопка → history.back() с правильным направлением -->
+<script src="components/back-button.js"></script>
+<!-- Анимация: phase-start → phase-fan → phase-accepted -->
+<script>
+  (function () {
+    var root = document.getElementById('gp');
+    var cta = document.getElementById('gpAcceptAll');
+    var confettiHost = document.getElementById('gpConfetti');
+    if (!root) return;
+
+    // Конфетти на финальный экран
+    (function buildConfetti() {
+      var colors = ['#ff6fa3', '#ffb547', '#3da9fc', '#7bd389', '#c084fc', '#ff6b6b'];
+      var N = 28;
+      for (var i = 0; i < N; i++) {
+        var p = document.createElement('i');
+        var ang = (Math.PI * 2 * i) / N + (Math.random() - 0.5) * 0.4;
+        var dist = 80 + Math.random() * 60;
+        var x = Math.cos(ang) * dist;
+        var y = Math.sin(ang) * dist - 10;
+        var r = (Math.random() * 720 - 360) | 0;
+        p.style.background = colors[i % colors.length];
+        p.style.setProperty('--x', x.toFixed(0) + 'px');
+        p.style.setProperty('--y', y.toFixed(0) + 'px');
+        p.style.setProperty('--r', r + 'deg');
+        p.style.setProperty('--d', (Math.random() * 240).toFixed(0) + 'ms');
+        confettiHost.appendChild(p);
+      }
+    })();
+
+    // Стартовая раскладка — phase-start, потом через короткую паузу — phase-fan
+    // (как в видео: маленький стек ↗ веер).
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        setTimeout(function () {
+          root.classList.remove('__phase-start');
+          root.classList.add('__phase-fan');
+        }, 380);
+      });
+    });
+
+    cta.addEventListener('click', function () {
+      root.classList.remove('__phase-fan');
+      root.classList.add('__phase-accepted');
+    });
+  })();
+</script>
+
+</body>
+</html>
