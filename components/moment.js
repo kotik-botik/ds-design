@@ -171,9 +171,13 @@
       if (cta) {
         if (s.cta && s.cta.label) {
           cta.style.display = '';
+          // По умолчанию CTA-кнопка во ВВЗ-стиле «secondary-on-color»
+          // (стеклянная). Для именинной сториз и любых других кейсов можно
+          // передать s.cta.style = 'primary' (или другой DS-стиль).
+          var ctaStyle = s.cta.style || 'secondary-on-color';
           cta.innerHTML =
-            '<div class="button-wrapper __size-44 __style-secondary-on-color">' +
-              '<button class="button-container __style-secondary-on-color" type="button">' +
+            '<div class="button-wrapper __size-44 __style-' + ctaStyle + '">' +
+              '<button class="button-container __style-' + ctaStyle + '" type="button">' +
                 '<span class="button-content"></span>' +
               '</button>' +
             '</div>';
@@ -380,6 +384,8 @@
     el.hidden = true;
     el.style.cssText = '--moment-duration: ' + duration + '; z-index: 1000;';
     el.innerHTML = [
+      '<img class="moment__media" alt="" style="display:none;">',
+      '<div class="moment__scrim"></div>',
       '<div class="moment__statusbar">',
         '<span class="moment__statusbar-time">9:41</span>',
       '</div>',
@@ -470,7 +476,7 @@
     };
     if (opts.headerTitle    != null) slide.title    = opts.headerTitle;
     if (opts.headerSubtitle != null) slide.subtitle = opts.headerSubtitle;
-    if (opts.cta) slide.cta = { label: opts.cta };
+    if (opts.cta) slide.cta = { label: opts.cta, style: 'primary' };
     return slide;
   }
 
