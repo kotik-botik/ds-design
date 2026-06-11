@@ -10,6 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
 <link rel="stylesheet" href="components/system-notifications.css">
+<link rel="stylesheet" href="components/app-launch.css">
+<link rel="stylesheet" href="components/lockscreen.css">
 <style>
   :root {
     --roboto: "Roboto", "Google Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -117,17 +119,10 @@
     background: radial-gradient(130% 120% at 50% 36%, transparent 54%, rgba(0,0,0,0.5) 100%);
   }
 
-  /* ============================================================
-     SCREEN 0 — Splash (boot) — фирменный оранжевый градиент ОК
-     (точные стопы из Figma node 2245:45745). По центру — логотип 78×78.
-     ============================================================ */
+  /* SCREEN 0 — Splash (boot). Каркас и анимация — в components/app-launch.{css,js}.
+     Здесь только brand-визуал: фирменный оранжевый градиент бренда ОК
+     (точные стопы из Figma node 2245:45745) и шрифт подписи. */
   .splash {
-    position: absolute;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background:
       radial-gradient(ellipse 155% 72% at 50% 55.4%,
         #ff9257 10%,
@@ -137,41 +132,12 @@
         #ff5500 45%,
         #f03c00 57.5%,
         #e12300 70%);
-    transition: opacity 0.5s ease;
-    /* circular reveal: JS задаёт центр и радиус через inline-style */
-    clip-path: circle(0px at 50% 50%);
-    will-change: clip-path;
   }
-  .splash.is-revealing {
-    transition: clip-path 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .splash.is-done { opacity: 0; pointer-events: none; }
-
-  /* На сплеше — фирменный PNG-лого (белый на оранжевом). Иконка из
-     лаунчера прилетает в центр поверх него, затем «фокус-пулл»:
-     иконка расплывается в блюр и гаснет, а splashLogo.png наоборот
-     выходит из блюра. Размер ~128px ближе к Android spec
-     (AVD inner circle ~192dp на 360dp экране). */
-  .splash__logo {
-    width: 128px;
-    height: 128px;
-    opacity: 0;
-    filter: blur(12px);
-    transition: opacity 0.4s ease, filter 0.4s ease;
-  }
-  .splash.is-loaded .splash__logo { opacity: 1; filter: blur(0); }
-  .splash__logo svg,
-  .splash__logo img { display: block; width: 100%; height: 100%; }
   /* splashLogo.png — оранжевая squircle-плитка с белыми буквами «ОК».
-     На оранжевом фоне сплеша плитка визуально сливается с градиентом,
-     остаются только белые буквы. Без фильтра — иначе и плитка, и буквы
-     стали бы одним белым квадратом. */
-
-  /* Подпись «народная соцсеть» — 50px от низа (параметры из Figma) */
+     На оранжевом фоне плитка визуально сливается с градиентом, остаются
+     только белые буквы. Без CSS-фильтра — иначе и плитка, и буквы стали
+     бы одним белым квадратом. */
   .splash__subtitle {
-    position: absolute;
-    left: 0; right: 0; bottom: 50px;
-    text-align: center;
     font-family: "OK Sans Display", var(--roboto);
     font-weight: 500;
     font-size: 15px;
@@ -179,98 +145,12 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     color: #fff;
-    opacity: 0;
-    transition: opacity 0.3s ease;
   }
-  .splash.is-revealing .splash__subtitle { opacity: 1; transition-delay: 0.15s; }
 
-  /* ============================================================
-     SCREEN 1 — Lock screen (Pixel style)
-     ============================================================ */
-  .lockscreen {
-    position: absolute;
-    inset: 0;
-    z-index: 40;
-    color: #fff;
-    transition: transform 0.5s cubic-bezier(0.2, 0.0, 0, 1),
-                opacity 0.4s ease;
-    will-change: transform;
-  }
-  .device.unlocked .lockscreen {
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-  }
-  /* Skip the slide animation when we land straight on the menu (Back). */
-  .device.no-anim .lockscreen,
+  /* SCREEN 1 — Lock screen. Каркас + swipe-up унлок в
+     components/lockscreen.{css,js}. .homescreen на этой странице
+     тоже синхронен через .device.no-anim, поэтому правило ниже. */
   .device.no-anim .homescreen { transition: none !important; }
-
-  .lockscreen__clock {
-    position: absolute;
-    top: 96px; left: 0; right: 0;
-    text-align: center;
-  }
-  .lockscreen__time {
-    font-size: 78px;
-    font-weight: 300;
-    line-height: 1.0;
-    letter-spacing: -1px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.25);
-  }
-  .lockscreen__date {
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: 500;
-    opacity: 0.95;
-  }
-  .lockscreen__weather {
-    margin-top: 4px;
-    font-size: 14px;
-    font-weight: 400;
-    opacity: 0.85;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  /* Small lock glyph above the bottom shortcuts */
-  .lockscreen__lock {
-    position: absolute;
-    bottom: 150px; left: 50%;
-    transform: translateX(-50%);
-    opacity: 0.9;
-  }
-  .lockscreen__hint {
-    position: absolute;
-    bottom: 116px; left: 0; right: 0;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-    opacity: 0.7;
-    animation: hintPulse 2.4s ease-in-out infinite;
-  }
-  @keyframes hintPulse {
-    0%, 100% { opacity: 0.45; transform: translateY(0); }
-    50%      { opacity: 0.9;  transform: translateY(-3px); }
-  }
-
-  /* Pixel bottom shortcuts — phone (left) + camera (right) */
-  .lockscreen__shortcuts {
-    position: absolute;
-    bottom: 38px; left: 0; right: 0;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 30px;
-  }
-  .shortcut {
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.16);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    display: flex; align-items: center; justify-content: center;
-    color: #fff;
-  }
 
   /* Gesture navigation pill (shared) */
   .nav-pill {
@@ -443,53 +323,9 @@
   .device .notifs { top: 254px; }
   .device.headsup-notifs .notifs { top: 36px; }
 
-  /* ============================================================
-     App-launch animation — tapped icon flies to splash logo position
-     while the orange splash background reveals as a growing circle
-     ============================================================ */
-  .launch {
-    position: absolute;
-    z-index: 110;                  /* над сплешем, чтобы быть его «лого» */
-    border-radius: 24%;
-    opacity: 0;
-    pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.30);
-    overflow: hidden;
-  }
-  /* .is-animating включает только переходы позиции/тени: opacity 0→1
-     должен случиться мгновенно, чтобы иконка была видна в полёте.
-     .is-faded задаёт ПОЛНЫЙ transition-список (включая position'ы),
-     чтобы при одновременном применении обоих классов shorthand
-     не обнулял переходы position — все 8 свойств анимируются. */
-  .launch.is-animating {
-    opacity: 1;
-    transition:
-      top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.4s ease;
-  }
-  .launch.is-arrived { box-shadow: none; }
-  .launch.is-faded {
-    opacity: 0;
-    filter: blur(12px);
-    transform: scale(1.06);
-    transition:
-      top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.4s ease,
-      opacity 0.4s ease,
-      filter 0.4s ease,
-      transform 0.4s ease;
-  }
-  .launch__glyph {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .launch__glyph img { display: block; width: 100%; height: 100%; }
+  /* App-launch overlay (.launch / .splash) — каркас и анимация в
+     components/app-launch.{css,js}. На странице ничего brand-specific
+     к .launch не добавляется. */
 </style>
 </head>
 <body>
@@ -564,7 +400,7 @@
     <!-- App grid -->
     <div class="home-grid">
       <!-- ОК → lenta-q3.html -->
-      <button class="app" data-href="lenta-q3.html">
+      <button class="app" data-launch="lenta-q3.html">
         <span class="app__icon icon-ok">
           <img src="assets/icons/appLogoDefault.png" alt="ОК" width="58" height="58">
         </span>
@@ -613,26 +449,15 @@
 </div>
 
 <script src="components/system-notifications.js"></script>
+<script src="components/lockscreen.js"></script>
+<script src="components/app-launch.js"></script>
 <script>
 (function () {
-  var device   = document.getElementById('device');
-  var lock     = document.getElementById('lockscreen');
-  var launch   = document.getElementById('launch');
-  var glyph    = document.getElementById('launchGlyph');
-  var splash   = document.getElementById('splash');
+  var device = document.getElementById('device');
 
-  /* ---- App-open splash: показывается ПОСЛЕ тапа по иконке ОК (пока
-     приложение «грузится»), затем переходим в ленту. На старте телефона
-     не показывается. ---- */
-  var SPLASH_MS = 950;    // кроссфейд стартует с тапом → PNG-лого чистое к ~420ms
-
-  function hideSplash() {
-    if (!splash) return;
-    splash.style.display = 'none';
-    splash.classList.remove('is-revealing');
-    splash.classList.remove('is-loaded');
-    splash.style.clipPath = '';
-  }
+  /* App-launch (splash + летящая иконка) — components/app-launch.{js,css}.
+     Lockscreen (swipe-up) — components/lockscreen.{js,css}.
+     Здесь только специфичная для start-страницы lifecycle-логика. */
 
   // Remembers, for this tab session, that the phone is already unlocked /
   // sitting on the home screen — so coming Back from a feed lands on the
@@ -701,12 +526,10 @@
   }
 
   // Clear the launch-zoom overlay (it may be left fullscreen after a
-  // bfcache restore) so it never covers the menu.
+  // bfcache restore) so it never covers the menu. AppLaunch.reset()
+  // делает то же самое; локальный шорткат — для удобства старого кода.
   function resetLaunch() {
-    launch.className = 'launch';
-    launch.removeAttribute('style');
-    glyph.innerHTML = '';
-    hideSplash();
+    if (window.AppLaunch) window.AppLaunch.reset();
   }
 
   /* System notifications реализованы в components/system-notifications.js —
@@ -714,39 +537,11 @@
   function startNotifications() { if (window.OkNotifs) window.OkNotifs.start(); }
   function stopNotifications(clear) { if (window.OkNotifs) window.OkNotifs.stop(clear); }
 
-  /* ---- Lock screen: interactive swipe-up (follows the finger), release past
-     the threshold to unlock, otherwise spring back. A plain tap also unlocks. ---- */
-  (function () {
-    var sy = 0, dy = 0, dragging = false;
-
-    lock.addEventListener('pointerdown', function (e) {
-      if (device.classList.contains('unlocked')) return;
-      dragging = true; sy = e.clientY; dy = 0;
-      lock.style.transition = 'none';
-      try { lock.setPointerCapture(e.pointerId); } catch (err) {}
-    });
-
-    lock.addEventListener('pointermove', function (e) {
-      if (!dragging) return;
-      dy = Math.min(0, e.clientY - sy);                 // только вверх
-      lock.style.transform = 'translateY(' + dy + 'px)';
-      lock.style.opacity = String(Math.max(0, 1 + dy / 420));
-    });
-
-    function end() {
-      if (!dragging) return;
-      dragging = false;
-      lock.style.transition = '';                       // вернуть CSS-переход
-      lock.style.transform = '';
-      lock.style.opacity = '';
-      if (dy < -70 || Math.abs(dy) < 8) {
-        unlock();                                        // свайп за порог или тап
-      }
-      // иначе — пружинит обратно (transform/opacity сброшены → анимация)
-    }
-    lock.addEventListener('pointerup', end);
-    lock.addEventListener('pointercancel', end);
-  })();
+  /* ---- Lock screen: swipe/тап обрабатывает components/lockscreen.js;
+     он стреляет 'lockscreen:unlock' на document — мы ловим и зовём
+     наш unlock() (а он уже выставляет history-state, sessionStorage,
+     слайд heads-up notifs, и т.п.). */
+  document.addEventListener('lockscreen:unlock', unlock);
 
   /* ---- Тап по гугл-серч-бару на главном экране → блокируем телефон
      (возврат на локскрин). Используем history.back() — попадает в наш
@@ -765,87 +560,18 @@
     });
   })();
 
-  /* ---- Launch an app: icon flies to splash logo position while the
-     orange splash background reveals as a growing circle from the tap ---- */
-  var SPLASH_LOGO_SIZE = 128;      // совпадает с .splash__logo (Android spec ≈ 192dp круг)
-
-  document.querySelectorAll('.app[data-href]').forEach(function (app) {
-    app.addEventListener('click', function () {
-      var href = app.getAttribute('data-href');
-      var iconEl = app.querySelector('.app__icon');
-      var iconRect = iconEl.getBoundingClientRect();
-      var deviceRect = device.getBoundingClientRect();
-
-      // Координаты иконки относительно .device
-      var startLeft = iconRect.left - deviceRect.left;
-      var startTop  = iconRect.top  - deviceRect.top;
-      var iconCx    = startLeft + iconRect.width / 2;
-      var iconCy    = startTop  + iconRect.height / 2;
-
-      // Куда летит лого — центр экрана, размером 78×78
-      var endLeft = (deviceRect.width  - SPLASH_LOGO_SIZE) / 2;
-      var endTop  = (deviceRect.height - SPLASH_LOGO_SIZE) / 2;
-
-      // Радиус, чтобы круговая волна полностью покрыла экран от точки тапа
-      var maxR = Math.hypot(
-        Math.max(iconCx, deviceRect.width  - iconCx),
-        Math.max(iconCy, deviceRect.height - iconCy)
-      );
-
-      // Поставить launch ровно над тапнутой иконкой
-      launch.className = 'launch icon-ok';
-      launch.style.top    = startTop  + 'px';
-      launch.style.left   = startLeft + 'px';
-      launch.style.width  = iconRect.width  + 'px';
-      launch.style.height = iconRect.height + 'px';
-      launch.style.borderRadius = '50%';
-      glyph.innerHTML = iconEl.innerHTML;
-
-      // Подготовить сплеш: круг радиуса 0 в точке тапа
-      splash.style.display = 'flex';
-      splash.classList.remove('is-revealing');
-      splash.style.clipPath = 'circle(0px at ' + iconCx + 'px ' + iconCy + 'px)';
-
-      // Remember we're "in the app" so Back returns to the menu
-      try { sessionStorage.setItem(HOME_KEY, '1'); } catch (e) {}
-
-      // Reflow → запускаем переходы
-      void launch.offsetWidth;
-      void splash.offsetWidth;
-
-      launch.classList.add('is-animating');
-      launch.style.top    = endTop  + 'px';
-      launch.style.left   = endLeft + 'px';
-      launch.style.width  = SPLASH_LOGO_SIZE + 'px';
-      launch.style.height = SPLASH_LOGO_SIZE + 'px';
-      launch.style.borderRadius = '24%';
-
-      splash.classList.add('is-revealing');
-      splash.style.clipPath = 'circle(' + maxR + 'px at ' + iconCx + 'px ' + iconCy + 'px)';
-
-      // Кроссфейд запускаем сразу же с самим полётом иконки: она блюрится
-      // и гаснет параллельно с движением, а splashLogo.png проявляется
-      // из блюра почти сразу после тапа. Double-rAF: первый rAF — это
-      // ещё текущий кадр до layout/paint, во втором браузер уже зафиксирует
-      // opacity:1 от .is-animating, и переход opacity 1→0 у .is-faded
-      // действительно сработает (иначе оба класса резолвятся в одном
-      // recalc и иконку не видно совсем).
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          launch.classList.add('is-arrived');
-          splash.classList.add('is-loaded');
-          launch.classList.add('is-faded');
-        });
-      });
-      setTimeout(function () { window.location.href = href; }, SPLASH_MS);
-    });
+  /* ---- App-launch: вся анимация и навигация — в components/app-launch.js.
+     На странице нужны только #launch / #splash оверлеи и кнопки с
+     data-launch="<url>". Здесь только хук: ставим at_home флаг,
+     чтобы Back из ленты приземлился на меню без локскрина. ---- */
+  document.addEventListener('app-launch:start', function () {
+    try { sessionStorage.setItem(HOME_KEY, '1'); } catch (e) {}
   });
 
   /* ---- Returning via Back from a feed: open straight to the menu, not the
      lock screen. pageshow fires on both fresh loads and bfcache restores. ---- */
   window.addEventListener('pageshow', function () {
-    resetLaunch();
-    hideSplash();           // сплеш только при открытии приложения, не на старте
+    resetLaunch();          // сплеш только при открытии приложения, не на старте
     var atHome = false;
     try { atHome = sessionStorage.getItem(HOME_KEY) === '1'; } catch (e) {}
     if (atHome) {

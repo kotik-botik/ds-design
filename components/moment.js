@@ -143,8 +143,8 @@
         if (s.cta && s.cta.label) {
           cta.style.display = '';
           cta.innerHTML =
-            '<div class="button-wrapper __size-44 __style-primary __full-width">' +
-              '<button class="button-container __style-primary" type="button">' +
+            '<div class="button-wrapper __size-44 __style-secondary-on-color">' +
+              '<button class="button-container __style-secondary-on-color" type="button">' +
                 '<span class="button-content"></span>' +
               '</button>' +
             '</div>';
@@ -247,17 +247,25 @@
       );
     }
 
-    function slidesFor(ava) {
-      if (typeof options.slides === 'function') return options.slides(ava);
+    function defaultSlides(ava) {
       var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
       var ctaLabel = ava.getAttribute('data-cta-label');
+      var palette = options.palette || DEFAULT_PALETTE;
       var list = [];
       for (var i = 0; i < count; i++) {
-        var s = {};
+        var s = { color: palette[i % palette.length] };
         if (ctaLabel) s.cta = { label: ctaLabel };
         list.push(s);
       }
       return list;
+    }
+
+    function slidesFor(ava) {
+      if (typeof options.slides === 'function') {
+        var custom = options.slides(ava);
+        if (custom) return custom;
+      }
+      return defaultSlides(ava);
     }
 
     function applyAuthor(ava) {
@@ -331,9 +339,90 @@
     }
   }
 
+  // ============================================================
+  // CREATE — фабрика DOM-узла viewer'а с готовой разметкой.
+  // На странице: document.getElementById('slot').replaceWith(MomentViewer.create()).
+  // ============================================================
+  function createViewer(opts) {
+    opts = opts || {};
+    var duration = opts.duration || '4s';
+    var el = document.createElement('div');
+    el.className = 'moment __fullscreen';
+    el.hidden = true;
+    el.style.cssText = '--moment-duration: ' + duration + '; z-index: 1000;';
+    el.innerHTML = [
+      '<div class="moment__statusbar">',
+        '<span class="moment__statusbar-time">9:41</span>',
+      '</div>',
+      '<div class="moment__topbar">',
+        '<div class="moment__progress"></div>',
+        '<div class="moment__header">',
+          '<div class="avatar __size-36 __type-image"><img src="" alt=""></div>',
+          '<div class="moment__header-text">',
+            '<div class="moment__header-title"></div>',
+            '<div class="moment__header-subtitle">только что</div>',
+          '</div>',
+          '<span class="button-inline-wrapper __view-primary-on-color __size-24">',
+            '<button class="button-inline __size-24" aria-label="Ещё">',
+              '<span class="button-inline__content">',
+                '<img class="button-inline__icon" src="assets/icons/more_24.svg" width="24" height="24" alt="" style="filter: brightness(0) invert(1);">',
+              '</span>',
+            '</button>',
+          '</span>',
+          '<span class="button-inline-wrapper __view-primary-on-color __size-24">',
+            '<button class="button-inline __size-24" aria-label="Закрыть">',
+              '<span class="button-inline__content">',
+                '<img class="button-inline__icon" src="assets/icons/close_16_20.svg" width="24" height="24" alt="" style="filter: brightness(0) invert(1);">',
+              '</span>',
+            '</button>',
+          '</span>',
+        '</div>',
+      '</div>',
+      '<div class="moment__body" style="display: none;"></div>',
+      '<div class="moment__nav">',
+        '<button class="moment__nav-zone __side-prev" aria-label="Назад"></button>',
+        '<button class="moment__nav-zone __side-next" aria-label="Дальше"></button>',
+      '</div>',
+      '<div class="moment__cta" style="display: none;"></div>',
+      '<div class="moment__handle"></div>'
+    ].join('');
+    return el;
+  }
+
+  // Палитра по умолчанию для обычных сториз без картинки. Используется в
+  // bindRow, если slides()-колбэк не передан или вернул null.
+  var DEFAULT_PALETTE = ['#FF7700', '#5856D6', '#34C759', '#FF3B30', '#007AFF', '#AF52DE'];
+
+  // ============================================================
+  // VVZ-SLIDE — фабрика slide-объекта для viewer'а с ВВЗ-контентом.
+  //   MomentViewer.vvzSlide({
+  //     title:  'Возможно вы знакомы',
+  //     people: [{ name, sub, img, mutuals?, m? }, …],
+  //     cta:    { label: 'Показать всех', onClick? }   // опц.
+  //   });
+  // Карточки рендерятся через window.VvzCard.render — соответствующий модуль
+  // должен быть подключён.
+  // ============================================================
+  function vvzSlide(opts) {
+    opts = opts || {};
+    var people = opts.people || [];
+    var renderCard = (window.VvzCard && window.VvzCard.render) || function () { return ''; };
+    var cards = people.map(renderCard).join('');
+    var body = [
+      '<h2 class="moment__body-title ds-title-xl">' + (opts.title || '') + '</h2>',
+      '<div class="moment__body-grid">' + cards + '</div>'
+    ].join('');
+    var slide = { color: opts.color || '#2E2F33', body: body };
+    if (opts.cta) slide.cta = opts.cta;
+    return slide;
+  }
+
   // Экспорт
   window.MomentViewer = {
-    init: function (root, options) { return new MomentViewer(root, options); },
-    bindRow: bindRow
+    init:     function (root, options) { return new MomentViewer(root, options); },
+    bindRow:  bindRow,
+    create:   createViewer,
+    vvzSlide: vvzSlide,
+    palette:  DEFAULT_PALETTE
   };
 })();

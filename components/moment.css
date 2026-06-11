@@ -209,27 +209,41 @@
   right: 0;
   bottom: 80px;  /* выше CTA/handle */
   z-index: 2;
-  padding: var(--space-4);
+  /* 16 сверху и по бокам, 32 снизу (по дизайну). */
+  padding: var(--space-4) var(--space-4) var(--space-8);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  /* Grid 2 row'а: первая (title) занимает auto, вторая (сетка карточек)
+     забирает весь остаток через 1fr — гарантированно растягивается на
+     любой высоте экрана, без flex-grow проблем со scroll-контейнером. */
+  display: grid;
+  grid-template-rows: auto 1fr;
+  row-gap: var(--space-2);
 }
 .moment__body::-webkit-scrollbar { display: none; }
 
+/* Типографика — DS-класс .ds-title-xl, навешивается в moment.js рядом
+   с .moment__body-title. Здесь только специфика: цвет, выравнивание,
+   отступ под сетку. */
 .moment__body-title {
-  font-family: var(--font-family);
-  font-size: 21px;
-  line-height: 28px;
-  font-weight: 600;
+  display: block;
+  width: 100%;
+  text-align: center;
   color: var(--static-text-and-icons-base-inverse-primary);
-  margin: 0 0 var(--space-4);
+  margin: 0;
 }
 
-/* Сетка 2×2 для карточек ВВЗ внутри body. */
+/* Сетка 2×2 для карточек ВВЗ внутри body. Растягивается на всю доступную
+   высоту (вторая row body 1fr), grid-auto-rows: 1fr делит свободное
+   место между рядами поровну — карточки занимают всю свою row. Это даёт
+   margin-top:auto на кнопке возможность работать. */
 .moment__body-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  grid-auto-rows: 1fr;
+  gap: var(--space-2);
+  min-height: 0;
 }
 /* В сетке карточка занимает всю ячейку — снимаем фикс. ширину 160px из vvz-card */
 .moment__body-grid > .vvz-card {
@@ -320,6 +334,9 @@
 }
 .moment__cta .button-wrapper {
   flex: 1 1 0;
+}
+.moment__cta .button-container {
+  width: 100%;
 }
 
 /* ============================================================

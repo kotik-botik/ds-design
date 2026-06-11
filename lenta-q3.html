@@ -145,7 +145,13 @@
 
   /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
   .ll-pymk { padding-top: var(--space-3); }
-  .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); }
+  .ll-pymk__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--space-2); padding: 0 var(--space-4) var(--space-3);
+  }
+  .ll-pymk__title { /* в head — паддинги задаёт сам __head */
+    padding: 0;
+  }
   .ll-pymk__row {
     display: flex;
     gap: var(--space-2);
@@ -356,7 +362,10 @@
 
         <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible) -->
         <section class="ll-pymk island" data-dismiss-row aria-label="Возможно, вы знакомы">
-          <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
+          <div class="ll-pymk__head">
+            <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
+            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24"><span class="button-inline__content">Все</span></button></span>
+          </div>
           <div class="ll-pymk__row">
 
             <div class="friend-card" data-dismiss-target>
@@ -785,54 +794,9 @@
          и поднимается по тапу на аватарку сториз. Сам контент (аватар, имя,
          количество палочек, картинки) подставляется JS из data-* выбранной
          сториз. -->
-    <div class="moment __fullscreen" id="ll-moment" hidden style="--moment-duration: 4s; z-index: 1000;">
-
-      <div class="moment__statusbar">
-        <span class="moment__statusbar-time">9:41</span>
-      </div>
-
-      <div class="moment__topbar">
-        <div class="moment__progress" id="ll-moment-progress"></div>
-        <div class="moment__header">
-          <div class="avatar __size-36 __type-image">
-            <img src="" alt="">
-          </div>
-          <div class="moment__header-text">
-            <div class="moment__header-title"></div>
-            <div class="moment__header-subtitle">только что</div>
-          </div>
-          <span class="button-inline-wrapper __view-primary-on-color __size-24">
-            <button class="button-inline __size-24" aria-label="Ещё">
-              <span class="button-inline__content">
-                <img class="button-inline__icon ll-icon" src="assets/icons/more_24.svg" width="24" height="24" alt="" style="filter: brightness(0) invert(1);">
-              </span>
-            </button>
-          </span>
-          <span class="button-inline-wrapper __view-primary-on-color __size-24">
-            <button class="button-inline __size-24" id="ll-moment-close" aria-label="Закрыть">
-              <span class="button-inline__content">
-                <img class="button-inline__icon ll-icon" src="assets/icons/close_16_20.svg" width="24" height="24" alt="" style="filter: brightness(0) invert(1);">
-              </span>
-            </button>
-          </span>
-        </div>
-      </div>
-
-      <div class="moment__nav">
-        <button class="moment__nav-zone __side-prev" aria-label="Назад"></button>
-        <button class="moment__nav-zone __side-next" aria-label="Дальше"></button>
-      </div>
-
-      <!-- Body-слот. Заполняется из slide.body в MomentViewer (см. moment.js).
-           По умолчанию скрыт — обычные сториз показывают только media+color. -->
-      <div class="moment__body" style="display: none;"></div>
-
-      <!-- CTA-слот. Заполняется из slide.cta в MomentViewer (см. moment.js).
-           Если у текущей сториз нет cta — слот скрыт через display: none. -->
-      <div class="moment__cta" style="display: none;"></div>
-
-      <div class="moment__handle"></div>
-    </div>
+    <!-- Слот под viewer сториз. Сам узел создаётся через
+         MomentViewer.create() и заменяет этот placeholder. -->
+    <div id="ll-moment-slot"></div>
 
     <!-- TABBAR (DS-компонент, прибит к низу) -------------------------- -->
     <div class="ll-tabbar">
@@ -939,43 +903,34 @@
        режим колоды и сам запускается стрим. -->
   <div class="notifs" id="notifs" data-autostart data-mode="heads-up"></div>
   <script src="components/system-notifications.js"></script>
+  <!-- Back из ленты всегда возвращает на меню — компонент пушит sentinel
+       в историю и перехватывает popstate. Ставим at_home=1, чтобы
+       start.html подхватил это и открылся не на локскрине, а на меню. -->
   <script>
-    // Back из ленты всегда возвращает на меню (start.html), какая бы страница
-    // ни была в реальной истории. Кладём sentinel-state и при popstate
-    // принудительно идём в start.html — там pageshow увидит at_home=1 и
-    // покажет меню без анимации локскрина.
-    (function () {
+    try { sessionStorage.setItem('okstart_at_home', '1'); } catch (e) {}
+    document.addEventListener('back-trap:before-navigate', function () {
       try { sessionStorage.setItem('okstart_at_home', '1'); } catch (e) {}
-      if (!history.state || history.state.scr !== 'feed-back-trap') {
-        history.pushState({ scr: 'feed-back-trap' }, '');
-      }
-      window.addEventListener('popstate', function () {
-        try { sessionStorage.setItem('okstart_at_home', '1'); } catch (e) {}
-        window.location.replace('start.html');
-      });
-    })();
+    });
   </script>
+  <script src="components/back-trap.js" data-target="start.html"></script>
   <script src="components/tab-bar.js"></script>
   <script src="components/dismissible.js"></script>
 
   <!-- Просмотрщик сториз ----------------------------------------------- -->
+  <script src="components/vvz-card.js"></script>
   <script src="components/moment.js"></script>
   <script>
-    // Связка карусели сториз и moment-viewer'а через DS-метод
-    // MomentViewer.bindRow. Всё поведение (тапы lev/prav, переход между
-    // авторами, маркировка просмотренных, открытие/закрытие) — внутри.
-    // Снаружи остаётся только выбор того, чем заполнить слайды.
+    // Связка сториз ↔ viewer. Логика поведения — внутри MomentViewer.bindRow.
+    // На странице остаётся: создать узел viewer'а, описать данные ВВЗ и
+    // отдать колбэк, как собирать слайды.
     (function () {
-      var STORY_COLORS = ['#FF7700', '#5856D6', '#34C759', '#FF3B30', '#007AFF', '#AF52DE'];
+      var row  = document.getElementById('ll-stories-row');
+      var slot = document.getElementById('ll-moment-slot');
+      if (!row || !slot) return;
 
-      var row    = document.getElementById('ll-stories-row');
-      var viewer = document.getElementById('ll-moment');
-      if (!row || !viewer) return;
+      var viewer = MomentViewer.create({ duration: '4s' });
+      slot.replaceWith(viewer);
 
-      // Данные для ВВЗ-сториз — 4 человека. У части указаны общие друзья,
-      // у части нет. Карточки без mutuals растягиваются по высоте до тех,
-      // у которых mutuals есть — выравнивание идёт через grid stretch +
-      // margin-top: auto у кнопки внутри vvz-card__content.
       var VVZ_PEOPLE = [
         { name: 'Карина Затонская', sub: '28 лет, Рига, Латвия',  img: 'https://i.pravatar.cc/192?img=47', mutuals: 18, m: [44, 12, 5] },
         { name: 'Илья Воронов',     sub: '31 год, Москва',         img: 'https://i.pravatar.cc/192?img=33' },
@@ -983,84 +938,19 @@
         { name: 'Мария Лебедева',   sub: '29 лет, Казань',         img: 'https://i.pravatar.cc/192?img=45' }
       ];
 
-      function vvzCardHtml(p) {
-        var hasMutuals = p.mutuals && p.m;
-        var mutualsBlock = '';
-        if (hasMutuals) {
-          var mutAvas = p.m.map(function (id) {
-            return '<div class="avatar __size-32 __type-image"><img src="https://i.pravatar.cc/64?img=' + id + '" alt=""></div>';
-          }).join('');
-          mutualsBlock = [
-            '<div class="vvz-card__mutuals">',
-              '<div class="avatars-view __size-32">',
-                '<div class="avatars-view__stack">' + mutAvas + '</div>',
-              '</div>',
-            '</div>'
-          ].join('');
-        }
-        return [
-          '<div class="vvz-card' + (hasMutuals ? ' __has-mutuals' : '') + '" data-vvz-card>',
-            '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',
-              '<button class="button-inline __size-16" aria-label="Скрыть" data-vvz-dismiss>',
-                '<span class="button-inline__content">',
-                  '<span class="button-inline__icon icon __size-16 __slot-close"></span>',
-                '</span>',
-              '</button>',
-            '</span>',
-            '<div class="vvz-card__media"><img src="' + p.img + '" alt=""></div>',
-            '<div class="vvz-card__content">',
-              '<div class="vvz-card__title ds-title-s">' + p.name + '</div>',
-              '<div class="vvz-card__subtitle ds-caption-m">' + (hasMutuals ? p.mutuals + ' общих друзей' : p.sub) + '</div>',
-              mutualsBlock,
-              '<div class="vvz-card__btn button-wrapper __size-36 __style-primary __full-width">',
-                '<button class="button-container __style-primary" type="button" style="width:100%;">',
-                  '<span class="button-content">Дружить</span>',
-                '</button>',
-              '</div>',
-            '</div>',
-          '</div>'
-        ].join('');
-      }
-
-      function vvzBodyHtml() {
-        var cards = VVZ_PEOPLE.map(vvzCardHtml).join('');
-        return [
-          '<h2 class="moment__body-title">Возможно вы знакомы</h2>',
-          '<div class="moment__body-grid">' + cards + '</div>'
-        ].join('');
-      }
-
-      window.MomentViewer.bindRow(row, viewer, {
+      MomentViewer.bindRow(row, viewer, {
         slides: function (ava) {
-          // ВВЗ-сториз — одна палочка, body вместо media, CTA «Показать всех»
+          // ВВЗ-сториз — собирается из готового хелпера, иначе null → fallback
+          // на дефолтную палитру из bindRow (см. MomentViewer.palette).
           if (ava.hasAttribute('data-vvz')) {
-            return [{
-              color: '#2E2F33', // тёмный фон под body (PNG появится позже)
-              body: vvzBodyHtml(),
-              cta: { label: 'Показать всех' }
-            }];
+            return [MomentViewer.vvzSlide({
+              title:  'Возможно вы знакомы',
+              people: VVZ_PEOPLE,
+              cta:    { label: 'Показать всех' }
+            })];
           }
-          // Обычная сториз — цветной фон + опц. CTA из data-cta-label
-          var count = parseInt(ava.getAttribute('data-stories'), 10) || 1;
-          var ctaLabel = ava.getAttribute('data-cta-label');
-          var list = [];
-          for (var i = 0; i < count; i++) {
-            var s = { color: STORY_COLORS[i % STORY_COLORS.length] };
-            if (ctaLabel) s.cta = { label: ctaLabel };
-            list.push(s);
-          }
-          return list;
+          return null;
         }
-      });
-
-      // Тап на ✕ в карточке ВВЗ → состояние «Рекомендация скрыта».
-      // Делегируем на viewer, потому что карточки рендерятся уже после init'а.
-      viewer.addEventListener('click', function (e) {
-        var btn = e.target.closest('[data-vvz-dismiss]');
-        if (!btn) return;
-        e.stopPropagation();
-        var card = btn.closest('[data-vvz-card]');
-        if (card) card.classList.add('__state-hidden');
       });
     })();
   </script>
