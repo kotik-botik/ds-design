@@ -159,8 +159,14 @@
           '</div>' +
           '<div class="moment__bday-content">' +
             '<p class="moment__bday-kicker">' + (s.bday.kicker || 'Сегодня') + '</p>' +
-            '<h2 class="moment__bday-heading">' + (s.bday.heading || 'День рождения') + '</h2>' +
-            '<p class="moment__bday-name">' + (s.bday.name || '') + '</p>' +
+            // Заголовок и ФИ — каждое слово на свой строке (как в макете):
+            // «День / рождения», «Анастасии / Фоминой».
+            '<h2 class="moment__bday-heading">' +
+              (s.bday.heading || 'День рождения').split(' ').join('<br>') +
+            '</h2>' +
+            '<p class="moment__bday-name">' +
+              (s.bday.name || '').split(' ').join('<br>') +
+            '</p>' +
           '</div>';
 
         // Шары — отдельный слой на всю карточку (sibling .moment__bday).

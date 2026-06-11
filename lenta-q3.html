@@ -950,13 +950,16 @@
           if (ava.hasAttribute('data-bday')) {
             var img = ava.querySelector('img');
             var name = ava.getAttribute('data-name') || '';
-            // Под "День рождения …" — род. падеж имени.
-            var GENITIVE = { 'Лиза': 'Лизы', 'Алексей': 'Алексея', 'Дима': 'Димы' };
-            var gen = GENITIVE[name] || name;
+            // ФИ в род. падеже под "День рождения …" (большим текстом — полностью,
+            // в шапке — только имя, чтобы не вылазить за ширину).
+            var FULL = { 'Лиза': ['Лизы', 'Михайловой'], 'Алексей': ['Алексея', 'Орлова'], 'Дима': ['Димы', 'Соколова'] };
+            var pair = FULL[name] || [name, ''];
+            var firstGen = pair[0];
+            var fullGen = (pair[0] + ' ' + pair[1]).trim();
             return [MomentViewer.bdaySlide({
               photo:          img ? img.src : '',
-              name:           gen,
-              headerTitle:    'День рождения ' + gen,
+              name:           fullGen,
+              headerTitle:    'День рождения ' + firstGen,
               headerSubtitle: '3 часа назад',
               cta:            'Поздравить'
             })];
