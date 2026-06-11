@@ -262,9 +262,20 @@
       currentAva = ava;
       var titleEl = viewerEl.querySelector('.moment__header-title');
       if (titleEl) titleEl.textContent = ava.getAttribute('data-name') || '';
-      var avaImg = viewerEl.querySelector('.moment__header .avatar img');
-      var srcImg = ava.querySelector('img');
-      if (avaImg && srcImg) avaImg.src = srcImg.src;
+
+      // Аватар в шапке viewer'а — копия аватарки из стака сториз.
+      // Копируем тип (__type-image / __type-placeholder / __type-emoji / …)
+      // и содержимое (img / emoji-символ), сохраняя свой __size-36.
+      var headerAva = viewerEl.querySelector('.moment__header > .avatar');
+      if (headerAva) {
+        Array.prototype.slice.call(headerAva.classList).forEach(function (c) {
+          if (/^__type-/.test(c)) headerAva.classList.remove(c);
+        });
+        Array.prototype.slice.call(ava.classList).forEach(function (c) {
+          if (/^__type-/.test(c)) headerAva.classList.add(c);
+        });
+        headerAva.innerHTML = ava.innerHTML;
+      }
     }
 
     function markViewed(ava) {

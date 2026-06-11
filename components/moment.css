@@ -216,13 +216,6 @@
 }
 .moment__body::-webkit-scrollbar { display: none; }
 
-/* В режиме __view-body (есть произвольный контент в .moment__body) скрываем
-   автора в шапке — остаются только прогресс-бар и actions (более/закрыть). */
-.moment.__view-body .moment__header > .avatar,
-.moment.__view-body .moment__header-text {
-  display: none;
-}
-
 .moment__body-title {
   font-family: var(--font-family);
   font-size: 21px;
