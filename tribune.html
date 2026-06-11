@@ -16,20 +16,9 @@
     margin: 0; padding: 0; height: 100%;
     background: var(--dynamic-surface-base-secondary);
   }
-  .phone-frame {
-    width: 100%; max-width: none;
-    height: 100dvh; min-height: 100dvh;
-    overflow: hidden;
-    background: var(--dynamic-surface-base-secondary);
-  }
-  .phone-frame__feed {
-    min-height: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .phone-frame__feed::-webkit-scrollbar { display: none; }
-
-  .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
+  /* fullscreen-оболочка + скролл-фид + .ll-tabbar + .ll-icon → components/app-shell.css.
+     Здесь только фон страницы (secondary). */
+  .phone-frame { background: var(--dynamic-surface-base-secondary); }
 
   /* Ряд chips под navbar внутри meshok-up: горизонтальный паддинг + воздух снизу.
      Фон обязательно — иначе sticky meshok-up «просвечивает» ленту под чипсами. */
@@ -54,13 +43,12 @@
     box-shadow: 0 8px 24px -8px rgba(0,0,0,0.25);
   }
 
-  /* FAB и таббар как в messages.html */
-  .ll-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; }
+  /* .ll-tabbar → components/app-shell.css */
 </style>
 </head>
 <body>
 
-  <div class="phone-frame">
+  <div class="phone-frame __fullscreen">
     <div class="phone-frame__feed">
 
       <!-- STATUS + NAVBAR (search) + CHIPS — внутри meshok-up -->

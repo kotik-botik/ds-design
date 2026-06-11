@@ -45,6 +45,19 @@
     if (this._prev) this._prev.addEventListener('click', this._onPrev);
     if (this._next) this._next.addEventListener('click', this._onNext);
 
+    // Long-press (Instagram-like): удержание >250ms → пауза прогресса +
+    // скрытие контролов (header/progress/statusbar). CTA остаётся видимым.
+    // Тап короче порога — обычный prev/next. Отпускание после long-press —
+    // возврат UI и продолжение анимации.
+    this._holdTimer = null;
+    this._isHolding = false;
+    this._onPressStart = this._onPressStart.bind(this);
+    this._onPressEnd = this._onPressEnd.bind(this);
+    root.addEventListener('pointerdown', this._onPressStart);
+    root.addEventListener('pointerup', this._onPressEnd);
+    root.addEventListener('pointercancel', this._onPressEnd);
+    root.addEventListener('pointerleave', this._onPressEnd);
+
     // Завершение анимации активного сегмента → автоматический next
     root.addEventListener('animationend', this._onAnimEnd);
 
@@ -226,6 +239,38 @@
   MomentViewer.prototype.pause  = function () { this.root.classList.add('__state-paused'); };
   MomentViewer.prototype.resume = function () { this.root.classList.remove('__state-paused'); };
 
+  // Долгое нажатие: ставим .__state-pressed на корне. CSS-правила в moment.css
+  // прячут контролы (header / прогресс / статус-бар) и останавливают анимацию
+  // активного сегмента через .__state-paused. CTA-кнопка остаётся видимой.
+  // Игнорируем нажатия по интерактивным элементам — крестик, CTA, карточки
+  // ВВЗ — чтобы они работали обычно.
+  MomentViewer.prototype._onPressStart = function (e) {
+    if (e.target && e.target.closest && e.target.closest(
+      '.moment__cta, .moment__header [aria-label], [data-vvz-dismiss], .vvz-card__btn'
+    )) return;
+    var self = this;
+    clearTimeout(this._holdTimer);
+    this._holdTimer = setTimeout(function () {
+      self._isHolding = true;
+      self.root.classList.add('__state-pressed');
+      self.pause();
+    }, 250);
+  };
+
+  MomentViewer.prototype._onPressEnd = function () {
+    clearTimeout(this._holdTimer);
+    if (!this._isHolding) return;
+    this._isHolding = false;
+    this.root.classList.remove('__state-pressed');
+    this.resume();
+    // Подавить следующий click — он сработает после pointerup как часть
+    // тач-цепочки, и иначе nav-зона переключит сториз сразу после удержания.
+    this.root.addEventListener('click', function suppress(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }, { capture: true, once: true });
+  };
+
   // Подменить сториз нового автора: пересобрать сегменты прогресса и слайды.
   // Страница вызывает это из onNext/onPrev перед тем как вернуть true.
   MomentViewer.prototype.setSlides = function (slides) {
@@ -256,6 +301,11 @@
   MomentViewer.prototype.destroy = function () {
     document.removeEventListener('keydown', this._onKey);
     this.root.removeEventListener('animationend', this._onAnimEnd);
+    this.root.removeEventListener('pointerdown', this._onPressStart);
+    this.root.removeEventListener('pointerup', this._onPressEnd);
+    this.root.removeEventListener('pointercancel', this._onPressEnd);
+    this.root.removeEventListener('pointerleave', this._onPressEnd);
+    clearTimeout(this._holdTimer);
     if (this._prev) this._prev.removeEventListener('click', this._onPrev);
     if (this._next) this._next.removeEventListener('click', this._onNext);
   };

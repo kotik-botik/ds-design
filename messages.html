@@ -17,20 +17,9 @@
     margin: 0; padding: 0; height: 100%;
     background: var(--dynamic-surface-base-secondary);
   }
-  .phone-frame {
-    width: 100%; max-width: none;
-    height: 100dvh; min-height: 100dvh;
-    overflow: hidden;
-    background: var(--dynamic-surface-base-secondary);
-  }
-  .phone-frame__feed {
-    min-height: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .phone-frame__feed::-webkit-scrollbar { display: none; }
-
-  .ll-icon { display: inline-block; flex-shrink: 0; vertical-align: middle; }
+  /* fullscreen-оболочка + скролл-фид + .ll-tabbar + .ll-icon → components/app-shell.css.
+     Здесь только фон страницы (secondary). */
+  .phone-frame { background: var(--dynamic-surface-base-secondary); }
 
   /* Шапка — DS-компонент meshok-up (sticky + белый фон + скругление) */
   .ll-msg-title {
@@ -43,9 +32,6 @@
   .ll-pymk__head {
     display: flex; align-items: center; justify-content: space-between;
     gap: var(--space-2); padding: 0 var(--space-4) var(--space-3);
-  }
-  .ll-pymk__actions {
-    display: flex; align-items: center; gap: var(--space-3);
   }
   .ll-pymk__row {
     display: flex; gap: var(--space-2); padding: 0 var(--space-4);
@@ -64,13 +50,12 @@
   /* иконка FAB — белая (asset-svg чёрный) на оранжевом button-circle */
   .ll-fab__icon { display: block; width: 28px; height: 28px; filter: brightness(0) invert(1); }
 
-  /* Таббар прибит к низу */
-  .ll-tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; }
+  /* .ll-tabbar → components/app-shell.css */
 </style>
 </head>
 <body>
 
-  <div class="phone-frame" data-screen>
+  <div class="phone-frame __fullscreen" data-screen>
     <div class="phone-frame__feed">
 
       <!-- STATUS + NAVBAR — DS meshok-up -->
@@ -103,10 +88,7 @@
       <section class="ll-pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
         <div class="ll-pymk__head">
           <header class="header __size-m"><div class="header__title">Возможно, вы знакомы</div></header>
-          <div class="ll-pymk__actions">
-            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24"><span class="button-inline__content">Все</span></button></span>
-            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" data-dismiss="row"><span class="button-inline__content">Скрыть</span></button></span>
-          </div>
+          <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" data-dismiss="row"><span class="button-inline__content">Скрыть</span></button></span>
         </div>
         <div class="ll-pymk__row">
 
