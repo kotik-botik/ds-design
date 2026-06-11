@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ru" class="__ui-theme_enabled __ui-theme_light __font-roboto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Друзья — прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="index.css">
+<!-- В head синхронно: listener pagereveal должен зарегистрироваться до события -->
+<script src="components/screen-transition.js"></script>
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--dynamic-surface-base-secondary);
+  }
+  .phone-frame { background: var(--dynamic-surface-base-secondary); }
+
+  /* Вкладки-фильтр (DS TabsView base) */
+  .ll-fr-tabs {
+    --tabs-view-padding-left: var(--space-4);
+    --tabs-view-padding-right: var(--space-4);
+    --tabs-view-padding-top: var(--space-1);
+  }
+
+  /* 2×2 grid быстрых действий: тайлы 163×64.
+     Каждый тайл — кликабельная зона: иконка 24 слева + текст на 2 строки. */
+  .ll-fr-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-3) 0;
+  }
+  .ll-fr-tile {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 12px;
+    background: var(--dynamic-surface-base-tertiary);
+    border-radius: 12px;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--font-family);
+    color: var(--dynamic-text-and-icons-base-primary);
+    transition: transform 500ms cubic-bezier(0, -0.3, 0.5, 1.3);
+  }
+  .ll-fr-tile:active,
+  .ll-fr-tile.__clicked { transform: scale(0.97); }
+  .ll-fr-tile__icon { flex-shrink: 0; width: 24px; height: 24px; display: block; }
+  .ll-fr-tile__label {
+    font-size: 13px; line-height: 16px; font-weight: 500;
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
+
+  /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
+  .ll-fr-pymk { padding-top: var(--space-4); padding-bottom: var(--space-3); }
+  .ll-fr-pymk__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--space-2); padding: 0 var(--space-4) var(--space-3);
+  }
+  .ll-fr-pymk__more {
+    border: 0; background: transparent; padding: 0;
+    color: var(--static-text-and-icons-special-primary);
+    font-family: var(--font-family);
+    font-size: 15px; line-height: 20px; font-weight: 600;
+    cursor: pointer;
+  }
+  .ll-fr-pymk__row {
+    display: flex; gap: var(--space-2); padding: 0 var(--space-4);
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .ll-fr-pymk__row::-webkit-scrollbar { display: none; }
+
+  /* Заголовки секций «Важные друзья» / «Все друзья» */
+  .ll-fr-section { padding-top: var(--space-3); }
+  .ll-fr-section__head { padding: 0 var(--space-4) var(--space-2); }
+
+  /* Правый слот в uni-cell — две круглые кнопки action */
+  .ll-fr-cell__actions {
+    display: flex; align-items: center; gap: var(--space-1);
+    margin-left: auto;
+  }
+  .ll-fr-cell__actions .button-inline__icon { width: 24px; height: 24px; }
+</style>
+</head>
+<body>
+
+  <div class="phone-frame __fullscreen">
+    <div class="phone-frame__feed">
+
+      <!-- STATUS + NAVBAR — DS meshok-up -->
+      <div class="meshok-up">
+        <div class="status-bar">
+          <span class="status-bar__time">9:41</span>
+          <span class="status-bar__indicators">
+            <img class="ll-icon" src="assets/icons/status-wifi.svg"    width="16" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-signal.svg"  width="17" height="12" alt="">
+            <img class="ll-icon" src="assets/icons/status-battery.svg" width="25" height="12" alt="">
+          </span>
+        </div>
+
+        <div class="nav-bar __type-feed">
+          <div class="nav-bar__leading">
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" aria-label="Назад"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/back_24.svg" width="24" height="24" alt=""></span></button></span>
+            <span class="ds-title-l">Друзья</span>
+          </div>
+          <div class="nav-bar__trailing">
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Поиск"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/search_24.svg" width="24" height="24" alt=""></span></button></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ВКЛАДКИ (DS Tab, base) — фильтр друзей -->
+      <div class="tabs-view __with-divider ll-fr-tabs">
+        <div class="tabs-row __scroll" id="frTabs">
+          <button class="tab-wrapper __view-base __selected" role="tab" aria-selected="true" data-filter="all">
+            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">Все</span></span></span></span>
+            <span class="line"></span>
+          </button>
+          <button class="tab-wrapper __view-base" role="tab" aria-selected="false" data-filter="requests">
+            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">Заявки в друзья</span></span></span></span>
+            <span class="line"></span>
+          </button>
+          <button class="tab-wrapper __view-base" role="tab" aria-selected="false" data-filter="online">
+            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">На сайте</span></span></span></span>
+            <span class="line"></span>
+          </button>
+          <button class="tab-wrapper __view-base" role="tab" aria-selected="false" data-filter="pymk">
+            <span class="inner-wrapper"><span class="tab"><span class="content"><span class="label">Вы знакомы</span></span></span></span>
+            <span class="line"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2×2 быстрые действия -->
+      <div class="ll-fr-menu">
+        <button class="ll-fr-tile" type="button">
+          <img class="ll-fr-tile__icon" src="assets/icons/user_contact_24.svg" width="24" height="24" alt="">
+          <span class="ll-fr-tile__label">Поиск по<br>контактам</span>
+        </button>
+        <button class="ll-fr-tile" type="button">
+          <img class="ll-fr-tile__icon" src="assets/icons/vk_square_24.svg" width="24" height="24" alt="">
+          <span class="ll-fr-tile__label">Импорт<br>из ВКонтакте</span>
+        </button>
+        <button class="ll-fr-tile" type="button">
+          <img class="ll-fr-tile__icon" src="assets/icons/globe_24.svg" width="24" height="24" alt="">
+          <span class="ll-fr-tile__label">Школьные<br>друзья</span>
+        </button>
+        <button class="ll-fr-tile" type="button">
+          <img class="ll-fr-tile__icon" src="assets/icons/user_share_24.svg" width="24" height="24" alt="">
+          <span class="ll-fr-tile__label">Поделиться<br>профилем</span>
+        </button>
+      </div>
+
+      <!-- Возможно, вы знакомы — стек friend-card (dismissible row) -->
+      <section class="ll-fr-pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
+        <div class="ll-fr-pymk__head">
+          <header class="header __size-m"><div class="header__title">Возможно, вы знакомы</div></header>
+          <button class="ll-fr-pymk__more" type="button">Ещё</button>
+        </div>
+        <div class="ll-fr-pymk__row">
+
+          <div class="friend-card" data-dismiss-target>
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=68')"></div>
+              <img src="https://i.pravatar.cc/240?img=68" alt="">
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
+                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
+              </span>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Ажар Сарбасова</div>
+              <div class="friend-card__subtitle ds-caption-m">3 общих друга</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="friend-card" data-dismiss-target>
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=12')"></div>
+              <img src="https://i.pravatar.cc/240?img=12" alt="">
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
+                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
+              </span>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Александр Кириллов</div>
+              <div class="friend-card__subtitle ds-caption-m">3 общих друга</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="friend-card" data-dismiss-target>
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=47')"></div>
+              <img src="https://i.pravatar.cc/240?img=47" alt="">
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
+                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
+              </span>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Алёна Ящук</div>
+              <div class="friend-card__subtitle ds-caption-m">20 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="friend-card" data-dismiss-target>
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=44')"></div>
+              <img src="https://i.pravatar.cc/240?img=44" alt="">
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
+                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
+              </span>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Анна Смирнова</div>
+              <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="friend-card" data-dismiss-target>
+            <div class="friend-card__media">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=33')"></div>
+              <img src="https://i.pravatar.cc/240?img=33" alt="">
+              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image">
+                <button class="button-circle" data-dismiss aria-label="Скрыть"><span class="icon __size-16 __slot-close"></span></button>
+              </span>
+            </div>
+            <div class="friend-card__content">
+              <div class="friend-card__title ds-title-s">Олег Зайцев</div>
+              <div class="friend-card__subtitle ds-caption-m">8 общих друзей</div>
+              <div class="friend-card__btn button-wrapper __size-36 __full-width">
+                <button class="button-container __style-primary" style="width:100%;"><span class="button-content">Дружить</span></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Важные друзья -->
+      <section class="ll-fr-section">
+        <div class="ll-fr-section__head">
+          <header class="header __size-m"><div class="header__title">Важные друзья</div></header>
+        </div>
+
+        <div class="uni-cell-wrapper">
+          <div class="uni-cell-container __state-enabled">
+            <div class="uni-cell">
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=49" alt=""></div>
+              <div class="uni-cell-additional-content">
+                <div class="ds-title-s">Лена Катина</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">4 минуты назад</div>
+              </div>
+              <div class="ll-fr-cell__actions">
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="uni-cell-wrapper">
+          <div class="uni-cell-container __state-enabled">
+            <div class="uni-cell">
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=32" alt=""></div>
+              <div class="uni-cell-additional-content">
+                <div class="ds-title-s">Мария Иванова</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">сегодня в 11:30</div>
+              </div>
+              <div class="ll-fr-cell__actions">
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Все друзья -->
+      <section class="ll-fr-section">
+        <div class="ll-fr-section__head">
+          <header class="header __size-m"><div class="header__title">Все друзья</div></header>
+        </div>
+
+        <div class="uni-cell-wrapper">
+          <div class="uni-cell-container __state-enabled">
+            <div class="uni-cell">
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=23" alt=""></div>
+              <div class="uni-cell-additional-content">
+                <div class="ds-title-s">Виктория Соколова</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн вчера</div>
+              </div>
+              <div class="ll-fr-cell__actions">
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="uni-cell-wrapper">
+          <div class="uni-cell-container __state-enabled">
+            <div class="uni-cell">
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=5" alt=""></div>
+              <div class="uni-cell-additional-content">
+                <div class="ds-title-s">Дмитрий Соколов</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн 2 дня назад</div>
+              </div>
+              <div class="ll-fr-cell__actions">
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="uni-cell-wrapper">
+          <div class="uni-cell-container __state-enabled">
+            <div class="uni-cell">
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=15" alt=""></div>
+              <div class="uni-cell-additional-content">
+                <div class="ds-title-s">Александр Фёдоров</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">был онлайн на этой неделе</div>
+              </div>
+              <div class="ll-fr-cell__actions">
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="uni-cell-wrapper">
+          <div class="uni-cell-container __state-enabled">
+            <div class="uni-cell">
+              <div class="avatar __size-56 __type-image"><img src="https://i.pravatar.cc/112?img=31" alt=""></div>
+              <div class="uni-cell-additional-content">
+                <div class="ds-title-s">Светлана Орлова</div>
+                <div class="ds-caption-m" style="color: var(--dynamic-text-and-icons-base-secondary);">была онлайн неделю назад</div>
+              </div>
+              <div class="ll-fr-cell__actions">
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Сообщение"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/message_24.svg" width="24" height="24" alt=""></span></button></span>
+                <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" aria-label="Ещё"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/more_vertical_24.svg" width="24" height="24" alt=""></span></button></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height: 96px"></div>
+      </section>
+
+    </div>
+
+    <!-- TABBAR -->
+    <div class="ll-tabbar">
+      <div class="tabbar __platform-ios">
+        <div class="tabbar__row">
+          <button class="tabbar-icon __slot-feed" aria-label="Лента"></button>
+          <button class="tabbar-icon __slot-book" aria-label="Книга"></button>
+          <button class="tabbar-icon __slot-message" aria-label="Сообщения"></button>
+          <button class="tabbar-icon __slot-clip" aria-label="Клипы"></button>
+          <button class="tabbar-icon __slot-menu __state-on" aria-label="Меню"></button>
+        </div>
+        <div class="tabbar__handle"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="components/dismissible.js"></script>
+  <script src="components/tab.js"></script>
+  <script src="components/tab-bar.js"></script>
+
+  <!-- Переключение активной вкладки по клику (визуально) -->
+  <script>
+    (function () {
+      var row = document.getElementById('frTabs');
+      if (!row) return;
+      row.addEventListener('click', function (e) {
+        var tab = e.target.closest && e.target.closest('.tab-wrapper');
+        if (!tab) return;
+        Array.prototype.forEach.call(row.querySelectorAll('.tab-wrapper'), function (t) {
+          t.classList.remove('__selected');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('__selected');
+        tab.setAttribute('aria-selected', 'true');
+      });
+    })();
+  </script>
+</body>
+</html>
