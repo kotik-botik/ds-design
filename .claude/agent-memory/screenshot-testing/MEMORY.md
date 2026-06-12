@@ -2,12 +2,15 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+<<<<<<< HEAD
 ## vvz-portlet header + button-inline (verified 2026-06-12, 360×800)
 - Header markup унифицирован: `<header class="vvz-portlet__header">` содержит `.vvz-portlet__title.ds-title-l` (текст «Возможно, вы знакомы», С ЗАПЯТОЙ — кодпоинт 44 после «Возможно») + правую кнопку. `aria-label` секции тоже «Возможно, вы знакомы» с запятой на всех 5 страницах (lenta-q3 / friends / guests / profile / messages). Запятая видна и в outerHTML, и в .textContent — раньше принял за отсутствующую, сверяй через charCodeAt.
 - Messages — единственный, у кого внутри `.vvz-portlet__header` ещё вложен `<header class="header __size-m">` с `.header__title` — двойная вложенность header'ов. Title text всё равно тот же.
 - Правый слот: `<span class="button-inline-wrapper __size-24 __view-primary">` (или `__view-secondary` на messages) → внутри `<button class="button-inline __size-24" data-href="vvz.html">` (или `data-dismiss="row"` на messages) → `<span class="button-inline__content">Ещё|Скрыть</span>`. **`data-href`/`data-dismiss` живут на ВНУТРЕННЕМ `<button>`, НЕ на wrapper-span.** Селекторами: `.vvz-portlet .button-inline[data-href="vvz.html"]` или `.button-inline[data-dismiss="row"]`. Тестировать тап по button (не span-wrapper) — `.click({force:true})` срабатывает, навигация на /vvz.html подтверждена.
 - Цвет: primary = `rgb(215, 98, 0)` (#D76200, оранжевый), secondary = `rgb(0, 0, 0)`. Это computed color на wrapper-span (CSS-переменная пробрасывается на child).
 
+=======
+>>>>>>> origin/main
 ## vvz-portlet компонент (2026-06-12, verified 360×800)
 Унифицированный «Возможно, вы знакомы» поверх 5 экранов:
 - Базовый класс: `.vvz-portlet` + опц. модификаторы `.island` (lenta-q3) / `.__messages` (messages, более компактный — h=274 vs 394).
