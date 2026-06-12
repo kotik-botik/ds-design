@@ -38,12 +38,16 @@
   .ll-gc-tabs .tabs-row { background-color: var(--dynamic-surface-base-secondary); }
 
   /* Островная обёртка вокруг хедера и грида — без верхнего/нижнего паддинга
-     острова (грид сам управляет внутренними отступами 12/36). */
+     острова (грид сам управляет внутренними отступами 12/36).
+     flex-shrink: 0 — иначе flex-column родитель (.phone-frame__feed) сжимает
+     остров и скролл ломается. */
   .ll-gc-island {
+    flex-shrink: 0;
     margin: var(--space-2) 0 0;
     padding-top: 0;
     padding-bottom: 0;
-    border-radius: 0;            /* фуллбейн под viewport */
+    background-color: var(--dynamic-surface-base-secondary);
+    overflow: visible;
   }
 
   /* Хедер «День рождения!» — DS header __size-l, внутри острова, 16/12/16/0 */
@@ -119,7 +123,7 @@
 
         <div class="nav-bar __type-feed">
           <div class="nav-bar__leading">
-            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" aria-label="Назад"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/back_24.svg" width="24" height="24" alt=""></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" aria-label="Назад"><span class="button-inline__content"><span class="icon __size-24 __slot-back"></span></span></button></span>
             <span class="ds-title-l">Подарки</span>
           </div>
           <div class="nav-bar__trailing">
@@ -149,7 +153,7 @@
       </div>
 
       <!-- ИСЛАНД: хедер «День рождения!» + сетка подарков -->
-      <section class="island ll-gc-island">
+      <section class="ll-gc-island">
         <header class="header __size-l ll-gc-section-head">
           <div class="header__title ds-title-l">День рождения!</div>
         </header>

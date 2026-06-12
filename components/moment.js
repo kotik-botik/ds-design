@@ -227,7 +227,11 @@
               renderer:  'svg',
               loop:      false,
               autoplay:  true,
-              path:      'assets/lottie/confetti.json'
+              path:      'assets/lottie/confetti.json',
+              // slice — заполняет весь контейнер по обеим осям, обрезая
+              // по более длинной. Дефолтный meet оставлял пустоты сверху/снизу,
+              // если aspect-ratio лотти-композиции не совпадал с карточкой.
+              rendererSettings: { preserveAspectRatio: 'xMidYMid slice' }
             });
           }).catch(function () {/* нет интернета — конфетти просто не покажем */});
         })(confettiHost);

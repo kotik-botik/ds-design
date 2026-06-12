@@ -2,6 +2,20 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+## vvz-portlet header + button-inline (verified 2026-06-12, 360×800)
+- Header markup унифицирован: `<header class="vvz-portlet__header">` содержит `.vvz-portlet__title.ds-title-l` (текст «Возможно, вы знакомы», С ЗАПЯТОЙ — кодпоинт 44 после «Возможно») + правую кнопку. `aria-label` секции тоже «Возможно, вы знакомы» с запятой на всех 5 страницах (lenta-q3 / friends / guests / profile / messages). Запятая видна и в outerHTML, и в .textContent — раньше принял за отсутствующую, сверяй через charCodeAt.
+- Messages — единственный, у кого внутри `.vvz-portlet__header` ещё вложен `<header class="header __size-m">` с `.header__title` — двойная вложенность header'ов. Title text всё равно тот же.
+- Правый слот: `<span class="button-inline-wrapper __size-24 __view-primary">` (или `__view-secondary` на messages) → внутри `<button class="button-inline __size-24" data-href="vvz.html">` (или `data-dismiss="row"` на messages) → `<span class="button-inline__content">Ещё|Скрыть</span>`. **`data-href`/`data-dismiss` живут на ВНУТРЕННЕМ `<button>`, НЕ на wrapper-span.** Селекторами: `.vvz-portlet .button-inline[data-href="vvz.html"]` или `.button-inline[data-dismiss="row"]`. Тестировать тап по button (не span-wrapper) — `.click({force:true})` срабатывает, навигация на /vvz.html подтверждена.
+- Цвет: primary = `rgb(215, 98, 0)` (#D76200, оранжевый), secondary = `rgb(0, 0, 0)`. Это computed color на wrapper-span (CSS-переменная пробрасывается на child).
+
+## vvz-portlet компонент (2026-06-12, verified 360×800)
+Унифицированный «Возможно, вы знакомы» поверх 5 экранов:
+- Базовый класс: `.vvz-portlet` + опц. модификаторы `.island` (lenta-q3) / `.__messages` (messages, более компактный — h=274 vs 394).
+- Шапка: `.vvz-portlet__header` (h=36–40, с тайтлом и кнопкой `.button-inline` «Ещё/Скрыть»).
+- Скроллер: `.vvz-portlet__row` (display:flex, gap:8px, overflowX:auto). Модификатор `.__cards-160` → friend-card width=160/h=270 (вместо дефолта 220/330). Используется на lenta-q3 и profile.
+- Дети: на friends/guests/lenta-q3/profile — `.friend-card`; на messages — `.vvz-card` (160×218, тот же, что в `vvz.html`-тиндере).
+- Числа подтверждены: lenta-q3 (island+__cards-160) → friend-card 160px; friends → 220; guests → 220; messages (__messages) → vvz-card 160; profile (__cards-160) → 160.
+
 ## Грабли icon.css (2026-06-11, vvz.html)
 - `<span class="icon __src" style="--icon-src: url('assets/icons/foo.svg')">` ломается: запрос уходит на `/components/assets/icons/foo.svg` → 404. Причина: `mask-image: var(--icon-src)` объявлено в `components/icon.css`, и CSS `url()` resolve'ится относительно файла-объявления, а не документа. Передача через CSS-переменную НЕ меняет точку resolve.
 - Фиксы: либо `url('../assets/icons/...')` в инлайне (relative-to-icon.css), либо абсолютный путь `url('/assets/icons/...')`, либо использовать готовый `__slot-*` класс (там пути уже с `../`).
@@ -120,6 +134,20 @@
 - Переключение режима — JS-вызовы `OkNotifs.setMode('lock'|'heads-up')`.
 - На локе `.device .notifs` стоит `top: 254px` (gap 36 после блока время/дата/погода). После анлока `.device.headsup-notifs` → `top: 36px`.
 
+## In-app push (notificationToast) — components/inapp-push.{js,css} (verified 2026-06-12, 390×844, messages.html + preview.html)
+ОТДЕЛЬНЫЙ компонент от `#notifs`/system-notifications. Глобал — `window.OkInApp` (НЕ OkNotifs). Контейнер: `<div class="inapp-pushes" id="inappPushes" data-autostart>`. Карточки: `.inapp-push.__type-user` / `.inapp-push.__type-ok`.
+- sessionStorage-ключи: `ok_inapp_idx`, `ok_inapp_next_at` (другие, чем у локскрин-стрима `ok_notif_*`).
+- Расписание в messages.html: item[0] user `delay:2000`, item[1] ok `delay:6000`. LIFETIME дефолт = 6000, GAP = 6000, MAX_STACK = 3.
+- Селекторы внутри: `.avatar.__size-56.__type-image > img` (user, аватар 56 круглый), `.inapp-push__avaicon` (ok, круг с иконкой), `.inapp-push__title.ds-title-s`, `.inapp-push__body.ds-body-m` (только user, `-webkit-line-clamp:2`).
+- Измерено user-карточка (full width 390): card w=390 top=48, bg `rgb(255,255,255)`, radius 16px, shadow `rgba(0,0,0,.12) 0 8px 24px -8px` (elevate-3), title fontWeight 600 / 15px, body color `rgba(46,47,51,.88)` 2 строки с …. Аватар 56×56 radius 50%.
+- ok-карточка: круг `.inapp-push__avaicon` 56px radius 50%, bg `rgb(0,153,255)` (#0099FF), иконка `assets/icons/web_24.svg` 24px по центру (dx=dy=0), белая через `filter: brightness(0) invert(1)`.
+- КОЛОДА (deck): реализована верно — restack() даёт depth0 z=100/translateY(0)/scale(1)/op1, depth1 z=99/translateY(10px)/scale(0.95)/op0.92, depth2 op0.8. Проверено принудительным overlapping (2× fireNext с паузой 400ms → обе карты в DOM, старая ушла вглубь/вниз/потускнела). ✓
+- **БАГ/ловушка timing-collision: в ДЕФОЛТНОМ расписании messages.html колода НЕ видна.** user.lifetime=6000 истекает РОВНО когда ok прилетает (ok delay=6000 от user). Прогон `sawBoth` (poll 100ms 9s) → false: user@~1.5s, ok@~7.5s, никогда не сосуществуют. Чтобы реально показать колоду в проде — у user нужен `lifetime` > GAP, либо ok-delay < user-lifetime. Сейчас «ложится поверх предыдущего» в естественном потоке не наблюдается.
+- Свайп-дисмисс: drag вверх, порог `dy < -34px` → dismiss (translateY(-150%), opacity0, 0.28s). Проверено `mouse.down` в центре + 10× move по -5px = -50px → карта удалена, контейнер пуст. ✓ Чистый тап (без move>4px) при наличии `data.href` → переход (`location.href`).
+- Тест чистого старта: `page.goto` → `sessionStorage.clear()` → `page.reload()`, иначе idx уже продвинут с прошлого визита.
+- pravatar.cc (аватар user) не грузится по HTTP в Playwright — placeholder-круг. Не баг компонента.
+- preview.html: секция «InAppPush — notificationToast 1.0» (h2). Карты статичные с inline `max-width:360px` (на 390 → реальная w=270, body клампится до ~1.5 строк визуально, но clamp=2 корректен). Верстка целая: radius/shadow/иконка-центр/нет overflow. `el.screenshot()` секции может склипать не туда если секция выше viewport — снимай через explicit `clip` после scrollTo.
+
 ## Launch-overlay (`#launch`)
 Живёт только во время анимации тапа. После `window.location.href = href` страница навигирует и `#launch` исчезает с DOM.
 
@@ -217,6 +245,27 @@ screen-transition.js теперь подключён синхронным `<scri
 - Свайп ряда: `attachSwipe` навешивается по `onDone` стейта 3 (т.е. в момент когда current стал 3 → state-4 активирован). STEP=312 (gap 12 + width 300). Программно эмулируется через `page.mouse.down/move/up`; в mid-swipe карточки сдвигаются translateX на dx, проверено.
 - Title рендерится двухстрочно через `<br>` («У вас<br>7 новых друзей»); `textContent` склеит без пробела — это просто свойство DOM API, не верстка.
 
+## PYMK help-card `.friend-card.__help` (verified 2026-06-12, viewport 360×800)
+- Финальная карточка PYMK на 4 страницах. helpCount=1 на каждой (guests, friends, lenta-q3, profile). Title «Найдите еще больше друзей», subtitle «Вы можете найти еще больше друзей или одноклассников», 2 link-кнопки «Поиск по контактам» / «Поиск по школам», icon 56×56.
+- **Размеры точно равны (НЕ просто близко) обычной .friend-card в ряду**, БЕЗ `align-items: stretch` (rowAlignItems='normal'). Естественная высота help-card подобрана так, что совпадает байт-в-байт с обычными карточками:
+  - guests: help 220×330 == regular 220×330
+  - friends: help 220×330 == regular 220×330
+  - lenta-q3 (vvz-portlet.island): help 220×330 == regular 220×330
+  - profile (vvz-portlet, row.__cards-160): help 160×282 == regular 160×282
+- На profile карточки УЖЕ́ — это `.vvz-portlet__row.__cards-160` модификатор (профиль использует компактный размер). Запись выше про «.pymk__row.__cards-220 (только guests) → 220» УСТАРЕЛА: классы по факту `.vvz-portlet` + `.vvz-portlet__row`, не `.pymk`. И __cards-160 теперь на profile, не на lenta-q3.
+- Класс портлета: `vvz-portlet` (guests/friends/profile) или `vvz-portlet island` (lenta-q3). Row: `vvz-portlet__row` или `vvz-portlet__row __cards-160`.
+- Для теста: row.scrollLeft = row.scrollWidth скроллит до конца; help-card — последний `.friend-card.__help` в row.
+- На lenta-q3 портлет глубоко в фиде — обязательно `sel.scrollIntoView()` перед измерением/скриншотом.
+
+## PYMK-секция — унифицированный компонент (verified 2026-06-12, viewport 360×800)
+- Класс изменился: было `.ll-pymk` / `.ll-pymk__row` / `.ll-pymk__title` — теперь **`.pymk` / `.pymk__row` / `.pymk__header`** на всех 4 страницах (lenta-q3, friends, guests, messages). Старый селектор `.ll-pymk__*` БОЛЬШЕ НЕ РАБОТАЕТ.
+- Модификаторы: `.pymk.island` (lenta-q3, добавляет island-обёртку), `.pymk.__messages` (messages.html), без модификаторов на friends/guests.
+- Row модификатор: `.pymk__row.__cards-220` (только guests) → ширина карточки **220px** (h=330). Без модификатора — **160px** (h=270 для friend-card, h=218 для vvz-card).
+- Row display:flex, overflow-x:auto, gap:8px на всех 4. Все PASS.
+- Содержимое: `.friend-card` (lenta-q3/friends/guests) или `.vvz-card` (messages).
+- Кнопка-action в `.pymk__header`: «Ещё» на guests, «Скрыть» на messages, отсутствует на lenta-q3/friends.
+- Скролл-позиция feed: lenta-q3 scrollTop=1051, friends=264, guests=252, messages=80 — pymk находится глубоко в фиде на lenta-q3 (после 7-летнего-назад), у остальных ближе к верху.
+
 ## friends.html — итерация 2 (2026-06-11, re-verified)
 - PYMK сейчас рендерится корректно: `.ll-pymk` без `.island` (раньше island клипал overflow + сливал bg). Top=284, h=334. Внутри `.ll-pymk__title.ds-title-l` + `.ll-pymk__row` (h=270, 5 `.friend-card` шириной 160 каждая, x=16 → горизонтальный ряд, gap 8, overflow-x:auto). Bg `rgba(0,0,0,0)` (прозрачный), overflow visible → теперь карточки не клипаются.
 - На viewport 360 в кадр попадают 2 целых карточки + 1 обрезанная справа (правильно для horiz-scroll'а). Фото broken (i.pravatar.cc недоступен в sandbox) — это особенность контейнера, layout сам корректен.
@@ -233,8 +282,10 @@ screen-transition.js теперь подключён синхронным `<scri
 - Tile «Поиск по контактам» / «Импорт из ВКонтакте» / «Школьные друзья» / «Поделиться профилем»: 2×2 grid, каждая 162×56 (12/186 left, 160/228 top), иконка 24×24 + двустрочный текст. Лейаут чистый.
 - «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
 - iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
-### gifts-catalog.html (наблюдено 2026-06-11, viewport 360×820)
-- ПОЧИНЕНО: грид теперь `grid-template-columns: minmax(0, 1fr)` — **1 колонка** во всю ширину острова. Резолвится в `328px` (vw 360 − 2×16 side padding). Gap=12, padding `0 16px 36px`. Никакого horizontal overflow (`docScrollW===360`).
+### gifts-catalog.html (наблюдено 2026-06-12, viewport 360×820) — СКРОЛЛ ОПЯТЬ 2 КОЛОНКИ
+- На viewport 360×820 грид `.ll-gc-grid` сейчас фактически 2-колоночный: 6 карт `.ll-gift` × 158×186, грид-обёртка island h=674px. Feed scrollHeight=830, clientHeight=820 → overflow ровно 10px, scrollTop max=10. Скролл технически работает, но margin крошечный — последний ряд карточек влезает в кадр почти полностью на дефолтной прокрутке (last card bottom=784 после scrollTo). Title «Подарки» и табы остаются видимыми сверху даже на максимуме скролла.
+- `feed.children`: meshok-up (h=0) + `.tabs-view.ll-gc-tabs` (h=48) + `.island.ll-gc-island` (h=674).
+- (запись «1 колонка minmax(0,1fr)» из предыдущей итерации — устарела. Сейчас визуально 2 колонки 158-wide, см. screenshot.)
 - Карточка `.ll-gift` — flex column, `align-items:center`, `gap:4px`. Постер 1:1, занимает 100% ширины (328×328). Под ним — `.price-tag` 24px.
 - **price-tag визуально центрирован под карточкой**, НО его `getBoundingClientRect()` врёт: компонент `.price-tag` имеет `margin-left: 14px` (`--price-tag-tip-width`) — это компенсация под «язычок», который рендерится через `::before` с `right:100%` и торчит ВЛЕВО за пределы body. Реальный визуальный bbox = `[bodyLeft-14, bodyRight]`. На vw=360: cardCenter=180, bodyCenter=187 (+7), visualCenter=180 (с учётом язычка). Δ=0. Если кто-то увидит «тег смещён вправо на 7px» из tag.getBoundingClientRect — это ОЖИДАЕМО, не баг. Чтобы измерять true center — вычитай `--price-tag-tip-width` из left, или мерь по `::before` через CSSOM/range.
 - Хедер «Подарки» — в nav-bar (class `ds-title-l ll-sg-navtitle__title-like`). «День рождения!» — внутри `.ll-gc-section-head .header__title.ds-title-l` в острове. Не путать.
@@ -242,6 +293,10 @@ screen-transition.js теперь подключён синхронным `<scri
 
 #### Старая запись (2-колоночный вариант, устарела)
 - ~~На 360-wide грид `.ll-gc-grid` объявлен `grid-template-columns: 1fr 1fr`, но resolved = `"235px 206px"` — колонки выползали за правый край viewport~~. Фикс применён: `minmax(0, 1fr)` + одна колонка.
+
+### send-gift.html — scroll-metrics (verified 2026-06-12, viewport 360×820)
+- Скроллер `.phone-frame__feed`: scrollHeight=921, clientHeight=820 → overflow 101px, что нормально. После `scrollTo({top:scrollHeight})` scrollTop=101 (atBottom=true). Последний друг (`.ll-sg-friend`, h=68) после скролла лежит top=720 / bottom=788 — **полностью виден** над таббарной зоной. 4 friend-rows в списке.
+- `feed.children`: meshok-up (h=0) + `.ll-sg-card` (h=461, открытка + CTA) + `.ll-sg-friends` (h=352, секция со списком друзей). На макс-скролле «Сообщение к открытке» и блок «Подарить за 2 OK» остаются видимыми сверху — друзья едут под этой шапкой.
 
 ### send-gift.html (наблюдено 2026-06-11) — БАГ в handler «Отправить» per-friend
 - В каждой friend-row кнопка `[data-give]` лежит ВНУТРИ `.button-wrapper`, **сразу под `.uni-cell`**, рядом с `.uni-cell-additional-content` (не внутри неё). См. DOM: `.uni-cell > .avatar | .uni-cell-additional-content | .button-wrapper > button[data-give]`.
@@ -271,3 +326,5 @@ screen-transition.js теперь подключён синхронным `<scri
 - Фото и mutual-аватарки = `i.pravatar.cc/...` → в Playwright не грузятся (broken-image иконка в углу фото-зоны). Форму/радиус/лейаут это не мешает проверить. Не регрессия.
 - Селектор передней карточки в ряду: `.friend-big-card[data-i="3"]` (Ольга). Ждать ряд: `waitForFunction(() => fp.classList.contains('__cards-revealed'))`.
 - reduced-motion путь сразу прыгает в `__state-4 __cards-revealed` (без морфа) — кружочного состояния там не увидишь.
+- Сетка быстрых действий: `.ll-quick__tile` — серые плашки. На 390-wide их **8 шт**, каждая **83.5×83.5** (квадрат), `aspect-ratio: 1 / 1`, display:flex. Квадратность держится через CSS `aspect-ratio`, не на жёсткой height. Verified 2026-06-12: PASS.
+- **Шторка-менюшка `.tabbar-menu-sheet` (components/tab-bar.js, verified 2026-06-12: PASS)**: создаётся ЛЕНИВО на первый openSheet() — до тапа в DOM её НЕТ (`querySelector('.tabbar-menu-sheet')===null`). Триггер: повторный тап по активному `.tabbar-icon.__slot-menu.__state-on` (handler в tab-bar.js:138, ветка `btn.classList.contains('__state-on') && __slot-menu` → openSheet). openSheet добавляет `.__open` внутри одного rAF; transition доезжает за <400ms. После тапа: `transform=matrix(1,0,0,1,0,0)` (translateY(0), НЕ 100%), opacity 1, rectTop=503 (выезжает снизу, h=341 при vh=844), backdrop `.tabbar-menu-sheet__backdrop.__open` тоже появляется. Закрытие — клик по backdrop / свайп вниз >60px. data-href клик в menu.html (строка 263) к шторке отношения не имеет — это отдельный делегат.

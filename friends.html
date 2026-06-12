@@ -56,23 +56,9 @@
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
-  /* «Возможно, вы знакомы» — берём ровно тот же паттерн, что в lenta-q3.html
-     (секция .ll-pymk + .ll-pymk__title ds-title-l + горизонтальный ряд friend-card).
-     .island не подходит здесь: его bg = page bg (secondary), а overflow:hidden
-     клипает горизонтальный скролл `.ll-pymk__row` — карточки исчезают. */
-  .ll-pymk { padding-top: var(--space-3); padding-bottom: var(--space-3); }
-  .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); display: block; color: inherit; text-decoration: none; }
-  .ll-pymk__row {
-    display: flex;
-    gap: var(--space-2);
-    padding: 0 var(--space-4);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .ll-pymk__row::-webkit-scrollbar { display: none; }
+  /* «Возможно, вы знакомы» — компонент .vvz-portlet (components/vvz-portlet.css), карточки 220 по дефолту */
 
-  /* Секции «Важные / Все друзья» — заголовок (как .ll-pymk__title) + список .user-cell.
+  /* Секции «Важные / Все друзья» — заголовок (как .vvz-portlet__title) + список .user-cell.
      Между ячейками вертикальный gap, тот же что в guests.html (--space-4). */
   .ll-fr-section { padding-top: var(--space-3); }
   .ll-fr-section__title { padding: 0 var(--space-4) var(--space-3); }
@@ -103,7 +89,7 @@
 
         <div class="nav-bar __type-feed">
           <div class="nav-bar__leading">
-            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" aria-label="Назад"><span class="button-inline__content"><img class="ll-icon button-inline__icon" src="assets/icons/back_24.svg" width="24" height="24" alt=""></span></button></span>
+            <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24 nav-bar__back" aria-label="Назад"><span class="button-inline__content"><span class="icon __size-24 __slot-back"></span></span></button></span>
             <span class="ds-title-l">Друзья</span>
           </div>
           <div class="nav-bar__trailing">
@@ -154,21 +140,23 @@
         </button>
       </div>
 
-      <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible).
-           Блок взят из lenta-q3.html; .island не подключаем, см. комментарий в стилях. -->
-      <section class="ll-pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
-        <a class="ll-pymk__title ds-title-l" href="vvz.html">Возможно, вы знакомы</a>
-        <div class="ll-pymk__row">
+      <!-- Возможно, вы знакомы — DS-компонент .vvz-portlet (Header с «Ещё» + ряд 220px friend-card). -->
+      <section class="vvz-portlet" data-dismiss-row aria-label="Возможно, вы знакомы">
+        <header class="vvz-portlet__header">
+          <div class="vvz-portlet__title ds-title-l">Возможно, вы знакомы</div>
+          <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24" data-href="vvz.html"><span class="button-inline__content">Ещё</span></button></span>
+        </header>
 
+        <div class="vvz-portlet__row">
           <div class="friend-card" data-dismiss-target>
             <div class="friend-card__media">
-              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=47')"></div>
-              <img src="https://i.pravatar.cc/240?img=47" alt="">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=15')"></div>
+              <img src="https://i.pravatar.cc/240?img=15" alt="">
               <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
             </div>
             <div class="friend-card__content">
-              <div class="friend-card__title ds-title-s">Алёна Ящук</div>
-              <div class="friend-card__subtitle ds-caption-m">20 общих друзей</div>
+              <div class="friend-card__title ds-title-s">Ажар Сарбасова</div>
+              <div class="friend-card__subtitle ds-caption-m">3 общих друга</div>
               <div class="friend-card__btn button-wrapper __size-36 __full-width">
                 <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
               </div>
@@ -177,13 +165,13 @@
 
           <div class="friend-card" data-dismiss-target>
             <div class="friend-card__media">
-              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=44')"></div>
-              <img src="https://i.pravatar.cc/240?img=44" alt="">
+              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=68')"></div>
+              <img src="https://i.pravatar.cc/240?img=68" alt="">
               <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
             </div>
             <div class="friend-card__content">
-              <div class="friend-card__title ds-title-s">Анна Смирнова</div>
-              <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
+              <div class="friend-card__title ds-title-s">Александр Кирюшкин</div>
+              <div class="friend-card__subtitle ds-caption-m">3 общих друга</div>
               <div class="friend-card__btn button-wrapper __size-36 __full-width">
                 <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
               </div>
@@ -197,23 +185,8 @@
               <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
             </div>
             <div class="friend-card__content">
-              <div class="friend-card__title ds-title-s">Александр Фёдоров</div>
-              <div class="friend-card__subtitle ds-caption-m">12 общих друзей</div>
-              <div class="friend-card__btn button-wrapper __size-36 __full-width">
-                <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="friend-card" data-dismiss-target>
-            <div class="friend-card__media">
-              <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=45')"></div>
-              <img src="https://i.pravatar.cc/240?img=45" alt="">
-              <span class="friend-card__close button-circle-wrapper __size-24 __style-on-image"><button class="button-circle" aria-label="Скрыть" data-dismiss><span class="icon __size-16 __slot-close"></span></button></span>
-            </div>
-            <div class="friend-card__content">
               <div class="friend-card__title ds-title-s">Мария Иванова</div>
-              <div class="friend-card__subtitle ds-caption-m">10 общих друзей</div>
+              <div class="friend-card__subtitle ds-caption-m">7 общих друзей</div>
               <div class="friend-card__btn button-wrapper __size-36 __full-width">
                 <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
               </div>
@@ -228,13 +201,25 @@
             </div>
             <div class="friend-card__content">
               <div class="friend-card__title ds-title-s">Олег Зайцев</div>
-              <div class="friend-card__subtitle ds-caption-m">8 общих друзей</div>
+              <div class="friend-card__subtitle ds-caption-m">2 общих друга</div>
               <div class="friend-card__btn button-wrapper __size-36 __full-width">
                 <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
               </div>
             </div>
           </div>
-
+            <div class="friend-card __help">
+              <div class="friend-card__help-icon">
+                <img class="ll-icon" src="assets/icons/smile_24.svg" width="24" height="24" alt="">
+              </div>
+              <div class="friend-card__help-text">
+                <div class="friend-card__help-title ds-title-s">Найдите еще больше друзей</div>
+                <div class="friend-card__help-subtitle ds-caption-m">Вы можете найти еще больше друзей или одноклассников</div>
+              </div>
+              <div class="friend-card__help-links">
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по контактам</button>
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по школам</button>
+              </div>
+            </div>
         </div>
       </section>
 
@@ -351,6 +336,16 @@
   <script src="components/dismissible.js"></script>
   <script src="components/tab.js"></script>
   <script src="components/tab-bar.js"></script>
+
+  <!-- Делегированный переход по data-href (кнопка «Ещё» в портлете → vvz.html) -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest && e.target.closest('button[data-href]');
+      if (!btn) return;
+      e.preventDefault();
+      location.href = btn.getAttribute('data-href');
+    });
+  </script>
 
   <!-- Переключение активной вкладки по клику (визуально) -->
   <script>

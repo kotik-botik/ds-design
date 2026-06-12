@@ -6,7 +6,6 @@
  * Подключение: <script src="components/tab-bar.js"></script> на странице с .tabbar.
  */
 (function () {
-  // Слот → страница по умолчанию
   var ROUTES = {
     feed: 'lenta-q3.html',
     book: 'tribune.html',
@@ -26,15 +25,23 @@
   document.addEventListener('click', function (e) {
     var btn = e.target.closest ? e.target.closest('.tabbar-icon') : null;
     if (!btn) return;
-    if (btn.classList.contains('__state-on')) return;   // уже активная вкладка
+
+    if (btn.classList.contains('__state-on')) {
+      if (btn.classList.contains('__slot-menu')) {
+        sessionStorage.setItem('nav-tab', '1');
+        location.href = ROUTES.menu;
+      }
+      return;
+    }
+
     var href = hrefFor(btn);
-    if (href) location.href = href;
+    if (href) {
+      sessionStorage.setItem('nav-tab', '1');
+      location.href = href;
+    }
   });
 
-  /* ---- Home-indicator swipe-up: жест по .tabbar__handle.
-     Свайп вверх на > 40px = «свернуть приложение» → start.html.
-     Имитирует системный gesture iOS home-indicator (быстрый свайп
-     от нижней кромки). ---- */
+  /* Home-indicator swipe-up: жест по .tabbar__handle → start.html */
   var handle = document.querySelector('.tabbar__handle');
   if (handle) {
     var sy = 0, dy = 0, dragging = false;

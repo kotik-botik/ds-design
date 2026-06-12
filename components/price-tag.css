@@ -29,7 +29,6 @@
   --price-tag-height: 24px;
   --price-tag-tip-width: 14px;
   --price-tag-bg: var(--static-surface-status-accent);
-  --price-tag-hole-color: rgba(0, 0, 0, 0.22);
 
   position: relative;
   display: inline-flex;
@@ -57,8 +56,9 @@
 }
 
 /* «Уголок» слева — отдельный пседоблок, выходит за пределы тела через
-   right: 100%. clip-path даёт плавную выпуклую кривую (квадратичная Безье
-   с контрольной точкой за левым краем). */
+   right: 100%. clip-path с evenodd: первая subpath — внешний контур
+   уголка, вторая subpath — круг-«дырка» (вырезается из заливки,
+   делая прозрачное отверстие, через которое видно фон страницы). */
 .price-tag::before {
   content: '';
   position: absolute;
@@ -67,26 +67,9 @@
   right: 100%;
   width: var(--price-tag-tip-width);
   background-color: var(--price-tag-bg);
-  /* Кривая: правая вертикаль 0→100, нижний скос к (40%, 75%), выпуклая
-     левая дуга к (40%, 25%) через ~ -10% (центр кривизны слева от элемента),
-     обратно к верхнему углу. Координаты в %, чтобы кривая масштабировалась
-     с высотой/шириной уголка. */
-  clip-path: path('M 14 0 L 14 24 L 5.5 17 C -1 13.5 -1 10.5 5.5 7 Z');
-}
-
-/* «Дырка» — маленькая тёмная точка в центре уголка. Сидит на правом
-   крае тела (left: 0 от тега), сдвинута влево на половину ширины уголка. */
-.price-tag::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: calc(var(--price-tag-tip-width) * -0.55);
-  width: 4px;
-  height: 4px;
-  margin-top: -2px;
-  border-radius: 50%;
-  background-color: var(--price-tag-hole-color);
-  pointer-events: none;
+  clip-path: path(evenodd,
+    'M 14 0 L 14 24 L 5.5 17 C -1 13.5 -1 10.5 5.5 7 Z \
+     M 7 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 Z');
 }
 
 /* ============================================================

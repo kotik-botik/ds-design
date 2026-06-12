@@ -24,8 +24,8 @@
     gap: var(--space-5);
     padding: var(--space-4) var(--space-4) 96px;
   }
-  /* «Возможно вы знакомы» — full-bleed: компенсируем 16 родительского паддинга */
-  .ll-guests .ll-pymk {
+  /* «Возможно, вы знакомы» — full-bleed: компенсируем 16 родительского паддинга */
+  .ll-guests .vvz-portlet {
     margin-left: calc(var(--space-4) * -1);
     margin-right: calc(var(--space-4) * -1);
   }
@@ -63,23 +63,7 @@
 
   /* Ячейка гостя — DS-компонент .user-cell (components/user-cell.css). */
 
-  /* ── «Возможно вы знакомы» — заголовок-ряд + горизонт. скролл ─── */
-  .ll-pymk__header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: var(--space-3);
-    padding: 0 var(--space-4) var(--space-3);
-  }
-  .ll-pymk__title { color: var(--dynamic-text-and-icons-base-primary); }
-  .ll-pymk__row {
-    display: flex; gap: var(--space-2);
-    padding: 0 var(--space-4);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .ll-pymk__row::-webkit-scrollbar { display: none; }
-  /* В Figma карточки уплотнены до 220 — увеличиваем ширину DS friend-card */
-  .ll-pymk__row .friend-card { width: 220px; }
+  /* «Возможно, вы знакомы» — компонент .vvz-portlet (карточки 220px по дефолту) */
 </style>
 </head>
 <body>
@@ -175,14 +159,14 @@
           </div>
         </section>
 
-        <!-- Возможно вы знакомы — DS friend-card (horizontal row, dismissible) -->
-        <section class="ll-pymk" data-dismiss-row aria-label="Возможно вы знакомы">
-          <div class="ll-pymk__header">
-            <div class="ll-pymk__title ds-title-l">Возможно вы знакомы</div>
-            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24"><span class="button-inline__content">Ещё</span></button></span>
-          </div>
+        <!-- Возможно, вы знакомы — DS friend-card (horizontal row, dismissible) -->
+        <section class="vvz-portlet" data-dismiss-row aria-label="Возможно, вы знакомы">
+          <header class="vvz-portlet__header">
+            <div class="vvz-portlet__title ds-title-l">Возможно, вы знакомы</div>
+            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24" data-href="vvz.html"><span class="button-inline__content">Ещё</span></button></span>
+          </header>
 
-          <div class="ll-pymk__row">
+          <div class="vvz-portlet__row">
             <div class="friend-card" data-dismiss-target>
               <div class="friend-card__media">
                 <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=15')"></div>
@@ -242,6 +226,19 @@
                 </div>
               </div>
             </div>
+            <div class="friend-card __help">
+              <div class="friend-card__help-icon">
+                <img class="ll-icon" src="assets/icons/smile_24.svg" width="24" height="24" alt="">
+              </div>
+              <div class="friend-card__help-text">
+                <div class="friend-card__help-title ds-title-s">Найдите еще больше друзей</div>
+                <div class="friend-card__help-subtitle ds-caption-m">Вы можете найти еще больше друзей или одноклассников</div>
+              </div>
+              <div class="friend-card__help-links">
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по контактам</button>
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по школам</button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -268,5 +265,15 @@
   <script src="components/dismissible.js"></script>
   <!-- Навигация по таббару -->
   <script src="components/tab-bar.js"></script>
+
+  <!-- Делегированный переход по data-href (кнопка «Ещё» → vvz.html) -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest && e.target.closest('button[data-href]');
+      if (!btn) return;
+      e.preventDefault();
+      location.href = btn.getAttribute('data-href');
+    });
+  </script>
 </body>
 </html>
