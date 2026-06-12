@@ -140,8 +140,11 @@
     if (!btn) return;
 
     if (btn.classList.contains('__state-on')) {
-      /* Повторный тап на активный меню-таб → открыть шторку */
-      if (btn.classList.contains('__slot-menu')) openSheet();
+      /* Повторный тап на активный меню-таб → перейти на menu.html */
+      if (btn.classList.contains('__slot-menu')) {
+        sessionStorage.setItem('nav-tab', '1');
+        location.href = ROUTES.menu;
+      }
       return;
     }
 

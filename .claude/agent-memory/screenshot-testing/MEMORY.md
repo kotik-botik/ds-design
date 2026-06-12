@@ -217,6 +217,15 @@ screen-transition.js теперь подключён синхронным `<scri
 - Свайп ряда: `attachSwipe` навешивается по `onDone` стейта 3 (т.е. в момент когда current стал 3 → state-4 активирован). STEP=312 (gap 12 + width 300). Программно эмулируется через `page.mouse.down/move/up`; в mid-swipe карточки сдвигаются translateX на dx, проверено.
 - Title рендерится двухстрочно через `<br>` («У вас<br>7 новых друзей»); `textContent` склеит без пробела — это просто свойство DOM API, не верстка.
 
+## PYMK-секция — унифицированный компонент (verified 2026-06-12, viewport 360×800)
+- Класс изменился: было `.ll-pymk` / `.ll-pymk__row` / `.ll-pymk__title` — теперь **`.pymk` / `.pymk__row` / `.pymk__header`** на всех 4 страницах (lenta-q3, friends, guests, messages). Старый селектор `.ll-pymk__*` БОЛЬШЕ НЕ РАБОТАЕТ.
+- Модификаторы: `.pymk.island` (lenta-q3, добавляет island-обёртку), `.pymk.__messages` (messages.html), без модификаторов на friends/guests.
+- Row модификатор: `.pymk__row.__cards-220` (только guests) → ширина карточки **220px** (h=330). Без модификатора — **160px** (h=270 для friend-card, h=218 для vvz-card).
+- Row display:flex, overflow-x:auto, gap:8px на всех 4. Все PASS.
+- Содержимое: `.friend-card` (lenta-q3/friends/guests) или `.vvz-card` (messages).
+- Кнопка-action в `.pymk__header`: «Ещё» на guests, «Скрыть» на messages, отсутствует на lenta-q3/friends.
+- Скролл-позиция feed: lenta-q3 scrollTop=1051, friends=264, guests=252, messages=80 — pymk находится глубоко в фиде на lenta-q3 (после 7-летнего-назад), у остальных ближе к верху.
+
 ## friends.html — итерация 2 (2026-06-11, re-verified)
 - PYMK сейчас рендерится корректно: `.ll-pymk` без `.island` (раньше island клипал overflow + сливал bg). Top=284, h=334. Внутри `.ll-pymk__title.ds-title-l` + `.ll-pymk__row` (h=270, 5 `.friend-card` шириной 160 каждая, x=16 → горизонтальный ряд, gap 8, overflow-x:auto). Bg `rgba(0,0,0,0)` (прозрачный), overflow visible → теперь карточки не клипаются.
 - На viewport 360 в кадр попадают 2 целых карточки + 1 обрезанная справа (правильно для horiz-scroll'а). Фото broken (i.pravatar.cc недоступен в sandbox) — это особенность контейнера, layout сам корректен.
