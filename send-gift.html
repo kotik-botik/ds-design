@@ -417,6 +417,18 @@
       });
     })();
 
+    // Главная CTA «Подарить» → секондари-дизейблд + «Подарок отправлен».
+    (function () {
+      var giveBtn = document.getElementById('sgGiveBtn');
+      if (!giveBtn) return;
+      giveBtn.addEventListener('click', function () {
+        giveBtn.classList.remove('__style-primary');
+        giveBtn.classList.add('__style-secondary', '__state-disabled');
+        giveBtn.querySelector('.button-content').textContent = 'Подарок отправлен';
+        giveBtn.disabled = true;
+      });
+    })();
+
     // Per-friend «Отправить» → заменяем кнопку статусом «Отправлено».
     (function () {
       document.querySelectorAll('[data-give]').forEach(function (btn) {
