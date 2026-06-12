@@ -233,6 +233,29 @@ screen-transition.js теперь подключён синхронным `<scri
 - Tile «Поиск по контактам» / «Импорт из ВКонтакте» / «Школьные друзья» / «Поделиться профилем»: 2×2 grid, каждая 162×56 (12/186 left, 160/228 top), иконка 24×24 + двустрочный текст. Лейаут чистый.
 - «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
 - iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
+### gifts-catalog.html (наблюдено 2026-06-12, viewport 360×820) — СКРОЛЛ ОПЯТЬ 2 КОЛОНКИ
+- На viewport 360×820 грид `.ll-gc-grid` сейчас фактически 2-колоночный: 6 карт `.ll-gift` × 158×186, грид-обёртка island h=674px. Feed scrollHeight=830, clientHeight=820 → overflow ровно 10px, scrollTop max=10. Скролл технически работает, но margin крошечный — последний ряд карточек влезает в кадр почти полностью на дефолтной прокрутке (last card bottom=784 после scrollTo). Title «Подарки» и табы остаются видимыми сверху даже на максимуме скролла.
+- `feed.children`: meshok-up (h=0) + `.tabs-view.ll-gc-tabs` (h=48) + `.island.ll-gc-island` (h=674).
+- (запись «1 колонка minmax(0,1fr)» из предыдущей итерации — устарела. Сейчас визуально 2 колонки 158-wide, см. screenshot.)
+- Карточка `.ll-gift` — flex column, `align-items:center`, `gap:4px`. Постер 1:1, занимает 100% ширины (328×328). Под ним — `.price-tag` 24px.
+- **price-tag визуально центрирован под карточкой**, НО его `getBoundingClientRect()` врёт: компонент `.price-tag` имеет `margin-left: 14px` (`--price-tag-tip-width`) — это компенсация под «язычок», который рендерится через `::before` с `right:100%` и торчит ВЛЕВО за пределы body. Реальный визуальный bbox = `[bodyLeft-14, bodyRight]`. На vw=360: cardCenter=180, bodyCenter=187 (+7), visualCenter=180 (с учётом язычка). Δ=0. Если кто-то увидит «тег смещён вправо на 7px» из tag.getBoundingClientRect — это ОЖИДАЕМО, не баг. Чтобы измерять true center — вычитай `--price-tag-tip-width` из left, или мерь по `::before` через CSSOM/range.
+- Хедер «Подарки» — в nav-bar (class `ds-title-l ll-sg-navtitle__title-like`). «День рождения!» — внутри `.ll-gc-section-head .header__title.ds-title-l` в острове. Не путать.
+- Тап `.ll-gift` → навигация на `send-gift.html?gift=<key>` (через `<a href="send-gift.html?gift=thanks">…`). Работает.
+
+#### Старая запись (2-колоночный вариант, устарела)
+- ~~На 360-wide грид `.ll-gc-grid` объявлен `grid-template-columns: 1fr 1fr`, но resolved = `"235px 206px"` — колонки выползали за правый край viewport~~. Фикс применён: `minmax(0, 1fr)` + одна колонка.
+
+### send-gift.html — scroll-metrics (verified 2026-06-12, viewport 360×820)
+- Скроллер `.phone-frame__feed`: scrollHeight=921, clientHeight=820 → overflow 101px, что нормально. После `scrollTo({top:scrollHeight})` scrollTop=101 (atBottom=true). Последний друг (`.ll-sg-friend`, h=68) после скролла лежит top=720 / bottom=788 — **полностью виден** над таббарной зоной. 4 friend-rows в списке.
+- `feed.children`: meshok-up (h=0) + `.ll-sg-card` (h=461, открытка + CTA) + `.ll-sg-friends` (h=352, секция со списком друзей). На макс-скролле «Сообщение к открытке» и блок «Подарить за 2 OK» остаются видимыми сверху — друзья едут под этой шапкой.
+
+### send-gift.html (наблюдено 2026-06-11) — БАГ в handler «Отправить» per-friend
+- В каждой friend-row кнопка `[data-give]` лежит ВНУТРИ `.button-wrapper`, **сразу под `.uni-cell`**, рядом с `.uni-cell-additional-content` (не внутри неё). См. DOM: `.uni-cell > .avatar | .uni-cell-additional-content | .button-wrapper > button[data-give]`.
+- Обработчик в `send-gift.html:346` делает `btn.closest('.uni-cell-additional-content').parentNode` → **возвращает null**, поэтому `.parentNode` бросает `TypeError: Cannot read properties of null (reading 'parentNode')`. Доказано: `page.on('pageerror')` ловит этот TypeError на каждом клике, кнопка НЕ заменяется на «Отправлено», тост `#sgToast` остаётся `hidden=true`. Визуально — только hover-подсветка строки (`.uni-cell-container.__state-enabled`).
+- Фикс — убрать неиспользуемую строку с `var cell = btn.closest('.uni-cell-additional-content').parentNode;` (переменная `cell` дальше не используется), или поправить на `btn.closest('.uni-cell')`.
+- Счётчик `#sgCount` показывает только число, плейсхолдер «/200» статичный → итог в DOM «16/200» (после `fill('С Днём Рождения!')`). Селектор для теста: `#sgCount` (числовая часть), либо ищи текст `/^\d+\/200$/` на родителе.
+- meshok-up корректно: `.ds-title-m.ll-sg-navtitle__title` = «Отправка открытки», `.ds-caption-m.ll-sg-navtitle__subtitle` = «На счёте: 79 ОК».
+
 ## menu.html — новый экран (наблюдено 2026-06-11)
 - Использует тот же fullscreen-shell, что и messages/lenta-q3: `.phone-frame.__fullscreen` (390×844, overflow:hidden), скроллер `.phone-frame__feed` (top:0..844). На свежей загрузке feed.scrollHeight==clientHeight==844 → контент помещается без скролла, прокрутка вниз ничего не двигает. Если контент позже разрастётся — тогда скролл активируется.
 - `.ll-tabbar`: position:fixed, top=771, bottom=844, h=73 — стандартное место. На menu.html таббар присутствует и НЕ уезжает при попытке скролла.
@@ -243,3 +266,5 @@ screen-transition.js теперь подключён синхронным `<scri
   4. `.tabbar-icon.__slot-clip` x=234
   5. `.tabbar-icon.__slot-menu` x=312 (≡)
 - Селектор иконки меню: `.ll-tabbar .__slot-menu` (или `.tabbar-icon.__slot-menu`). Тап ведёт на `menu.html` (подтверждено finalUrl). На самом menu.html `__slot-menu` должен бы получить `__state-on` — проверять отдельно.
+- Сетка быстрых действий: `.ll-quick__tile` — серые плашки. На 390-wide их **8 шт**, каждая **83.5×83.5** (квадрат), `aspect-ratio: 1 / 1`, display:flex. Квадратность держится через CSS `aspect-ratio`, не на жёсткой height. Verified 2026-06-12: PASS.
+- **Шторка-менюшка `.tabbar-menu-sheet` (components/tab-bar.js, verified 2026-06-12: PASS)**: создаётся ЛЕНИВО на первый openSheet() — до тапа в DOM её НЕТ (`querySelector('.tabbar-menu-sheet')===null`). Триггер: повторный тап по активному `.tabbar-icon.__slot-menu.__state-on` (handler в tab-bar.js:138, ветка `btn.classList.contains('__state-on') && __slot-menu` → openSheet). openSheet добавляет `.__open` внутри одного rAF; transition доезжает за <400ms. После тапа: `transform=matrix(1,0,0,1,0,0)` (translateY(0), НЕ 100%), opacity 1, rectTop=503 (выезжает снизу, h=341 при vh=844), backdrop `.tabbar-menu-sheet__backdrop.__open` тоже появляется. Закрытие — клик по backdrop / свайп вниз >60px. data-href клик в menu.html (строка 263) к шторке отношения не имеет — это отдельный делегат.
