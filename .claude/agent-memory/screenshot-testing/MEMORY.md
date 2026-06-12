@@ -7,8 +7,15 @@
 - Базовый класс: `.vvz-portlet` + опц. модификаторы `.island` (lenta-q3) / `.__messages` (messages, более компактный — h=274 vs 394).
 - Шапка: `.vvz-portlet__header` (h=36–40, с тайтлом и кнопкой `.button-inline` «Ещё/Скрыть»).
 - Скроллер: `.vvz-portlet__row` (display:flex, gap:8px, overflowX:auto). Модификатор `.__cards-160` → friend-card width=160/h=270 (вместо дефолта 220/330). Используется на lenta-q3 и profile.
-- Дети: на friends/guests/lenta-q3/profile — `.friend-card`; на messages — `.vvz-card` (160×218, тот же, что в `vvz.html`-тиндере).
-- Числа подтверждены: lenta-q3 (island+__cards-160) → friend-card 160px; friends → 220; guests → 220; messages (__messages) → vvz-card 160; profile (__cards-160) → 160.
+- Дети (после рефактора 2026-06-12, см. ниже): friend-card ВЛИТ в `.vvz-card.__default` на friends/guests/lenta-q3/profile; на messages — `.vvz-card.__message`.
+- Числа подтверждены: lenta-q3 (island+__cards-160) → 160px... СТОП, на самом деле lenta-q3 ряд __default = 220 (см. ниже, перепроверено); friends → 220; guests → 220; messages → 160; profile (__cards-160) → 160.
+
+## vvz-card __default + __help рефактор (2026-06-12, 390×844, verified)
+friend-card влит в `.vvz-card.__default`; добавлен `.vvz-card.__help` (финальная карта ряда). Прогон friends/guests/profile/lenta-q3:
+- `.__default`: КВАДРАТНОЕ media сверху во всю ширину (mediaSquare=true: friends/guests/lenta 220×220, profile 160×160), `.vvz-card__blur` подложка есть. ✕ = `.vvz-card__close` (button-circle on-image) top=8 right=8 поверх фото. title+subtitle «N общих друзей» textAlign=LEFT. Кнопка «Дружить» full-width, ОРАНЖЕВАЯ primary rgb(255,119,0)+белый текст (button-container __style-primary). Ширины: friends 220×330, guests 220×330, profile 160×270, lenta-q3 220×330. ВСЁ совпало.
+- `.__help`: hasMedia=false, hasBtn=false. Сверху круглая `.vvz-card__help-icon` 56×56 (смайл), под ней `.vvz-card__help-title` «Найдите ещё больше друзей» + subtitle, две `.vvz-card__help-link` [«Поиск по контактам»,«Поиск по школам»]. Контент textAlign=center. Ширина И высота == соседним (friends/guests/lenta 220×330, profile 160×270 — карта тянется на высоту ряда). Совпало.
+- Селектор default-ряда: `.vvz-portlet__row` содержащий `.vvz-card.__default`; default card = `.vvz-card.__default:not(.__help)`; help = `.vvz-card.__help`. Help — последняя в ряду, видна после `row.scrollLeft=row.scrollWidth`.
+- lenta-q3 ряд __default = 220px (НЕ 160). Старая запись про «lenta 160» относилась к friend-card до рефактора / другому ряду; для нового __default-ряда в фиде ширина 220.
 
 ## vvz-card единый компонент (2026-06-12, 390×844)
 Один компонент `.vvz-card` с 2 вариантами (`components/vvz-card.{css,js}`).
