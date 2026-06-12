@@ -377,8 +377,8 @@
         <!-- ВВЗ-сториз: одна палочка, заголовок и сетка 2×2 карточек.
              CTA-кнопка снизу — только у ВВЗ. -->
         <div class="avatar __size-56 __type-image __ring-active"
-             data-stories="1" data-name="Возможно вы знакомы" data-vvz
-             aria-label="Возможно вы знакомы">
+             data-stories="1" data-name="Возможно, вы знакомы" data-vvz
+             aria-label="Возможно, вы знакомы">
           <img src="assets/icons/vvz_stories.png" alt="">
         </div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
@@ -1186,7 +1186,7 @@
       // ВВЗ, и для рекламной вставки между сторизами.
       function makeVvzSlide() {
         return MomentViewer.vvzSlide({
-          title:  'Возможно вы знакомы',
+          title:  'Возможно, вы знакомы',
           people: VVZ_PEOPLE,
           cta:    { label: 'Показать всех', onClick: function () { location.href = 'vvz.html'; } }
         });
