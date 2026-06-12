@@ -300,7 +300,13 @@
     </div>
   </div>
 
+  <!-- In-app push: DS-баннер «новое сообщение» поверх контента.
+       Контейнер + скрипт; data-autostart запускает стрим из расписания
+       (см. components/inapp-push.js). -->
+  <div class="inapp-pushes" id="inappPushes" data-autostart></div>
+
   <script src="components/dismissible.js"></script>
   <script src="components/tab-bar.js"></script>
+  <script src="components/inapp-push.js"></script>
 </body>
 </html>
