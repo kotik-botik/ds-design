@@ -12,11 +12,11 @@
 <script src="components/screen-transition.js"></script>
 <style>
   * { -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; padding: 0; height: 100%; background: var(--dynamic-surface-base-secondary); }
-  .phone-frame { background: var(--dynamic-surface-base-secondary); }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--dynamic-surface-base-primary); }
+  .phone-frame { background: var(--dynamic-surface-base-primary); }
 
-  /* «Белая карточка» — секция профиля поверх secondary-фона страницы */
-  .ll-pr-card { background: var(--dynamic-surface-base-quaternary); }
+  /* Верхний остров вплотную к навбару — верхние углы 0 */
+  .ll-pr-card-island { border-radius: 0 0 20px 20px; padding-top: 0; padding-bottom: 0; }
 
   /* Шапка профиля: имя/статус слева, аватар справа */
   .ll-pr-head {
@@ -76,34 +76,21 @@
   .ll-pr-info__row.__link:active { opacity: 0.6; }
 
   /* Полоса табов «Все события / Увлечения / События Алек…» */
+  /* Полоса табов лежит на «облаке» (primary), без острова */
   .ll-pr-tabs {
     --tabs-view-padding-left: var(--space-4);
     --tabs-view-padding-right: var(--space-4);
     --tabs-view-padding-top: var(--space-3);
     --tabs-view-padding-bottom: var(--space-3);
-    background: var(--dynamic-surface-base-quaternary);
+    background: transparent;
     margin-top: var(--space-2);
   }
-  /* «селект-пилюля» — белый фон на secondary-подложке. Достигается через __view-primary,
-     но визуально мы кладём её на secondary-сетку — поэтому подменим bg на secondary. */
-  .ll-pr-tabs .tab-wrapper.__view-primary { background: var(--dynamic-surface-base-secondary); }
-  .ll-pr-tabs .tab-wrapper.__view-primary.__selected { background: var(--dynamic-surface-base-quaternary); }
+  /* Селект-пилюля «Все события» — белая на primary-облаке */
+  .ll-pr-tabs .tab-wrapper.__view-primary { background: var(--dynamic-surface-base-primary); }
+  .ll-pr-tabs .tab-wrapper.__view-primary.__selected { background: var(--dynamic-surface-base-secondary); }
 
-  /* Пустое состояние с картинкой по центру */
-  .ll-pr-empty {
-    background: var(--dynamic-surface-base-quaternary);
-    display: flex; flex-direction: column; align-items: center;
-    padding: var(--space-6) var(--space-4) var(--space-8);
-    text-align: center;
-    color: var(--dynamic-text-and-icons-base-secondary);
-  }
-  .ll-pr-empty__art {
-    width: 96px; height: 96px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 80px; line-height: 1;
-  }
-  .ll-pr-empty__title { margin-top: var(--space-3); color: var(--dynamic-text-and-icons-base-primary); }
-  .ll-pr-empty__hint { margin-top: var(--space-1); }
+  /* Нижний остров с vibe-empty */
+  .ll-pr-empty-island { padding: var(--space-6) var(--space-4) var(--space-8); }
 </style>
 </head>
 <body>
@@ -132,8 +119,8 @@
         </div>
       </div>
 
-      <!-- ПРОФИЛЬНАЯ КАРТОЧКА: имя, аватар, CTA, меню, инфо-строки -->
-      <section class="ll-pr-card">
+      <!-- ПРОФИЛЬНЫЙ ОСТРОВ: имя, аватар, CTA, меню, инфо-строки -->
+      <section class="island ll-pr-card-island">
 
         <div class="ll-pr-head">
           <div class="ll-pr-head__body">
@@ -223,11 +210,15 @@
         </div>
       </div>
 
-      <!-- Пустое состояние ленты профиля -->
-      <section class="ll-pr-empty">
-        <div class="ll-pr-empty__art" aria-hidden="true">🗂️</div>
-        <div class="ds-title-s ll-pr-empty__title">Пока ничего нет</div>
-        <div class="ds-caption-m ll-pr-empty__hint">Здесь появятся события Эмиля</div>
+      <!-- Пустое состояние ленты профиля — vibe внутри острова -->
+      <section class="island ll-pr-empty-island">
+        <div class="vibe-wrapper">
+          <div class="vibe __context-island">
+            <div class="vibe__illustration" aria-hidden="true" style="font-size:80px;line-height:1">🗂️</div>
+            <div class="vibe__title ds-title-l">Пока ничего нет</div>
+            <div class="vibe__subtitle ds-body-l">Здесь появятся события Эмиля</div>
+          </div>
+        </div>
       </section>
 
       <div style="height: 96px"></div>
