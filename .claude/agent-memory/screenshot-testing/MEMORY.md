@@ -233,8 +233,10 @@ screen-transition.js теперь подключён синхронным `<scri
 - Tile «Поиск по контактам» / «Импорт из ВКонтакте» / «Школьные друзья» / «Поделиться профилем»: 2×2 grid, каждая 162×56 (12/186 left, 160/228 top), иконка 24×24 + двустрочный текст. Лейаут чистый.
 - «Важные друзья» (2 шт) и «Все друзья» (4 шт) — строки с круглым аватаром 56 + имя + статус + два круглых icon-button'а (envelope + meatballs) справа. Выглядят аккуратно.
 - iOS-tabbar внизу: 5 икон (feed/?/messages/?/menu), активная — последняя (оранжевый «гамбургер»). position:fixed, top=727 при 800 высоте viewport — overlap'ит низ контента, но это by design (контент скроллится под ним).
-### gifts-catalog.html (наблюдено 2026-06-11, viewport 360×820)
-- ПОЧИНЕНО: грид теперь `grid-template-columns: minmax(0, 1fr)` — **1 колонка** во всю ширину острова. Резолвится в `328px` (vw 360 − 2×16 side padding). Gap=12, padding `0 16px 36px`. Никакого horizontal overflow (`docScrollW===360`).
+### gifts-catalog.html (наблюдено 2026-06-12, viewport 360×820) — СКРОЛЛ ОПЯТЬ 2 КОЛОНКИ
+- На viewport 360×820 грид `.ll-gc-grid` сейчас фактически 2-колоночный: 6 карт `.ll-gift` × 158×186, грид-обёртка island h=674px. Feed scrollHeight=830, clientHeight=820 → overflow ровно 10px, scrollTop max=10. Скролл технически работает, но margin крошечный — последний ряд карточек влезает в кадр почти полностью на дефолтной прокрутке (last card bottom=784 после scrollTo). Title «Подарки» и табы остаются видимыми сверху даже на максимуме скролла.
+- `feed.children`: meshok-up (h=0) + `.tabs-view.ll-gc-tabs` (h=48) + `.island.ll-gc-island` (h=674).
+- (запись «1 колонка minmax(0,1fr)» из предыдущей итерации — устарела. Сейчас визуально 2 колонки 158-wide, см. screenshot.)
 - Карточка `.ll-gift` — flex column, `align-items:center`, `gap:4px`. Постер 1:1, занимает 100% ширины (328×328). Под ним — `.price-tag` 24px.
 - **price-tag визуально центрирован под карточкой**, НО его `getBoundingClientRect()` врёт: компонент `.price-tag` имеет `margin-left: 14px` (`--price-tag-tip-width`) — это компенсация под «язычок», который рендерится через `::before` с `right:100%` и торчит ВЛЕВО за пределы body. Реальный визуальный bbox = `[bodyLeft-14, bodyRight]`. На vw=360: cardCenter=180, bodyCenter=187 (+7), visualCenter=180 (с учётом язычка). Δ=0. Если кто-то увидит «тег смещён вправо на 7px» из tag.getBoundingClientRect — это ОЖИДАЕМО, не баг. Чтобы измерять true center — вычитай `--price-tag-tip-width` из left, или мерь по `::before` через CSSOM/range.
 - Хедер «Подарки» — в nav-bar (class `ds-title-l ll-sg-navtitle__title-like`). «День рождения!» — внутри `.ll-gc-section-head .header__title.ds-title-l` в острове. Не путать.
@@ -242,6 +244,10 @@ screen-transition.js теперь подключён синхронным `<scri
 
 #### Старая запись (2-колоночный вариант, устарела)
 - ~~На 360-wide грид `.ll-gc-grid` объявлен `grid-template-columns: 1fr 1fr`, но resolved = `"235px 206px"` — колонки выползали за правый край viewport~~. Фикс применён: `minmax(0, 1fr)` + одна колонка.
+
+### send-gift.html — scroll-metrics (verified 2026-06-12, viewport 360×820)
+- Скроллер `.phone-frame__feed`: scrollHeight=921, clientHeight=820 → overflow 101px, что нормально. После `scrollTo({top:scrollHeight})` scrollTop=101 (atBottom=true). Последний друг (`.ll-sg-friend`, h=68) после скролла лежит top=720 / bottom=788 — **полностью виден** над таббарной зоной. 4 friend-rows в списке.
+- `feed.children`: meshok-up (h=0) + `.ll-sg-card` (h=461, открытка + CTA) + `.ll-sg-friends` (h=352, секция со списком друзей). На макс-скролле «Сообщение к открытке» и блок «Подарить за 2 OK» остаются видимыми сверху — друзья едут под этой шапкой.
 
 ### send-gift.html (наблюдено 2026-06-11) — БАГ в handler «Отправить» per-friend
 - В каждой friend-row кнопка `[data-give]` лежит ВНУТРИ `.button-wrapper`, **сразу под `.uni-cell`**, рядом с `.uni-cell-additional-content` (не внутри неё). См. DOM: `.uni-cell > .avatar | .uni-cell-additional-content | .button-wrapper > button[data-give]`.

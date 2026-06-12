@@ -38,8 +38,11 @@
   .ll-gc-tabs .tabs-row { background-color: var(--dynamic-surface-base-secondary); }
 
   /* Островная обёртка вокруг хедера и грида — без верхнего/нижнего паддинга
-     острова (грид сам управляет внутренними отступами 12/36). */
+     острова (грид сам управляет внутренними отступами 12/36).
+     flex-shrink: 0 — иначе flex-column родитель (.phone-frame__feed) сжимает
+     остров и скролл ломается. */
   .ll-gc-island {
+    flex-shrink: 0;
     margin: var(--space-2) 0 0;
     padding-top: 0;
     padding-bottom: 0;
