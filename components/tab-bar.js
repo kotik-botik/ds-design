@@ -28,7 +28,10 @@
     if (!btn) return;
     if (btn.classList.contains('__state-on')) return;   // уже активная вкладка
     var href = hrefFor(btn);
-    if (href) location.href = href;
+    if (href) {
+      sessionStorage.setItem('nav-tab', '1');
+      location.href = href;
+    }
   });
 
   /* ---- Home-indicator swipe-up: жест по .tabbar__handle.
