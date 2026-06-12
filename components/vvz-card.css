@@ -1,15 +1,19 @@
 /**
  * OK Design System (proto) — VvzCard «ВВЗ»
  *
- * Карточка «Возможно, вы знакомы». ОДИН компонент с двумя модификаторами-
- * вариантами — отличаются наличием блока общих друзей (avatars-view) и
- * стилем кнопки «Дружить»:
- *  - .__message — в сообщениях: горизонтальный ряд, ширина 160px, без
- *                 avatars-view, кнопка primary-on-color (тёмная заливка)
- *  - .__stories — в сториз ВВЗ: вертикальный стек, ширина 100%, с
- *                 avatars-view общих друзей, кнопка primary (оранжевая)
+ * Карточка «Возможно, вы знакомы». ОДИН компонент на все места ВВЗ, варианты
+ * задаются модификатором:
+ *  - .__default — в ленте / друзьях / гостях / профиле: квадратное фото с
+ *                 blur-подложкой + крестик on-image, текст слева, кнопка
+ *                 primary. Ширина 220 (дефолт) или 160 (.__cards-160 у ряда).
+ *  - .__message — в сообщениях: горизонтальный ряд, ширина 160px, круглый
+ *                 аватар, без avatars-view, кнопка primary-on-color (белая)
+ *  - .__stories — в сториз ВВЗ: вертикальный стек, ширина 100%, круглый
+ *                 аватар + avatars-view общих друзей, кнопка primary (оранжевая)
+ *  - .__help    — финальная карточка стека «Найдите ещё больше друзей»: без
+ *                 фото и кнопки «Дружить», смайл-иконка + текст + строки-ссылки
  *
- * Вертикальный ритм (по дизайну, одинаков для обоих вариантов):
+ * Вертикальный ритм аватарных вариантов (.__message / .__stories):
  *   аватар 96 → 8 → (title ds-title-s + ds-body-m) → 8 → avatars-view 36
  *   → 12 → кнопка
  *
@@ -73,7 +77,113 @@
   --button-background-color: var(--static-surface-base-inverse-primary);
 }
 
-/* Круглый аватар по центру */
+/* ============================================================
+   ВАРИАНТ DEFAULT — квадратное фото с blur-подложкой (лента / друзья /
+   гости / профиль). Бывший отдельный компонент friend-card (Figma
+   2339:88742, на базе uniCard 160 + media). Отличия от аватарных
+   вариантов: фото во всю ширину сверху (не круглый аватар по центру),
+   текст слева, крестик «скрыть» — button-circle on-image поверх фото.
+   Ширину (220 / 160) задаёт .vvz-portlet__row, см. vvz-portlet.css.
+   ============================================================ */
+.vvz-card.__default {
+  align-items: stretch;
+  padding-top: 0;
+  overflow: hidden;
+}
+/* Медиа — квадрат с blur-подложкой (заполняет поля непропорциональных фото).
+   Внутренняя обводка 1px contrast-low — поверх содержимого через ::after. */
+.vvz-card.__default .vvz-card__media {
+  position: relative;
+  width: auto;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 0;
+  border-bottom: 0.5px solid var(--dynamic-stroke-contrast-low);
+}
+.vvz-card.__default .vvz-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px var(--dynamic-stroke-contrast-low);
+}
+.vvz-card__blur {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.2);
+  filter: blur(6px);
+}
+.vvz-card.__default .vvz-card__media > img { position: relative; }
+/* Крестик «скрыть» поверх фото — DS button-circle __size-24 __style-on-image */
+.vvz-card.__default .vvz-card__close {
+  top: 8px;
+  right: 8px;
+}
+/* Контент — слева, паддинг 12 со всех сторон */
+.vvz-card.__default .vvz-card__content {
+  padding: 12px;
+  align-items: stretch;
+}
+.vvz-card.__default .vvz-card__title,
+.vvz-card.__default .vvz-card__subtitle { text-align: left; }
+
+/* ============================================================
+   ВАРИАНТ HELP — финальная карточка стека «Найдите ещё больше друзей».
+   Без фото и кнопки «Дружить»: иконка-смайл в круге + центрированные
+   тексты + строки-ссылки (поиск по контактам / по школам).
+   ============================================================ */
+.vvz-card.__help {
+  padding: 12px;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+.vvz-card__help-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+.vvz-card__help-icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dynamic-surface-contrast-low);
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+.vvz-card__help-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+.vvz-card__help-title    { color: var(--dynamic-text-and-icons-base-primary);   text-align: center; }
+.vvz-card__help-subtitle { color: var(--dynamic-text-and-icons-base-secondary); text-align: center; }
+.vvz-card__help-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.vvz-card__help-link {
+  color: var(--dynamic-text-and-icons-base-secondary);
+  text-align: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Круглый аватар по центру (аватарные варианты __message / __stories) */
 .vvz-card__media {
   width: 96px;
   height: 96px;
