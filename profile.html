@@ -15,6 +15,10 @@
   html, body { margin: 0; padding: 0; height: 100%; background: var(--dynamic-surface-base-primary); }
   .phone-frame { background: var(--dynamic-surface-base-primary); }
 
+  /* Дети скролл-контейнера не должны сжиматься — иначе .island
+     (с overflow:hidden) клипает свой контент. */
+  .phone-frame__feed > * { flex-shrink: 0; }
+
   /* Верхний остров вплотную к навбару — верхние углы 0, высота по контенту */
   .ll-pr-card-island { border-radius: 0 0 20px 20px; padding-top: 0; padding-bottom: 0; height: auto; }
 
