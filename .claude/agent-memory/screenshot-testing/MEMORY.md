@@ -13,8 +13,25 @@
 - Базовый класс: `.vvz-portlet` + опц. модификаторы `.island` (lenta-q3) / `.__messages` (messages, более компактный — h=274 vs 394).
 - Шапка: `.vvz-portlet__header` (h=36–40, с тайтлом и кнопкой `.button-inline` «Ещё/Скрыть»).
 - Скроллер: `.vvz-portlet__row` (display:flex, gap:8px, overflowX:auto). Модификатор `.__cards-160` → friend-card width=160/h=270 (вместо дефолта 220/330). Используется на lenta-q3 и profile.
-- Дети: на friends/guests/lenta-q3/profile — `.friend-card`; на messages — `.vvz-card` (160×218, тот же, что в `vvz.html`-тиндере).
-- Числа подтверждены: lenta-q3 (island+__cards-160) → friend-card 160px; friends → 220; guests → 220; messages (__messages) → vvz-card 160; profile (__cards-160) → 160.
+- Дети (после рефактора 2026-06-12, см. ниже): friend-card ВЛИТ в `.vvz-card.__default` на friends/guests/lenta-q3/profile; на messages — `.vvz-card.__message`.
+- Числа подтверждены: lenta-q3 (island+__cards-160) → 160px... СТОП, на самом деле lenta-q3 ряд __default = 220 (см. ниже, перепроверено); friends → 220; guests → 220; messages → 160; profile (__cards-160) → 160.
+
+## vvz-card __default + __help рефактор (2026-06-12, 390×844, verified)
+friend-card влит в `.vvz-card.__default`; добавлен `.vvz-card.__help` (финальная карта ряда). Прогон friends/guests/profile/lenta-q3:
+- `.__default`: КВАДРАТНОЕ media сверху во всю ширину (mediaSquare=true: friends/guests/lenta 220×220, profile 160×160), `.vvz-card__blur` подложка есть. ✕ = `.vvz-card__close` (button-circle on-image) top=8 right=8 поверх фото. title+subtitle «N общих друзей» textAlign=LEFT. Кнопка «Дружить» full-width, ОРАНЖЕВАЯ primary rgb(255,119,0)+белый текст (button-container __style-primary). Ширины: friends 220×330, guests 220×330, profile 160×270, lenta-q3 220×330. ВСЁ совпало.
+- `.__help`: hasMedia=false, hasBtn=false. Сверху круглая `.vvz-card__help-icon` 56×56 (смайл), под ней `.vvz-card__help-title` «Найдите ещё больше друзей» + subtitle, две `.vvz-card__help-link` [«Поиск по контактам»,«Поиск по школам»]. Контент textAlign=center. Ширина И высота == соседним (friends/guests/lenta 220×330, profile 160×270 — карта тянется на высоту ряда). Совпало.
+- Селектор default-ряда: `.vvz-portlet__row` содержащий `.vvz-card.__default`; default card = `.vvz-card.__default:not(.__help)`; help = `.vvz-card.__help`. Help — последняя в ряду, видна после `row.scrollLeft=row.scrollWidth`.
+- lenta-q3 ряд __default = 220px (НЕ 160). Старая запись про «lenta 160» относилась к friend-card до рефактора / другому ряду; для нового __default-ряда в фиде ширина 220.
+
+## vvz-card единый компонент (2026-06-12, 390×844)
+Один компонент `.vvz-card` с 2 вариантами (`components/vvz-card.{css,js}`).
+- `.__message` (messages.html, hand-written markup): 160px, БЕЗ avatars-view, subtitle «N общих друзей» ds-body-m. Ритм аватар96→8→title→sub→кнопка (gap sub→btn=0, кнопка не прижата — высота по контенту). ВСЁ ОК.
+- `.__message` КНОПКА — BUG/расхождение: спека хочет primary-on-color = тёмная заливка + светлый текст. По факту computed `--button-background-color: var(--static-surface-base-inverse-primary)` = `#FFFFFF` (это значение в tokens.css:473), `--button-color: var(--base-black-100)` = `#2E2F33`. messages.html — light theme (`__ui-theme_light`), inverse-primary surface там БЕЛЫЙ. Результат: БЕЛАЯ кнопка с тёмным текстом, НЕ тёмная. Визуально подтверждено скрином. Чтобы стало тёмным — нужен токен тёмной поверхности (base-black/static-surface-*-primary в light), а не inverse-primary.
+- `.__stories` (lenta-q3 viewer, рендер через `VvzCard.render` в `moment.js#vvzSlide`): сетка 2×2 в `.moment__body-grid`, тёмный фон. Все 4 карточки h=270 (равны). Ритм: аватар96→8→title+sub(ds-body-m)→8→avatars-view→0→кнопка, btn_bottom→card_bottom=12px (фикс, не прижата к низу с гэпом). Кнопка ОРАНЖЕВАЯ rgb(255,119,0)+белый текст — ОК.
+  - Только 2 из 4 people имеют mutuals (Карина/Анна → «N общих друзей» + видимый avatars-view); Илья/Мария → «Подобрали для вас» + placeholder avatars-view (visibility:hidden, держит высоту). Равная высота карточек подтверждена.
+  - state-hidden (✕): title→«Рекомендация скрыта», btn→«Отменить», cardBg transparent, border 1px rgba(255,255,255,.16), btnBg rgba(255,255,255,.16)+белый текст, media display:none, h сохраняется (270). «Отменить» возвращает исходный вид (тексты из dataset.originalText). Оба перехода работают.
+- ГРАБЛЯ lenta-q3 `vvzAsAd`: при ≥2 «обычных» сториз (там их 6) JS УДАЛЯЕТ `[data-vvz]` аватарку из DOM и вставляет ВВЗ-слайд случайно в середину стрима. Прямого тапа по ВВЗ-аватарке нет. Для детерминированного открытия viewer'а — `page.route` rewrite: заменить `var vvzAsAd = regularStoriesCount >= 2;` → `var vvzAsAd = false;`. Тогда аватарка остаётся, тап открывает dedicated ВВЗ-слайд.
+- ГРАБЛЯ moment viewer: `.moment__nav-zone` (prev/next зоны) лежат ПОВЕРХ карточек и перехватывают pointer. `click({force:true})` НЕ помогает — реальный клик уходит в nav-zone, делегированный `[data-vvz-dismiss]` listener не срабатывает. Фикс: dispatch напрямую — `el.dispatchEvent(new MouseEvent('click',{bubbles:true}))`. Сработало и для ✕, и для «Отменить».
 
 ## Грабли icon.css (2026-06-11, vvz.html)
 - `<span class="icon __src" style="--icon-src: url('assets/icons/foo.svg')">` ломается: запрос уходит на `/components/assets/icons/foo.svg` → 404. Причина: `mask-image: var(--icon-src)` объявлено в `components/icon.css`, и CSS `url()` resolve'ится относительно файла-объявления, а не документа. Передача через CSS-переменную НЕ меняет точку resolve.
