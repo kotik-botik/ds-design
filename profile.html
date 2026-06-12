@@ -44,18 +44,16 @@
   }
   .ll-pr-menu__item {
     appearance: none; background: transparent; border: 0; padding: var(--space-2) 0;
-    display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
+    display: flex; flex-direction: column; align-items: center;
     color: var(--dynamic-text-and-icons-base-primary);
     cursor: pointer; border-radius: 12px;
     transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1), transform 500ms cubic-bezier(0, -0.3, 0.5, 1.3);
   }
   .ll-pr-menu__item:hover { opacity: 0.84; }
   .ll-pr-menu__item:active { transform: scale(0.95); }
-  .ll-pr-menu__label { line-height: 1.2; text-align: center; }
-  .ll-pr-menu__count {
-    color: var(--dynamic-text-and-icons-base-secondary);
-    margin-top: 2px;
-  }
+  .ll-pr-menu__item > img { margin-bottom: 6px; }
+  .ll-pr-menu__label { line-height: 1.2; text-align: center; margin-bottom: 4px; }
+  .ll-pr-menu__count { color: var(--dynamic-text-and-icons-base-secondary); }
 
   /* Разделитель между «меню» и инфо-блоком */
   .ll-pr-divider {
@@ -153,14 +151,14 @@
               <span class="button-content">Дружить</span>
             </button>
           </div>
-          <div class="button-circle-wrapper __size-44 __style-secondary">
-            <button class="button-circle" aria-label="Подарок">
-              <span class="icon __src" style="--icon-src:url('assets/icons/gift_24.svg')"></span>
+          <div class="button-wrapper __size-44">
+            <button class="button-container __style-secondary __icon" aria-label="Подарок">
+              <span class="button-content"><span class="icon __src" style="--icon-src:url('assets/icons/gift_24.svg')"></span></span>
             </button>
           </div>
-          <div class="button-circle-wrapper __size-44 __style-secondary">
-            <button class="button-circle" aria-label="Подписаться">
-              <span class="icon __src" style="--icon-src:url('assets/icons/follow_24.svg')"></span>
+          <div class="button-wrapper __size-44">
+            <button class="button-container __style-secondary __icon" aria-label="Подписаться">
+              <span class="button-content"><span class="icon __src" style="--icon-src:url('assets/icons/follow_24.svg')"></span></span>
             </button>
           </div>
         </div>
@@ -171,13 +169,15 @@
             <span class="ll-pr-menu__label ds-caption-m">Друзья</span>
             <span class="ll-pr-menu__count ds-caption-m">5</span>
           </button>
-          <button class="ll-pr-menu__item" aria-label="Заметки">
+          <button class="ll-pr-menu__item" aria-label="Заметки: 12">
             <img class="ll-icon" src="assets/icons/edit_24.svg" width="24" height="24" alt="">
             <span class="ll-pr-menu__label ds-caption-m">Заметки</span>
+            <span class="ll-pr-menu__count ds-caption-m">12</span>
           </button>
-          <button class="ll-pr-menu__item" aria-label="Фото">
+          <button class="ll-pr-menu__item" aria-label="Фото: 84">
             <img class="ll-icon" src="assets/icons/photo_24.svg" width="24" height="24" alt="">
             <span class="ll-pr-menu__label ds-caption-m">Фото</span>
+            <span class="ll-pr-menu__count ds-caption-m">84</span>
           </button>
           <button class="ll-pr-menu__item" aria-label="Ещё">
             <img class="ll-icon" src="assets/icons/menu_24.svg" width="24" height="24" alt="">
