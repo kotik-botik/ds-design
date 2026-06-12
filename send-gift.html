@@ -30,8 +30,11 @@
   .ll-sg-navtitle__subtitle { color: var(--dynamic-text-and-icons-base-secondary); }
 
   /* Верхний блок «остров» (на белом фоне) — preview + сообщение + приватность +
-     получатель + CTA. Сидит на secondary; ниже отступ-разделитель в primary. */
+     получатель + CTA. Сидит на secondary; ниже отступ-разделитель в primary.
+     flex-shrink: 0 — иначе flex-column родитель (.phone-frame__feed) сжимает
+     секции и контент режется/скролл ломается. */
   .ll-sg-card {
+    flex-shrink: 0;
     background-color: var(--dynamic-surface-base-secondary);
     padding: var(--space-6) var(--space-4) var(--space-4);
     display: flex; flex-direction: column; gap: var(--space-4);
@@ -124,8 +127,10 @@
     opacity: 0.55;
   }
 
-  /* Раздел «Друзья» — заголовок-ряд + список */
+  /* Раздел «Друзья» — заголовок-ряд + список. flex-shrink: 0 по тем же
+     причинам, что и .ll-sg-card. */
   .ll-sg-friends {
+    flex-shrink: 0;
     background-color: var(--dynamic-surface-base-secondary);
     margin-top: var(--space-2);
     padding: var(--space-4) 0 var(--space-8);
