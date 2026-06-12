@@ -137,6 +137,20 @@
 - Переключение режима — JS-вызовы `OkNotifs.setMode('lock'|'heads-up')`.
 - На локе `.device .notifs` стоит `top: 254px` (gap 36 после блока время/дата/погода). После анлока `.device.headsup-notifs` → `top: 36px`.
 
+## In-app push (notificationToast) — components/inapp-push.{js,css} (verified 2026-06-12, 390×844, messages.html + preview.html)
+ОТДЕЛЬНЫЙ компонент от `#notifs`/system-notifications. Глобал — `window.OkInApp` (НЕ OkNotifs). Контейнер: `<div class="inapp-pushes" id="inappPushes" data-autostart>`. Карточки: `.inapp-push.__type-user` / `.inapp-push.__type-ok`.
+- sessionStorage-ключи: `ok_inapp_idx`, `ok_inapp_next_at` (другие, чем у локскрин-стрима `ok_notif_*`).
+- Расписание в messages.html: item[0] user `delay:2000`, item[1] ok `delay:6000`. LIFETIME дефолт = 6000, GAP = 6000, MAX_STACK = 3.
+- Селекторы внутри: `.avatar.__size-56.__type-image > img` (user, аватар 56 круглый), `.inapp-push__avaicon` (ok, круг с иконкой), `.inapp-push__title.ds-title-s`, `.inapp-push__body.ds-body-m` (только user, `-webkit-line-clamp:2`).
+- Измерено user-карточка (full width 390): card w=390 top=48, bg `rgb(255,255,255)`, radius 16px, shadow `rgba(0,0,0,.12) 0 8px 24px -8px` (elevate-3), title fontWeight 600 / 15px, body color `rgba(46,47,51,.88)` 2 строки с …. Аватар 56×56 radius 50%.
+- ok-карточка: круг `.inapp-push__avaicon` 56px radius 50%, bg `rgb(0,153,255)` (#0099FF), иконка `assets/icons/web_24.svg` 24px по центру (dx=dy=0), белая через `filter: brightness(0) invert(1)`.
+- КОЛОДА (deck): реализована верно — restack() даёт depth0 z=100/translateY(0)/scale(1)/op1, depth1 z=99/translateY(10px)/scale(0.95)/op0.92, depth2 op0.8. Проверено принудительным overlapping (2× fireNext с паузой 400ms → обе карты в DOM, старая ушла вглубь/вниз/потускнела). ✓
+- **БАГ/ловушка timing-collision: в ДЕФОЛТНОМ расписании messages.html колода НЕ видна.** user.lifetime=6000 истекает РОВНО когда ok прилетает (ok delay=6000 от user). Прогон `sawBoth` (poll 100ms 9s) → false: user@~1.5s, ok@~7.5s, никогда не сосуществуют. Чтобы реально показать колоду в проде — у user нужен `lifetime` > GAP, либо ok-delay < user-lifetime. Сейчас «ложится поверх предыдущего» в естественном потоке не наблюдается.
+- Свайп-дисмисс: drag вверх, порог `dy < -34px` → dismiss (translateY(-150%), opacity0, 0.28s). Проверено `mouse.down` в центре + 10× move по -5px = -50px → карта удалена, контейнер пуст. ✓ Чистый тап (без move>4px) при наличии `data.href` → переход (`location.href`).
+- Тест чистого старта: `page.goto` → `sessionStorage.clear()` → `page.reload()`, иначе idx уже продвинут с прошлого визита.
+- pravatar.cc (аватар user) не грузится по HTTP в Playwright — placeholder-круг. Не баг компонента.
+- preview.html: секция «InAppPush — notificationToast 1.0» (h2). Карты статичные с inline `max-width:360px` (на 390 → реальная w=270, body клампится до ~1.5 строк визуально, но clamp=2 корректен). Верстка целая: radius/shadow/иконка-центр/нет overflow. `el.screenshot()` секции может склипать не туда если секция выше viewport — снимай через explicit `clip` после scrollTo.
+
 ## Launch-overlay (`#launch`)
 Живёт только во время анимации тапа. После `window.location.href = href` страница навигирует и `#launch` исчезает с DOM.
 
