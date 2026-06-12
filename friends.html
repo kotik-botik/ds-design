@@ -56,23 +56,9 @@
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
-  /* «Возможно, вы знакомы» — берём ровно тот же паттерн, что в lenta-q3.html
-     (секция .ll-pymk + .ll-pymk__title ds-title-l + горизонтальный ряд friend-card).
-     .island не подходит здесь: его bg = page bg (secondary), а overflow:hidden
-     клипает горизонтальный скролл `.ll-pymk__row` — карточки исчезают. */
-  .ll-pymk { padding-top: var(--space-3); padding-bottom: var(--space-3); }
-  .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); display: block; color: inherit; text-decoration: none; }
-  .ll-pymk__row {
-    display: flex;
-    gap: var(--space-2);
-    padding: 0 var(--space-4);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .ll-pymk__row::-webkit-scrollbar { display: none; }
+  /* «Возможно, вы знакомы» — компонент .pymk (components/pymk.css) */
 
-  /* Секции «Важные / Все друзья» — заголовок (как .ll-pymk__title) + список .user-cell.
+  /* Секции «Важные / Все друзья» — заголовок (как .pymk__title) + список .user-cell.
      Между ячейками вертикальный gap, тот же что в guests.html (--space-4). */
   .ll-fr-section { padding-top: var(--space-3); }
   .ll-fr-section__title { padding: 0 var(--space-4) var(--space-3); }
@@ -156,9 +142,11 @@
 
       <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible).
            Блок взят из lenta-q3.html; .island не подключаем, см. комментарий в стилях. -->
-      <section class="ll-pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
-        <a class="ll-pymk__title ds-title-l" href="vvz.html">Возможно, вы знакомы</a>
-        <div class="ll-pymk__row">
+      <section class="pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
+        <header class="pymk__header">
+          <a class="pymk__title ds-title-l" href="vvz.html">Возможно, вы знакомы</a>
+        </header>
+        <div class="pymk__row">
 
           <div class="friend-card" data-dismiss-target>
             <div class="friend-card__media">
