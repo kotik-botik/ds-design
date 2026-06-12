@@ -56,27 +56,9 @@
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
-  /* «Возможно, вы знакомы» — копия блока из guests.html
-     (заголовок-ряд .ll-pymk__header + горизонт. скролл с friend-card шириной 220). */
-  .ll-pymk { padding-top: var(--space-3); padding-bottom: var(--space-3); }
-  .ll-pymk__header {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: var(--space-3);
-    padding: 0 var(--space-4) var(--space-3);
-  }
-  .ll-pymk__title { color: var(--dynamic-text-and-icons-base-primary); }
-  .ll-pymk__row {
-    display: flex; gap: var(--space-2);
-    padding: 0 var(--space-4);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .ll-pymk__row::-webkit-scrollbar { display: none; }
-  /* Карточки уплотнены до 220 — как в guests.html */
-  .ll-pymk__row .friend-card { width: 220px; }
+  /* «Возможно, вы знакомы» — компонент .pymk (components/pymk.css), модификатор __cards-220 */
 
-  /* Секции «Важные / Все друзья» — заголовок (как .ll-pymk__title) + список .user-cell.
+  /* Секции «Важные / Все друзья» — заголовок (как .pymk__title) + список .user-cell.
      Между ячейками вертикальный gap, тот же что в guests.html (--space-4). */
   .ll-fr-section { padding-top: var(--space-3); }
   .ll-fr-section__title { padding: 0 var(--space-4) var(--space-3); }
@@ -158,15 +140,14 @@
         </button>
       </div>
 
-      <!-- Возможно, вы знакомы — копия блока из guests.html
-           (header «Возможно вы знакомы» + кнопка «Ещё» + друкарты 220px). -->
-      <section class="ll-pymk" data-dismiss-row aria-label="Возможно вы знакомы">
-        <div class="ll-pymk__header">
-          <div class="ll-pymk__title ds-title-l">Возможно вы знакомы</div>
-          <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24"><span class="button-inline__content">Ещё</span></button></span>
-        </div>
+      <!-- Возможно, вы знакомы — DS-компонент .pymk (Header с «Ещё» + ряд 220px friend-card). -->
+      <section class="pymk" data-dismiss-row aria-label="Возможно вы знакомы">
+        <header class="pymk__header">
+          <div class="pymk__title ds-title-l">Возможно вы знакомы</div>
+          <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24" data-href="vvz.html"><span class="button-inline__content">Ещё</span></button></span>
+        </header>
 
-        <div class="ll-pymk__row">
+        <div class="pymk__row __cards-220">
           <div class="friend-card" data-dismiss-target>
             <div class="friend-card__media">
               <div class="friend-card__blur" style="background-image:url('https://i.pravatar.cc/240?img=15')"></div>
