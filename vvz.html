@@ -132,6 +132,41 @@
   }
   .vk-tinder-card .avatar { --avatar-size: 28px; }
 
+  /* Финальная карточка-подсказка «Найдите ещё больше друзей»
+     (Figma 2453:3653). Та же подложка стэка, но без фото и стампов:
+     иконка-смайл в круге + центрированные тексты + 2 ссылки-строки. */
+  .vk-tinder-card.__help {
+    background: var(--dynamic-surface-base-tertiary, #f7f4f2);
+    padding: 12px;
+    gap: 32px;
+    align-items: center;
+    justify-content: center;
+  }
+  .vk-tinder-card__help-top {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 16px; width: 100%;
+  }
+  .vk-tinder-card__help-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--dynamic-surface-contrast-low);
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
+  .vk-tinder-card__help-text {
+    display: flex; flex-direction: column; gap: 2px; width: 100%;
+  }
+  .vk-tinder-card__help-title    { color: var(--dynamic-text-and-icons-base-primary); text-align: center; }
+  .vk-tinder-card__help-subtitle { color: var(--dynamic-text-and-icons-base-secondary); text-align: center; }
+  .vk-tinder-card__help-links {
+    display: flex; flex-direction: column; gap: 16px; width: 100%;
+  }
+  .vk-tinder-card__help-link {
+    color: var(--dynamic-text-and-icons-base-secondary);
+    text-align: center;
+    background: none; border: 0; padding: 0;
+    font-family: inherit; cursor: pointer;
+  }
+
   /* ============================================================
      Нижняя панель — два круглых button-circle (72px)
      ============================================================ */
@@ -278,7 +313,13 @@
     { name: 'Анна Смирнова',     meta: '24 года, Москва, Россия',      photo: 47, mutual: 12, friends: [15, 33, 23] },
     { name: 'Мария Иванова',     meta: '31 год, Санкт-Петербург',       photo: 45, mutual: 10, friends: [14, 22, 18] },
     { name: 'Алёна Ящук',        meta: '26 лет, Минск, Беларусь',      photo: 44, mutual: 20, friends: [7, 11, 27] },
-    { name: 'Светлана Орлова',   meta: '29 лет, Алматы, Казахстан',     photo: 32, mutual: 6,  friends: [21, 34, 36] }
+    { name: 'Светлана Орлова',   meta: '29 лет, Алматы, Казахстан',     photo: 32, mutual: 6,  friends: [21, 34, 36] },
+    /* Финальная карточка-подсказка (Figma 2453:3653) — закрывает стек.
+       Свайп/тап по кнопкам уведёт стек в empty-state. */
+    { type: 'help',
+      title:    'Найдите еще больше друзей',
+      subtitle: 'Вы можете найти еще больше друзей или одноклассников',
+      links:    ['Поиск по контактам', 'Поиск по школам'] }
   ];
 
   var deck = document.getElementById('vk-tinder-deck');
@@ -315,6 +356,28 @@
     card.className = 'vk-tinder-card';
     // depth 0 — верхняя; 1, 2 — отъезд назад по Y и масштабу.
     setDepth(card, depth);
+
+    if (p.type === 'help') {
+      card.classList.add('__help');
+      card.innerHTML =
+        '<div class="vk-tinder-card__help-top">' +
+          '<div class="vk-tinder-card__help-icon">' +
+            '<img class="ll-icon" src="assets/icons/smile_24.svg" width="24" height="24" alt="">' +
+          '</div>' +
+          '<div class="vk-tinder-card__help-text">' +
+            '<div class="vk-tinder-card__help-title ds-title-s">' + p.title + '</div>' +
+            '<div class="vk-tinder-card__help-subtitle ds-caption-m">' + p.subtitle + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vk-tinder-card__help-links">' +
+          p.links.map(function (l) {
+            return '<button type="button" class="vk-tinder-card__help-link ds-caption-m">' + l + '</button>';
+          }).join('') +
+        '</div>';
+      /* drag не подключаем — у help-card нет like/nope стампов;
+         кнопки skip/like снизу всё равно дёрнут fly() для верхней карточки. */
+      return card;
+    }
 
     var avatars = p.friends.map(function (id) {
       return '<div class="avatar __type-image"><img src="https://i.pravatar.cc/56?img=' + id + '" alt=""></div>';
