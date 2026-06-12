@@ -144,18 +144,7 @@
   .text-feed__media.__row { overflow-x: hidden; }
   .text-feed__media.__row .text-feed__media-cell { flex: 1 1 0; min-width: 0; }
 
-  /* «Возможно, вы знакомы» — секция + горизонтальный ряд friend-card */
-  .ll-pymk { padding-top: var(--space-3); }
-  .ll-pymk__title { padding: 0 var(--space-4) var(--space-3); }
-  .ll-pymk__row {
-    display: flex;
-    gap: var(--space-2);
-    padding: 0 var(--space-4);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .ll-pymk__row::-webkit-scrollbar { display: none; }
+  /* «Возможно, вы знакомы» — компонент .vvz-portlet (components/vvz-portlet.css) */
 
   /* Баннер под сторис — PNG на фоне контейнера, паддинги 16, текст внутри. */
   .ll-banner {
@@ -388,8 +377,8 @@
         <!-- ВВЗ-сториз: одна палочка, заголовок и сетка 2×2 карточек.
              CTA-кнопка снизу — только у ВВЗ. -->
         <div class="avatar __size-56 __type-image __ring-active"
-             data-stories="1" data-name="Возможно вы знакомы" data-vvz
-             aria-label="Возможно вы знакомы">
+             data-stories="1" data-name="Возможно, вы знакомы" data-vvz
+             aria-label="Возможно, вы знакомы">
           <img src="assets/icons/vvz_stories.png" alt="">
         </div>
         <div class="avatar __size-56 __type-image __ring-active" data-stories="2" data-name="Дима"><img src="https://i.pravatar.cc/112?img=5"  alt=""></div>
@@ -495,9 +484,12 @@
         </article>
 
         <!-- Возможно, вы знакомы — горизонтальный ряд friend-card (dismissible) -->
-        <section class="ll-pymk island" data-dismiss-row aria-label="Возможно, вы знакомы">
-          <div class="ll-pymk__title ds-title-l">Возможно, вы знакомы</div>
-          <div class="ll-pymk__row">
+        <section class="vvz-portlet island" data-dismiss-row aria-label="Возможно, вы знакомы">
+          <header class="vvz-portlet__header">
+            <div class="vvz-portlet__title ds-title-l">Возможно, вы знакомы</div>
+            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24" data-href="vvz.html"><span class="button-inline__content">Ещё</span></button></span>
+          </header>
+          <div class="vvz-portlet__row">
 
             <div class="friend-card" data-dismiss-target>
               <div class="friend-card__media">
@@ -574,6 +566,19 @@
               </div>
             </div>
 
+            <div class="friend-card __help">
+              <div class="friend-card__help-icon">
+                <img class="ll-icon" src="assets/icons/smile_24.svg" width="24" height="24" alt="">
+              </div>
+              <div class="friend-card__help-text">
+                <div class="friend-card__help-title ds-title-s">Найдите еще больше друзей</div>
+                <div class="friend-card__help-subtitle ds-caption-m">Вы можете найти еще больше друзей или одноклассников</div>
+              </div>
+              <div class="friend-card__help-links">
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по контактам</button>
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по школам</button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1141,6 +1146,16 @@
   </script>
   <script src="components/back-trap.js" data-target="start.html"></script>
   <script src="components/tab-bar.js"></script>
+
+  <!-- Делегированный переход по data-href (кнопка «Ещё» в vvz-portlet → vvz.html) -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest && e.target.closest('button[data-href]');
+      if (!btn) return;
+      e.preventDefault();
+      location.href = btn.getAttribute('data-href');
+    });
+  </script>
   <script src="components/dismissible.js"></script>
 
   <!-- Просмотрщик сториз ----------------------------------------------- -->
@@ -1171,7 +1186,7 @@
       // ВВЗ, и для рекламной вставки между сторизами.
       function makeVvzSlide() {
         return MomentViewer.vvzSlide({
-          title:  'Возможно вы знакомы',
+          title:  'Возможно, вы знакомы',
           people: VVZ_PEOPLE,
           cta:    { label: 'Показать всех', onClick: function () { location.href = 'vvz.html'; } }
         });

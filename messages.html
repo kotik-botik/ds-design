@@ -27,17 +27,7 @@
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
-  /* «Возможно, вы знакомы» — секция + горизонтальный ряд vvz-card */
-  .ll-pymk { padding-top: var(--space-2); padding-bottom: var(--space-3); }
-  .ll-pymk__head {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: var(--space-2); padding: 0 var(--space-4) var(--space-3);
-  }
-  .ll-pymk__row {
-    display: flex; gap: var(--space-2); padding: 0 var(--space-4);
-    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  }
-  .ll-pymk__row::-webkit-scrollbar { display: none; }
+  /* «Возможно, вы знакомы» — компонент .vvz-portlet.__messages (components/vvz-portlet.css) */
 
   /* Список диалогов — компонент message-cell (components/message-cell.css) */
 
@@ -85,12 +75,12 @@
       </div>
 
       <!-- Возможно, вы знакомы — стек vvz-card (dismissible row) -->
-      <section class="ll-pymk" data-dismiss-row aria-label="Возможно, вы знакомы">
-        <div class="ll-pymk__head">
+      <section class="vvz-portlet __messages" data-dismiss-row aria-label="Возможно, вы знакомы">
+        <header class="vvz-portlet__header">
           <header class="header __size-m"><div class="header__title">Возможно, вы знакомы</div></header>
           <span class="button-inline-wrapper __size-24 __view-secondary"><button class="button-inline __size-24" data-dismiss="row"><span class="button-inline__content">Скрыть</span></button></span>
-        </div>
-        <div class="ll-pymk__row">
+        </header>
+        <div class="vvz-portlet__row">
 
           <div class="vvz-card" data-dismiss-target>
             <div class="vvz-card__media">
@@ -310,7 +300,13 @@
     </div>
   </div>
 
+  <!-- In-app push: DS-баннер «новое сообщение» поверх контента.
+       Контейнер + скрипт; data-autostart запускает стрим из расписания
+       (см. components/inapp-push.js). -->
+  <div class="inapp-pushes" id="inappPushes" data-autostart></div>
+
   <script src="components/dismissible.js"></script>
   <script src="components/tab-bar.js"></script>
+  <script src="components/inapp-push.js"></script>
 </body>
 </html>

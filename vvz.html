@@ -18,7 +18,7 @@
   .phone-frame { background: var(--dynamic-surface-base-secondary); }
 
   /* Шапка: компактный nav-bar с centered title — фон prosвечивает */
-  .vvz-nav .nav-bar__title {
+  .vk-tinder-nav .nav-bar__title {
     color: var(--dynamic-text-and-icons-base-primary);
   }
 
@@ -26,30 +26,34 @@
      Сцена «дека карточек» — занимает всё пространство между шапкой
      и нижней панелью кнопок.
      ============================================================ */
-  .vvz-deck {
+  .vk-tinder-deck {
     flex: 1;
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px 0;
+    padding: 0 24px;
     min-height: 0;
+  }
+
+  /* Слот-стек: 328×464, флекс-центрируется в deck. Внутри 3 карточки
+     лежат друг на друге через position: absolute → inset: 0. */
+  .vk-tinder-stack {
+    position: relative;
+    width: 328px;
+    height: 464px;
+    flex-shrink: 0;
   }
 
   /* Карточка-кандидат — DS uni-card по духу, но композиция уникальная
      (фото + центрированный текст + аватары + большая мягкая тень). */
-  .vvz-card {
+  .vk-tinder-card {
     position: absolute;
-    top: 0;
-    left: 50%;
-    width: 326px;
-    height: 464px;
-    margin-left: -163px;
+    inset: 0;
     box-sizing: border-box;
     background: var(--dynamic-surface-base-quaternary, #fff);
     border-radius: 16px;
     box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.2);
-    padding: 14px 16px 16px;
+    padding: 16px 16px 24px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -60,18 +64,18 @@
       transform 320ms cubic-bezier(0.2, 0, 0, 1),
       opacity   320ms cubic-bezier(0.2, 0, 0, 1);
   }
-  .vvz-card.__dragging { transition: none; }
+  .vk-tinder-card.__dragging { transition: none; }
 
-  .vvz-card__photo {
+  .vk-tinder-card__photo {
     position: relative;
-    width: 100%;
-    aspect-ratio: 295 / 296;
+    width: 296px;
+    height: 296px;
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.08);
     background: var(--dynamic-surface-contrast-low);
   }
-  .vvz-card__photo > img {
+  .vk-tinder-card__photo > img {
     display: block;
     width: 100%;
     height: 100%;
@@ -79,7 +83,7 @@
   }
 
   /* Подсветка-стикер «Дружить / Пропустить» при свайпе */
-  .vvz-card__stamp {
+  .vk-tinder-card__stamp {
     position: absolute;
     top: 16px;
     padding: 6px 12px;
@@ -92,67 +96,119 @@
     transform: rotate(-12deg);
     pointer-events: none;
   }
-  .vvz-card__stamp.__like  { right: 16px; color: var(--static-surface-status-accent, #f50); transform: rotate(-12deg); }
-  .vvz-card__stamp.__nope  { left: 16px;  color: var(--dynamic-text-and-icons-base-primary); transform: rotate(12deg); }
+  .vk-tinder-card__stamp.__like  { right: 16px; color: var(--static-surface-status-accent, #f50); transform: rotate(-12deg); }
+  .vk-tinder-card__stamp.__nope  { left: 16px;  color: var(--dynamic-text-and-icons-base-primary); transform: rotate(12deg); }
 
-  .vvz-card__info {
+  .vk-tinder-card__info {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
     padding: 0 16px;
   }
-  .vvz-card__name {
+  .vk-tinder-card__name {
     color: var(--dynamic-text-and-icons-base-primary);
     text-align: center;
     font-weight: 500;
   }
-  .vvz-card__meta {
+  .vk-tinder-card__meta {
     color: var(--dynamic-text-and-icons-base-secondary);
     text-align: center;
   }
 
-  /* «18 общих друзей» + три кружка-аватарки — DS .avatars-view __layout-vertical */
-  .vvz-card .avatars-view {
+  /* «18 общих друзей» + строка отдельных аватарок 28px, gap 8 */
+  .vk-tinder-card__friends {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: 6px;
   }
-  .vvz-card .avatars-view__text {
+  .vk-tinder-card__friends-label {
     color: var(--dynamic-text-and-icons-base-secondary);
-    font-size: 13px;
-    line-height: 16px;
   }
-  .vvz-card .avatars-view__stack > * {
-    border-color: var(--dynamic-surface-base-quaternary, #fff);
+  .vk-tinder-card__friends-list {
+    display: flex;
+    gap: 8px;
   }
+  .vk-tinder-card .avatar { --avatar-size: 28px; }
 
-  /* Цвет фона аватарного border'а = фон карточки */
-  .vvz-card .avatar { background: var(--dynamic-surface-contrast-low); }
+  /* Финальная карточка-подсказка «Найдите ещё больше друзей»
+     (Figma 2453:3653). Та же подложка стэка, но без фото и стампов:
+     иконка-смайл в круге + центрированные тексты + 2 ссылки-строки. */
+  .vk-tinder-card.__help {
+    background: var(--dynamic-surface-base-tertiary, #f7f4f2);
+    padding: 12px;
+    gap: 32px;
+    align-items: center;
+    justify-content: center;
+  }
+  .vk-tinder-card__help-top {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 16px; width: 100%;
+  }
+  .vk-tinder-card__help-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--dynamic-surface-contrast-low);
+    color: var(--dynamic-text-and-icons-base-primary);
+  }
+  .vk-tinder-card__help-text {
+    display: flex; flex-direction: column; gap: 2px; width: 100%;
+  }
+  .vk-tinder-card__help-title    { color: var(--dynamic-text-and-icons-base-primary); text-align: center; }
+  .vk-tinder-card__help-subtitle { color: var(--dynamic-text-and-icons-base-secondary); text-align: center; }
+  .vk-tinder-card__help-links {
+    display: flex; flex-direction: column; gap: 16px; width: 100%;
+  }
+  .vk-tinder-card__help-link {
+    color: var(--dynamic-text-and-icons-base-secondary);
+    text-align: center;
+    background: none; border: 0; padding: 0;
+    font-family: inherit; cursor: pointer;
+  }
 
   /* ============================================================
      Нижняя панель — два круглых button-circle (72px)
      ============================================================ */
-  .vvz-actions {
+  .vk-tinder-actions {
     flex-shrink: 0;
     display: flex;
     gap: 40px;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px 16px;
+    padding: 24px 16px 40px;
   }
-  .vvz-action {
+  /* Системный home-indicator (iOS-стиль): 4×108 пилюля по центру 24-px полосы. */
+  .vk-tinder-handle {
+    flex-shrink: 0;
+    position: relative;
+    height: 24px;
+  }
+  .vk-tinder-handle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    width: 108px;
+    height: 4px;
+    border-radius: 12px;
+    background: var(--dynamic-surface-base-inverse-primary, #2e2f33);
+  }
+  .vk-tinder-action {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
     min-width: 72px;
   }
-  .vvz-action__label {
+  .vk-tinder-action__label {
     color: var(--dynamic-text-and-icons-base-primary);
     text-align: center;
   }
 
   /* Состояние «пусто» — когда карточки закончились */
-  .vvz-empty {
+  .vk-tinder-empty {
     position: absolute;
     inset: 0;
     display: none;
@@ -164,8 +220,8 @@
     text-align: center;
     color: var(--dynamic-text-and-icons-base-secondary);
   }
-  .vvz-deck.__empty .vvz-empty { display: flex; }
-  .vvz-empty__title {
+  .vk-tinder-stack.__empty .vk-tinder-empty { display: flex; }
+  .vk-tinder-empty__title {
     color: var(--dynamic-text-and-icons-base-primary);
     font-weight: 500;
   }
@@ -187,7 +243,7 @@
           </span>
         </div>
 
-        <div class="nav-bar vvz-nav">
+        <div class="nav-bar vk-tinder-nav">
           <div class="nav-bar__leading">
             <span class="button-inline-wrapper __size-24 __view-secondary">
               <button class="button-inline __size-24 nav-bar__back" aria-label="Закрыть">
@@ -210,36 +266,40 @@
         </div>
       </div>
 
-      <!-- ДЕКА КАРТОЧЕК -->
-      <div class="vvz-deck" id="vvz-deck">
+      <!-- ДЕКА КАРТОЧЕК — flex-центрирует .vk-tinder-stack по горизонтали и вертикали -->
+      <div class="vk-tinder-deck">
+        <div class="vk-tinder-stack" id="vk-tinder-deck">
+          <!-- Карточки рендерятся скриптом ниже из data[] -->
 
-        <!-- Карточки рендерятся скриптом ниже из data[] -->
-
-        <div class="vvz-empty">
-          <div class="vvz-empty__title ds-title-m">Друзей пока больше нет</div>
-          <div class="ds-body-m">Загляните позже — мы найдём ещё людей, с которыми у вас много общего.</div>
+          <div class="vk-tinder-empty">
+            <div class="vk-tinder-empty__title ds-title-m">Друзей пока больше нет</div>
+            <div class="ds-body-m">Загляните позже — мы найдём ещё людей, с которыми у вас много общего.</div>
+          </div>
         </div>
       </div>
 
       <!-- КНОПКИ ДЕЙСТВИЙ — DS button-circle __size-72 -->
-      <div class="vvz-actions">
-        <div class="vvz-action">
+      <div class="vk-tinder-actions">
+        <div class="vk-tinder-action">
           <span class="button-circle-wrapper __size-72 __style-secondary">
-            <button class="button-circle" id="vvz-skip" aria-label="Пропустить">
+            <button class="button-circle" id="vk-tinder-skip" aria-label="Пропустить">
               <span class="icon __size-32 __slot-close"></span>
             </button>
           </span>
-          <span class="vvz-action__label ds-caption-m">Пропустить</span>
+          <span class="vk-tinder-action__label ds-caption-m">Пропустить</span>
         </div>
-        <div class="vvz-action">
+        <div class="vk-tinder-action">
           <span class="button-circle-wrapper __size-72 __style-primary">
-            <button class="button-circle" id="vvz-like" aria-label="Дружить">
+            <button class="button-circle" id="vk-tinder-like" aria-label="Дружить">
               <span class="icon __size-32 __slot-done"></span>
             </button>
           </span>
-          <span class="vvz-action__label ds-caption-m">Дружить</span>
+          <span class="vk-tinder-action__label ds-caption-m">Дружить</span>
         </div>
       </div>
+
+      <!-- Home indicator -->
+      <div class="vk-tinder-handle" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -253,12 +313,18 @@
     { name: 'Анна Смирнова',     meta: '24 года, Москва, Россия',      photo: 47, mutual: 12, friends: [15, 33, 23] },
     { name: 'Мария Иванова',     meta: '31 год, Санкт-Петербург',       photo: 45, mutual: 10, friends: [14, 22, 18] },
     { name: 'Алёна Ящук',        meta: '26 лет, Минск, Беларусь',      photo: 44, mutual: 20, friends: [7, 11, 27] },
-    { name: 'Светлана Орлова',   meta: '29 лет, Алматы, Казахстан',     photo: 32, mutual: 6,  friends: [21, 34, 36] }
+    { name: 'Светлана Орлова',   meta: '29 лет, Алматы, Казахстан',     photo: 32, mutual: 6,  friends: [21, 34, 36] },
+    /* Финальная карточка-подсказка (Figma 2453:3653) — закрывает стек.
+       Свайп/тап по кнопкам уведёт стек в empty-state. */
+    { type: 'help',
+      title:    'Найдите еще больше друзей',
+      subtitle: 'Вы можете найти еще больше друзей или одноклассников',
+      links:    ['Поиск по контактам', 'Поиск по школам'] }
   ];
 
-  var deck = document.getElementById('vvz-deck');
-  var btnSkip = document.getElementById('vvz-skip');
-  var btnLike = document.getElementById('vvz-like');
+  var deck = document.getElementById('vk-tinder-deck');
+  var btnSkip = document.getElementById('vk-tinder-skip');
+  var btnLike = document.getElementById('vk-tinder-like');
 
   // Рендерим только верхние 3 карточки в DOM — нижние ждут очереди.
   // i = 0 — верхняя, i = 1 — за ней, i = 2 — самая глубокая.
@@ -266,8 +332,8 @@
   var idx = 0;
 
   function render() {
-    // Уберём старые карточки (но не .vvz-empty).
-    Array.prototype.slice.call(deck.querySelectorAll('.vvz-card')).forEach(function (n) { n.remove(); });
+    // Уберём старые карточки (но не .vk-tinder-empty).
+    Array.prototype.slice.call(deck.querySelectorAll('.vk-tinder-card')).forEach(function (n) { n.remove(); });
 
     var live = people.slice(idx, idx + STACK);
     if (!live.length) {
@@ -287,26 +353,48 @@
 
   function buildCard(p, depth) {
     var card = document.createElement('div');
-    card.className = 'vvz-card';
+    card.className = 'vk-tinder-card';
     // depth 0 — верхняя; 1, 2 — отъезд назад по Y и масштабу.
     setDepth(card, depth);
 
+    if (p.type === 'help') {
+      card.classList.add('__help');
+      card.innerHTML =
+        '<div class="vk-tinder-card__help-top">' +
+          '<div class="vk-tinder-card__help-icon">' +
+            '<img class="ll-icon" src="assets/icons/smile_24.svg" width="24" height="24" alt="">' +
+          '</div>' +
+          '<div class="vk-tinder-card__help-text">' +
+            '<div class="vk-tinder-card__help-title ds-title-s">' + p.title + '</div>' +
+            '<div class="vk-tinder-card__help-subtitle ds-caption-m">' + p.subtitle + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vk-tinder-card__help-links">' +
+          p.links.map(function (l) {
+            return '<button type="button" class="vk-tinder-card__help-link ds-caption-m">' + l + '</button>';
+          }).join('') +
+        '</div>';
+      /* drag не подключаем — у help-card нет like/nope стампов;
+         кнопки skip/like снизу всё равно дёрнут fly() для верхней карточки. */
+      return card;
+    }
+
     var avatars = p.friends.map(function (id) {
-      return '<div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=' + id + '" alt=""></div>';
+      return '<div class="avatar __type-image"><img src="https://i.pravatar.cc/56?img=' + id + '" alt=""></div>';
     }).join('');
 
     card.innerHTML =
-      '<div class="vvz-card__photo">' +
+      '<div class="vk-tinder-card__photo">' +
         '<img src="https://i.pravatar.cc/600?img=' + p.photo + '" alt="">' +
-        '<div class="vvz-card__stamp __like">Дружить</div>' +
-        '<div class="vvz-card__stamp __nope">Пропустить</div>' +
+        '<div class="vk-tinder-card__stamp __like">Дружить</div>' +
+        '<div class="vk-tinder-card__stamp __nope">Пропустить</div>' +
       '</div>' +
-      '<div class="vvz-card__info">' +
-        '<div class="vvz-card__name ds-display-m">' + p.name + '</div>' +
-        '<div class="vvz-card__meta ds-caption-m">' + p.meta + '</div>' +
-        '<div class="avatars-view __size-36 __layout-vertical">' +
-          '<span class="avatars-view__text">' + p.mutual + ' общих друзей</span>' +
-          '<div class="avatars-view__stack">' + avatars + '</div>' +
+      '<div class="vk-tinder-card__info">' +
+        '<div class="vk-tinder-card__name ds-display-m">' + p.name + '</div>' +
+        '<div class="vk-tinder-card__meta ds-caption-m">' + p.meta + '</div>' +
+        '<div class="vk-tinder-card__friends">' +
+          '<div class="vk-tinder-card__friends-label ds-caption-m">' + p.mutual + ' общих друзей</div>' +
+          '<div class="vk-tinder-card__friends-list">' + avatars + '</div>' +
         '</div>' +
       '</div>';
 
@@ -325,14 +413,14 @@
 
   // Анимированный «вылет» верхней карточки в сторону.
   function fly(direction) {
-    var top = deck.querySelector('.vvz-card');
+    var top = deck.querySelector('.vk-tinder-card');
     if (!top) return;
     var dx = direction === 'like' ? 480 : -480;
     var rot = direction === 'like' ? 18 : -18;
     top.style.transform = 'translate(' + dx + 'px,-40px) rotate(' + rot + 'deg)';
     top.style.opacity = '0';
     // Подтягиваем оставшиеся карточки вперёд.
-    var rest = Array.prototype.slice.call(deck.querySelectorAll('.vvz-card')).slice(1);
+    var rest = Array.prototype.slice.call(deck.querySelectorAll('.vk-tinder-card')).slice(1);
     rest.forEach(function (c, i) { setDepth(c, i); });
     // Через transition-конец — перерисовываем стек целиком.
     setTimeout(function () {

@@ -1,0 +1,132 @@
+/**
+ * OK Design System (proto) — FriendBigCard
+ *
+ * Большая карточка-знакомство из шторы «У вас N новых друзей».
+ * Используется в friends.html в стейтах 3-5 (ряд + свайп).
+ * Структура: фото на 60% высоты + инфо-блок (имя, возраст/город,
+ * общие друзья) + primary-кнопка «Дружить» внизу.
+ *
+ * Эталон — стейт 3 (300×460): белая карточка, border 1px, padding 0
+ * (фото впритык к краям), border-radius 36px. Геометрия позиционирования
+ * (cy = 220) симметрична центру карточки.
+ *
+ *   <article class="friend-big-card" data-i="3">
+ *     <div class="friend-big-card__photo">
+ *       <img src="…" alt="">
+ *     </div>
+ *     <div class="friend-big-card__info">
+ *       <div class="friend-big-card__name ds-title-m">Ольга Вайнер</div>
+ *       <div class="friend-big-card__caption ds-caption-l">58 лет, Москва</div>
+ *       <div class="friend-big-card__mutual">
+ *         <div class="avatars-view">…</div>
+ *         <span class="ds-caption-l">18 общих друзей</span>
+ *       </div>
+ *     </div>
+ *     <div class="friend-big-card__accept">
+ *       <div class="button-wrapper __size-56">
+ *         <button class="button-container __style-primary">
+ *           <span class="button-content">Дружить</span>
+ *         </button>
+ *       </div>
+ *     </div>
+ *   </article>
+ *
+ * Borders держим визуально 1px при любом scale через CSS-переменную
+ * --friend-big-card-scale (как в .gift-card).
+ */
+
+.friend-big-card {
+  --friend-big-card-scale: 1;
+
+  position: relative;
+  width: 300px;
+  height: 460px;
+  box-sizing: border-box;
+  background: #fff;
+  border: solid #e7e7e7;
+  border-width: calc(1px / var(--friend-big-card-scale));
+  border-radius: 36px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform-origin: 50% 50%;
+  /* Лёгкая тень для разделения в стопке/веере (стейты 1-2). */
+  box-shadow: 0 16px 24px rgba(0, 0, 0, 0.08),
+              0 2px 6px  rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================================
+   PHOTO — верхняя часть карточки 300×264 (≈57% высоты).
+   ============================================================ */
+.friend-big-card__photo {
+  flex: 0 0 264px;
+  position: relative;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+.friend-big-card__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================================
+   INFO — имя, подзаголовок, общие друзья.
+   ============================================================ */
+.friend-big-card__info {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 14px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.friend-big-card__name {
+  color: var(--dynamic-text-and-icons-base-primary);
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.friend-big-card__caption {
+  color: var(--dynamic-text-and-icons-base-secondary);
+  font-size: 14px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* «.friend-big-card__mutual» — модификатор-спейсер на .avatars-view,
+   только отступ сверху от подзаголовка. Стек+текст рисует сама avatars-view. */
+.friend-big-card__mutual {
+  margin-top: 8px;
+}
+
+/* ============================================================
+   ACCEPT — «Дружить» внизу. В отличие от gift-card.__active,
+   у friend-big-card кнопка ВСЕГДА на месте (нет хидинга).
+   ============================================================ */
+.friend-big-card__accept {
+  flex: 0 0 auto;
+  padding: 12px 16px 16px;
+}
+.friend-big-card__accept .button-wrapper,
+.friend-big-card__accept .button-container { width: 100%; }
+
+/* ============================================================
+   .__flying-up / .__flying-down — улёт после accept/dismiss.
+   ============================================================ */
+.friend-big-card.__flying-up,
+.friend-big-card.__flying-down {
+  pointer-events: none;
+  transition: transform 600ms cubic-bezier(.5, 0, .75, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .friend-big-card { transition: none !important; animation: none !important; }
+}
