@@ -2,6 +2,17 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+## add-friends-sheet.html — автоплей кучка→разлёт→ряд (verified 2026-06-12, 390×844, commit 7639de1)
+- Root = `#fp` (`.fp`). Состояния = классы на нём: `__state-1` (кучка), `__state-2` (разлёт), `__state-4`+`__cards-revealed` (ряд). После инверсии в 7639de1: STATES[0]=кучка (title 210), STATES[1]=разлёт (title 96) — порядок подтверждён в браузере, не только в коде.
+- Элементы: 3 `.friend-big-card[data-i=1..3]` (300×460 base) + 4 `.fp-decor[data-decor=A..D]` (декор-кружки). Центры замеряй через getBoundingClientRect (cx=left+w/2).
+- Тайминг сценария: `setTimeout 1000ms` держит state-1 (кучка читается) → spring 1→2 **2000ms** (k96 c6 m1) → PAUSE_BETWEEN 800ms → ease 2→3 300ms → spring 3→4 600ms. `__state-2` КЛАСС добавляется в НАЧАЛЕ спринга 1→2 (transitionTo(1) ставит `__state-`+2), позиции мид-флайт. Сэмплить state-2 надо после ~400-500ms осадки, но ДО PAUSE+2→3.
+- Замеры (390×844, pravatar застаблен 1×1 PNG):
+  - state-1 кучка: 7 центров СБИТЫ — spreadX 44, spreadY 26, x∈[185,229] y∈[442,468]. title.top=210 (offsetTop=210). w крупного кружка ~145.
+  - state-2 разлёт: spreadX 251, spreadY 265, x∈[96,347] y∈[319,585]. Крупный (card i=2) ⌀~249 cx301/cy319 правый-верх. title styleTop едет к 96 (на сэмпле застал 99.6 — spring ещё садился; финальный таргет STATES[1].title=96).
+  - ряд `__state-4`/`__cards-revealed`: 3 карточки w=300 в ряд (cx 181/493/805, cy441), все 4 `.fp-decor` **opacity 0**. title.top=96 ровно.
+- title.textContent = «У вас7 новых друзей» (без пробела — `<br>` между «У вас» и «7», textContent склеивает; в DOM `У вас<br>7 новых друзей`).
+- pravatar.cc даёт CERT-ошибку как везде — стаб `ctx.route('https://i.pravatar.cc/**', fulfill PNG)` обязателен иначе битые фото.
+
 ## vvz-portlet header + button-inline (verified 2026-06-12, 360×800)
 - Header markup унифицирован: `<header class="vvz-portlet__header">` содержит `.vvz-portlet__title.ds-title-l` (текст «Возможно, вы знакомы», С ЗАПЯТОЙ — кодпоинт 44 после «Возможно») + правую кнопку. `aria-label` секции тоже «Возможно, вы знакомы» с запятой на всех 5 страницах (lenta-q3 / friends / guests / profile / messages). Запятая видна и в outerHTML, и в .textContent — раньше принял за отсутствующую, сверяй через charCodeAt.
 - Messages — единственный, у кого внутри `.vvz-portlet__header` ещё вложен `<header class="header __size-m">` с `.header__title` — двойная вложенность header'ов. Title text всё равно тот же.
@@ -333,15 +344,5 @@ screen-transition.js теперь подключён синхронным `<scri
   5. `.tabbar-icon.__slot-menu` x=312 (≡)
 - Селектор иконки меню: `.ll-tabbar .__slot-menu` (или `.tabbar-icon.__slot-menu`). Тап ведёт на `menu.html` (подтверждено finalUrl). На самом menu.html `__slot-menu` должен бы получить `__state-on` — проверять отдельно.
 
-### add-friends-sheet.html — автоплей стопка→веер→ряд (circle→card морф) — 2026-06-12
-- Тайминг автоплея ОБНОВЛЁН (commit a4683aa, 2026-06-12): стартовый setTimeout теперь **1000ms** (не 500) — облако стейта-1 «дочитывается» дольше. Цепочка: state-1 cloud держится t=0..~1000; transitionTo(1)=спринг dur 2000 → state-2 settle ~T+3000..3150; затем `PAUSE_BETWEEN=800`; transitionTo(2) ease 300; transitionTo(3) спринг 600. Эмпирически: T+400 → `__state-1`; T+1400 → `__state-2` НО ещё в полёте (НЕ в центре!); state-2 реально схлопнут в центр ~T+3050; ряд `__state-4 __cards-revealed` ~T+4877. ВАЖНО: старые тайминги (T+1400=state2-settled, T+3500=row) уже НЕ верны — всё сдвинулось на ~+1.9с.
-- Облако стейта-1 (НОВОЕ, commit a4683aa): 7 кругов разбросаны. 3×`.friend-big-card` центры (390-vp, замерено): i=2 крупный ⌀253 правый-верх (304,315); i=1 ⌀183 (234,534); i=3 ⌀155 левый (95,452). 4×`.fp-decor` мелкие: A ⌀90 (93,321), B ⌀80 (97,544), C ⌀74 правый (351,435), D ⌀38 (132,589). Разброс по X ~95..351, по Y ~315..589 — реально облако, НЕ стопка. К state-2 все съезжаются к (~185..228, ~440..470). decor.cx-230 offset в applyDecor (translate base 230/50) — учитывай при сверке с STATES-координатами (там 360-сетка, центр 180).
-- Кружочный вид (стейты 1-2): `.friend-big-card__photo` computed `border-radius:50%`, `margin-top:80px`, `.friend-big-card__info` opacity:0, карточка `background:transparent`/`border transparent`. В ряду: photo radius `36px 36px 0 0` (скруглён только верх, низ плоский — НЕ круг), margin-top:0, info opacity:1, bg белый rgb(255,255,255), border rgb(231,231,231). Подтверждено замерами.
-- Морф РЕАЛЬНО анимирован (transition, не class-swap): сэмплы border-top-left-radius `50%`→`calc(48%+1.4px)`→...→`calc(5.4%+32px)` и margin-top `80px`→`8.6px`→0 за ~12 кадров. Флаг `.__cards-revealed` ставится при `toIdx>=2` и фиксирует карточный вид навсегда (возврат в веер по «Дружить со всеми» не сворачивает обратно в кружки).
-- Кнопки «Дружить» на самой карточке НЕТ (`.friend-big-card__accept` удалён из DOM, `acceptExistsInDom:false`). Внизу шторки `.fp__bottom` = «Дружить со всеми» (одна общая CTA).
-- Финальная карточка: квадратное фото сверху + центрированный инфо-блок (имя «Ольга Вайнер», «58 лет, Москва», «18 общих друзей» с тремя аватарками `__size-36`). Соседние карточки видны как ряд (свайп).
-- Фото и mutual-аватарки = `i.pravatar.cc/...` → в Playwright не грузятся (broken-image иконка в углу фото-зоны). Форму/радиус/лейаут это не мешает проверить. Не регрессия.
-- Селектор передней карточки в ряду: `.friend-big-card[data-i="3"]` (Ольга). Ждать ряд: `waitForFunction(() => fp.classList.contains('__cards-revealed'))`.
-- reduced-motion путь сразу прыгает в `__state-4 __cards-revealed` (без морфа) — кружочного состояния там не увидишь.
 - Сетка быстрых действий: `.ll-quick__tile` — серые плашки. На 390-wide их **8 шт**, каждая **83.5×83.5** (квадрат), `aspect-ratio: 1 / 1`, display:flex. Квадратность держится через CSS `aspect-ratio`, не на жёсткой height. Verified 2026-06-12: PASS.
 - **Шторка-менюшка `.tabbar-menu-sheet` (components/tab-bar.js, verified 2026-06-12: PASS)**: создаётся ЛЕНИВО на первый openSheet() — до тапа в DOM её НЕТ (`querySelector('.tabbar-menu-sheet')===null`). Триггер: повторный тап по активному `.tabbar-icon.__slot-menu.__state-on` (handler в tab-bar.js:138, ветка `btn.classList.contains('__state-on') && __slot-menu` → openSheet). openSheet добавляет `.__open` внутри одного rAF; transition доезжает за <400ms. После тапа: `transform=matrix(1,0,0,1,0,0)` (translateY(0), НЕ 100%), opacity 1, rectTop=503 (выезжает снизу, h=341 при vh=844), backdrop `.tabbar-menu-sheet__backdrop.__open` тоже появляется. Закрытие — клик по backdrop / свайп вниз >60px. data-href клик в menu.html (строка 263) к шторке отношения не имеет — это отдельный делегат.
