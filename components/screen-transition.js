@@ -17,6 +17,7 @@
  */
 (function () {
   var BACK_KEY = 'screenNavBack';
+  var TAB_KEY  = 'nav-tab';
 
   function isBackByNav(activation) {
     if (!activation || activation.navigationType !== 'traverse') return false;
@@ -25,14 +26,25 @@
               typeof to.index === 'number' && to.index < from.index);
   }
 
-  // Входящий документ: до первой отрисовки решаем направление и метим html.nav-back
+  // Входящий документ: до первой отрисовки решаем направление и метим html
   window.addEventListener('pagereveal', function (e) {
     if (!e.viewTransition) return;
+    var html = document.documentElement;
+
+    // Переход по табу — без анимации
+    try {
+      if (sessionStorage.getItem(TAB_KEY)) {
+        sessionStorage.removeItem(TAB_KEY);
+        html.classList.add('nav-tab');
+        e.viewTransition.finished.finally(function () { html.classList.remove('nav-tab'); });
+        return;
+      }
+    } catch (_) {}
+
     var back = false;
     try { if (sessionStorage.getItem(BACK_KEY)) { back = true; sessionStorage.removeItem(BACK_KEY); } } catch (_) {}
     if (!back) back = isBackByNav(window.navigation && window.navigation.activation);
     if (!back) return;
-    var html = document.documentElement;
     html.classList.add('nav-back');
     e.viewTransition.finished.finally(function () { html.classList.remove('nav-back'); });
   });
