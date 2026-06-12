@@ -12,15 +12,11 @@
 <script src="components/screen-transition.js"></script>
 <style>
   * { -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; padding: 0; height: 100%; background: var(--dynamic-surface-base-primary); }
-  .phone-frame { background: var(--dynamic-surface-base-primary); }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--dynamic-surface-base-secondary); }
+  .phone-frame { background: var(--dynamic-surface-base-secondary); }
 
-  /* Дети скролл-контейнера не должны сжиматься — иначе .island
-     (с overflow:hidden) клипает свой контент. */
-  .phone-frame__feed > * { flex-shrink: 0; }
-
-  /* Верхний остров вплотную к навбару — верхние углы 0, высота по контенту */
-  .ll-pr-card-island { border-radius: 0 0 20px 20px; padding-top: 0; padding-bottom: 0; height: auto; }
+  /* «Белая карточка» — секция профиля поверх secondary-фона страницы */
+  .ll-pr-card { background: var(--dynamic-surface-base-quaternary); }
 
   /* Шапка профиля: имя/статус слева, аватар справа */
   .ll-pr-head {
@@ -48,16 +44,18 @@
   }
   .ll-pr-menu__item {
     appearance: none; background: transparent; border: 0; padding: var(--space-2) 0;
-    display: flex; flex-direction: column; align-items: center;
+    display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
     color: var(--dynamic-text-and-icons-base-primary);
     cursor: pointer; border-radius: 12px;
     transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1), transform 500ms cubic-bezier(0, -0.3, 0.5, 1.3);
   }
   .ll-pr-menu__item:hover { opacity: 0.84; }
   .ll-pr-menu__item:active { transform: scale(0.95); }
-  .ll-pr-menu__item > img { margin-bottom: 6px; }
-  .ll-pr-menu__label { line-height: 1.2; text-align: center; margin-bottom: 4px; }
-  .ll-pr-menu__count { color: var(--dynamic-text-and-icons-base-secondary); }
+  .ll-pr-menu__label { line-height: 1.2; text-align: center; }
+  .ll-pr-menu__count {
+    color: var(--dynamic-text-and-icons-base-secondary);
+    margin-top: 2px;
+  }
 
   /* Разделитель между «меню» и инфо-блоком */
   .ll-pr-divider {
@@ -80,21 +78,34 @@
   .ll-pr-info__row.__link:active { opacity: 0.6; }
 
   /* Полоса табов «Все события / Увлечения / События Алек…» */
-  /* Полоса табов лежит на «облаке» (primary), без острова */
   .ll-pr-tabs {
     --tabs-view-padding-left: var(--space-4);
     --tabs-view-padding-right: var(--space-4);
     --tabs-view-padding-top: var(--space-3);
     --tabs-view-padding-bottom: var(--space-3);
-    background: transparent;
+    background: var(--dynamic-surface-base-quaternary);
     margin-top: var(--space-2);
   }
-  /* Селект-пилюля «Все события» — белая на primary-облаке */
-  .ll-pr-tabs .tab-wrapper.__view-primary { background: var(--dynamic-surface-base-primary); }
-  .ll-pr-tabs .tab-wrapper.__view-primary.__selected { background: var(--dynamic-surface-base-secondary); }
+  /* «селект-пилюля» — белый фон на secondary-подложке. Достигается через __view-primary,
+     но визуально мы кладём её на secondary-сетку — поэтому подменим bg на secondary. */
+  .ll-pr-tabs .tab-wrapper.__view-primary { background: var(--dynamic-surface-base-secondary); }
+  .ll-pr-tabs .tab-wrapper.__view-primary.__selected { background: var(--dynamic-surface-base-quaternary); }
 
-  /* Нижний остров с vibe-empty */
-  .ll-pr-empty-island { padding: var(--space-6) var(--space-4) var(--space-8); }
+  /* Пустое состояние с картинкой по центру */
+  .ll-pr-empty {
+    background: var(--dynamic-surface-base-quaternary);
+    display: flex; flex-direction: column; align-items: center;
+    padding: var(--space-6) var(--space-4) var(--space-8);
+    text-align: center;
+    color: var(--dynamic-text-and-icons-base-secondary);
+  }
+  .ll-pr-empty__art {
+    width: 96px; height: 96px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px; line-height: 1;
+  }
+  .ll-pr-empty__title { margin-top: var(--space-3); color: var(--dynamic-text-and-icons-base-primary); }
+  .ll-pr-empty__hint { margin-top: var(--space-1); }
 </style>
 </head>
 <body>
@@ -123,8 +134,8 @@
         </div>
       </div>
 
-      <!-- ПРОФИЛЬНЫЙ ОСТРОВ: имя, аватар, CTA, меню, инфо-строки -->
-      <section class="island ll-pr-card-island">
+      <!-- ПРОФИЛЬНАЯ КАРТОЧКА: имя, аватар, CTA, меню, инфо-строки -->
+      <section class="ll-pr-card">
 
         <div class="ll-pr-head">
           <div class="ll-pr-head__body">
@@ -139,17 +150,17 @@
         <div class="ll-pr-cta">
           <div class="button-wrapper __size-44 __full-width">
             <button class="button-container __style-primary" style="width:100%;">
-              <span class="button-content">Добавить в друзья</span>
+              <span class="button-content">Дружить</span>
             </button>
           </div>
-          <div class="button-wrapper __size-44">
-            <button class="button-container __style-secondary __icon" aria-label="Подарок">
-              <span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/gift_24.svg')"></span></span>
+          <div class="button-circle-wrapper __size-44 __style-secondary">
+            <button class="button-circle" aria-label="Подарок">
+              <img class="ll-icon" src="assets/icons/gift_24.svg" width="24" height="24" alt="">
             </button>
           </div>
-          <div class="button-wrapper __size-44">
-            <button class="button-container __style-secondary __icon" aria-label="Подписаться">
-              <span class="button-content"><span class="icon __src" style="--icon-src:url('../assets/icons/follow_24.svg')"></span></span>
+          <div class="button-circle-wrapper __size-44 __style-secondary">
+            <button class="button-circle" aria-label="Подписаться">
+              <img class="ll-icon" src="assets/icons/follow_24.svg" width="24" height="24" alt="">
             </button>
           </div>
         </div>
@@ -157,7 +168,8 @@
         <!-- Возможно, вы знакомы — DS-портлет .vvz-portlet с модификатором __cards-160 (узкие) -->
         <section class="vvz-portlet" data-dismiss-row aria-label="Возможно, вы знакомы">
           <header class="vvz-portlet__header">
-            <a class="vvz-portlet__title ds-title-l" href="vvz.html">Возможно, вы знакомы</a>
+            <div class="vvz-portlet__title ds-title-l">Возможно, вы знакомы</div>
+            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24" data-href="vvz.html"><span class="button-inline__content">Ещё</span></button></span>
           </header>
           <div class="vvz-portlet__row __cards-160">
 
@@ -245,15 +257,13 @@
             <span class="ll-pr-menu__label ds-caption-m">Друзья</span>
             <span class="ll-pr-menu__count ds-caption-m">5</span>
           </button>
-          <button class="ll-pr-menu__item" aria-label="Заметки: 12">
+          <button class="ll-pr-menu__item" aria-label="Заметки">
             <img class="ll-icon" src="assets/icons/edit_24.svg" width="24" height="24" alt="">
             <span class="ll-pr-menu__label ds-caption-m">Заметки</span>
-            <span class="ll-pr-menu__count ds-caption-m">12</span>
           </button>
-          <button class="ll-pr-menu__item" aria-label="Фото: 84">
+          <button class="ll-pr-menu__item" aria-label="Фото">
             <img class="ll-icon" src="assets/icons/photo_24.svg" width="24" height="24" alt="">
             <span class="ll-pr-menu__label ds-caption-m">Фото</span>
-            <span class="ll-pr-menu__count ds-caption-m">84</span>
           </button>
           <button class="ll-pr-menu__item" aria-label="Ещё">
             <img class="ll-icon" src="assets/icons/menu_24.svg" width="24" height="24" alt="">
@@ -276,14 +286,10 @@
             <img class="ll-pr-info__icon" src="assets/icons/follow_16_20.svg" width="16" height="16" alt="">
             <span class="ds-body-m">Подписчики: 18 человек</span>
           </div>
-          <span class="button-inline-wrapper __size-20 __view-primary" style="align-self:flex-start">
-            <button class="button-inline __size-20" type="button">
-              <span class="button-inline__content" style="justify-content:flex-start">
-                <span class="icon __size-20 __src button-inline__icon" style="--icon-src:url('../assets/icons/info_circle_16_20.svg')"></span>
-                <span class="ds-body-m">Вся информация</span>
-              </span>
-            </button>
-          </span>
+          <div class="ll-pr-info__row __accent __link" role="button" tabindex="0">
+            <span class="icon __size-16 __src ll-pr-info__icon" style="--icon-src:url('assets/icons/info_circle_16_20.svg')"></span>
+            <span class="ds-body-m">Вся информация</span>
+          </div>
         </div>
 
       </section>
@@ -303,15 +309,11 @@
         </div>
       </div>
 
-      <!-- Пустое состояние ленты профиля — vibe внутри острова -->
-      <section class="island ll-pr-empty-island">
-        <div class="vibe-wrapper">
-          <div class="vibe __context-island">
-            <div class="vibe__illustration" aria-hidden="true" style="font-size:80px;line-height:1">🗂️</div>
-            <div class="vibe__title ds-title-l">Пока ничего нет</div>
-            <div class="vibe__subtitle ds-body-l">Здесь появятся события Эмиля</div>
-          </div>
-        </div>
+      <!-- Пустое состояние ленты профиля -->
+      <section class="ll-pr-empty">
+        <div class="ll-pr-empty__art" aria-hidden="true">🗂️</div>
+        <div class="ds-title-s ll-pr-empty__title">Пока ничего нет</div>
+        <div class="ds-caption-m ll-pr-empty__hint">Здесь появятся события Эмиля</div>
       </section>
 
       <div style="height: 96px"></div>
@@ -337,5 +339,15 @@
   <script src="components/tab.js"></script>
   <script src="components/user-data.js"></script>
   <script src="components/tab-bar.js"></script>
+
+  <!-- Делегированный переход по data-href (кнопка «Ещё» в vvz-portlet → vvz.html) -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest && e.target.closest('button[data-href]');
+      if (!btn) return;
+      e.preventDefault();
+      location.href = btn.getAttribute('data-href');
+    });
+  </script>
 </body>
 </html>

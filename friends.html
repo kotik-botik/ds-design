@@ -143,7 +143,7 @@
       <!-- Возможно, вы знакомы — DS-компонент .vvz-portlet (Header с «Ещё» + ряд 220px vvz-card.__default). -->
       <section class="vvz-portlet" data-dismiss-row aria-label="Возможно вы знакомы">
         <header class="vvz-portlet__header">
-          <div class="vvz-portlet__title ds-title-l">Возможно вы знакомы</div>
+          <div class="vvz-portlet__title ds-title-l">Возможно, вы знакомы</div>
           <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24" data-href="vvz.html"><span class="button-inline__content">Ещё</span></button></span>
         </header>
 
@@ -339,6 +339,16 @@
   <script src="components/dismissible.js"></script>
   <script src="components/tab.js"></script>
   <script src="components/tab-bar.js"></script>
+
+  <!-- Делегированный переход по data-href (кнопка «Ещё» в портлете → vvz.html) -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest && e.target.closest('button[data-href]');
+      if (!btn) return;
+      e.preventDefault();
+      location.href = btn.getAttribute('data-href');
+    });
+  </script>
 
   <!-- Переключение активной вкладки по клику (визуально) -->
   <script>

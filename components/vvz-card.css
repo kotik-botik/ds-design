@@ -182,6 +182,7 @@
   font-family: inherit;
   cursor: pointer;
 }
+.vvz-card__help-link:active { opacity: 0.6; }
 
 /* Круглый аватар по центру (аватарные варианты __message / __stories) */
 .vvz-card__media {
