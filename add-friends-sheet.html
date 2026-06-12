@@ -81,6 +81,31 @@
   .fp.__state-3 .friend-big-card,
   .fp.__state-4 .friend-big-card { z-index: 2; }
 
+  /* ── КРУЖОЧНЫЙ ВИЗУАЛ ─────────────────────────────────────────
+     До раскрытия в ряд (стейты 1-2 = стопка/веер) элементы выглядят
+     как круглые аватарки: фото-квадрат скруглён в круг и центрирован
+     по высоте бокса (margin-top 80 = (460-300)/2), карточная обвязка
+     (фон, обводка, тень, инфо) скрыта. На переходе веер→ряд всё это
+     плавно проявляется (морф задаётся transition'ами в friend-big-card.css).
+     Флаг .__cards-revealed ставится по достижении ряда и фиксирует
+     карточный вид — чтобы «Дружить со всеми» (возврат в веер) не
+     сворачивал карточки обратно в кружки. */
+  .fp:not(.__cards-revealed).__state-1 .friend-big-card,
+  .fp:not(.__cards-revealed).__state-2 .friend-big-card {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+  .fp:not(.__cards-revealed).__state-1 .friend-big-card .friend-big-card__photo,
+  .fp:not(.__cards-revealed).__state-2 .friend-big-card .friend-big-card__photo {
+    margin-top: 80px;
+    border-radius: 50%;
+  }
+  .fp:not(.__cards-revealed).__state-1 .friend-big-card .friend-big-card__info,
+  .fp:not(.__cards-revealed).__state-2 .friend-big-card .friend-big-card__info {
+    opacity: 0;
+  }
+
   /* Нижний CTA */
   .fp__bottom {
     position: absolute; left: 0; right: 0; bottom: 24px;
@@ -147,18 +172,13 @@
       <div class="friend-big-card__info">
         <div class="friend-big-card__name">Ольга Вайнер</div>
         <div class="friend-big-card__caption">58 лет, Москва</div>
-        <div class="avatars-view __size-16 friend-big-card__mutual">
+        <div class="avatars-view __size-36 friend-big-card__mutual">
           <div class="avatars-view__stack">
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=11" alt=""></div>
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=12" alt=""></div>
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=13" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=11" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=12" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=13" alt=""></div>
           </div>
           <span class="avatars-view__text">18 общих друзей</span>
-        </div>
-      </div>
-      <div class="friend-big-card__accept">
-        <div class="button-wrapper __size-56">
-          <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
         </div>
       </div>
     </article>
@@ -170,18 +190,13 @@
       <div class="friend-big-card__info">
         <div class="friend-big-card__name">Александр Соколов</div>
         <div class="friend-big-card__caption">42 года, Санкт-Петербург</div>
-        <div class="avatars-view __size-16 friend-big-card__mutual">
+        <div class="avatars-view __size-36 friend-big-card__mutual">
           <div class="avatars-view__stack">
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=21" alt=""></div>
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=22" alt=""></div>
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=23" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=21" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=22" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=23" alt=""></div>
           </div>
           <span class="avatars-view__text">12 общих друзей</span>
-        </div>
-      </div>
-      <div class="friend-big-card__accept">
-        <div class="button-wrapper __size-56">
-          <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
         </div>
       </div>
     </article>
@@ -193,18 +208,13 @@
       <div class="friend-big-card__info">
         <div class="friend-big-card__name">Михаил Фёдоров</div>
         <div class="friend-big-card__caption">35 лет, Казань</div>
-        <div class="avatars-view __size-16 friend-big-card__mutual">
+        <div class="avatars-view __size-36 friend-big-card__mutual">
           <div class="avatars-view__stack">
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=31" alt=""></div>
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=32" alt=""></div>
-            <div class="avatar __size-16 __type-image"><img src="https://i.pravatar.cc/32?img=33" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=31" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=32" alt=""></div>
+            <div class="avatar __size-36 __type-image"><img src="https://i.pravatar.cc/72?img=33" alt=""></div>
           </div>
           <span class="avatars-view__text">7 общих друзей</span>
-        </div>
-      </div>
-      <div class="friend-big-card__accept">
-        <div class="button-wrapper __size-56">
-          <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
         </div>
       </div>
     </article>
@@ -395,6 +405,9 @@
       current = toIdx;
       root.classList.remove('__state-1', '__state-2', '__state-3', '__state-4', '__state-5');
       root.classList.add('__state-' + (toIdx + 1));
+      // Достигли ряда (стейт 3 = idx 2) — фиксируем карточный вид навсегда:
+      // дальнейший возврат в веер (Дружить со всеми) не сворачивает в кружки.
+      if (toIdx >= 2) root.classList.add('__cards-revealed');
 
       function done() {
         applyState(toIdx);
@@ -664,7 +677,7 @@
     if (reducedMotion()) {
       current = 3;
       root.classList.remove('__state-1');
-      root.classList.add('__state-4');
+      root.classList.add('__state-4', '__cards-revealed');
       applyState(3);
       attachSwipe();
     } else {
