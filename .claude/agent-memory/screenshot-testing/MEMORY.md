@@ -2,6 +2,17 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+## add-friends-sheet.html — автоплей кучка→разлёт→ряд (verified 2026-06-12, 390×844, commit 7639de1)
+- Root = `#fp` (`.fp`). Состояния = классы на нём: `__state-1` (кучка), `__state-2` (разлёт), `__state-4`+`__cards-revealed` (ряд). После инверсии в 7639de1: STATES[0]=кучка (title 210), STATES[1]=разлёт (title 96) — порядок подтверждён в браузере, не только в коде.
+- Элементы: 3 `.friend-big-card[data-i=1..3]` (300×460 base) + 4 `.fp-decor[data-decor=A..D]` (декор-кружки). Центры замеряй через getBoundingClientRect (cx=left+w/2).
+- Тайминг сценария: `setTimeout 1000ms` держит state-1 (кучка читается) → spring 1→2 **2000ms** (k96 c6 m1) → PAUSE_BETWEEN 800ms → ease 2→3 300ms → spring 3→4 600ms. `__state-2` КЛАСС добавляется в НАЧАЛЕ спринга 1→2 (transitionTo(1) ставит `__state-`+2), позиции мид-флайт. Сэмплить state-2 надо после ~400-500ms осадки, но ДО PAUSE+2→3.
+- Замеры (390×844, pravatar застаблен 1×1 PNG):
+  - state-1 кучка: 7 центров СБИТЫ — spreadX 44, spreadY 26, x∈[185,229] y∈[442,468]. title.top=210 (offsetTop=210). w крупного кружка ~145.
+  - state-2 разлёт: spreadX 251, spreadY 265, x∈[96,347] y∈[319,585]. Крупный (card i=2) ⌀~249 cx301/cy319 правый-верх. title styleTop едет к 96 (на сэмпле застал 99.6 — spring ещё садился; финальный таргет STATES[1].title=96).
+  - ряд `__state-4`/`__cards-revealed`: 3 карточки w=300 в ряд (cx 181/493/805, cy441), все 4 `.fp-decor` **opacity 0**. title.top=96 ровно.
+- title.textContent = «У вас7 новых друзей» (без пробела — `<br>` между «У вас» и «7», textContent склеивает; в DOM `У вас<br>7 новых друзей`).
+- pravatar.cc даёт CERT-ошибку как везде — стаб `ctx.route('https://i.pravatar.cc/**', fulfill PNG)` обязателен иначе битые фото.
+
 ## vvz-portlet header + button-inline (verified 2026-06-12, 360×800)
 - Header markup унифицирован: `<header class="vvz-portlet__header">` содержит `.vvz-portlet__title.ds-title-l` (текст «Возможно, вы знакомы», С ЗАПЯТОЙ — кодпоинт 44 после «Возможно») + правую кнопку. `aria-label` секции тоже «Возможно, вы знакомы» с запятой на всех 5 страницах (lenta-q3 / friends / guests / profile / messages). Запятая видна и в outerHTML, и в .textContent — раньше принял за отсутствующую, сверяй через charCodeAt.
 - Messages — единственный, у кого внутри `.vvz-portlet__header` ещё вложен `<header class="header __size-m">` с `.header__title` — двойная вложенность header'ов. Title text всё равно тот же.
