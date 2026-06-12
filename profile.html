@@ -168,7 +168,8 @@
         <!-- Возможно, вы знакомы — DS-портлет .vvz-portlet с модификатором __cards-160 (узкие) -->
         <section class="vvz-portlet" data-dismiss-row aria-label="Возможно, вы знакомы">
           <header class="vvz-portlet__header">
-            <a class="vvz-portlet__title ds-title-l" href="vvz.html">Возможно, вы знакомы</a>
+            <div class="vvz-portlet__title ds-title-l">Возможно, вы знакомы</div>
+            <span class="button-inline-wrapper __size-24 __view-primary"><button class="button-inline __size-24" data-href="vvz.html"><span class="button-inline__content">Ещё</span></button></span>
           </header>
           <div class="vvz-portlet__row __cards-160">
 
@@ -229,6 +230,19 @@
                 <div class="friend-card__btn button-wrapper __size-36 __full-width">
                   <button class="button-container __style-primary"><span class="button-content">Дружить</span></button>
                 </div>
+              </div>
+            </div>
+            <div class="friend-card __help">
+              <div class="friend-card__help-icon">
+                <img class="ll-icon" src="assets/icons/smile_24.svg" width="24" height="24" alt="">
+              </div>
+              <div class="friend-card__help-text">
+                <div class="friend-card__help-title ds-title-s">Найдите еще больше друзей</div>
+                <div class="friend-card__help-subtitle ds-caption-m">Вы можете найти еще больше друзей или одноклассников</div>
+              </div>
+              <div class="friend-card__help-links">
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по контактам</button>
+                <button type="button" class="friend-card__help-link ds-caption-m">Поиск по школам</button>
               </div>
             </div>
           </div>
@@ -322,5 +336,15 @@
   <script src="components/tab.js"></script>
   <script src="components/user-data.js"></script>
   <script src="components/tab-bar.js"></script>
+
+  <!-- Делегированный переход по data-href (кнопка «Ещё» в vvz-portlet → vvz.html) -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest && e.target.closest('button[data-href]');
+      if (!btn) return;
+      e.preventDefault();
+      location.href = btn.getAttribute('data-href');
+    });
+  </script>
 </body>
 </html>
