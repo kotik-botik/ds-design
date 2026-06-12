@@ -42,12 +42,21 @@
 .friend-card:active,
 .friend-card.__clicked { transform: scale(0.98); }
 
-/* МЕДИА — квадрат с blur-подложкой (заполняет поля непропорциональных фото) */
+/* МЕДИА — квадрат с blur-подложкой (заполняет поля непропорциональных фото).
+   Внутренняя обводка 1px contrast-low — рисуется поверх содержимого через
+   ::after, чтобы не съесть пиксели по контенту и работать с любым background. */
 .friend-card__media {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
   border-bottom: 0.5px solid var(--dynamic-stroke-contrast-low);
+}
+.friend-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px var(--dynamic-stroke-contrast-low);
 }
 .friend-card__blur {
   position: absolute;
