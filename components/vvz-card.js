@@ -40,7 +40,7 @@
      // 2260:68219). С общими — «N общих друзей».
     var subtitle = hasMutuals ? (p.mutuals + ' общих друзей') : 'Подобрали для вас';
     return [
-      '<div class="vvz-card' + (hasMutuals ? ' __has-mutuals' : '') + '" data-vvz-card>',
+      '<div class="vvz-card __stories' + (hasMutuals ? ' __has-mutuals' : '') + '" data-vvz-card>',
         '<span class="vvz-card__close button-inline-wrapper __size-16 __view-secondary">',
           '<button class="button-inline __size-16" aria-label="Скрыть" data-vvz-dismiss>',
             '<span class="button-inline__content">',
@@ -51,7 +51,7 @@
         '<div class="vvz-card__media"><img src="' + (p.img || '') + '" alt=""></div>',
         '<div class="vvz-card__content">',
           '<div class="vvz-card__title ds-title-s">' + (p.name || '') + '</div>',
-          '<div class="vvz-card__subtitle ds-caption-m">' + subtitle + '</div>',
+          '<div class="vvz-card__subtitle ds-body-m">' + subtitle + '</div>',
           '<div class="vvz-card__mutuals">',
             '<div class="avatars-view __size-36">',
               '<div class="avatars-view__stack">' + mutAvas + '</div>',
