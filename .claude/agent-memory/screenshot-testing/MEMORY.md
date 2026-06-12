@@ -22,6 +22,8 @@ friend-card влит в `.vvz-card.__default`; добавлен `.vvz-card.__hel
 - `.__help`: hasMedia=false, hasBtn=false. Сверху круглая `.vvz-card__help-icon` 56×56 (смайл), под ней `.vvz-card__help-title` «Найдите ещё больше друзей» + subtitle, две `.vvz-card__help-link` [«Поиск по контактам»,«Поиск по школам»]. Контент textAlign=center. Ширина И высота == соседним (friends/guests/lenta 220×330, profile 160×270 — карта тянется на высоту ряда). Совпало.
 - Селектор default-ряда: `.vvz-portlet__row` содержащий `.vvz-card.__default`; default card = `.vvz-card.__default:not(.__help)`; help = `.vvz-card.__help`. Help — последняя в ряду, видна после `row.scrollLeft=row.scrollWidth`.
 - lenta-q3 ряд __default = 220px (НЕ 160). Старая запись про «lenta 160» относилась к friend-card до рефактора / другому ряду; для нового __default-ряда в фиде ширина 220.
+- ПОСТ-MERGE re-verify (2026-06-12, merge 008c80b, был resolved-конфликт; profile.html правили параллельно, 114 строк): все 4 экрана PASS, числа байт-в-байт как выше. defaultCount: friends/guests/profile=4, lenta-q3=5. profile.html НЕ сломан мержем — help-карта 160×270 рядом с default 160×270, без артефактов. Merge diff в vvz css косметика: `.vvz-card__help-link:active{opacity:.6}` + comment-блок в vvz-portlet.css.
+- ГРАБЛЯ extract subtitle: `.textContent` карточки склеивает `.vvz-card__subtitle` («3 общих друга») с СКРЫТЫМ счётчиком avatars-view → выглядит как «3 общихдруга» (пропавший пробел). Это артефакт чтения, НЕ рендера. Проверяй через `.vvz-card__subtitle` innerHTML отдельно — там пробел на месте.
 
 ## vvz-card единый компонент (2026-06-12, 390×844)
 Один компонент `.vvz-card` с 2 вариантами (`components/vvz-card.{css,js}`).
