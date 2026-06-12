@@ -38,6 +38,12 @@ html.nav-back::view-transition-new(root) {
 @keyframes screen-in-left   { from { transform: translateX(-25%); }  to { transform: translateX(0); } }
 @keyframes screen-out-right { from { transform: translateX(0); }     to { transform: translateX(100%); } }
 
+/* ---- tab switch: мгновенный переход без анимации ---- */
+html.nav-tab::view-transition-old(root),
+html.nav-tab::view-transition-new(root) {
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none !important; }
