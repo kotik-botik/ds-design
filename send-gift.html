@@ -64,6 +64,7 @@
   .ll-sg-message {
     display: flex; flex-direction: column; gap: var(--space-2);
   }
+  /* Типографика приходит DS-классом .ds-body-l на самом <textarea>. */
   .ll-sg-message__input {
     width: 100%;
     box-sizing: border-box;
@@ -71,8 +72,6 @@
     background: transparent;
     border-bottom: 1px solid var(--dynamic-stroke-contrast-low);
     padding: var(--space-2) 0;
-    font-family: var(--font-family);
-    font-size: 17px; line-height: 24px;
     color: var(--dynamic-text-and-icons-base-primary);
     outline: none;
     resize: none;
@@ -201,7 +200,7 @@
         <!-- Сообщение к открытке -->
         <div class="ll-sg-message">
           <textarea
-            class="ll-sg-message__input"
+            class="ds-body-l ll-sg-message__input"
             id="sgMessage"
             placeholder="Сообщение к открытке"
             maxlength="200"
