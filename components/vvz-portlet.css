@@ -8,14 +8,29 @@
  *
  *   <section class="vvz-portlet" data-dismiss-row aria-label="Возможно, вы знакомы">
  *     <header class="vvz-portlet__header">
- *       <!-- title-only: ссылка на vvz.html (лента) -->
- *       <a class="vvz-portlet__title ds-title-l" href="vvz.html">Возможно, вы знакомы</a>
- *       <!-- title + правый слот: кнопка-инлайн (друзья / гости / сообщения) -->
- *       <!-- <span class="button-inline-wrapper ...">…«Ещё» / «Скрыть»…</span> -->
+ *       <div class="vvz-portlet__title ds-title-l">Возможно, вы знакомы</div>
+ *
+ *       <!-- ВАРИАНТ A — «Ещё» (лента / друзья / гости / профиль),
+ *            оранжевая ссылка-инлайн, ведёт в тиндер ВВЗ (vvz.html).
+ *            Требует на странице script с делегированным click-handler по
+ *            [data-href] (см. guests.html). -->
+ *       <span class="button-inline-wrapper __size-24 __view-primary">
+ *         <button class="button-inline __size-24" data-href="vvz.html">
+ *           <span class="button-inline__content">Ещё</span>
+ *         </button>
+ *       </span>
+ *
+ *       <!-- ВАРИАНТ B — «Скрыть» (сообщения), вторичная кнопка-инлайн,
+ *            скрывает портлет через data-dismiss="row" из dismissible.js. -->
+ *       <!-- <span class="button-inline-wrapper __size-24 __view-secondary">
+ *              <button class="button-inline __size-24" data-dismiss="row">
+ *                <span class="button-inline__content">Скрыть</span>
+ *              </button>
+ *            </span> -->
  *     </header>
  *     <div class="vvz-portlet__row">
- *       <!-- .friend-card × N (лента / друзья / гости / профиль) -->
- *       <!-- .vvz-card × N (сообщения) -->
+ *       <!-- .friend-card × N (+ финальная .friend-card.__help) — лента / друзья / гости / профиль -->
+ *       <!-- .vvz-card × N — сообщения -->
  *     </div>
  *   </section>
  *

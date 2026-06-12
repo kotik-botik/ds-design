@@ -106,3 +106,42 @@
   margin-top: 12px;
   display: block;
 }
+
+/* ── Help variant — финальная карточка-подсказка в ряду PYMK
+   (Figma 2453:3653). Без фото: смайл-иконка в круге + центрированные
+   тайтл/сабтайтл + 2 текстовые ссылки. Высота равняется по соседним
+   friend-card через align-items: stretch у родительского flex-row. */
+.friend-card.__help {
+  background: var(--dynamic-surface-base-tertiary);
+  padding: 12px;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.friend-card__help-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--dynamic-surface-contrast-low);
+  color: var(--dynamic-text-and-icons-base-primary);
+  flex-shrink: 0;
+}
+.friend-card__help-text {
+  display: flex; flex-direction: column; gap: 2px;
+  width: 100%; text-align: center;
+}
+.friend-card__help-title {
+  color: var(--dynamic-text-and-icons-base-primary);
+}
+.friend-card__help-subtitle {
+  color: var(--dynamic-text-and-icons-base-secondary);
+}
+.friend-card__help-links {
+  display: flex; flex-direction: column; gap: 16px; width: 100%;
+}
+.friend-card__help-link {
+  color: var(--dynamic-text-and-icons-base-secondary);
+  text-align: center;
+  background: none; border: 0; padding: 0;
+  font-family: inherit; cursor: pointer;
+}
+.friend-card__help-link:active { opacity: 0.6; }

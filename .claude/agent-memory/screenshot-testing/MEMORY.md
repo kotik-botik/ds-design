@@ -2,6 +2,15 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+<<<<<<< HEAD
+## vvz-portlet header + button-inline (verified 2026-06-12, 360×800)
+- Header markup унифицирован: `<header class="vvz-portlet__header">` содержит `.vvz-portlet__title.ds-title-l` (текст «Возможно, вы знакомы», С ЗАПЯТОЙ — кодпоинт 44 после «Возможно») + правую кнопку. `aria-label` секции тоже «Возможно, вы знакомы» с запятой на всех 5 страницах (lenta-q3 / friends / guests / profile / messages). Запятая видна и в outerHTML, и в .textContent — раньше принял за отсутствующую, сверяй через charCodeAt.
+- Messages — единственный, у кого внутри `.vvz-portlet__header` ещё вложен `<header class="header __size-m">` с `.header__title` — двойная вложенность header'ов. Title text всё равно тот же.
+- Правый слот: `<span class="button-inline-wrapper __size-24 __view-primary">` (или `__view-secondary` на messages) → внутри `<button class="button-inline __size-24" data-href="vvz.html">` (или `data-dismiss="row"` на messages) → `<span class="button-inline__content">Ещё|Скрыть</span>`. **`data-href`/`data-dismiss` живут на ВНУТРЕННЕМ `<button>`, НЕ на wrapper-span.** Селекторами: `.vvz-portlet .button-inline[data-href="vvz.html"]` или `.button-inline[data-dismiss="row"]`. Тестировать тап по button (не span-wrapper) — `.click({force:true})` срабатывает, навигация на /vvz.html подтверждена.
+- Цвет: primary = `rgb(215, 98, 0)` (#D76200, оранжевый), secondary = `rgb(0, 0, 0)`. Это computed color на wrapper-span (CSS-переменная пробрасывается на child).
+
+=======
+>>>>>>> origin/main
 ## vvz-portlet компонент (2026-06-12, verified 360×800)
 Унифицированный «Возможно, вы знакомы» поверх 5 экранов:
 - Базовый класс: `.vvz-portlet` + опц. модификаторы `.island` (lenta-q3) / `.__messages` (messages, более компактный — h=274 vs 394).
@@ -224,6 +233,18 @@ screen-transition.js теперь подключён синхронным `<scri
 - Фото i.pravatar.cc и google fonts тоже даёт ERR_CERT_AUTHORITY_INVALID в sandbox — карточки показываются с серыми placeholder и broken-image иконками в углу photo и в avatars-view. Layout/anim работает корректно, только пиксели фото отсутствуют.
 - Свайп ряда: `attachSwipe` навешивается по `onDone` стейта 3 (т.е. в момент когда current стал 3 → state-4 активирован). STEP=312 (gap 12 + width 300). Программно эмулируется через `page.mouse.down/move/up`; в mid-swipe карточки сдвигаются translateX на dx, проверено.
 - Title рендерится двухстрочно через `<br>` («У вас<br>7 новых друзей»); `textContent` склеит без пробела — это просто свойство DOM API, не верстка.
+
+## PYMK help-card `.friend-card.__help` (verified 2026-06-12, viewport 360×800)
+- Финальная карточка PYMK на 4 страницах. helpCount=1 на каждой (guests, friends, lenta-q3, profile). Title «Найдите еще больше друзей», subtitle «Вы можете найти еще больше друзей или одноклассников», 2 link-кнопки «Поиск по контактам» / «Поиск по школам», icon 56×56.
+- **Размеры точно равны (НЕ просто близко) обычной .friend-card в ряду**, БЕЗ `align-items: stretch` (rowAlignItems='normal'). Естественная высота help-card подобрана так, что совпадает байт-в-байт с обычными карточками:
+  - guests: help 220×330 == regular 220×330
+  - friends: help 220×330 == regular 220×330
+  - lenta-q3 (vvz-portlet.island): help 220×330 == regular 220×330
+  - profile (vvz-portlet, row.__cards-160): help 160×282 == regular 160×282
+- На profile карточки УЖЕ́ — это `.vvz-portlet__row.__cards-160` модификатор (профиль использует компактный размер). Запись выше про «.pymk__row.__cards-220 (только guests) → 220» УСТАРЕЛА: классы по факту `.vvz-portlet` + `.vvz-portlet__row`, не `.pymk`. И __cards-160 теперь на profile, не на lenta-q3.
+- Класс портлета: `vvz-portlet` (guests/friends/profile) или `vvz-portlet island` (lenta-q3). Row: `vvz-portlet__row` или `vvz-portlet__row __cards-160`.
+- Для теста: row.scrollLeft = row.scrollWidth скроллит до конца; help-card — последний `.friend-card.__help` в row.
+- На lenta-q3 портлет глубоко в фиде — обязательно `sel.scrollIntoView()` перед измерением/скриншотом.
 
 ## PYMK-секция — унифицированный компонент (verified 2026-06-12, viewport 360×800)
 - Класс изменился: было `.ll-pymk` / `.ll-pymk__row` / `.ll-pymk__title` — теперь **`.pymk` / `.pymk__row` / `.pymk__header`** на всех 4 страницах (lenta-q3, friends, guests, messages). Старый селектор `.ll-pymk__*` БОЛЬШЕ НЕ РАБОТАЕТ.
