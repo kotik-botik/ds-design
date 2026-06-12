@@ -260,3 +260,13 @@ screen-transition.js теперь подключён синхронным `<scri
   4. `.tabbar-icon.__slot-clip` x=234
   5. `.tabbar-icon.__slot-menu` x=312 (≡)
 - Селектор иконки меню: `.ll-tabbar .__slot-menu` (или `.tabbar-icon.__slot-menu`). Тап ведёт на `menu.html` (подтверждено finalUrl). На самом menu.html `__slot-menu` должен бы получить `__state-on` — проверять отдельно.
+
+### add-friends-sheet.html — автоплей стопка→веер→ряд (circle→card морф) — 2026-06-12
+- Тайминг автоплея (НЕ reduced-motion): state-1 (стопка) с t=0; transitionTo(1) после `SPRING.delay=500` + spring `duration:2000`; затем `PAUSE_BETWEEN=800`; затем state-3 ряд (spring 600). Эмпирически: на T+300 root=`fp __state-1`, на T+1200 уже `fp __state-2`. Веер ловится в окне ~1100-1300ms. Ряд+`__cards-revealed` стабильно к ~3.5с; морф фото идёт ~370ms после установки флага.
+- Кружочный вид (стейты 1-2): `.friend-big-card__photo` computed `border-radius:50%`, `margin-top:80px`, `.friend-big-card__info` opacity:0, карточка `background:transparent`/`border transparent`. В ряду: photo radius `36px 36px 0 0` (скруглён только верх, низ плоский — НЕ круг), margin-top:0, info opacity:1, bg белый rgb(255,255,255), border rgb(231,231,231). Подтверждено замерами.
+- Морф РЕАЛЬНО анимирован (transition, не class-swap): сэмплы border-top-left-radius `50%`→`calc(48%+1.4px)`→...→`calc(5.4%+32px)` и margin-top `80px`→`8.6px`→0 за ~12 кадров. Флаг `.__cards-revealed` ставится при `toIdx>=2` и фиксирует карточный вид навсегда (возврат в веер по «Дружить со всеми» не сворачивает обратно в кружки).
+- Кнопки «Дружить» на самой карточке НЕТ (`.friend-big-card__accept` удалён из DOM, `acceptExistsInDom:false`). Внизу шторки `.fp__bottom` = «Дружить со всеми» (одна общая CTA).
+- Финальная карточка: квадратное фото сверху + центрированный инфо-блок (имя «Ольга Вайнер», «58 лет, Москва», «18 общих друзей» с тремя аватарками `__size-36`). Соседние карточки видны как ряд (свайп).
+- Фото и mutual-аватарки = `i.pravatar.cc/...` → в Playwright не грузятся (broken-image иконка в углу фото-зоны). Форму/радиус/лейаут это не мешает проверить. Не регрессия.
+- Селектор передней карточки в ряду: `.friend-big-card[data-i="3"]` (Ольга). Ждать ряд: `waitForFunction(() => fp.classList.contains('__cards-revealed'))`.
+- reduced-motion путь сразу прыгает в `__state-4 __cards-revealed` (без морфа) — кружочного состояния там не увидишь.
