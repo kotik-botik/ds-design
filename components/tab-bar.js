@@ -16,13 +16,13 @@
   };
 
   var SHEET_ITEMS = [
-    { label: 'Оповещения', icon: 'notifications_24.svg', badge: '4', href: null },
+    { label: 'Оповещения', icon: 'notifications_24.svg', badge: '4', href: 'notifications.html' },
     { label: 'События',    icon: 'events_24.svg',        badge: '5', href: null },
     { label: 'Гости',      icon: 'guests_24.svg',        badge: '1', href: 'guests.html' },
     { label: 'Друзья',     icon: 'users_24.svg',         badge: null, href: 'friends.html' },
     { label: 'Фото',       icon: 'photo_24.svg',         badge: null, href: null },
     { label: 'Видео',      icon: 'video_24.svg',         badge: null, href: null },
-    { label: 'Группы',     icon: 'klass_groups_24.svg',  badge: null, href: null },
+    { label: 'Группы',     icon: 'users_3_24.svg',       badge: null, href: null },
     { label: 'Подарки',    icon: 'gift_24.svg',          badge: null, href: 'gifts-catalog.html' }
   ];
 
