@@ -15,8 +15,8 @@
   html, body { margin: 0; padding: 0; height: 100%; background: var(--dynamic-surface-base-primary); }
   .phone-frame { background: var(--dynamic-surface-base-primary); }
 
-  /* Верхний остров вплотную к навбару — верхние углы 0 */
-  .ll-pr-card-island { border-radius: 0 0 20px 20px; padding-top: 0; padding-bottom: 0; }
+  /* Верхний остров вплотную к навбару — верхние углы 0, высота по контенту */
+  .ll-pr-card-island { border-radius: 0 0 20px 20px; padding-top: 0; padding-bottom: 0; height: auto; }
 
   /* Шапка профиля: имя/статус слева, аватар справа */
   .ll-pr-head {
@@ -187,9 +187,9 @@
             <img class="ll-pr-info__icon" src="assets/icons/follow_16_20.svg" width="16" height="16" alt="">
             <span class="ds-body-m">Подписчики: 18 человек</span>
           </div>
-          <span class="button-inline-wrapper __size-20 __view-primary">
+          <span class="button-inline-wrapper __size-20 __view-primary" style="align-self:flex-start">
             <button class="button-inline __size-20" type="button">
-              <span class="button-inline__content">
+              <span class="button-inline__content" style="justify-content:flex-start">
                 <span class="icon __size-20 __src button-inline__icon" style="--icon-src:url('../assets/icons/info_circle_16_20.svg')"></span>
                 <span class="ds-body-m">Вся информация</span>
               </span>
