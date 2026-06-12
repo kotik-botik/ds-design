@@ -1,0 +1,70 @@
+/**
+ * OK Design System (proto) — VvzPortlet
+ *
+ * «Возможно, вы знакомы» — портлет: заголовок + горизонтальный ряд
+ * карточек. Используется в ленте (lenta-q3.html), друзьях (friends.html),
+ * гостях (guests.html), сообщениях (messages.html — модификатор) и
+ * планируется в профиле (profile.html, дефолтные friend-card 160).
+ *
+ *   <section class="vvz-portlet" data-dismiss-row aria-label="Возможно, вы знакомы">
+ *     <header class="vvz-portlet__header">
+ *       <!-- title-only: ссылка на vvz.html (лента) -->
+ *       <a class="vvz-portlet__title ds-title-l" href="vvz.html">Возможно, вы знакомы</a>
+ *       <!-- title + правый слот: кнопка-инлайн (друзья / гости / сообщения) -->
+ *       <!-- <span class="button-inline-wrapper ...">…«Ещё» / «Скрыть»…</span> -->
+ *     </header>
+ *     <div class="vvz-portlet__row">
+ *       <!-- .friend-card × N (лента / друзья / гости / профиль) -->
+ *       <!-- .vvz-card × N (сообщения) -->
+ *     </div>
+ *   </section>
+ *
+ * MODS:
+ *   .vvz-portlet.__messages          — компактный паддинг сверху (для messages)
+ *   .vvz-portlet__row.__cards-160    — friend-card шириной 160 (узкие, для ленты / профиля).
+ *                                       По дефолту карточки 220.
+ */
+
+.vvz-portlet {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+.vvz-portlet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 var(--space-4) var(--space-3);
+}
+/* первый слот хедера (title / Header view) забирает всё пространство */
+.vvz-portlet__header > :first-child {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.vvz-portlet__title {
+  color: var(--dynamic-text-and-icons-base-primary);
+  text-decoration: none;
+  display: block;
+}
+
+.vvz-portlet__row {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.vvz-portlet__row::-webkit-scrollbar { display: none; }
+
+/* ── Модификаторы ───────────────────────────────────────────── */
+
+/* Карточки 220 по дефолту (Figma — гости / друзья) */
+.vvz-portlet__row > .friend-card { width: 220px; }
+/* Узкие 160 — для ленты / профиля */
+.vvz-portlet__row.__cards-160 > .friend-card { width: 160px; }
+
+/* Сообщения: меньше отступ сверху (по Figma --space-2) */
+.vvz-portlet.__messages { padding-top: var(--space-2); }

@@ -2,6 +2,14 @@
 
 Накопленные находки по тому, как этот прототип на самом деле себя ведёт в браузере. Дополняй после каждого прогона; устаревшее — удаляй или коротко обобщай.
 
+## vvz-portlet компонент (2026-06-12, verified 360×800)
+Унифицированный «Возможно, вы знакомы» поверх 5 экранов:
+- Базовый класс: `.vvz-portlet` + опц. модификаторы `.island` (lenta-q3) / `.__messages` (messages, более компактный — h=274 vs 394).
+- Шапка: `.vvz-portlet__header` (h=36–40, с тайтлом и кнопкой `.button-inline` «Ещё/Скрыть»).
+- Скроллер: `.vvz-portlet__row` (display:flex, gap:8px, overflowX:auto). Модификатор `.__cards-160` → friend-card width=160/h=270 (вместо дефолта 220/330). Используется на lenta-q3 и profile.
+- Дети: на friends/guests/lenta-q3/profile — `.friend-card`; на messages — `.vvz-card` (160×218, тот же, что в `vvz.html`-тиндере).
+- Числа подтверждены: lenta-q3 (island+__cards-160) → friend-card 160px; friends → 220; guests → 220; messages (__messages) → vvz-card 160; profile (__cards-160) → 160.
+
 ## Грабли icon.css (2026-06-11, vvz.html)
 - `<span class="icon __src" style="--icon-src: url('assets/icons/foo.svg')">` ломается: запрос уходит на `/components/assets/icons/foo.svg` → 404. Причина: `mask-image: var(--icon-src)` объявлено в `components/icon.css`, и CSS `url()` resolve'ится относительно файла-объявления, а не документа. Передача через CSS-переменную НЕ меняет точку resolve.
 - Фиксы: либо `url('../assets/icons/...')` в инлайне (relative-to-icon.css), либо абсолютный путь `url('/assets/icons/...')`, либо использовать готовый `__slot-*` класс (там пути уже с `../`).
