@@ -266,3 +266,4 @@ screen-transition.js теперь подключён синхронным `<scri
   4. `.tabbar-icon.__slot-clip` x=234
   5. `.tabbar-icon.__slot-menu` x=312 (≡)
 - Селектор иконки меню: `.ll-tabbar .__slot-menu` (или `.tabbar-icon.__slot-menu`). Тап ведёт на `menu.html` (подтверждено finalUrl). На самом menu.html `__slot-menu` должен бы получить `__state-on` — проверять отдельно.
+- Сетка быстрых действий: `.ll-quick__tile` — серые плашки. На 390-wide их **8 шт**, каждая **83.5×83.5** (квадрат), `aspect-ratio: 1 / 1`, display:flex. Квадратность держится через CSS `aspect-ratio`, не на жёсткой height. Verified 2026-06-12: PASS.
