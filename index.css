@@ -66,6 +66,7 @@
 @import url('./components/text-input.css');
 @import url('./components/comment-input.css');
 @import url('./components/notification-cell.css');
+@import url('./components/inapp-push.css');
 @import url('./components/gift-card.css');
 @import url('./components/friend-big-card.css');
 @import url('./components/user-cell.css');
